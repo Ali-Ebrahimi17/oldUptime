@@ -1,0 +1,99 @@
+@charset "UTF-8";
+/* // DEMO
+body { padding: 20px 40px; min-width: 750px; background: #aeaeae; }*/
+/* === Multi Select Facet Dropdown Styles Adecco UK Re-Branding */
+#multiselect-form.resource-form {
+  overflow: visible;
+  padding: 15px;
+  margin: 0;
+  border: none;
+  position: relative;
+}
+#multiselect-form.resource-form .resource-dropdown label {
+  position: relative;
+}
+#multiselect-form.resource-form legend {
+  font-size: 16px;
+  border: none;
+  color: #dad9d9;
+}
+#multiselect-form.resource-form .btn {
+  border: none;
+  background: transparent;
+}
+#multiselect-form.resource-form #reset-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: inline-block;
+  color: red;
+}
+#multiselect-form.resource-form #reset-button:hover {
+  color: rgba(255, 0, 0, 0.6);
+}
+#multiselect-form.resource-form .btn-group .dropdown-menu {
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  min-height: 180px;
+}
+#multiselect-form.resource-form .btn-group .dropdown-menu li {
+  font-size: 14px;
+  padding: 5px 15px;
+  border: none;
+}
+#multiselect-form.resource-form .btn-group .dropdown-menu li.selected, #multiselect-form.resource-form .btn-group .dropdown-menu li.selected:hover, #multiselect-form.resource-form .btn-group .dropdown-menu li.selected a, #multiselect-form.resource-form .btn-group .dropdown-menu li:hover {
+  background-color: #dad9d9;
+  cursor: pointer;
+}
+#multiselect-form.resource-form .btn-group .dropdown-menu li a span.check-mark {
+  position: absolute;
+  left: 8px;
+  top: 6px;
+  font-size: 8px;
+  background: red;
+  color: white;
+  width: 12px;
+  padding: 2px;
+  border-radius: 30px;
+}
+#multiselect-form.resource-form .btn-group .dropdown-menu li a span.check-mark:hover {
+  background-color: #dad9d9;
+  cursor: pointer;
+}
+#multiselect-form.resource-form .btn-group .dropdown-menu li a:hover {
+  background-color: #dad9d9;
+}
+#multiselect-form.resource-form .btn-group .dropdown select {
+  box-shadow: 0 1px 1px 0 #b2b2b2;
+}
+#multiselect-form.resource-form .btn-group .dropdown select:after {
+  color: #ef2e24;
+  content: "";
+  font-family: FontAwesome;
+  right: 10px;
+  top: 10px;
+  position: absolute;
+  width: 35px;
+  padding: 0 0 5px;
+  text-indent: 14px;
+  z-index: -1;
+}
+#multiselect-form.resource-form .btn-group li.dropdown.open > .dropdown-toggle .caret {
+  border-top-color: transparent;
+  border-bottom: 4px solid #000000;
+  position: relative;
+  top: -3px;
+}
+#multiselect-form.resource-form .caret {
+  -webkit-appearance: none;
+}
+#multiselect-form.resource-form .dropdown .open [aria-expanded=true] {
+  color: red;
+  background-color: red !important;
+  color: #ef2e24;
+  content: "";
+  font-family: FontAwesome;
+}
+
+/* -- */

@@ -1,0 +1,63 @@
+.division-holder {
+	width: 45%;
+	/* background-color: #6a6d6d; */
+	height: 180px;
+}
+.division-holder p {
+	color: white;
+	font-size: 20px;
+}
+.top-hr {
+	width: 300px;
+	color: grey;
+
+	margin-top: -15px;
+}
+.division-hr {
+	width: 200px;
+	color: grey;
+
+	margin-top: 6px;
+	margin-bottom: 12px;
+}
+.bottom-hr {
+	width: 40%;
+	color: grey;
+	margin-bottom: 20px;
+}
+.check-result-holder {
+	display: flex;
+	justify-content: space-around;
+	width: 100%;
+}
+.Passed {
+	display: flex;
+	/* flex-direction: column; */
+	text-align: center;
+	color: rgb(0, 196, 70);
+	font-weight: bold;
+}
+.contained {
+	display: flex;
+	/* flex-direction: column; */
+	text-align: center;
+	color: rgb(255, 123, 0);
+	font-weight: bold;
+}
+.Failed {
+	display: flex;
+	/* flex-direction: column; */
+	text-align: center;
+	color: rgb(238, 28, 37);
+	font-weight: bold;
+}
+.open {
+	display: flex;
+	/* flex-direction: column; */
+	text-align: center;
+	color: white;
+	font-weight: bold;
+}
+.last-checked-holder {
+	margin-top: -15px;
+}

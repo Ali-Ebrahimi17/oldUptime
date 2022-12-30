@@ -1,0 +1,99 @@
+body {
+	background: rgb(19, 19, 19);
+	color: #fff;
+	box-sizing: border-box;
+	/* font-family: 'Noto Sans', sans-serif; */
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	/* justify-content: center; */
+	/* align-items: center; */
+	/* background: #353535; */
+	border: 1px solid #353535;
+	background: rgb(19, 19, 19);
+	font-size: 3rem;
+	color: #fff;
+	box-shadow: rgba(3, 8, 20, 0.1) 0px 0.15rem 0.5rem, rgba(2, 8, 20, 0.1) 0px 0.075rem 0.175rem;
+	height: 100%;
+	width: 100%;
+	border-radius: 4px;
+	transition: all 500ms;
+	overflow: hidden;
+}
+.card-outline {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	/* justify-content: center; */
+	/* align-items: center; */
+	/* background: #353535; */
+	border: 1px solid #353535;
+	background: rgb(19, 19, 19);
+	font-size: 3rem;
+	color: #fff;
+	box-shadow: rgba(3, 8, 20, 0.1) 0px 0.15rem 0.5rem, rgba(2, 8, 20, 0.1) 0px 0.075rem 0.175rem;
+	height: 100%;
+	width: 100%;
+	border-radius: 4px;
+	transition: all 500ms;
+	overflow: hidden;
+}
+
+/* .dash-layout {
+	height: 77vh;
+	margin: 5px 20px;
+
+	display: grid;
+	gap: 1rem;
+
+	grid-template-rows: repeat(8, 10%);
+	grid-template-columns: repeat(16, 5.47%);
+} */
+@media screen and (min-width: 600px) {
+	.card-header {
+		grid-column: span 16 / auto;
+		text-align: center;
+		font-size: 30px;
+		margin-bottom: 10px;
+	}
+	.card-full {
+		grid-row: span 6 / auto;
+	}
+	.card-left-blank {
+		grid-row: span 1 / auto;
+		border: none;
+	}
+	.card-left {
+		grid-row: span 2 / auto;
+	}
+	.card-div-header {
+		grid-column: span 2 / auto;
+	}
+	.card-2tall {
+		grid-row: span 1 / auto;
+		grid-column: span 2 / auto;
+	}
+	.card-4tall {
+		grid-row: span 4 / auto;
+		grid-column: span 3 / auto;
+	}
+
+	.card-wide {
+		grid-column: span 2 / auto;
+	}
+	.card-prediction {
+		/* grid-column: span 2 / auto; */
+		grid-row: span 3 / auto;
+	}
+}
+a {
+	text-decoration: none;
+	color: inherit;
+}
+a:hover {
+	text-decoration: none; /* no underline */
+	color: inherit;
+}

@@ -1,0 +1,37 @@
+
+<svg version="1.1" id="Skid_Steer_Loaders_Icon" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 200 200"
+    style="enable-background:new 0 0 200 200;" xml:space="preserve">
+    <style type="text/css">
+        .st1 {
+            fill: none;
+            stroke: #FCB026;
+            stroke-width: 2.85;
+            stroke-miterlimit: 1;
+        }
+
+        .product-range-component .container:hover figure:hover .st1 {
+            fill: none;
+            stroke: #DD970C;
+        }
+    </style>
+    <defs>
+    </defs>
+    <g>
+        <circle class="st1" cx="125.7" cy="130.8" r="11.7"></circle>
+        <circle class="st1" cx="125.7" cy="130.8" r="5.6"></circle>
+        <circle class="st1" cx="89.1" cy="130.8" r="5.6"></circle>
+        <circle class="st1" cx="89.1" cy="130.8" r="11.7"></circle>
+        <line class="st1" x1="99.5" y1="136.2" x2="115.3" y2="136.2"></line>
+        <path class="st1" d="M136.1,136.2h8.2l15.2-7.3l-2.2-26.4c0,0,0.5-4.9-6.6-6.2l-22.2-3.1"></path>
+        <path class="st1" d="M83.5,120.5c0,0,6.9-30.8,7.8-34.8c1.8-7.7,8.4-7.8,8.4-7.8l18-1.1c4.1,0,9.4,2.6,10,9.3
+            c0.6,6.7,3,34.2,3,34.2"></path>
+        <path class="st1" d="M87.2,79.4C94.7,78,98.8,78,98.8,78"></path>
+        <polygon class="st1" points="65.3,125.2 44.1,136.2 44.2,139.9 40.5,144 62.5,144 70.5,137.5 	"></polygon>
+        <path class="st1" d="M128.3,91.7l16.6-6c0,0,0,0,5.7,0c5.7,0,3.8,4.5,3.8,4.5l-2.3,6.4"></path>
+        <path class="st1" d="M86.9,105.5c0,0-4.3-0.6-8.2,7.2c-2.8,5.5-10,18.8-10,18.8l2.5,8.5l7.6-3.5"></path>
+        <path class="st1"
+            d="M129.2,101.2c0,0-3.4,0.9-5.2,1.3c-4,0.9-4,4.8-4,4.8l-18.7,5c0,0-1.1-4-4.6-2.9c-2.4,0.6-11.4,2.8-11.4,2.8">
+        </path>
+    </g>
+</svg>

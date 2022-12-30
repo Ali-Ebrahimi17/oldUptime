@@ -1,0 +1,360 @@
+/* body {
+	background-color: black;
+	font-weight: bold;
+	color: black;
+} */
+
+.dashboard-cards {
+	position: relative;
+	padding: 30px;
+	margin: 0 !important;
+	display: flex;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+}
+
+.dashboard-cards .card {
+	/* background: #ffffff; */
+	display: inline-block;
+	perspective: 1000;
+	z-index: 20;
+	padding: 0 !important;
+	margin: 5px 5px 5px 5px;
+	/* position: relative; */
+	text-align: left;
+	transition: all 0.3s 0s ease-in;
+	z-index: 1;
+	/* width: calc(33.33333333% - 10px); */
+	cursor: pointer;
+	transition: all 0.3s ease;
+	max-width: 400px;
+	margin-bottom: 50px;
+}
+
+.dashboard-cards .card:hover {
+	box-shadow: 0 15px 10px -10px rgba(31, 31, 31, 0.5);
+	transition: all 0.3s ease;
+}
+
+.dashboard-cards .card .card-title {
+	/* background: #ffffff; */
+	padding: 20px 0px;
+	position: relative;
+	z-index: 0;
+	margin: -5px;
+	border-radius: 5px;
+}
+
+.dashboard-cards .card .card-title h2 {
+	font-size: 2rem;
+	letter-spacing: -0.05em;
+	margin: 0;
+	padding: 0;
+}
+
+small {
+	letter-spacing: -0.025em;
+	text-align: center;
+	display: block;
+	color: grey;
+	font-size: 15px;
+	/* margin-top: 15px; */
+}
+
+.dashboard-cards .card .card-title h2 small {
+	display: block;
+	font-size: 14px;
+	margin-top: 15px;
+	letter-spacing: -0.025em;
+}
+
+.dashboard-cards .card .card-description {
+	position: relative;
+	font-size: 14px;
+	border-top: 1px solid #ddd;
+	padding: 10px 15px 0 15px;
+}
+
+.dashboard-cards .card .card-actions {
+	box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.075);
+	padding: 10px;
+	text-align: center;
+}
+
+.dashboard-cards .card .card-flap {
+	background: #d9d9d9;
+	position: absolute;
+	width: 100%;
+	transform-origin: top;
+	transform: rotateX(-90deg);
+}
+
+.dashboard-cards .card .flap1 {
+	transition: all 0.3s 0.3s ease-out;
+	z-index: -1;
+}
+
+.dashboard-cards .card .flap2 {
+	transition: all 0.3s 0s ease-out;
+	z-index: -2;
+}
+
+.dashboard-cards.showing .card {
+	cursor: pointer;
+	opacity: 0.6;
+	transform: scale(0.88);
+}
+
+.dashboard-cards .no-touch .dashboard-cards.showing .card:hover {
+	opacity: 0.94;
+	transform: scale(0.92);
+}
+
+.dashboard-cards .card.d-card-show {
+	opacity: 1 !important;
+	transform: scale(1) !important;
+}
+
+.dashboard-cards .card.d-card-show .card-flap {
+	background: #ffffff;
+	transform: rotateX(0deg);
+}
+
+.dashboard-cards .card.d-card-show .flap1 {
+	transition: all 0.3s 0s ease-out;
+}
+
+.dashboard-cards .card.d-card-show .flap2 {
+	transition: all 0.3s 0.2s ease-out;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+.dashboard-cards .card .task-count {
+	width: 60px;
+	height: 60px;
+	position: absolute;
+	top: 30px;
+	right: 10px;
+	background: #ecf0f1;
+	text-align: center;
+	line-height: 58px;
+	border-radius: 100%;
+	color: #333333;
+	font-weight: 600;
+	transition: all 0.2s ease;
+}
+
+.dashboard-cards .task-list {
+	padding: 0 !important;
+}
+
+.dashboard-cards .task-list li {
+	padding: 10px 0;
+	padding-left: 15px;
+	margin: 3px 0;
+	list-style-type: none;
+	border-bottom: 1px solid #e9ebed;
+	/* border-left: 3px solid #fcb026; */
+	transition: all 0.2s ease;
+}
+
+.dashboard-cards .task-list li:hover {
+	/* opacity: 0.5; */
+	/* background-color: #ecf0f1; */
+	border-radius: 20px;
+}
+
+.dashboard-cards .task-list li span {
+	float: right;
+	/* color: black; */
+	margin-right: 15px;
+}
+
+.dashboard-cards.showing .card.d-card-show .task-count {
+	color: #ffffff;
+	background: #fcb026;
+	transition: all 0.2s ease;
+}
+
+.dashboard-cards .card-actions .btn {
+	color: white;
+	border-radius: 20px;
+	margin-top: -15px;
+}
+
+/* .dashboard-cards .card-actions .btn:hover {
+	color: #fcb026;
+} */
+
+.green-card {
+	background-color: rgb(11, 156, 49);
+	width: 120px;
+	height: 100px;
+	padding: 12px 0;
+}
+.amber-card {
+	background-color: rgb(252, 176, 38);
+	width: 120px;
+	height: 100px;
+	padding: 12px 0;
+}
+.red-card {
+	background-color: rgb(238, 28, 37);
+	width: 120px;
+	height: 100px;
+	padding: 12px 0;
+}
+.grey-card {
+	background-color: #33383a;
+	width: 120px;
+	height: 100px;
+	padding: 12px 0;
+}
+.green-cardV {
+	background-color: rgb(11, 156, 49);
+	width: 120px;
+	height: 55px;
+	margin-top: -25px;
+}
+.amber-cardV {
+	background-color: rgb(252, 176, 38);
+	width: 120px;
+	height: 55px;
+	margin-top: -25px;
+}
+
+.red-cardV {
+	background-color: rgb(238, 28, 37);
+	width: 120px;
+	height: 55px;
+	margin-top: -25px;
+}
+.grey-cardV {
+	background-color: #33383a;
+	width: 120px;
+	height: 55px;
+	margin-top: -25px;
+	padding-top: 1px;
+}
+.green-li {
+	color: black;
+	font-weight: bolder;
+	font-size: 15px;
+	background-color: rgb(11, 156, 49);
+	border-radius: 10px;
+}
+.amber-li {
+	color: black;
+	font-weight: bolder;
+	font-size: 15px;
+	background-color: rgb(252, 176, 38);
+	border-radius: 10px;
+}
+.red-li {
+	color: black;
+	font-weight: bolder;
+	font-size: 15px;
+	background-color: rgb(238, 28, 37);
+	border-radius: 10px;
+}
+.grey-li {
+	color: black;
+	font-weight: bolder;
+	font-size: 15px;
+	/* background-color: #a0adb1; */
+	border-radius: 10px;
+}
+
+.plant-check-total {
+	display: flex;
+	justify-content: space-evenly;
+	margin-top: 20px;
+	margin-bottom: -20px;
+	border-radius: 10px;
+}
+
+.plant-detail {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 10px;
+	width: 120px;
+}
+.plant-detail p {
+	text-align: center;
+}
+
+.main-header-holder {
+	margin-top: 20px;
+}
+.main-header-holder h1 {
+	font-size: 2.5rem;
+	text-align: center;
+	color: white;
+}
+.plant-detail-holder {
+	display: flex;
+}
+
+.plant-checks {
+	width: 60px;
+	height: 60px;
+	/* position: absolute; */
+	/* top: 30px;
+	right: 10px; */
+	background: #ecf0f1;
+	text-align: center;
+	line-height: 58px;
+	border-radius: 100%;
+	color: #333333;
+	font-weight: 600;
+	transition: all 0.2s ease;
+	margin-top: -10px;
+	margin-bottom: -10px;
+}
+
+.graph-holder {
+	margin-bottom: -10px;
+}
+
+.progress-holder {
+	margin-top: -25px;
+}
+
+.progress-data {
+	font-size: 2.5rem;
+	margin-bottom: -10px;
+}
+
+.plant-check-total-holder {
+	display: flex;
+	justify-content: space-evenly;
+	margin-top: 8px;
+}
+
+.plant-wrapper {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.division-header {
+	font-size: 2rem;
+	color: white;
+	font-weight: 100;
+	text-align: center;
+}
+
+.header-text {
+	color: white;
+	font-size: 2rem;
+}
+.header-text a:hover {
+	color: white;
+	font-size: 2rem;
+}
+
+.last-checked-holder {
+	margin-top: -5px;
+}

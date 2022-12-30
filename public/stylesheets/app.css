@@ -1,0 +1,465 @@
+body {
+	background-color: #fcb026;
+	/* background-color:  rgba(17, 29, 36, 0.952); */
+}
+
+.main-body {
+	margin-bottom: auto;
+	margin-top: 2rem;
+}
+
+.index-container {
+	display: flex;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+}
+.fourc-search {
+	background-color: #fcb026;
+	margin: 0 45px;
+}
+.nav-link {
+	color: white;
+}
+
+.fourc-grid {
+	display: flex;
+}
+
+a {
+	color: white;
+	text-decoration: none;
+}
+
+.fourC-title {
+	text-align: center;
+}
+
+a {
+	color: white;
+	text-decoration: none;
+}
+
+/* use these media queries to apply different parameters depending
+on screen size */
+@media (max-width: 350px) {
+	/* put button under 'comments' in comments card header */
+	#commentHeader {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+}
+
+@media (min-width: 576px) {
+	/* this makes the images inside cards in index to be the same size */
+	#indexCardImg {
+		width: 100%;
+		height: 50vw;
+		object-fit: cover;
+	}
+}
+
+@media (min-width: 768px) {
+	/* this makes the images inside cards in index to be the same size */
+	#indexCardImg {
+		width: 100%;
+		height: 25vw;
+		object-fit: cover;
+	}
+}
+
+@media (min-width: 992px) {
+	/* this makes the images inside cards in index to be the same size */
+	#indexCardImg {
+		width: 100%;
+		height: 15vw;
+		object-fit: cover;
+	}
+}
+
+# #findForm {
+	width: 75%;
+	margin: 25px auto;
+	/* makes button hover beside the find form */
+	display: flex;
+	flex-direction: row;
+}
+
+@media (max-width: 450px) {
+	#findForm {
+		width: 75%;
+		/* makes button go under find form, in this screen size */
+		display: flex;
+		flex-direction: column;
+	}
+}
+
+@media (min-width: 768px) {
+	#findForm {
+		width: 400px;
+	}
+}
+.form {
+	color: white;
+}
+
+/* standard forms take this appearance */
+@media (min-width: 768px) {
+	.form {
+		width: 600px;
+	}
+}
+
+.form-background {
+	background-color: rgba(0, 0, 0, 0.3);
+	border-radius: 10px;
+}
+.form-background-vetting-left {
+	background-color: rgba(0, 0, 0, 0.3);
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	height: 650px;
+}
+.form-background-vetting-right {
+	background-color: rgba(0, 0, 0, 0.3);
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	height: 650px;
+}
+
+/* puts 'delete campground' button in the same line as 
+'edit campground' button */
+.delete-form {
+	display: inline;
+}
+
+.list-group-item {
+	background-color: rgba(0, 0, 0, 0.3);
+	border-left: 3px solid black;
+	border-right: 3px solid black;
+}
+#main-list-top {
+	border-top: 3px solid black;
+}
+
+#main-list-bottom {
+	border-bottom: 3px solid black;
+}
+
+hr {
+	background-color: #fcb026;
+}
+
+/* resizes the images when showing detailed info of campground */
+
+#indexCardBody {
+	text-align: center;
+}
+
+.card {
+	background-color: grey;
+	border: 3px solid black;
+}
+
+.card img {
+	width: 100%;
+}
+
+.open {
+	background-color: red;
+	height: 480px;
+	color: white;
+}
+
+.contained {
+	background-color: orange;
+	height: 480px;
+	color: white;
+}
+
+.closed {
+	background-color: green;
+	height: 480px;
+	color: white;
+}
+.audited {
+	background-color: rgb(43, 43, 146);
+	height: 480px;
+	color: white;
+}
+
+.outline {
+	border-bottom: 2px solid #fcb026;
+}
+
+.vetting-body {
+	padding-left: 30px;
+	padding-right: 30px;
+}
+.doa2021-body {
+	align-content: center;
+	justify-content: center;
+	display: flex;
+}
+
+table {
+	font-size: 10px;
+	display: flex;
+	flex-flow: column;
+	width: 100%;
+	height: 78.5vh;
+	/* border-radius: 15px; */
+}
+
+thead {
+	flex: 0 0 auto;
+}
+
+tbody {
+	flex: 1 1 auto;
+	display: block;
+	overflow-y: visible;
+	overflow-x: hidden;
+}
+
+tr {
+	width: 100%;
+	display: table;
+	table-layout: fixed;
+}
+
+#vetting-title {
+	font-weight: bold;
+	color: black;
+	font-size: 52px;
+	text-align: center;
+}
+
+#four-title {
+	font-weight: bold;
+	font-size: 60px;
+}
+
+#open-num {
+	background-color: red;
+	max-width: 22rem;
+	height: fit-content;
+	margin-left: 28px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#con-num {
+	background-color: grey;
+	max-width: 22rem;
+	height: fit-content;
+	margin: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#closed-num {
+	background-color: green;
+	max-width: 22rem;
+	height: fit-content;
+	margin-right: 28px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.login-container {
+	margin-top: 100px;
+	margin-bottom: 100px;
+	margin-right: 500px;
+	margin-left: 500px;
+}
+
+#edit-container {
+	margin: 5px 50px;
+	color: white;
+}
+#top50edit-container {
+	margin: 20px 250px;
+	color: white;
+}
+#reallocation-container {
+	margin: 100px 320px;
+	color: white;
+}
+#newbuild-container {
+	margin: 100px 750px;
+	color: white;
+}
+#zone-container {
+	margin: 100px 150px;
+	color: white;
+}
+#cutin-container {
+	margin: 100px 600px;
+	color: white;
+}
+
+textarea {
+	resize: none;
+}
+#claim-comments {
+	height: 200px;
+}
+
+.container .dropdown .dropdown-menu a:hover {
+	color: #fff;
+	background-color: rgba(0, 0, 0, 0.3);
+	border-color: #fff;
+}
+
+#newsignout-container {
+	margin: 100px 720px;
+}
+
+#newred-container {
+	margin: 100px 520px;
+}
+
+.open-list {
+	margin-left: 45px;
+	/* font-weight: bold; */
+	font-size: 25px;
+}
+.status-list {
+	margin-right: 45px;
+	font-weight: bold;
+	font-size: 20px;
+}
+.status-num {
+	font-weight: bold;
+	font-size: 70px;
+}
+
+.show-list {
+	margin-left: 45px;
+	/* font-weight: bold; */
+	font-size: 30px;
+}
+.red-span {
+	font-weight: bold;
+	font-size: 16px;
+	color: red;
+}
+.green-span {
+	font-weight: bold;
+	font-size: 16px;
+	color: green;
+}
+.div-dash-stat {
+	font-weight: bold;
+	font-size: 45px;
+}
+
+form {
+	color: white;
+}
+.top50 table {
+	counter-reset: rowNumber + 0;
+}
+
+.top50 table tr:not(:first-child) {
+	counter-increment: rowNumber;
+}
+
+.top50 table tr td:first-child::before {
+	content: counter(rowNumber) ' - ';
+	padding-right: 0.3em;
+	text-align: right;
+}
+.top50 tbody {
+	flex: 1 1 auto;
+	display: block;
+	overflow-y: visible;
+	overflow-x: hidden;
+}
+/* .top50 th:first-child, td:first-child
+{
+  position:sticky;
+  left:0px;
+ 
+} */
+.top50green {
+	width: 3.8vw;
+	background-color: green;
+	align-items: center;
+	text-align: center;
+}
+.top50amber {
+	width: 3.8vw;
+	background-color: orange;
+	align-items: center;
+	text-align: center;
+}
+.top50red {
+	width: 3.8vw;
+	background-color: red;
+	align-items: center;
+	text-align: center;
+}
+
+.top50failure {
+	background-color: #ffcccb;
+	color: #ff0000;
+	font-weight: bold;
+	align-items: center;
+	text-align: center;
+}
+
+.blink {
+	animation: blinker 1s step-start infinite;
+	color: red;
+	font-weight: bold;
+	font-size: 1rem;
+}
+
+@keyframes blinker {
+	50% {
+		opacity: 0;
+	}
+}
+.steady-red {
+	color: red;
+	font-size: 1rem;
+}
+
+.top50-analysis-container {
+	margin-left: 25px;
+	display: flex;
+	justify-content: space-evenly;
+	font-weight: bold;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+a:hover {
+	text-decoration: none; /* no underline */
+	color: inherit;
+}
+
+.scc-doa {
+	width: 10;
+	text-align: center;
+	font-weight: bolder;
+}
+.scc-doa h2 {
+	font-weight: bold;
+}
+
+.top-graph-line {
+	display: flex;
+	justify-content: space-evenly;
+	height: 90px;
+	align-items: center;
+}
+
+.stages-wrapper {
+	display: flex;
+	justify-content: center;
+	margin: 50px;
+}

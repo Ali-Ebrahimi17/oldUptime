@@ -1,0 +1,46 @@
+
+<svg version="1.1" id="Telescopic_Handlers_Icon" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 200 200"
+    style="enable-background:new 0 0 200 200;" xml:space="preserve">
+    <style type="text/css">
+        .st0 {
+            fill: none;
+        }
+
+        .st1 {
+            fill: none;
+            stroke: #FCB026;
+            stroke-width: 2.85;
+            stroke-miterlimit: 1;
+        }
+
+        .product-range-component .container:hover figure:hover .st0 .st1 {
+            fill: none;
+            stroke: #DD970C;
+        }
+    </style>
+    <defs>
+    </defs>
+    <g>
+        <path class="st1" d="M167.3,126.8c0,4.5-3.6,8.1-8.1,8.1c-4.5,0-8.1-3.6-8.1-8.1c0-4.5,3.6-8.1,8.1-8.1
+            C163.7,118.7,167.3,122.3,167.3,126.8z"></path>
+        <path class="st1" d="M174.8,126.8c0,8.6-7,15.6-15.6,15.6c-8.6,0-15.6-7-15.6-15.6c0-8.6,7-15.6,15.6-15.6
+            C167.8,111.2,174.8,118.2,174.8,126.8z"></path>
+        <ellipse transform="matrix(0.9239 -0.3827 0.3827 0.9239 -41.901 42.9397)" class="st1" cx="87" cy="126.8"
+            rx="8.1" ry="8.1"></ellipse>
+        <ellipse transform="matrix(0.9239 -0.3827 0.3827 0.9239 -41.9006 42.9392)" class="st1" cx="87" cy="126.8"
+            rx="15.6" ry="15.6"></ellipse>
+        <path class="st1" d="M143.6,126.8c-2.1,2.1-4.1,4.6-4.1,4.6h-33.3l-3.6-4.6 M77.8,114.2c-6.6-1.7-11.4,3.9-11.4,3.9l-9.5,19h-2
+            l-0.7-11.4c0,0,3.2-3.9,1.9-19.3c2.8-0.3,46.3-4.1,46.3-4.1s4.5-15.7,10.6-23.8c0.2-0.2,0.3-0.4,0.5-0.6c0.3-0.1,0.5-0.1,0.8-0.2
+            c15.2-3.7,40.5,0.9,40.5,0.9"></path>
+        <path class="st1"
+            d="M130.7,76.3v44.1 M149,100c0,0-4.5-23.2-10.4-23.2 M173.9,131.5c0,0,3.3-0.1,10.1-4.1c2.1-0.7,0.4-22.3,0-27.8
+            c-0.7-5.9-1.8-5.7-8.8-5.5c-1.3,0-7.9,0.5-9.2,0.6c-1.2,0.1-17.1,5.3-17.1,5.3s-5,8.5-13.7,20.5h-23.9l-9.1-18.1l28.3-1.5">
+        </path>
+        <path class="st1" d="M151.1,108.7c2.2-1.6,19.2-7.9,27.8,9.8"></path>
+        <line class="st1" x1="108.7" y1="78.9" x2="114.3" y2="77.8"></line>
+        <polyline class="st1" points="54.2,125.8 45.2,121.9 45.2,139.2 13,142 45.7,143.9 51.3,141.8 54.6,137.1 	">
+        </polyline>
+        <line class="st1" x1="74" y1="104.9" x2="74.5" y2="114"></line>
+    </g>
+</svg>

@@ -1,0 +1,98 @@
+.container-full { margin: 0px; padding: 0px }
+.header-top { background-color: rgb(252, 176, 38); color: black; border-bottom: 1px solid black }
+.header-bottom { background-color: rgb(48, 48, 48); color: white; border-bottom: 2px solid black }
+.header-top-text { font-size: 26px; font-weight: bold; margin: 0px }
+.header-bottom-text { font-size: 14px; font-weight: bold; margin: 0px }
+.header-bottom-other { margin: 0px; color: rgb(150, 150, 150); font-style: italic; font-size: 14px }
+.icon-header { font-size: 28px; color: black; margin: 0px }
+.icon-header:hover { color: white }
+.icon-home:hover { color: white !important; cursor: pointer }
+.icon-search:hover { color: white; cursor: pointer }
+#span-search:hover { color: white !important; cursor: pointer }
+
+html { background-color: black }
+:root { -ms-overflow-style: -ms-autohiding-scrollbar }
+.col-main { background-color: black; float: left; width: 100%; padding: 15px }
+
+.bg-materials { background-color: rgb(30, 32, 34); border: 2px solid black !important }
+.bg-materials:hover { background-color: rgb(52, 54, 56); cursor: pointer }
+
+.card-body { text-align: center }
+.card-dept { margin: 0px 0px 4px 0px !important; color: white; font-size: 24px; font-weight: bold }
+.card-dept-sub { margin: 0px 0px 8px 0px !important; color: rgb(104, 104, 104); font-size: 18px; font-weight: bold }
+
+.col-arrow { text-align: center }
+.card-title { font-weight: bold; margin: 0px; color: white }
+
+.fas { font-size: 32px; margin: 0px 1px 0px 1px; color: rgb(190, 190, 190); font-weight: bold }
+.icon-arrow { font-size: 42px; color: white }
+.icon-map:hover { cursor: pointer; color: rgb(64, 64, 64) }
+.icon-map-between { font-size: 32px }
+.icon-map-between:hover { cursor: pointer; color: rgb(64, 64, 64) }
+.icon-box-location { padding-top: 8px }
+.icon-box-arrow { padding-top: 0px }
+.icon-box-arrow-down { padding-top: 2px; margin-bottom: 0px }
+.icon-common:hover { cursor: pointer; color: rgb(252, 176, 36) }
+.icon-stakeholders { color: black }
+.icon-wip { font-size: 22px }
+.icon-header:hover { color: white !important }
+.text-grey { color: rgb(104, 104, 104) !important }
+
+.icon-box-location-between-down { padding: 0px }
+
+.text-white { color: white }
+.metric-value { margin-bottom: 0px }
+.footer { position: fixed; left: 0; bottom: 0; width: 100%; background-color: rgb(252, 176, 36); color: white; text-align: center }
+
+.text-warning { color: rgb(255, 146, 29) !important }
+
+@keyframes flash {  
+    0% { opacity: 0.40 }
+    25% { opacity: 0.70 }
+    50% { opacity: 1.0 }
+    75% { opacity: 0.70 }
+    100% { opacity: 0.40 }
+}
+
+.text-danger { color: rgb(255, 10, 10) !important }
+.text-success { color: rgb(0, 196, 70) !important }
+.bg-danger { background-color: rgb(255, 10, 10) !important }
+.bg-success { background-color: rgb(0, 196, 70) !important }
+
+.rotate {
+    /* FF3.5+ */
+    -moz-transform: rotate(-90.0deg);
+    /* Opera 10.5 */
+    -o-transform: rotate(-90.0deg);
+    /* Saf3.1+, Chrome */
+    -webkit-transform: rotate(-90.0deg);
+    /* IE6,IE7 */
+    filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=0.083);
+    /* IE8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)";
+    /* Standard */
+    transform: rotate(-90.0deg);
+}
+
+.modal-content { border-radius: 0px; border: 2px solid black }
+.btn-modal { border-radius: 0px }
+.modal-header { text-align: center !important; display: block !important; margin: 0px !important; padding: 12px !important }
+.modal-title { margin: 0px !important }
+.form-control { border-radius: 0px }
+
+.form-group { margin-bottom: 12px }
+.form-label { margin-bottom: 6px; color: black }
+.form-label-white { margin-bottom: 4px; color: white }
+.form-label-modal { color: black }
+.form-text { margin-top: 6px; margin-bottom: 0px; color: rgb(122, 124, 126) !important; font-style: italic }
+.input-group-text { border-radius: 0px }
+.btn-input-right { border-left: 2px solid rgb(206, 212, 218) }
+input[readonly] { background-color: rgb(206, 212, 218) !important }
+
+.modal-body { height: 100%; padding-top: 10px; padding-bottom: 0px }
+.modal-bottom-padding { padding-top: 17px; padding-bottom: 17px }
+
+a:hover { text-decoration: none; color: inherit; border-radius: 0px }
+a:visited { text-decoration: none; color: inherit; border-radius: 0px }
+a:link { text-decoration: none; color: inherit; border-radius: 0px }
+a:active { text-decoration: none; color: inherit; border-radius: 0px }
