@@ -1,0 +1,43 @@
+const mongoose = require('mongoose');
+
+// Schema Setup
+const zoneSchema = new mongoose.Schema({
+	name        : String,
+	division    : String,
+	wk6         : String,
+	wk5         : String,
+	wk4         : String,
+	wk3         : String,
+	wk2         : String,
+	wk1         : String,
+	lastWeekDpu : String,
+	dpuWeek1    : String,
+	dpuWeek2    : String,
+	dpuWeek3    : String,
+	dpuWeek4    : String,
+	dpuWeek5    : String,
+	dpuWeek6    : String,
+	target      : String,
+	issue1      : String,
+	count1      : String,
+	cutIn1      : String,
+	status1     : String,
+	issue2      : String,
+	count2      : String,
+	cutIn2      : String,
+	status2     : String,
+	issue3      : String,
+	count3      : String,
+	cutIn3      : String,
+	status3     : String,
+	issue4      : String,
+	count4      : String,
+	cutIn4      : String,
+	status4     : String,
+	issue5      : String,
+	count5      : String,
+	cutIn5      : String,
+	status5     : String,
+});
+
+module.exports = mongoose.model('Zone', zoneSchema);
