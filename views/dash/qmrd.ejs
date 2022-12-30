@@ -1,0 +1,2390 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- <meta http-equiv="refresh" content="620"> -->
+  <title>JCB - Quality Uptime</title>
+  <link rel="icon" href="/home/jcb.png" />
+  <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+  <!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+  <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+  <link rel="stylesheet" href="/content/table.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+  <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+  <!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+  <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+  <link rel="stylesheet" href="/stylesheets/app.css" />
+  <link rel="stylesheet" href="/fontawesome/css/all.css" />
+</head>
+
+<style>
+  .graph-holder-top1 {
+    width: 475px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 185px
+  }
+
+  .graph-holder-top2 {
+    width: 505px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 185px
+  }
+
+  .graph-holder-top3 {
+    width: 475px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 185px;
+    margin-right: -20px;
+
+  }
+
+  .graph-holder-top {
+    width: 475px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 205px
+  }
+
+  .graph-holder-bars {
+    width: 455px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 205px
+  }
+
+  .graph-holder-table {
+    width: 485px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 450px
+  }
+
+  .graph-holder-second-thin-container {
+    width: 850px;
+
+    height: 250px
+  }
+
+  .graph-holder-second-thin1 {
+    width: 485px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 185px
+  }
+
+  .graph-holder-second-thin {
+    width: 270px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 272px
+  }
+
+  .graph-holder-second-thin-table {
+    width: 345px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 272px
+  }
+
+  .graph-holder-bottom {
+    width: 442px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 175px
+  }
+
+  .card {
+    border: 1px solid grey;
+    margin-bottom: 5px;
+    color: white;
+    font-size: 14px;
+  }
+
+  .green-top50 {
+    background-color: green;
+  }
+
+  .amber-top50 {
+    background-color: orange;
+  }
+
+  .red-top50 {
+    background-color: red;
+  }
+
+  .graph-holder-internal-dpu {
+    width: 325px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 148px
+  }
+</style>
+
+<body>
+
+  <!-- doa claims modal -->
+  <!--  Doa Modal -->
+  <div class="modal fade" id="doaClaimsNo4C-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" style="width: 1950px;">
+      <div class="modal-content">
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" style="margin-right: 10px; margin-top: 20px;">&times;</span>
+            </button> -->
+          <h3 style="text-align: center; margin: 8px;"><%= division %> <%= allDoaClaimsWithout4C.length %> DOA CLAIMS NOT COVERED BY 4C</h3>
+        </div>
+        <div class="modal-body">
+          <% let xDOAClaims = 0 %>
+          <% for (let c of allDoaClaimsWithout4C) { %>
+          <% xDOAClaims++ %>
+
+          <div class="card ">
+            <div class="card-body">
+              <div style="display: flex; justify-content: space-between;">
+                <div style="text-align: start;">
+                  <h5># <%= xDOAClaims %></h5>
+                  <h5>Claim Number: <%= c.claimNumber %></h5>
+                  <h5>Claim Submitted: <%= moment(c.importedDate).format("DD/MM/YYYY") %></h5>
+                  <h5>Serial: <%= c.name %></h5>
+                  <h5>Model: <%= c.model %></h5>
+                  <h5>Build Date: <%= c.buildDate %></h5>
+                </div>
+              </div>
+              <div style="text-align: start;">
+                <h5>Narrative: <br /> <%= c.description %></h5>
+              </div>
+              <hr>
+              <% if (c.vetted === 'Yes') { %>
+              <div style="text-align: start;">
+                <h5>Comments by <%= c.vettedBy %>: <br /> <%= c.notes %></h5>
+              </div>
+              <% } else { %>
+              <div style="text-align: start;">
+                <h5>Not yet vetted</h5>
+              </div>
+              <% } %>
+
+
+            </div>
+          </div>
+          <%} %>
+        </div>
+        <div class="modal-footer" style="border: none;">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- T0 claims modal -->
+  <!--  Doa Modal -->
+  <div class="modal fade" id="T0ClaimsNo4C-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" style="width: 1950px;">
+      <div class="modal-content">
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" style="margin-right: 10px; margin-top: 20px;">&times;</span>
+            </button> -->
+          <h3 style="text-align: center; margin: 8px;"><%= division %> <%= allT0ClaimsWithout4C.length %> T0 CLAIMS NOT COVERED BY 4C</h3>
+        </div>
+        <div class="modal-body">
+          <% let xT0Claims = 0 %>
+          <% for (let c of allT0ClaimsWithout4C) { %>
+          <% xT0Claims++ %>
+
+          <div class="card ">
+            <div class="card-body">
+              <div style="display: flex; justify-content: space-between;">
+                <div style="text-align: start;">
+                  <h5># <%= xT0Claims %></h5>
+                  <h5>Claim Number: <%= c.claimNumber %></h5>
+                  <h5>Claim Submitted: <%= moment(c.importedDate).format("DD/MM/YYYY") %></h5>
+                  <h5>Serial: <%= c.name %></h5>
+                  <h5>Model: <%= c.model %></h5>
+                  <h5>Build Date: <%= c.buildDate %></h5>
+                </div>
+              </div>
+              <div style="text-align: start;">
+                <h5>Narrative: <br /> <%= c.description %></h5>
+              </div>
+              <hr>
+              <% if (c.vetted === 'Yes') { %>
+              <div style="text-align: start;">
+                <h5>Comments by <%= c.vettedBy %>: <br /> <%= c.notes %></h5>
+              </div>
+              <% } else { %>
+              <div style="text-align: start;">
+                <h5>Not yet vetted</h5>
+              </div>
+              <% } %>
+
+            </div>
+          </div>
+          <%} %>
+        </div>
+        <div class="modal-footer" style="border: none;">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- dpu modal -->
+  <div class="modal fade" id="modal_dpu" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+          <h3 style="text-align: center; margin: 8px;">Update DPU</h3>
+        </div>
+        <div class="modal-body">
+          <fieldset>
+            <form id='theForm' action="/dash/updateQmr/<%= internalDpuRaw._id %>" method="POST">
+              <div class="row" style="color:black">
+                <div class="col" style="margin-bottom: 10px;">
+                  <h5 style="text-align: center;">Data</h5>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[0] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat1" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat1 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[1] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat2" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat2 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[2] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat3" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat3 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[3] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat4" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat4 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[4] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat5" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat5 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[5] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat6" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat6 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[6] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat7" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat7 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[7] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat8" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat8 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[8] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat9" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat9 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[9] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat10" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat10 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[10] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat11" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat11 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[11] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat12" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat12 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[12] %></label>
+                    <input class="form-control" type="number" step="0.1" name="stat13" style="margin-bottom: 10px;" value="<%= internalDpuRaw.stat13 %>">
+                  </div>
+
+
+                </div>
+                <div class="col">
+                  <h5 style="text-align: center;">Target</h5>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[0] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target1" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target1 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[1] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target2" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target2 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[2] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target3" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target3 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[3] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target4" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target4 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[4] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target5" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target5 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[5] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target6" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target6 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[6] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target7" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target7 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[7] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target8" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target8 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[8] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target9" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target9 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[9] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target10" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target10 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[10] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target11" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target11 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[11] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target12" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target12 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[12] %></label>
+                    <input class="form-control" type="number" step="0.1" name="target13" style="margin-bottom: 10px;" value="<%= internalDpuRaw.target13 %>">
+                  </div>
+
+
+                  <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                  <button id="btnSave" class="btn btn-success float-right" type='submit' style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                </div>
+              </div>
+            </form>
+          </fieldset>
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- cfc modal -->
+  <div class="modal fade" id="modal_cfc" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+          <h3 style="text-align: center; margin: 8px;">Update CFC RFT</h3>
+        </div>
+        <div class="modal-body">
+          <fieldset>
+            <form id='theForm' action="/dash/updateQmr/<%= internalCfcRaw._id %>" method="POST">
+              <div class="row" style="color:black">
+                <div class="col" style="margin-bottom: 10px;">
+                  <h5 style="text-align: center;">Data</h5>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[0] %></label>
+                    <input class="form-control" type="number" step="0" name="stat1" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat1 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[1] %></label>
+                    <input class="form-control" type="number" step="0" name="stat2" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat2 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[2] %></label>
+                    <input class="form-control" type="number" step="0" name="stat3" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat3 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[3] %></label>
+                    <input class="form-control" type="number" step="0" name="stat4" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat4 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[4] %></label>
+                    <input class="form-control" type="number" step="0" name="stat5" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat5 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[5] %></label>
+                    <input class="form-control" type="number" step="0" name="stat6" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat6 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[6] %></label>
+                    <input class="form-control" type="number" step="0" name="stat7" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat7 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[7] %></label>
+                    <input class="form-control" type="number" step="0" name="stat8" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat8 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[8] %></label>
+                    <input class="form-control" type="number" step="0" name="stat9" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat9 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[9] %></label>
+                    <input class="form-control" type="number" step="0" name="stat10" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat10 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[10] %></label>
+                    <input class="form-control" type="number" step="0" name="stat11" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat11 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[11] %></label>
+                    <input class="form-control" type="number" step="0" name="stat12" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat12 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[12] %></label>
+                    <input class="form-control" type="number" step="0" name="stat13" style="margin-bottom: 10px;" value="<%= internalCfcRaw.stat13 %>">
+                  </div>
+
+
+                </div>
+                <div class="col">
+                  <h5 style="text-align: center;">Target</h5>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[0] %></label>
+                    <input class="form-control" type="text" name="target1" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target1 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[1] %></label>
+                    <input class="form-control" type="text" name="target2" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target2 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[2] %></label>
+                    <input class="form-control" type="text" name="target3" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target3 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[3] %></label>
+                    <input class="form-control" type="text" name="target4" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target4 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[4] %></label>
+                    <input class="form-control" type="text" name="target5" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target5 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[5] %></label>
+                    <input class="form-control" type="text" name="target6" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target6 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[6] %></label>
+                    <input class="form-control" type="text" name="target7" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target7 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[7] %></label>
+                    <input class="form-control" type="text" name="target8" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target8 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[8] %></label>
+                    <input class="form-control" type="text" name="target9" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target9 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[9] %></label>
+                    <input class="form-control" type="text" name="target10" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target10 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[10] %></label>
+                    <input class="form-control" type="text" name="target11" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target11 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[11] %></label>
+                    <input class="form-control" type="text" name="target12" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target12 %>">
+                  </div>
+                  <div style="display: flex;">
+                    <label style="width: 100px; padding-top: 8px;" for="buildNumber"><%= dpuMonths[12] %></label>
+                    <input class="form-control" type="text" name="target13" style="margin-bottom: 10px;" value="<%= internalCfcRaw.target13 %>">
+                  </div>
+
+
+                  <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                  <button id="btnSave" class="btn btn-success float-right" type='submit' style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                </div>
+              </div>
+            </form>
+          </fieldset>
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div class="container-fluid">
+
+    <div class="row header-top">
+      <div class="col-lg-5 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <a href="/"><img height="24px" src="/7z/content/images/jcb-logo.png"></a>
+        <!-- <a href="/"><img height="44px" src="/dog/dog.gif"></a>  -->
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container-fluid" style="overflow-x: hidden;">
+
+
+
+
+    <div class="row" style="display: flex; flex-wrap: wrap;">
+      <div style="display: flex; justify-content: center; background-color: black; width: 100%;">
+        <h1 style="font-size: 34px; color: white; margin: 0px; text-align: center"><%= division %> Quality Management Report</h1>
+
+      </div>
+      <div class="col-main" style="padding-left: 35px; width: 80%;">
+
+
+        <div style="display: flex; flex-direction: column; justify-content: center; width: 100%; ">
+          <!-- top row -->
+
+          <div class="row" style="display: flex; justify-content: center;">
+
+
+
+
+            <div style=" margin-bottom: 22px; padding: 8px 0px">
+              <div class="col-measure" style="width: 100%;  text-align: center; ">
+                <h1 class="line-sub-header-top">Delivered Quality</h1>
+              </div>
+            </div>
+
+
+
+
+            <div style="display: flex; width: 100%; margin-bottom: 20px; margin-top: -20px; ">
+              <div class="col" style=" margin: 10px 10px; width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap;">
+
+
+
+                <!-- original row -->
+
+                <div class="row" style="display: flex; width: 100%; margin: 0; padding: 0;">
+
+                  <a data-toggle="modal" data-target="#doa-BHL" style="cursor: pointer;">
+                    <div class="graph-holder-top1">
+                      <div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer;">
+                        <div class="float-left" style="text-align: center; color: white;">
+                          <h5><i style="color: <%= doaDealerColor  %>;" class="fas fa-circle"></i></h5>
+                        </div>
+                        <div style="text-align: center; color: white;">
+                          <h5>Dealer RFT & DPU</h5>
+                        </div>
+                        <canvas id="chart1" height="100"></canvas>
+                      </div>
+                    </div>
+                  </a>
+
+
+                  <a data-toggle="modal" data-target="#doa-BHL" style="cursor: pointer;">
+                    <div class="graph-holder-top2">
+                      <div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer;">
+                        <div class="float-left" style="text-align: center; color: white;">
+                          <h5><i style="color: <%= t0CustomerColor  %>;" class="fas fa-circle"></i></h5>
+                        </div>
+                        <div style="text-align: center; color: white;">
+                          <h5>Customer T0 RFT & DPU</h5>
+                        </div>
+                        <canvas id="chart2" height="100"></canvas>
+                      </div>
+                    </div>
+                  </a>
+
+                  <a data-toggle="modal" data-target="#doa-BHL" style="cursor: pointer;">
+                    <div class="graph-holder-top3">
+                      <div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer;">
+                        <div class="float-left" style="text-align: center; color: white;">
+                          <h5><i style="color: <%= escapeColor  %>;" class="fas fa-circle"></i></h5>
+                        </div>
+                        <div style="text-align: center; color: white;">
+                          <h5>Major Escape DPU</h5>
+                        </div>
+                        <canvas id="chart3" height="100"></canvas>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+              </div>
+
+
+            </div>
+
+
+          </div>
+          <!-- second row-->
+
+          <div class="row" style="display: flex; justify-content: center;">
+
+
+            <div style="display: flex; width: 100%;  margin-bottom: 20px; margin-top: -20px; justify-content: center; align-items: center; ">
+              <div class="col" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+
+                <div class="row" style="display: flex; justify-content: space-between; width: 100%;">
+
+                  <div style="display: flex; flex-direction: column;">
+
+
+                    <div class="graph-holder-table">
+
+                      <div style="text-align: center; color: white;">
+                        <h5>Top 10 Dealer focus Table</h5>
+                      </div>
+                      <table class="table table-dark table-striped" style="height: 410px; font-size: 10px; line-height: 12px;">
+                        <thead>
+                          <tr>
+                            <th style=" width: 100px;">Dealer</th>
+                            <th>ID Issues</th>
+                            <th>Process</th>
+                            <th>Visit</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% for (let d of mriDoaDealers) { %>
+
+                          <% if (currentUser && currentUser.isQmr)  { %>
+                          <tr>
+                            <td style=" width: 100px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.name %></a></td>
+                            <td><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.issues %></a></td>
+                            <td><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.process %></a></td>
+                            <td><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.visit %></a></td>
+                            <td><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.status %></a></td>
+                          </tr>
+                          <% } else { %>
+                          <tr>
+                            <td style=" width: 100px;"><%= d.name %></td>
+                            <td><%= d.issues %></td>
+                            <td><%= d.process %></td>
+                            <td><%= d.visit %></td>
+                            <td><%= d.status %></td>
+                          </tr>
+
+                          <% } %>
+
+                          <div class="modal fade" id="modal<%= d._id %>" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                              <div class="modal-content">
+
+                                <div style="background-color: rgb(252, 176, 38); height: 50px;">
+                                  <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+                                  <h3 style="text-align: center; margin: 8px;">Update <%= d.name %></h3>
+                                </div>
+                                <div class="modal-body">
+                                  <fieldset>
+                                    <form id='theForm' action="/dash/updateQmr/<%= d._id %>" method="POST">
+                                      <div class="row" style="color:black">
+                                        <div class="col" style="margin-bottom: 10px;">
+                                          <label for="buildNumber">Dealer Name</label>
+                                          <input class="form-control" type="text" name="name" style="margin-bottom: 10px;" value="<%= d.name %>" required>
+                                          <label for="buildNumber">Id Issues</label>
+                                          <textarea class="form-control" style="margin-bottom: 10px;" type="text" rows="4" cols="4" name="issues" required><%= d.issues %></textarea>
+                                          <label for="buildNumber">Process</label>
+                                          <textarea class="form-control" style="margin-bottom: 10px;" type="text" rows="3" cols="4" name="process" required><%= d.process %></textarea>
+                                          <!-- <label for="buildNumber" style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; ">Maximum of 48 hours</label> -->
+                                        </div>
+                                        <div class="col">
+                                          <label for="buildNumber">Visit</label>
+                                          <textarea class="form-control" style="margin-bottom: 10px;" type="text" rows="3" cols="4" name="visit" required><%= d.visit %></textarea>
+                                          <label for="buildNumber">Status</label>
+                                          <textarea class="form-control" style="margin-bottom: 10px; height: 188px;" type="text" name="status" required><%= d.status%></textarea>
+
+
+                                          <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                                          <button id="btnSave" class="btn btn-success float-right" type='submit' style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </fieldset>
+                                </div>
+                                <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+                                  <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                          <% } %>
+                        </tbody>
+                      </table>
+
+                    </div>
+
+
+                    <a data-toggle="modal" data-target="#doa-BHL" style="cursor: pointer;">
+                      <div class="graph-holder-second-thin1">
+                        <div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer;">
+                          <div class="float-left" style="text-align: center; color: white;">
+                            <h5><i style="color: <%= top10DealerRftColor  %>;" class="fas fa-circle"></i></h5>
+                          </div>
+                          <div style="text-align: center; color: white;">
+                            <h5>Top 10 Dealer RFT</h5>
+                          </div>
+                          <canvas id="chart4" height="85"></canvas>
+                        </div>
+                      </div>
+                    </a>
+
+                  </div>
+
+                  <div style="display: flex; flex-direction: column;">
+
+                    <div class="graph-holder-table">
+
+                      <div style="text-align: center; color: white;">
+                        <h5>Top 10 Customer focus Table</h5>
+                      </div>
+                      <table class="table table-dark table-striped" style="height: 410px; font-size: 10px; line-height: 12px;">
+                        <thead>
+                          <tr>
+                            <th style=" width: 100px;">Dealer</th>
+                            <th>ID Issues</th>
+                            <th>Process</th>
+                            <th>Visit</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% if (division === 'LDL') { %>
+                          <% for (let d of mriT0Dealers) { %>
+                          <% if (currentUser && currentUser.isQmr)  { %>
+                          <tr>
+                            <td style=" width: 100px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.name %></a></td>
+                            <td><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.issues %></a></td>
+                            <td><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.process %></a></td>
+                            <td><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.visit %></a></td>
+                            <td><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.status %></a></td>
+                          </tr>
+                          <% } else { %>
+                          <tr>
+                            <td style=" width: 100px;"><%= d.name %></td>
+                            <td><%= d.issues %></td>
+                            <td><%= d.process %></td>
+                            <td><%= d.visit %></td>
+                            <td><%= d.status %></td>
+                          </tr>
+                          <% } %>
+
+                          <div class="modal fade" id="modal<%= d._id %>" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                              <div class="modal-content">
+
+                                <div style="background-color: rgb(252, 176, 38); height: 50px;">
+                                  <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+                                  <h3 style="text-align: center; margin: 8px;">Update <%= d.name %></h3>
+                                </div>
+                                <div class="modal-body">
+                                  <fieldset>
+                                    <form id='theForm' action="/dash/updateQmr/<%= d._id %>" method="POST">
+                                      <div class="row" style="color:black">
+                                        <div class="col" style="margin-bottom: 10px;">
+                                          <label for="buildNumber">Dealer Name</label>
+                                          <input class="form-control" type="text" name="name" style="margin-bottom: 10px;" value="<%= d.name %>" required>
+                                          <label for="buildNumber">Id Issues</label>
+                                          <textarea class="form-control" style="margin-bottom: 10px;" type="text" rows="4" cols="4" name="issues" required><%= d.issues %></textarea>
+                                          <label for="buildNumber">Process</label>
+                                          <textarea class="form-control" style="margin-bottom: 10px;" type="text" rows="3" cols="4" name="process" required><%= d.process %></textarea>
+                                          <!-- <label for="buildNumber" style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; ">Maximum of 48 hours</label> -->
+                                        </div>
+                                        <div class="col">
+                                          <label for="buildNumber">Visit</label>
+                                          <textarea class="form-control" style="margin-bottom: 10px;" type="text" rows="3" cols="4" name="visit" required><%= d.visit %></textarea>
+                                          <label for="buildNumber">Status</label>
+                                          <textarea class="form-control" style="margin-bottom: 10px; height: 188px;" type="text" name="status" required><%= d.status%></textarea>
+
+
+                                          <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                                          <button id="btnSave" class="btn btn-success float-right" type='submit' style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </fieldset>
+                                </div>
+                                <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+                                  <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                          <% } %>
+
+                          <% } else { %>
+                          <div style="color: white; position: absolute; margin-top: 180px; margin-left: 125px;">
+                            <h1>Coming Soon</h1>
+                          </div>
+
+                          <% } %>
+
+                        </tbody>
+                      </table>
+
+                    </div>
+
+
+
+                    <a data-toggle="modal" data-target="#doa-BHL" style="cursor: pointer;">
+                      <div class="graph-holder-second-thin1">
+                        <div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer;">
+                          <div class="float-left" style="text-align: center; color: white;">
+                            <h5><i style="color: <%= top10CustomerRftColor  %>;" class="fas fa-circle"></i></h5>
+                          </div>
+                          <div style="text-align: center; color: white;">
+                            <h5>Top 10 Customer RFT</h5>
+                          </div>
+                          <canvas id="chart5" height="85"></canvas>
+                        </div>
+                      </div>
+                    </a>
+
+
+                  </div>
+
+                  <div style="display: flex; flex-direction: column;">
+
+                    <div class="graph-holder-bars">
+                      <div style="display: flex; justify-content: space-between; ">
+                        <div>
+                          <div style="text-align: center; color: white;">
+
+                            <h5>Major Escape Repeats</h5>
+                          </div>
+                          <div style="display: flex; justify-content: space-around;">
+                            <div style="color: white; text-align: center;">
+                              Prev<br />
+                              Month<br />
+                              <span style="font-size: 45px;"><%= majorEscapesRepeatPrev %></span>
+                            </div>
+                            <div style="color: white; text-align: center;">
+                              Current<br />
+                              Month<br />
+                              <span style="font-size: 45px; color: <%= majorEscapeRepeatColor  %>;"><%= majorEscapesRepeatCurrent %></span>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div>
+                          <div style="text-align: center; color: white;">
+                            <h5>DOA Top 50 Repeats</h5>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="color: white; text-align: center;">
+                              Prev<br />
+                              Month<br />
+                              <span style="font-size: 45px;"><%= doaTop50RepeatPercentPrev %>%</span>
+                            </div>
+                            <div style="color: white; text-align: center;">
+                              Current<br />
+                              Month<br />
+                              <span style="font-size: 45px; color: <%= doaTop50RepeatPercentCurrentColor %>;"><%= doaTop50RepeatPercentCurrent %>%</span>
+                            </div>
+                          </div>
+
+                        </div>
+
+                      </div>
+
+
+                      <div style="display: flex; justify-content: space-between; height: 200px; margin-top: 20px; ">
+                        <div style="width: 45%; height: 100%;">
+                          <% if (currentUser && currentUser.isFourCGraphOk ) { %>
+                          <div data-toggle="modal" data-target="#doaClaimsNo4C-modal" style="cursor: pointer;">
+                            <div style="text-align: center; color: white; margin-top: -20px; padding: 0;">
+                              <h5>DOA 4C Coverage </h5>
+                            </div>
+                            <div style="text-align: center; color: white; margin-top: -10px; margin-bottom: -15px; ">
+                              <p>(<%= allDoaClaimsWith4C.length %>/<%= allDoaClaims.length %>) Target 90%</p>
+                            </div>
+                            <div style="background: white; height: 70px; width: 6px; margin-top: -4px; margin-left: 180px; margin-right: -50px; z-index: 100; position: absolute;"></div>
+                            <div class="progress" style="height: 60px; border-radius: 0px; margin-bottom: 25px; width: auto; background-color: black;">
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: green;  font-size: 20px; color: black; font-weight: bold; width: <%= doa4cCoveragePercent %>%"><%= doa4cCoveragePercent %>%</div>
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: grey;  font-size: 20px; color: black; font-weight: bold; width: <%= doa4cNotCoveragePercent %>%"><%= doa4cNotCoveragePercent %>%</div>
+                            </div>
+                          </div>
+                          <% } %>
+                          <div>
+                            <div style="text-align: center; color: white; margin-top: -20px;">
+                              <h5>DOA Top 50 RAG</h5>
+                            </div>
+                            <div style="text-align: center; color: white; margin-top: -15px; margin-bottom: -15px; ">
+                              <p>Target 75%</p>
+                            </div>
+                            <div style="background: white; height: 70px; width: 6px; margin-top: -4px; margin-left: 149px; margin-right: -50px; z-index: 100; position: absolute;"></div>
+                            <div class="progress" style="height: 60px; border-radius: 0px; margin-bottom: 25px; width: auto; background-color: black;">
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= doaTop50Green %>%"><%= doaTop50Green %>%</div>
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: orange; font-size: 20px; color: black; font-weight: bold; width: <%= doaTop50Amber %>%"><%= doaTop50Amber %>%</div>
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: red;  font-size: 20px; color: black; font-weight: bold; width: <%= doaTop50Red %>%"><%= doaTop50Red %>%</div>
+                            </div>
+
+
+
+                          </div>
+
+                        </div>
+                        <div style="width: 45%;">
+                          <% if (currentUser && currentUser.isFourCGraphOk ) { %>
+                          <div data-toggle="modal" data-target="#T0ClaimsNo4C-modal" style="cursor: pointer;">
+                            <div style="text-align: center; color: white; margin-top: -20px;">
+                              <h5>T0 4C Coverage </h5>
+                            </div>
+                            <div style="text-align: center; color: white; margin-top: -10px; margin-bottom: -15px; ">
+                              <p> (<%= allT0ClaimsWith4C.length %>/<%= allT0Claims.length %>) Target 90%</p>
+                            </div>
+                            <div style="background: white; height: 70px; width: 6px; margin-top: -4px; margin-left: 180px; margin-right: -50px; z-index: 100; position: absolute;"></div>
+                            <div class="progress" style="height: 60px; border-radius: 0px; margin-bottom: 25px; width: auto; background-color: black;">
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: green;  font-size: 20px; color: black; font-weight: bold; width: <%= t04cCoveragePercent %>%"><%= t04cCoveragePercent %>%</div>
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: grey;  font-size: 20px; color: black; font-weight: bold; width: <%= to4cNotCoveragePercent %>%"><%= to4cNotCoveragePercent %>%</div>
+                            </div>
+                          </div>
+                          <% } %>
+                          <div>
+                            <div style="text-align: center; color: white; margin-top: -20px;">
+                              <h5>T0 Top 50 RAG</h5>
+                            </div>
+                            <div style="text-align: center; color: white; margin-top: -15px; margin-bottom: -15px; ">
+                              <p>Target 75%</p>
+                            </div>
+                            <div style="background: white; height: 70px; width: 6px; margin-top: -4px; margin-left: 149px; margin-right: -50px; z-index: 100; position: absolute;"></div>
+                            <div class="progress" style="height: 60px; border-radius: 0px; margin-bottom: 25px; width: auto; background-color: black;">
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= t0Top50Green %>%"><%= t0Top50Green %>%</div>
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: orange; font-size: 20px; color: black; font-weight: bold; width: <%= t0Top50Amber %>%"><%= t0Top50Amber %>%</div>
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: red;  font-size: 20px; color: black; font-weight: bold; width: <%= t0Top50Red %>%"><%= t0Top50Red %>%</div>
+                            </div>
+
+
+                          </div>
+
+
+
+                        </div>
+
+                      </div>
+
+                      <div style="text-align: center; color: white; margin-right: -450px;">
+                        <h5>Improvement Plan</h5>
+                      </div>
+                      <table class="table table-dark table-striped" style="height: 260px; font-size: 12px; width: 848px;">
+                        <thead>
+                          <tr style="">
+                            <th style=" width: 5px;">#</th>
+                            <th style=" width: 450px;">Improvement</th>
+                            <th style="width: 150px;">Who</th>
+                            <th>When</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% let x = 0 %>
+                          <% for (let d of doaImprovements) { %>
+                          <% x++ %>
+                          <% if (currentUser && currentUser.isQmr)  { %>
+                          <tr>
+                            <td style=" width: 5px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= x %></a></td>
+                            <td style=" width: 450px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.name %></a></td>
+                            <td style=" width: 150px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.who %></a></td>
+                            <td><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.when %></a></td>
+                            <td><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.status %></a></td>
+                          </tr>
+                          <% } else { %>
+                          <tr>
+                            <td style=" width: 5px;"><%= x %></td>
+                            <td style=" width: 450px;"><%= d.name %></td>
+                            <td style=" width: 150px;"><%= d.who %></td>
+                            <td><%= d.when %></td>
+                            <td><%= d.status %></td>
+                          </tr>
+
+                          <% } %>
+
+                          <div class="modal fade" id="modal<%= d._id %>" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                              <div class="modal-content">
+
+                                <div style="background-color: rgb(252, 176, 38); height: 50px;">
+                                  <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+                                  <h3 style="text-align: center; margin: 8px;">Update <%= d.name %></h3>
+                                </div>
+                                <div class="modal-body">
+                                  <fieldset>
+                                    <form id='theForm' action="/dash/updateQmr/<%= d._id %>" method="POST">
+                                      <div class="row" style="color:black">
+                                        <div class="col" style="margin-bottom: 10px;">
+                                          <label for="buildNumber">Dealer Name</label>
+                                          <input class="form-control" type="text" name="name" style="margin-bottom: 10px;" value="<%= d.name %>" required>
+                                          <label for="buildNumber">Who</label>
+                                          <input class="form-control" type="text" name="who" style="margin-bottom: 10px;" value="<%= d.who %>" required>
+                                          <label for="buildNumber">When</label>
+                                          <input class="form-control" type="text" name="when" style="margin-bottom: 10px;" value="<%= d.when %>" required>
+                                          <label for="buildNumber">Status</label>
+                                          <textarea class="form-control" style="margin-bottom: 10px;" type="text" rows="3" cols="4" name="status" required><%= d.status %></textarea>
+                                          <!-- <label for="buildNumber" style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; ">Maximum of 48 hours</label> -->
+                                          <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                                          <button id="btnSave" class="btn btn-success float-right" type='submit' style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                                        </div>
+
+                                      </div>
+                                    </form>
+                                  </fieldset>
+                                </div>
+                                <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+                                  <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                          <% } %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+
+            </div>
+
+
+          </div>
+          <!-- third row-->
+
+
+
+        </div>
+
+
+
+      </div>
+
+
+      <!-- start of internal -->
+      <div class="col-main" style="width: 20%; ">
+        <hr class="float-left" style=" margin-left: -25px; width: 1px; height: 57%; display: inline-block; background-color: grey; margin-top: 20%; ">
+
+        <div style=" margin-bottom: 22px; padding: 8px 0px">
+          <div class="col-measure" style="width: 100%;  text-align: center; ">
+            <h1 class="line-sub-header-top">Internal Quality</h1>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column;">
+          <a <% if (currentUser && currentUser.isQmr)  { %> data-toggle="modal" data-target="#modal_dpu" style="cursor: pointer;" <% } else { %> <% } %>>
+            <div class="graph-holder-internal-dpu">
+              <div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer;">
+                <div style="text-align: center; color: white;">
+                  <h5>Total DPU</h5>
+                </div>
+                <canvas id="chart6" height="125"></canvas>
+              </div>
+            </div>
+          </a>
+
+          <a <% if (currentUser && currentUser.isQmr)  { %> data-toggle="modal" data-target="#modal_cfc" style="cursor: pointer;" <% } else { %> <% } %>>
+            <div class="graph-holder-internal-dpu">
+              <div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer;">
+                <div style="text-align: center; color: white;">
+                  <h5>CFC RFT</h5>
+                </div>
+                <canvas id="chart7" height="125"></canvas>
+              </div>
+            </div>
+          </a>
+
+
+          <div class="graph-holder-second-thin-table">
+            <div>
+              <div style="text-align: center; color: white;">
+                <h5>DPU By Track</h5>
+              </div>
+              <table class="table table-dark table-striped" style="height: 192px; font-size: 12px;">
+                <thead>
+                  <tr>
+                    <th style=" width: 65px;">Track</th>
+                    <th style="text-align: center; width: 65px;">Dec21 DPU</th>
+                    <th style="text-align: center; width: 65px;">DPU Act</th>
+                    <th style="text-align: center; width: 65px;">Closed Top 5</th>
+                    <th style="text-align: center;">Open<br />Top 5</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for (let d of dpuTracks) { %>
+                  <% if (currentUser && currentUser.isQmr)  { %>
+                  <tr>
+                    <td style=" width: 65px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.name %></a></td>
+                    <td style="text-align: center;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.dpu_dec_21  %></a></td>
+                    <td style="text-align: center;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.dpu_current %></a></td>
+                    <td style="text-align: center;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.closed_top_5 %></a></td>
+                    <td style="text-align: center;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.open_top_5 %></a></td>
+                  </tr>
+                  <% } else { %>
+                  <tr>
+                    <td style=" width: 65px;"><%= d.name %></td>
+                    <td style="text-align: center;"><%= d.dpu_dec_21  %></td>
+                    <td style="text-align: center;"><%= d.dpu_current %></td>
+                    <td style="text-align: center;"><%= d.closed_top_5 %></td>
+                    <td style="text-align: center;"><%= d.open_top_5 %></td>
+                  </tr>
+                  <% } %>
+
+                  <div class="modal fade" id="modal<%= d._id %>" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                      <div class="modal-content">
+
+                        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+                          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+                          <h3 style="text-align: center; margin: 8px;">Update <%= d.name %></h3>
+                        </div>
+                        <div class="modal-body">
+                          <fieldset>
+                            <form id='theForm' action="/dash/updateQmr/<%= d._id %>" method="POST">
+                              <div class="row" style="color:black">
+                                <div class="col" style="margin-bottom: 10px;">
+                                  <label for="buildNumber">Track</label>
+                                  <input class="form-control" type="text" name="name" style="margin-bottom: 10px;" value="<%= d.name %>" required>
+                                  <label for="buildNumber">DPU Dec-21</label>
+                                  <input class="form-control" type="text" name="dpu_dec_21" style="margin-bottom: 10px;" value="<%= d.dpu_dec_21 %>" required>
+                                  <label for="buildNumber">Current DPU</label>
+                                  <input class="form-control" type="text" name="dpu_current" style="margin-bottom: 10px;" value="<%= d.dpu_current %>" required>
+                                  <label for="buildNumber">Closed Top 5</label>
+                                  <input class="form-control" type="text" name="closed_top_5 " style="margin-bottom: 10px;" value="<%= d.closed_top_5 %>" required>
+                                  <label for="buildNumber">Open Top 5</label>
+                                  <input class="form-control" type="text" name="open_top_5 " style="margin-bottom: 10px;" value="<%= d.open_top_5 %>" required>
+
+                                  <!-- <label for="buildNumber" style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; ">Maximum of 48 hours</label> -->
+                                  <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                                  <button id="btnSave" class="btn btn-success float-right" type='submit' style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                                </div>
+
+                              </div>
+                            </form>
+                          </fieldset>
+                        </div>
+                        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+                          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <% } %>
+
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  </div>
+
+
+
+  <div class="container-fluid footer">
+
+    <div class="row header-top">
+      <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+        <img height="24px" src="/7z/content/images/df.png">
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+        J.C. Bamford Excavators LTD &copy; 2022
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    Chart.defaults.global.defaultFontColor = "white";
+    //  Chart.defaults.global.defaultFontSize = 10;
+    Chart.defaults.scale.gridLines.display = false;
+
+
+    let options = {
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        enabled: true,
+        mode: 'label',
+        yAlign: 'center',
+        //  callbacks: {
+        //  title: function(tooltipItem, data) {
+        //  return ""
+        //  },
+        //  // label: function(tooltipItem, data) {
+        //  //   return data['datasets'][0]['data'][tooltipItem['index']];
+        //  // },
+        //  // afterLabel: function(tooltipItem, data) {
+        //  //   var dataset = data['datasets'][0];
+        //  //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+        //  //   return '(' + percent + '%)';
+        //  // }
+      },
+
+      //  },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          barPercentage: 0.8,
+          ticks: {
+            display: true,
+            beginAtZero: true,
+            fontSize: 9,
+            fontColor: '#fff',
+            autoSkip: false,
+            maxRotation: 90,
+            minRotation: 90,
+            // callback: function(value) {if (value % 1 === 0) {return value;}}
+          },
+          dataLabels: {
+            fontSize: 2
+          },
+          //     scaleLabel : {
+          //       display     : true,
+          //     //   labelString : 'Build Month',
+          //       fontSize: 10,
+          //       fontColor:'#fff'
+          //   },
+        }],
+        yAxes: [{
+            id: 'bar-y-axis',
+            position: 'left',
+            //  stacked : true,
+            display: false,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 100,
+              // stepSize: 0.3,
+              fontSize: 9,
+              //  formatter:: function(value, context, values) {
+              //              if(context.dataIndex === context.dataset.data.length - 1){
+              //                       return value
+              //      }
+              //  }
+
+              callback: function(value) {
+                if (value % 0.2 === 0) {
+                  return value
+                }
+              }
+            },
+            type: 'linear',
+
+          },
+          {
+            id: 'bar-y-axis1',
+            position: 'right',
+            //  stacked : true,
+            display: true,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 120,
+              stepSize: 20,
+              fontSize: 9,
+              fontColor: 'black',
+              callback: function(value) {
+                if (value > 100) {
+                  return ''
+                } else {
+                  if (value % 1 === 0) {
+                    return value + '%'
+                  }
+                }
+
+              }
+            },
+            type: 'linear',
+          },
+
+        ],
+      },
+    }
+
+    let escapeOptions = {
+      legend: {
+        display: false,
+      },
+      //  tooltips: {
+      //      enabled: true,
+      //      mode: 'label',
+      //      yAlign: 'center',
+      //      callbacks: {
+      //      title: function(tooltipItem, data) {
+      //      return ""
+      //      },
+      //      // label: function(tooltipItem, data) {
+      //      //   return data['datasets'][0]['data'][tooltipItem['index']];
+      //      // },
+      //      // afterLabel: function(tooltipItem, data) {
+      //      //   var dataset = data['datasets'][0];
+      //      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+      //      //   return '(' + percent + '%)';
+      //      // }
+      //  },
+
+      //  },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          barPercentage: 0.8,
+          ticks: {
+            display: true,
+            beginAtZero: true,
+            fontSize: 9,
+            fontColor: '#fff',
+            autoSkip: false,
+            maxRotation: 90,
+            minRotation: 90,
+            // callback: function(value) {if (value % 1 === 0) {return value;}}
+          },
+          dataLabels: {
+            fontSize: 2
+          },
+          //     scaleLabel : {
+          //       display     : true,
+          //     //   labelString : 'Build Month',
+          //       fontSize: 10,
+          //       fontColor:'#fff'
+          //   },
+        }],
+        yAxes: [{
+            id: 'bar-y-axis',
+            position: 'left',
+            //  stacked : true,
+            display: false,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 100,
+              // stepSize: 0.3,
+              fontSize: 9,
+              //  formatter:: function(value, context, values) {
+              //              if(context.dataIndex === context.dataset.data.length - 1){
+              //                       return value
+              //      }
+              //  }
+
+              callback: function(value) {
+                if (value % 0.2 === 0) {
+                  return value
+                }
+              }
+            },
+            type: 'linear',
+
+          },
+          {
+            id: 'bar-y-axis1',
+            position: 'right',
+            //  stacked : true,
+            display: false,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 120,
+              stepSize: 20,
+              fontSize: 9,
+              fontColor: 'black',
+              callback: function(value) {
+                if (value > 100) {
+                  return ''
+                } else {
+                  if (value % 1 === 0) {
+                    return value + '%'
+                  }
+                }
+
+              }
+            },
+            type: 'linear',
+          },
+
+        ],
+      },
+    }
+
+    let dpuOptions = {
+      legend: {
+        display: false,
+      },
+      //  tooltips: {
+      //      enabled: true,
+      //      mode: 'label',
+      //      yAlign: 'center',
+      //      callbacks: {
+      //      title: function(tooltipItem, data) {
+      //      return ""
+      //      },
+      //      // label: function(tooltipItem, data) {
+      //      //   return data['datasets'][0]['data'][tooltipItem['index']];
+      //      // },
+      //      // afterLabel: function(tooltipItem, data) {
+      //      //   var dataset = data['datasets'][0];
+      //      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+      //      //   return '(' + percent + '%)';
+      //      // }
+      //  },
+
+      //  },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          barPercentage: 0.8,
+          ticks: {
+            display: true,
+            beginAtZero: true,
+            fontSize: 9,
+            fontColor: '#fff',
+            autoSkip: false,
+            maxRotation: 90,
+            minRotation: 90,
+            // callback: function(value) {if (value % 1 === 0) {return value;}}
+          },
+          dataLabels: {
+            fontSize: 2
+          },
+          //     scaleLabel : {
+          //       display     : true,
+          //     //   labelString : 'Build Month',
+          //       fontSize: 10,
+          //       fontColor:'#fff'
+          //   },
+        }],
+        yAxes: [{
+            id: 'bar-y-axis',
+            position: 'left',
+            //  stacked : true,
+            display: false,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              //  max         : 100,
+              // stepSize: 0.3,
+              fontSize: 9,
+              //  formatter:: function(value, context, values) {
+              //              if(context.dataIndex === context.dataset.data.length - 1){
+              //                       return value
+              //      }
+              //  }
+
+              callback: function(value) {
+                if (value % 0.2 === 0) {
+                  return value
+                }
+              }
+            },
+            type: 'linear',
+
+          },
+          {
+            id: 'bar-y-axis1',
+            position: 'right',
+            //  stacked : true,
+            //    display : true,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              //  max         : 120,
+              //  stepSize: 50,
+              fontSize: 9,
+              //  callback: function(value) {
+              //      if (value > 100) {
+              //          return ''
+              //      } else {
+              //      if (value % 1 === 0) {
+              //          return value + '%'
+              //          }
+              //      }
+
+              //      }
+            },
+            type: 'linear',
+          },
+
+        ],
+      },
+    }
+
+    let cfcOptions = {
+      legend: {
+        display: false,
+      },
+      //  tooltips: {
+      //      enabled: true,
+      //      mode: 'label',
+      //      yAlign: 'center',
+      //      callbacks: {
+      //      title: function(tooltipItem, data) {
+      //      return ""
+      //      },
+      //      // label: function(tooltipItem, data) {
+      //      //   return data['datasets'][0]['data'][tooltipItem['index']];
+      //      // },
+      //      // afterLabel: function(tooltipItem, data) {
+      //      //   var dataset = data['datasets'][0];
+      //      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+      //      //   return '(' + percent + '%)';
+      //      // }
+      //  },
+
+      //  },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          barPercentage: 0.8,
+          ticks: {
+            display: true,
+            beginAtZero: true,
+            fontSize: 9,
+            fontColor: '#fff',
+            autoSkip: false,
+            maxRotation: 90,
+            minRotation: 90,
+            // callback: function(value) {if (value % 1 === 0) {return value;}}
+          },
+          dataLabels: {
+            fontSize: 2
+          },
+          //     scaleLabel : {
+          //       display     : true,
+          //     //   labelString : 'Build Month',
+          //       fontSize: 10,
+          //       fontColor:'#fff'
+          //   },
+        }],
+        yAxes: [{
+            id: 'bar-y-axis',
+            position: 'left',
+            //  stacked : true,
+            display: false,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              //  max         : 100,
+              // stepSize: 0.3,
+              fontSize: 9,
+              //  formatter:: function(value, context, values) {
+              //              if(context.dataIndex === context.dataset.data.length - 1){
+              //                       return value
+              //      }
+              //  }
+
+              callback: function(value) {
+                if (value % 0.2 === 0) {
+                  return value
+                }
+              }
+            },
+            type: 'linear',
+
+          },
+          {
+            id: 'bar-y-axis1',
+            position: 'right',
+            //  stacked : true,
+            //    display : true,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 120,
+              //  stepSize: 50,
+              fontSize: 9,
+              callback: function(value) {
+                if (value > 100) {
+                  return ''
+                } else {
+                  if (value % 1 === 0) {
+                    return value + '%'
+                  }
+                }
+
+              }
+            },
+            type: 'linear',
+          },
+
+        ],
+      },
+    }
+
+
+    let barChartData1 = {
+      labels: <%- JSON.stringify(theMonths) %>,
+
+      datasets: [
+
+        {
+          type: 'line',
+          label: 'RFT',
+          borderColor: 'blue',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          lineTension: 0,
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'top',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= daoRFT %>],
+
+        },
+        {
+          type: 'line',
+          label: 'Target',
+          borderColor: 'red',
+          pointRadius: 0,
+          borderDash: [10, 5],
+
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            //  rotation: -90,
+            align: 'top',
+            offset: -6,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (context.dataIndex === context.dataset.data.length - 1) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                return value + '%';
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= daoRFTTarget %>],
+
+        },
+        {
+          type: 'line',
+          label: 'DPU',
+          pointRadius: 0,
+          lineTension: 0,
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            clamp: true,
+            align: 'top',
+            offset: -2,
+            //  anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= daoDPU %>],
+
+        },
+        {
+          type: 'line',
+          label: 'DPU Target',
+          borderColor: 'red',
+          pointRadius: 0,
+          borderDash: [10, 5],
+          //  segment: {
+          //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+          //     },
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            display: true,
+            color: 'white',
+            rotation: -90,
+            // anchor: 'start',
+            align: 'top',
+            // offset: -8,
+            formatter: function(value, context) {
+              if (context.dataIndex === context.dataset.data.length - 1) {
+                return value.y;
+              }
+              return "";
+            }
+          },
+          data: [<%= daoDPUTarget %>],
+
+        },
+
+
+      ],
+    }
+
+    let barChartData2 = {
+      labels: <%- JSON.stringify(theMonths) %>,
+
+      datasets: [
+
+        {
+          type: 'line',
+          label: 'RFT',
+          borderColor: 'blue',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          lineTension: 0,
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'top',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= t0RFT %>],
+
+        },
+        {
+          type: 'line',
+          label: 'Target',
+          borderColor: 'red',
+          pointRadius: 0,
+          borderDash: [10, 5],
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            //  rotation: -90,
+            align: 'top',
+            offset: -4,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (context.dataIndex === context.dataset.data.length - 1) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                return value + '%';
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= t0RFTTarget %>],
+
+        },
+        {
+          type: 'line',
+          label: 'DPU',
+          borderColor: 'orange',
+          pointRadius: 0,
+          lineTension: 0,
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            clamp: true,
+            align: 'top',
+            offset: -2,
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= t0DPU %>],
+
+        },
+        {
+          type: 'line',
+          label: 'DPU Target',
+          borderColor: 'red',
+          pointRadius: 0,
+          borderDash: [10, 5],
+          //  segment: {
+          //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+          //     },
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            display: true,
+            color: 'white',
+            rotation: -90,
+            // anchor: 'start',
+            align: 'top',
+            // offset: -8,
+            formatter: function(value, context) {
+              if (context.dataIndex === context.dataset.data.length - 1) {
+                return value;
+              }
+              return "";
+            }
+          },
+          data: [<%= t0DPUTarget %>],
+
+        },
+
+
+      ],
+    }
+
+    let barChartData3 = {
+      labels: <%- JSON.stringify(theMonths) %>,
+
+      datasets: [{
+          type: 'line',
+          label: 'DPU',
+          borderColor: 'orange',
+          pointRadius: 0,
+          lineTension: 0,
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            clamp: true,
+            align: 'top',
+            offset: -2,
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= escapeDPU %>],
+
+        },
+        {
+          type: 'line',
+          label: 'DPU Target',
+          borderColor: 'red',
+          pointRadius: 0,
+          borderDash: [10, 5],
+          //  segment: {
+          //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+          //     },
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            // anchor: 'start',
+            align: 'top',
+            // offset: -8,
+            formatter: function(value, context) {
+              if (context.dataIndex === context.dataset.data.length - 1) {
+                return value.y;
+              }
+              return "";
+            }
+          },
+          data: [<%= escapeTarget %>],
+
+        },
+
+
+      ],
+    }
+    let barChartData4 = {
+      labels: <%- JSON.stringify(dealerShortMonths) %>,
+
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          //  borderColor     : 'orange',
+          //  pointRadius     : 0,
+          //  lineTension     : 0,
+          backgroundColor: 'orange',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            //  rotation: -90,
+            clamp: true,
+            align: 'top',
+            anchor: 'end',
+            offset: -6,
+            //  fontColor: "black",
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                //  return value + '%';
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= top10DealerRft %>],
+
+        },
+        {
+          type: 'line',
+          label: 'RFT Target',
+          borderColor: 'red',
+          pointRadius: 0,
+          borderDash: [10, 5],
+          //  segment: {
+          //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+          //     },
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            //  rotation: -90,
+            // anchor: 'start',
+            // align: 'bottom',
+            //  offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context) {
+              if (context.dataIndex === context.dataset.data.length - 1) {
+                return value + '%';
+              }
+              return "";
+            }
+          },
+          data: [<%= top10DealerRftTarget %>],
+
+        },
+
+
+      ],
+    }
+
+    let barChartData5 = {
+      labels: <%- JSON.stringify(dealerShortMonths) %>,
+
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          //  borderColor     : 'orange',
+          //  pointRadius     : 0,
+          //  lineTension     : 0,
+          backgroundColor: 'orange',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            //  rotation: -90,
+            clamp: true,
+            align: 'top',
+            anchor: 'end',
+            offset: -6,
+            //  fontColor: "black",
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                //  return value + '%';
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= top10CustomerRft %>],
+
+        },
+        {
+          type: 'line',
+          label: 'RFT Target',
+          borderColor: 'red',
+          pointRadius: 0,
+          borderDash: [10, 5],
+          //  segment: {
+          //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+          //     },
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            //  rotation: -90,
+            // anchor: 'start',
+            // align: 'bottom',
+            //  offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context) {
+              if (context.dataIndex === context.dataset.data.length - 1) {
+                return value + '%';
+              }
+              return "";
+            }
+          },
+          data: [<%= top10CustomerRftTarget %>],
+
+        },
+
+
+      ],
+    }
+    let barChartData6 = {
+      labels: <%- JSON.stringify(dpuMonths) %>,
+
+      datasets: [{
+          type: 'line',
+          label: 'DPU',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          lineTension: 0,
+          //  backgroundColor : 'orange',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            clamp: true,
+            align: 'bottom',
+            //  offset: -2,
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= internalDpuData %>],
+
+
+        },
+        {
+          type: 'line',
+          label: 'DPU Target',
+          borderColor: 'red',
+          pointRadius: 0,
+          borderDash: [10, 5],
+          //  segment: {
+          //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+          //     },
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            //  rotation: -90,
+            anchor: 'start',
+            align: 'top',
+            //  offset: 8,
+            formatter: function(value, context) {
+              if (context.dataIndex === context.dataset.data.length - 1) {
+                return value
+              }
+              return ""
+            }
+          },
+          data: [<%= internalDpuTarget %>],
+
+
+        },
+
+
+      ],
+    }
+
+    let barChartData7 = {
+      labels: <%- JSON.stringify(dpuMonths) %>,
+
+      datasets: [{
+          type: 'line',
+          label: 'RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          lineTension: 0,
+          //  backgroundColor : 'orange',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            clamp: true,
+            align: 'top',
+            //  offset: -2,
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                return value + '%'
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= internalCfcData %>],
+
+        },
+        {
+          type: 'line',
+          label: 'RFT Target',
+          borderColor: 'red',
+          pointRadius: 0,
+          borderDash: [10, 5],
+          //  segment: {
+          //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+          //     },
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            //  rotation: -90,
+            anchor: 'start',
+            align: 'top',
+            //  offset: 8,
+            formatter: function(value, context) {
+              if (context.dataIndex === context.dataset.data.length - 1) {
+                return value + '%';
+              }
+              return "";
+            }
+          },
+          data: [<%= internalCfcTarget %>],
+
+        },
+
+
+      ],
+    }
+
+
+
+
+    window.onload = function() {
+
+
+
+      // doa dpu & rft
+      const ctx = document.getElementById("chart1")
+      options.scales.yAxes[0].ticks.max = <%= doaDPUMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart1 = new Chart(ctx, {
+        //  type: 'bar',
+        data: barChartData1,
+        options: options
+      })
+
+
+      // to dpu & rft
+      const ctx2 = document.getElementById("chart2")
+      options.scales.yAxes[0].ticks.max = <%= t0DPUMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: barChartData2,
+        options: options
+      })
+
+      // major escape dpu
+      const ctx3 = document.getElementById("chart3")
+      escapeOptions.scales.yAxes[0].ticks.max = <%= escapeDPUMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart3 = new Chart(ctx3, {
+        type: 'bar',
+        data: barChartData3,
+        options: escapeOptions
+      })
+      // Top 10 dealer rft
+      const ctx4 = document.getElementById("chart4")
+      //    options.scales.yAxes[0].ticks.max = <%= escapeDPUMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart4 = new Chart(ctx4, {
+        type: 'bar',
+        data: barChartData4,
+        options: options
+      })
+
+      // Top 10 customer rft
+      const ctx5 = document.getElementById("chart5")
+      //    options.scales.yAxes[0].ticks.max = <%= escapeDPUMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart5 = new Chart(ctx5, {
+        type: 'bar',
+        data: barChartData5,
+        options: options
+      })
+
+      // Total DPU
+      const ctx6 = document.getElementById("chart6")
+      //    options.scales.yAxes[0].ticks.max = <%= escapeDPUMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart6 = new Chart(ctx6, {
+        type: 'bar',
+        data: barChartData6,
+        options: dpuOptions
+      })
+
+      // CFC RFT
+      const ctx7 = document.getElementById("chart7")
+      //    options.scales.yAxes[0].ticks.max = <%= escapeDPUMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart7 = new Chart(ctx7, {
+        type: 'bar',
+        data: barChartData7,
+        options: cfcOptions
+      })
+
+    }
+  </script>
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,719 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <meta http-equiv="refresh" content="120"> -->
+    <title>JCB - Equipment Monitoring</title>
+    <link rel="icon" href="/home/jcb.png" />
+    <link rel="stylesheet" href="/7z/content/bootstrap/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/dashboards.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+    <link rel="stylesheet" href=/7z/content/chart-js/chart.min.css" type="text/css">
+    <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+    <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+    <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+</head>
+<body>
+
+<style>
+    #table-requests { font-size: 15px; border: 2px solid black; vertical-align: middle; margin-top: 14px }
+
+#table-requests:hover { cursor: pointer }
+
+
+#table-requests > thead > tr > th { border: 1px solid black; vertical-align: middle; padding-top: 8px; padding-bottom: 8px }
+
+#table-requests > thead > tr > .th-top { background-color: rgb(14, 16, 18); text-align: center; color: white; border-bottom: 2px solid black; font-size: 16px; padding-top: 8px; padding-bottom: 8px }
+
+#table-requests > thead > tr > .th-left { text-align: left; padding-left: 18px; background-color: rgb(42, 44, 46); color: white; border-bottom: 2px solid black }
+
+#table-requests > thead > tr > .th-centre { text-align: center; background-color: rgb(42, 44, 46); color: white; border-bottom: 2px solid black }
+
+
+#table-requests > tbody > tr > td { border: 1px solid black; font-weight: bold; padding-top: 7px; padding-bottom: 7px; background-color: rgb(28, 30, 32); vertical-align: middle }
+
+#table-requests > tbody > tr > .td-left { text-align: left; padding-left: 18px; border-bottom: 1px solid black }
+
+#table-requests > tbody > tr > .td-centre { text-align: center; border-bottom: 1px solid black }
+
+
+#table-requests > tbody > tr:hover { background-color: rgb(46, 46, 46) !important }
+</style>
+
+<div class="container-fluid">
+        
+    <div class="row header-top">
+        <div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+            <img height="24px" src="/7z/content/images/jcb-logo.png">
+        </div>
+        <div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+            <a href="/equipment-monitoring/home">
+                <span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 5px" class="fas fa-home icon-home"></span>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<table class="table" id="table-requests" style="margin-bottom: 42px">
+    <thead>
+        <tr>
+            <th class="th-top" colspan="2">REQUIREMENT</th>
+            <th class="th-top" colspan="3">TIMING</th>
+            <th class="th-top" colspan="4">STATUS</th>
+        </tr>
+        <tr>
+            <th class="th-centre" style="width: 105px">PROJECT<BR />STATUS</th>
+            <th class="th-left">
+                <div style="float: left; width: 91%">REQUEST BUSINESS UNIT<BR />AND CATEGORY</div>
+                <div style="float: left; width: 4.5%; text-align: right; font-size: 26px; line-height: 0.8; padding-top: 10px; color: rgb(142, 144, 146)">
+                    <span id="span-filter-column-one" class="fas fa-filter"></span>
+                </div>
+                <div style="float: left; width: 4.5%; text-align: right; font-size: 32px; line-height: 0.8; padding-top: 8px; color: rgb(142, 144, 146)">
+                    <a href="all-requests.php?order=2">
+                        <span id="span-sort-column-one" class="fas fa-long-arrow-alt-down <?php if ($_GET['order'] == 2) { echo 'text-warning'; } ?>"></span>
+                    </a>
+                </div>
+            </th>
+            <th class="th-centre" style="width: 140px">INVESTMENT<BR/>AMOUNT</th>
+            <th class="th-centre" style="width: 150px">YEAR OF<BR/>INSTALLATION</th>
+            <th class="th-centre" style="width: 120px; display: none">PAYBACK<BR/>PERIOD</th>
+            <th class="th-left" style="width: 195px">
+                <div style="float: left; width: 85%">DROP-DEAD<BR/>COUNTDOWN</div>
+                <div style="float: left; width: 15%; text-align: center; font-size: 32px; line-height: 0.8; padding-top: 8px; color: rgb(142, 144, 146)">
+                    <a href="all-requests.php?order=1">
+                        <span id="span-sort-column-one" class="fas fa-long-arrow-alt-down <?php if ($_GET['order'] == 1) { echo 'text-warning'; } ?>"></span>
+                    </a>
+                </div>
+            </th>
+            <th class="th-centre" style="width: 270px">CURRENT<BR/>STAGE</th>
+            <th class="th-centre" style="width: 200px">NEXT<BR/>STAGE</th>
+            <th class="th-centre" style="width: 130px">JOB ONE<BR/>DATE</th>
+            <th class="th-centre" style="width: 92px">CSR<BR/>DOCS</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td class='td-centre'>
+                <i style='font-size: 32px; color: white; margin: 0px; line-height: 1.3' class='".$result['Request_Icon']."'></i>
+            </td>
+            <td class='td-left td-request'>
+                <p style='font-size: 16px; color: white; margin: 0px; line-height: 1.3'>".strtoupper($result['Request_Requirement'])."</p>
+                <p style='font-size: 16px; color: rgb(142, 144, 146); margin: 0px; line-height: 1.3'><span class='row-business'>".$result['Request_BusinessUnit']."</span> - <span class='row-type'>".$result['Request_Type']."</span></p>
+                <p style='font-size: 16px; color: white; margin: 0px 0px 1px 0px; line-height: 1.3'><span class='row-category'>".$result['Request_Category']."</span></p>
+            </td>
+            <td class='td-centre'>
+                <p style='font-size: 16px; color: white; margin: 0px; line-height: 1.3'>".$result['Request_EstimatedInvestment']."</p>
+            </td>
+            <td class='td-centre'>
+                <p style='font-size: 16px; color: white; margin: 0px; line-height: 1.3'>".$result['Request_Year']."</p>
+                <p style='font-size: 16px; color: rgb(142, 144, 146); margin: 0px; line-height: 1.3'>".strtoupper($result['Request_Ref'])."</p>
+            </td>
+            <td class='td-left'>
+                <p style='font-size: 16px; color: white; margin: 0px; line-height: 1.3' class='".$result['Request_DDLOI_Diff_Colour']."'>".$result['Request_DDLOI_Diff']."</p>
+                <p style='font-size: 16px; color: rgb(142, 144, 146); margin: 0px; line-height: 1.3'>".$result['Request_DDLOI']."</p>
+            </td>
+            <td class='td-centre' style='padding-left: 20px; padding-right: 20px; padding-top: 16px'>
+                <div class='progress' style='border-radius: 0px; height: 20px; margin-bottom: 5px'>
+                    <div class='progress-bar progress-bar-striped progress-bar-animated ".$result['Request_Progress_Colour']."' style='width: ".$result['Request_Progress_Amount']."%'></div>
+                </div>
+                <p style='font-size: 16px; color: rgb(142, 144, 146); margin: 0px; line-height: 1.3'>".$result['Request_Progress_State']."</p>
+            </td>
+            <td class='td-centre'>
+                <p style='font-size: 16px; color: white; margin: 0px; line-height: 1.3'>".$result['Request_Progress_Next_State']."</p>
+                <p style='font-size: 16px; color: rgb(142, 144, 146); margin: 0px; line-height: 1.3'>".$result['Request_Progress_Next_State_Person']."</p>
+            </td>
+            <td class='td-centre'>
+                <p style='font-size: 16px; color: white; margin: 0px; line-height: 1.3'>".$result['Request_J1Date_Diff']." Days</p>
+                <p style='font-size: 16px; color: rgb(142, 144, 146); margin: 0px; line-height: 1.3'>".$result['Request_J1Date']."</p>
+            </td>
+            <td class='td-centre' data-request='".$result['Request_ID']."'>".$result['Request_Documents']."</td>
+        </tr>
+
+    </tbody>
+</table>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-main">
+
+            <div class="row">
+
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Group Global Equipment Performance</h1>
+                    <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: 0px 0px 16px 0px; text-align: center">Machine Overview (Vs Shift)</h1>
+                </div>
+              
+
+                <div class="col-lg-12" style=" height: 90px; margin-bottom: 18px; padding: 8px 0px 8px 0px; border-top: 3px solid rgb(26, 28, 30); border-bottom: 3px solid rgb(26, 28, 30)">
+
+                    <div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+                        <h1 class="line-sub-header-top">Business Unit</h1>
+                        <h1 class="line-measure-value-top text-grey">Loadall</h1>
+                    </div>
+                    <!-- <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+                        <h1 class="line-sub-header-top">T-Time</h1>
+                        <h1 class="line-measure-value-top text-grey">42%</h1>
+                    </div>
+                    <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+                        <h1 class="line-sub-header-top">Idle Time</h1>
+                        <h1 class="line-measure-value-top text-grey">25%</h1>
+                    </div> -->
+
+                </div>
+                <div class="col-lg-12">
+                    <div class="col-measure" style="width: 100%; float: left; text-align: center; margin-top: -10px; margin-bottom: -10px">
+                        <img height="40px" src="/7z/content/images/legend.JPG">
+                   </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="division-holder">
+                        <div class="division-row" style="margin-top: 40px;" >
+                            <div class="division-box">
+                                <h3 style="text-align: center; margin-bottom: 30px;">
+                                    Welding Robots
+                                </h3>
+                                <div class="division-box-stats">
+                                    <div style="text-align: center; margin-bottom: 30px;">
+                                        <h5>
+                                            Utilisation
+                                        </h5>
+                                        <h4 class="text-grey" style="margin-top: -10px;">89%</h4>
+                                    </div>
+                                    <div style="text-align: center">
+                                        <h5>
+                                            T-Time
+                                        </h5>
+                                        <h4 class="text-grey" style="margin-top: -10px;">57%</h4>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <h5>
+                                            Idle Time
+                                        </h5>
+                                        <h4 class="text-grey" style="margin-top: -10px;">11%</h4>
+                                    </div>
+                                </div>
+                                <canvas id="chartstatusLoadall" height="300" style="align-items: center; margin-bottom: 8px;"></canvas>
+                                <div style="margin-top: -40%;  text-align: center; ">
+                                    <h3>
+                                        Idle<br>Time
+                                    </h3>
+                                </div>
+                            </div>
+                            <!-- <div class="division-box" style="background-color: #2a2a2a;"> -->
+                            <div class="division-box">
+                                <h3 style="text-align: center; margin-bottom: 30px;">
+                                    Laser Cutters
+                                </h3>
+                                <div class="division-box-stats">
+                                    <div style="text-align: center;  margin-bottom: 30px;">
+                                        <h5>
+                                            Utilisation
+                                        </h5>
+                                        <h4 class="text-grey" style="margin-top: -10px;">80%</h4>
+                                    </div>
+                                    <div style="text-align: center">
+                                        <h5>
+                                            T-Time
+                                        </h5>
+                                        <h4 class="text-grey" style="margin-top: -10px;">50%</h4>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <h5>
+                                            Idle Time
+                                        </h5>
+                                        <h4 class="text-grey" style="margin-top: -10px;">12%</h4>
+                                    </div>
+                                </div>
+                                <canvas id="chartstatusBackhoe" height="300" style="align-items: center; margin-bottom: 8px;"></canvas>
+                                <div style="margin-top: -40%;  text-align: center; ">
+                                    <h3>
+                                        Idle<br>Time
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="division-box">
+                                <h3 style="text-align: center; margin-bottom: 30px;">
+                                    Plasma Cutters
+                                </h3>
+                                <div class="division-box-stats">
+                                    <div style="text-align: center;  margin-bottom: 30px;">
+                                        <h5>
+                                            Utilisation
+                                        </h5>
+                                        <h4 class="text-grey" style="margin-top: -10px;">95%</h4>
+                                    </div>
+                                    <div style="text-align: center">
+                                        <h5>
+                                            T-Time
+                                        </h5>
+                                        <h4 class="text-grey" style="margin-top: -10px;">62%</h4>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <h5>
+                                            Idle Time
+                                        </h5>
+                                        <h4 class="text-grey" style="margin-top: -10px;">18%</h4>
+                                    </div>
+                                </div>
+                                <canvas id="chartstatusCompact" height="300" style="align-items: center; margin-bottom: 8px;"></canvas>
+                                <div style="margin-top: -40%;  text-align: center; ">
+                                    <h3>
+                                        Idle<br>Time
+                                    </h3>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid footer">
+        
+    <div class="row header-top">
+        <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+            <img height="24px" src="/7z/content/images/df.png">
+        </div>
+        <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+            J.C. Bamford Excavators LTD &copy; 2022
+        </div>
+    </div>
+
+</div>
+
+<script  src="/7z/content/modal/modal.js"></script>
+
+
+
+
+
+<script>
+    Chart.defaults.global.defaultFontColor = '#fff';
+
+     
+
+     $(document).ready(function () {
+ 
+         var ctxOpenStatus = $('#chartstatusLoadall');
+         var chartOpenStatus = new Chart(ctxOpenStatus, {
+             plugins: [{
+                 beforeInit: function(chart, options) {
+                     chart.legend.afterFit = function() {
+                         this.height = this.height + 4;
+                     };
+                 }
+             }],
+             type: 'pie',
+             data: {
+                 labels: ['Known Breakdown', 'Waiting (parts)', 'Waiting (wire)',],
+                 datasets: [
+                     {
+                         data: [ 25, 52, 30,],
+                         backgroundColor: [ 'rgb(238, 28, 37)', 'rgb(255, 123, 0)', 'rgb(0, 173, 238)'],
+                         borderColor: 'black',
+                         borderWidth: 6,
+                         hoverBackgroundColor: 'rgba(255, 255, 255, 0.8)',
+                         hoverBorderColor: 'black',
+                     },
+                 ]
+             },
+             options: {
+                 plugins: {
+                     labels: {
+                         render: 'value',
+                         fontSize: 14,
+                         fontFamily: 'verdana',
+                         fontColor: 'rgb(0, 0, 0)',
+                         fontStyle: 'bold',
+                         render: function (context) {
+                             if (context.percentage > 10) {
+                                 return context.value;
+                             };
+                         },
+                     }
+                 },
+                 tooltips: {
+                     enabled: true,
+                     mode: 'single',
+                     callbacks: {
+                         label: function(tooltipItem, data) {
+                             var label = data.labels[tooltipItem.index];
+                             var datasetLabel = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                             return label + " - " + datasetLabel.toFixed(0);
+                         }
+                     },
+                 },
+                 legend: {
+                     display: false,
+                     position: 'bottom',
+                     padding:{
+                        left:0,
+                        right:0,
+                        bottom:0,
+                        top:0
+                         },
+                     labels : {
+                         fontColor: 'rgb(162, 164, 166)',
+                         fontSize: 14
+                     }
+                 },
+                 cutoutPercentage: 50,
+             }
+         });
+         var ctxOpenStatus = $('#chartstatusBackhoe');
+         var chartOpenStatus = new Chart(ctxOpenStatus, {
+             plugins: [{
+                 beforeInit: function(chart, options) {
+                     chart.legend.afterFit = function() {
+                         this.height = this.height + 4;
+                     };
+                 }
+             }],
+             type: 'pie',
+             data: {
+                 labels: ['Known Breakdown', 'Waiting (parts)', 'Waiting (wire)',],
+                 datasets: [
+                     {
+                        data: [ 30, 20, 45,],
+                        backgroundColor: [ 'rgb(238, 28, 37)', 'rgb(255, 123, 0)', 'rgb(0, 173, 238)'],
+                        borderColor: 'black',
+                        borderWidth: 6,
+                        hoverBackgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        hoverBorderColor: 'black',
+                     },
+                 ]
+             },
+             options: {
+                 plugins: {
+                     labels: {
+                         render: 'value',
+                         fontSize: 14,
+                         fontFamily: 'verdana',
+                         fontColor: 'rgb(0, 0, 0)',
+                         fontStyle: 'bold',
+                         render: function (context) {
+                             if (context.percentage > 10) {
+                                 return context.value;
+                             };
+                         },
+                     }
+                 },
+                 tooltips: {
+                     enabled: true,
+                     mode: 'single',
+                     callbacks: {
+                         label: function(tooltipItem, data) {
+                             var label = data.labels[tooltipItem.index];
+                             var datasetLabel = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                             return label + " - " + datasetLabel.toFixed(0);
+                         }
+                     },
+                 },
+                 legend: {
+                     display: false,
+                     position: 'bottom',
+                     padding:{
+                        left:0,
+                        right:0,
+                        bottom:0,
+                        top:0
+                         },
+                     labels : {
+                         fontColor: 'rgb(162, 164, 166)',
+                         fontSize: 14
+                     }
+                 },
+                 cutoutPercentage: 50,
+             }
+         });
+         var ctxOpenStatus = $('#chartstatusCompact');
+         var chartOpenStatus = new Chart(ctxOpenStatus, {
+             plugins: [{
+                 beforeInit: function(chart, options) {
+                     chart.legend.afterFit = function() {
+                         this.height = this.height + 4;
+                     };
+                 }
+             }],
+             type: 'pie',
+             data: {
+                 labels: ['Known Breakdown', 'Waiting (parts)', 'Waiting (wire)',],
+                 datasets: [
+                     {
+                         data: [ 40, 15, 60,],
+                         backgroundColor: [ 'rgb(238, 28, 37)', 'rgb(255, 123, 0)', 'rgb(0, 173, 238)'],
+                         borderColor: 'black',
+                         borderWidth: 6,
+                         hoverBackgroundColor: 'rgba(255, 255, 255, 0.8)',
+                         hoverBorderColor: 'black',
+                     },
+                 ]
+             },
+             options: {
+                 plugins: {
+                     labels: {
+                         render: 'value',
+                         fontSize: 14,
+                         fontFamily: 'verdana',
+                         fontColor: 'rgb(0, 0, 0)',
+                         fontStyle: 'bold',
+                         render: function (context) {
+                             if (context.percentage > 10) {
+                                 return context.value;
+                             };
+                         },
+                     }
+                 },
+                 tooltips: {
+                     enabled: true,
+                     mode: 'single',
+                     callbacks: {
+                         label: function(tooltipItem, data) {
+                             var label = data.labels[tooltipItem.index];
+                             var datasetLabel = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                             return label + " - " + datasetLabel.toFixed(0);
+                         }
+                     },
+                 },
+                 legend: {
+                     display: false,
+                     position: 'bottom',
+                     padding:{
+                        left:0,
+                        right:0,
+                        bottom:0,
+                        top:0
+                         },
+                     labels : {
+                         fontColor: 'rgb(162, 164, 166)',
+                         fontSize: 14
+                     }
+                 },
+                 cutoutPercentage: 50,
+             }
+         });
+         var ctxOpenStatus = $('#chartstatusHeavy');
+         var chartOpenStatus = new Chart(ctxOpenStatus, {
+             plugins: [{
+                 beforeInit: function(chart, options) {
+                     chart.legend.afterFit = function() {
+                         this.height = this.height + 4;
+                     };
+                 }
+             }],
+             type: 'pie',
+             data: {
+                 labels: ['Known Breakdown', 'Waiting (parts)', 'Waiting (wire)',],
+                 datasets: [
+                     {
+                         data: [ 15, 80, 30,],
+                         backgroundColor: [ 'rgb(238, 28, 37)', 'rgb(255, 123, 0)', 'rgb(0, 173, 238)'],
+                         borderColor: '#2a2a2a',
+                         borderWidth: 6,
+                         hoverBackgroundColor: 'rgba(255, 255, 255, 0.8)',
+                         hoverBorderColor: '#2a2a2a',
+                     },
+                 ]
+             },
+             options: {
+                 plugins: {
+                     labels: {
+                         render: 'value',
+                         fontSize: 14,
+                         fontFamily: 'verdana',
+                         fontColor: 'rgb(0, 0, 0)',
+                         fontStyle: 'bold',
+                         render: function (context) {
+                             if (context.percentage > 10) {
+                                 return context.value;
+                             };
+                         },
+                     }
+                 },
+                 tooltips: {
+                     enabled: true,
+                     mode: 'single',
+                     callbacks: {
+                         label: function(tooltipItem, data) {
+                             var label = data.labels[tooltipItem.index];
+                             var datasetLabel = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                             return label + " - " + datasetLabel.toFixed(0);
+                         }
+                     },
+                 },
+                 legend: {
+                     display: false,
+                     position: 'bottom',
+                     padding:{
+                        left:0,
+                        right:0,
+                        bottom:0,
+                        top:0
+                         },
+                     labels : {
+                         fontColor: 'rgb(162, 164, 166)',
+                         fontSize: 14
+                     }
+                 },
+                 cutoutPercentage: 50,
+             }
+         });
+         var ctxOpenStatus = $('#chartstatusEM');
+         var chartOpenStatus = new Chart(ctxOpenStatus, {
+             plugins: [{
+                 beforeInit: function(chart, options) {
+                     chart.legend.afterFit = function() {
+                         this.height = this.height + 4;
+                     };
+                 }
+             }],
+             type: 'pie',
+             data: {
+                 labels: ['Known Breakdown', 'Waiting (parts)', 'Waiting (wire)',],
+                 datasets: [
+                     {
+                         data: [ 80, 15, 18,],
+                         backgroundColor: [ 'rgb(238, 28, 37)', 'rgb(255, 123, 0)', 'rgb(0, 173, 238)'],
+                         borderColor: 'black',
+                         borderWidth: 6,
+                         hoverBackgroundColor: 'rgba(255, 255, 255, 0.8)',
+                         hoverBorderColor: 'black',
+                     },
+                 ]
+             },
+             options: {
+                 plugins: {
+                     labels: {
+                         render: 'value',
+                         fontSize: 14,
+                         fontFamily: 'verdana',
+                         fontColor: 'rgb(0, 0, 0)',
+                         fontStyle: 'bold',
+                         render: function (context) {
+                             if (context.percentage > 10) {
+                                 return context.value;
+                             };
+                         },
+                     }
+                 },
+                 tooltips: {
+                     enabled: true,
+                     mode: 'single',
+                     callbacks: {
+                         label: function(tooltipItem, data) {
+                             var label = data.labels[tooltipItem.index];
+                             var datasetLabel = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                             return label + " - " + datasetLabel.toFixed(0);
+                         }
+                     },
+                 },
+                 legend: {
+                     display: false,
+                     position: 'bottom',
+                     padding:{
+                        left:0,
+                        right:0,
+                        bottom:0,
+                        top:0
+                         },
+                     labels : {
+                         fontColor: 'rgb(162, 164, 166)',
+                         fontSize: 14
+                     }
+                 },
+                 cutoutPercentage: 50,
+             }
+         });
+         var ctxOpenStatus = $('#chartstatusSD');
+         var chartOpenStatus = new Chart(ctxOpenStatus, {
+             plugins: [{
+                 beforeInit: function(chart, options) {
+                     chart.legend.afterFit = function() {
+                         this.height = this.height + 4;
+                     };
+                 }
+             }],
+             type: 'pie',
+             data: {
+                 labels: ['Known Breakdown', 'Waiting (parts)', 'Waiting (wire)',],
+                 datasets: [
+                     {
+                         data: [ 20, 50, 30,],
+                         backgroundColor: [ 'rgb(238, 28, 37)', 'rgb(255, 123, 0)', 'rgb(0, 173, 238)'],
+                         borderColor: '#2a2a2a',
+                         borderWidth: 6,
+                         hoverBackgroundColor: 'rgba(255, 255, 255, 0.8)',
+                         hoverBorderColor: '#2a2a2a',
+                     },
+                 ]
+             },
+             options: {
+                 plugins: {
+                     labels: {
+                         render: 'value',
+                         fontSize: 14,
+                         fontFamily: 'verdana',
+                         fontColor: 'rgb(0, 0, 0)',
+                         fontStyle: 'bold',
+                         render: function (context) {
+                             if (context.percentage > 10) {
+                                 return context.value;
+                             };
+                         },
+                     }
+                 },
+                 tooltips: {
+                     enabled: true,
+                     mode: 'single',
+                     callbacks: {
+                         label: function(tooltipItem, data) {
+                             var label = data.labels[tooltipItem.index];
+                             var datasetLabel = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                             return label + " - " + datasetLabel.toFixed(0);
+                         }
+                     },
+                 },
+                 legend: {
+                     display: false,
+                     position: 'bottom',
+                     padding:{
+                        left:0,
+                        right:0,
+                        bottom:0,
+                        top:0
+                         },
+                     labels : {
+                         fontColor: 'rgb(162, 164, 166)',
+                         fontSize: 14
+                     }
+                 },
+                 cutoutPercentage: 50,
+             }
+         });
+     });
+
+ </script>
+
+
+
+
+
+</body>
+</html>

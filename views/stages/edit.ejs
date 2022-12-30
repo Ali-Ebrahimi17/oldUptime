@@ -1,0 +1,120 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="newbuild-container">
+
+
+  <div class="row form-background" style="width: 50vw; margin-left: -12vw;">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Edit Zone</h1>
+    </div>
+
+
+
+    <div class="col">
+      <form action="/stage/edit/<%= stage._id %>" method="POST">
+        <input type="hidden" name="area[division]" value="<%= division %>">
+        <label for="buildNumber">Rec 1</label>
+        <select class="form-control" type="text" name="stage[rec1]" autocomplete="off">
+          <% inspectors.forEach(inspector => { %>
+          <option hidden><%= stage.rec1 %></option>
+
+          <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+            <% }) %>
+          <option></option>
+        </select>
+        <label for="buildNumber">Rec 2</label>
+        <select class="form-control" type="text" name="stage[rec2]" autocomplete="off">
+          <% inspectors.forEach(inspector => { %>
+          <option hidden><%= stage.rec2 %></option>
+          <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+            <% }) %>
+          <option></option>
+        </select>
+        <label for="buildNumber">Rec 3</label>
+        <select class="form-control" type="text" name="stage[rec3]" autocomplete="off">
+          <% inspectors.forEach(inspector => { %>
+          <option hidden><%= stage.rec3 %></option>
+          <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+            <% }) %>
+          <option></option>
+        </select>
+        <label for="buildNumber">Rec 4</label>
+        <select class="form-control" type="text" name="stage[rec4]" autocomplete="off">
+          <% inspectors.forEach(inspector => { %>
+          <option hidden><%= stage.rec4 %></option>
+          <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+            <% }) %>
+          <option></option>
+        </select>
+        <label for="buildNumber">Rec 5</label>
+        <select class="form-control" type="text" name="stage[rec5]" style="margin-bottom: 12px;" autocomplete="off">
+          <% inspectors.forEach(inspector => { %>
+          <option hidden><%= stage.rec5 %></option>
+          <option label="<%= inspector.name %>" value="<%= inspector.name%>">
+            <% }) %>
+          <option></option>
+        </select>
+
+    </div>
+    <div class="col">
+      <label for="buildNumber">Rec 6</label>
+      <select class="form-control" type="text" name="stage[rec6]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= stage.rec6 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+      <label for="buildNumber">Rec 7</label>
+      <select class="form-control" type="text" name="stage[rec7]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= stage.rec7 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+      <label for="buildNumber">Rec 8</label>
+      <select class="form-control" type="text" name="stage[rec8]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= stage.rec8 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+
+      <label for="buildNumber">Rec 9</label>
+      <select class="form-control" type="text" name="stage[rec9]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= stage.rec9 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+
+      <label for="buildNumber">Rec 10</label>
+      <select class="form-control" type="text" name="stage[rec10]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= stage.rec10 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+    </div>
+    <div class="col">
+      <label for="buildNumber">Name</label>
+      <input class="form-control" type="text" name="stage[name]" value="<%= stage.name %>" required>
+      <label for="buildNumber">SIP Station</label>
+      <input class="form-control" type="text" name="stage[sip]" value="<%= stage.sip %>" required>
+      <label for="buildNumber">Target DPU</label>
+      <input class="form-control" type="text" name="stage[target]" value="<%= stage.target %>" required>
+      <div class="form-group text-center">
+        <button class="btn btn-md btn-success" style="margin: 12px;">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+
+  <div>
+    <a href="/stage/all/<%= division %>">Go Back</a>
+  </div>

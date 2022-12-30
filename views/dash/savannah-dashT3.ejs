@@ -1,0 +1,949 @@
+<% layout('layouts/boilerplate')%>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- <meta http-equiv="refresh" content="1900" /> -->
+
+	<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+
+	<!-- <script src="/7z/content/chart-js/chart.bundle.min.js"></script> -->
+
+	<script src="/7z/content/chart-js/chart.bundle.js"></script>
+
+	<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+	<link rel="stylesheet" href="/stylesheets/dash.css" />
+</head>
+
+<style></style>
+
+<!-- The dash layout -->
+
+<section style="display: flex; justify-content: space-evenly; height: 85vh; flex-wrap: wrap; margin-top: -20px">
+	<!-- doa side -->
+	<div style="width: 1070px">
+		
+		<div style="display: flex; justify-content: space-evenly">
+			<div style="display: flex; flex-direction: column; width: 250px; margin-top: 38px;">
+				<!-- doa stat -->
+				<a href="/dash/savannah-dashDOA">
+					<div class="card" style="height: 380px; margin-bottom: 15px; display: flex; flex-direction: column; justify-content: space-evenly">
+						<div style="text-align: center; margin-top: -10px; font-size: 30px">DOA</div>
+						<div style="text-align: center; font-size: 15px"><%= newDOAStat.monthYear %></div>
+						<% if ( newDOAStat.totalDPU > newDOALastStat.totalDPU) { %>
+						<div style="text-align: center; font-size: 55px; font-weight: bold"><%= newDOAStat.totalDPU %></div>
+						<div style="text-align: center">
+              <div style="margin-bottom: 15px; font-size: 15px;">Vs Prev Month</div>
+							<i class="fa fa-caret-up" style="text-align: center; font-size: 165px; margin-top: -55px; color: red" aria-hidden="true"></i>
+						</div>
+
+						<% } else { %>
+						<div style="text-align: center; font-size: 55px; font-weight: bold"><%= newDOAStat.totalDPU %></div>
+						<div style="text-align: center">
+              <div style="margin-bottom: 15px; font-size: 15px;">Vs Prev Month</div>
+							<i class="fa fa-caret-down" style="text-align: center; font-size: 165px; margin-top: -55px; color: green" aria-hidden="true"></i>
+						</div>
+
+						<% } %>
+					</div>
+				</a>
+				<!-- t3 stat -->
+				<a href="/dash/savannah-dashT3">
+					<div class="card" style="height: 380px; margin-bottom: 15px; display: flex; flex-direction: column; justify-content: space-evenly">
+						<div style="text-align: center; margin-top: -10px; font-size: 30px">T3</div>
+						<div style="text-align: center; font-size: 15px"><%= newT3LastStat.monthYear %></div>
+						<% if ( newT3LastStat.totalDPU > newT3PrevLastStat.totalDPU ) { %>
+						<div style="text-align: center; font-size: 55px; font-weight: bold"><%= newT3LastStat.totalDPU%></div>
+						<div style="text-align: center">
+              <div style="margin-bottom: 15px; font-size: 15px;">Vs Prev Month</div>
+							<i class="fa fa-caret-up" style="text-align: center; font-size: 165px; margin-top: -55px; color: red" aria-hidden="true"></i>
+						</div>
+
+						<% } else { %>
+						<div style="text-align: center; font-size: 55px; font-weight: bold"><%= newT3LastStat.totalDPU %></div>
+						<div style="text-align: center">
+              <div style="margin-bottom: 15px; font-size: 15px;">Vs Prev Month</div>
+							<i class="fa fa-caret-down" style="text-align: center; font-size: 165px; margin-top: -55px; color: green" aria-hidden="true"></i>
+						</div>
+
+						<% } %>
+					</div>
+				</a>
+			</div>
+      
+			<div style="display: flex; flex-direction: column; width: 770px">
+        <div style="text-align: center; font-size: 25px; padding-left: 30px;">CUSTOMER QUALITY T3 PERFORMANCE</div>
+				<!-- t3 dpu chart -->
+				<div class="card" style="height: 340px; margin-bottom: 15px">
+					<div style="height: 350px">
+						<canvas id="t3Chart"></canvas>
+					</div>
+				</div>
+				<!-- prediction 1 -->
+				<div
+					class="card"
+					style="height: 130px; margin-bottom: 15px; display: flex; justify-content: space-between; flex-direction: row; padding: 0px 10px"
+				>
+					<div style="font-size: 15px; display: flex; flex-direction: column">
+						<div style="margin-bottom: 10px"><%= newT3Prediction1.monthYear %></div>
+						<div>Builds <%= newT3Prediction1.totalBuiltMachines %></div>
+						<div>Retailed <%= newT3Prediction1.totalRetails %></div>
+						<div>In MRI <%= newT3Prediction1.mriMachines %> - ( <%= newT3Prediction1.inMriPercent %>%)</div>
+						<div>Claims <%= newT3Prediction1.claims %></div>
+					</div>
+					<div style="font-size: 15px; display: flex; flex-direction: column">
+						<div style="margin-bottom: 15px">Vs Prev Month</div>
+						<% if ( newT3Prediction1.totalDPU > newT3LastStat.totalDPU) { %>
+						<i class="fa fa-caret-up" style="text-align: center; font-size: 165px; margin-top: -55px; color: red" aria-hidden="true"></i>
+						<% } else { %>
+						<i class="fa fa-caret-down" style="text-align: center; font-size: 165px; margin-top: -55px; color: green" aria-hidden="true"></i>
+						<% } %>
+					</div>
+					<div style="font-size: 15px; width: 40%; text-align: center; display: flex; flex-direction: column">
+						<div style="margin-bottom: 5px">Prediction</div>
+						<h1
+							class="<% if (newT3Prediction1.totalDPU > newT3Prediction1.t3DpuTarget) { %>red-prediction<% } else { %>green-prediction<% } %>"
+							style="font-size: 80px"
+						>
+							<%= newT3Prediction1.totalDPU %>
+						</h1>
+
+						<div style="margin-top: -15px">TARGET - <%= newT3Prediction1.t3DpuTarget%></div>
+					</div>
+					<div style="font-size: 15px; width: 20%; text-align: center; display: flex; flex-direction: column">
+						<div style="margin-bottom: 10px">RFT</div>
+						<div>
+							<canvas id="doughnut-chart1"></canvas>
+							<div style="position: relative; margin-top: -50px; font-size: 14px"><%= newT3Prediction1.rft %>%</div>
+						</div>
+					</div>
+				</div>
+				<!-- prediction 2 -->
+				<div
+					class="card"
+					style="height: 130px; margin-bottom: 15px; display: flex; justify-content: space-between; flex-direction: row; padding: 0px 10px"
+				>
+					<div style="font-size: 15px; display: flex; flex-direction: column">
+						<div style="margin-bottom: 10px"><%= newT3Prediction2.monthYear %></div>
+						<div>Builds <%= newT3Prediction2.totalBuiltMachines %></div>
+						<div>Retailed <%= newT3Prediction2.totalRetails %></div>
+						<div>In MRI <%= newT3Prediction2.mriMachines %> - ( <%= newT3Prediction2.inMriPercent %>%)</div>
+						<div>Claims <%= newT3Prediction2.claims %></div>
+					</div>
+					<div style="font-size: 15px; display: flex; flex-direction: column">
+						<div style="margin-bottom: 15px">Vs Prev Month</div>
+						<% if ( newT3Prediction2.totalDPU > newT3Prediction1.totalDPU ) { %>
+						<i class="fa fa-caret-up" style="text-align: center; font-size: 165px; margin-top: -55px; color: red" aria-hidden="true"></i>
+						<% } else { %>
+						<i class="fa fa-caret-down" style="text-align: center; font-size: 165px; margin-top: -55px; color: green" aria-hidden="true"></i>
+						<% } %>
+					</div>
+					<div style="font-size: 15px; width: 40%; text-align: center; display: flex; flex-direction: column">
+						<div style="margin-bottom: 5px">Prediction</div>
+						<h1
+							class="<% if (newT3Prediction2.totalDPU > newT3Prediction2.t3DpuTarget) { %>red-prediction<% } else { %>green-prediction<% } %>"
+							style="font-size: 80px"
+						>
+							<%= newT3Prediction2.totalDPU %>
+						</h1>
+
+						<div style="margin-top: -15px">TARGET - <%= newT3Prediction2.t3DpuTarget%></div>
+					</div>
+					<div style="font-size: 15px; width: 20%; text-align: center; display: flex; flex-direction: column">
+						<div style="margin-bottom: 10px">RFT</div>
+						<div>
+							<canvas id="doughnut-chart2"></canvas>
+							<div style="position: relative; margin-top: -50px; font-size: 14px"><%=newT3Prediction2.rft %>%</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- prediction 3 -->
+				<div
+					class="card"
+					style="height: 130px; margin-bottom: 15px; display: flex; justify-content: space-between; flex-direction: row; padding: 0px 10px"
+				>
+					<div style="font-size: 15px; display: flex; flex-direction: column">
+						<div style="margin-bottom: 10px"><%= newT3Prediction3.monthYear %></div>
+						<div>Builds <%= newT3Prediction3.totalBuiltMachines %></div>
+						<div>Retailed <%= newT3Prediction3.totalRetails %></div>
+						<div>In MRI <%= newT3Prediction3.mriMachines %> - ( <%= newT3Prediction3.inMriPercent %>%)</div>
+						<div>Claims <%= newT3Prediction3.claims %></div>
+					</div>
+					<div style="font-size: 15px; display: flex; flex-direction: column">
+						<div style="margin-bottom: 15px">Vs Prev Month</div>
+						<% if ( newT3Prediction3.totalDPU > newT3Prediction2.totalDPU ) { %>
+						<i class="fa fa-caret-up" style="text-align: center; font-size: 165px; margin-top: -55px; color: red" aria-hidden="true"></i>
+						<% } else { %>
+						<i class="fa fa-caret-down" style="text-align: center; font-size: 165px; margin-top: -55px; color: green" aria-hidden="true"></i>
+						<% } %>
+					</div>
+					<div style="font-size: 15px; width: 40%; text-align: center; display: flex; flex-direction: column">
+						<div style="margin-bottom: 5px">Prediction</div>
+						<h1
+							class="<% if (newT3Prediction3.totalDPU > newT3Prediction3.t3DpuTarget) { %>red-prediction<% } else { %>green-prediction<% } %>"
+							style="font-size: 80px"
+						>
+							<%= newT3Prediction3.totalDPU %>
+						</h1>
+
+						<div style="margin-top: -15px">TARGET - <%= newT3Prediction3.t3DpuTarget%></div>
+					</div>
+					<div style="font-size: 15px; width: 20%; text-align: center; display: flex; flex-direction: column">
+						<div style="margin-bottom: 10px">RFT</div>
+						<div>
+							<canvas id="doughnut-chart3"></canvas>
+							<div style="position: relative; margin-top: -50px; font-size: 14px"><%= newT3Prediction3.rft %>%</div>
+						</div>
+					</div>
+				</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- t3 side -->
+	<div style="width: 830px">
+		<div style="text-align: center; font-size: 25px">PRE T3 WARRANTY ANALYSIS</div>
+		<div style="display: flex; justify-content: space-between">
+			<div style="display: flex; flex-direction: column; width: 825px">
+				<div class="card" style="height: 775px; margin-bottom: 15px; display: flex; justify-content: space-evenly">
+					<!-- machine analysis -->
+					<div style="display: flex; justify-content: space-evenly; padding-left: 10px">
+						<div style="width: 26%px; height: 220px">
+							<canvas id="failedParts"></canvas>
+						</div>
+						<div style="width: 35%; height: 220px">
+							<canvas id="failureTypes"></canvas>
+						</div>
+						<div style="width: 26%; height: 220px">
+							<canvas id="models"></canvas>
+						</div>
+					</div>
+					<hr style="background-color: grey" style="width: 60%" />
+					<div style="text-align: center; font-size: 25px; margin-top: -15px">PRE T3 LEAKS ANALYSIS</div>
+					<!-- leaks analysis -->
+
+					<div style="display: flex; justify-content: space-between; padding-left: 10px; padding-right: 10px">
+						<div style="width: 400px; height: 130px">
+							<canvas id="new1"></canvas>
+						</div>
+						<div style="width: 400px; height: 130px">
+							<canvas id="new2"></canvas>
+						</div>
+					</div>
+
+					<!-- leaks trend -->
+
+					<div style="width: 800px; height: 720px">
+						<canvas id="leaksTrend"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+
+	Chart.defaults.global.defaultFontColor = "white";
+	// Chart.defaults.global.defaultFontSize = 15;
+	Chart.defaults.scale.gridLines.display = false;
+	// Chart.defaults.global.defaultFontFamily = "Ubuntu";
+
+
+		new Chart(document.getElementById("failureTypes"),
+		{
+		type: 'horizontalBar',
+		data: {
+		  labels: <%- JSON.stringify(top10FailureCodeLabels); %>,
+
+		  datasets: [{
+		    label: "Claims",
+		    backgroundColor: 'rgb(37 99 235)',
+	       hoverBackgroundColor: 'rgb(37 99 235)',
+
+		    data: <%- JSON.stringify(top10FailureCodeData) %>,
+		    // borderWidth: 1,
+		    // borderColor: '#777',
+		    // hoverBorderWidth: 3,
+		    // hoverBorderColor: '#FFFFFF',
+		    fontSize: 10,
+
+		  }, ]
+		},
+		options: {
+		  maintainAspectRatio: false,
+		  responsive: true,
+		  scales: {
+		    xAxes: [{
+
+		      ticks: {
+		         stacked: true,
+		           barPercentage: 0.8,
+		           ticks: {
+		             display: true,
+		             beginAtZero: true,
+		             fontSize: 9,
+		             fontColor: '#fff',
+		             autoSkip: false,
+		             maxRotation: 90,
+		             minRotation: 90,
+		             // callback: function(value) {if (value % 1 === 0) {return value;}}
+		           },
+		           dataLabels: {
+		             fontSize: 2
+		           },
+
+		        display: false,
+		        beginAtZero: true,
+		        callback: function(value) {
+		          if (value % 1 === 0) {
+		            return value;
+		          }
+		        }
+		      }
+		    }]
+		  },
+		  legend: {
+		    display: false
+		  },
+		  title: {
+		    display: true,
+		    text: 'TOP 10 FAILURE MODES',
+		    fontSize: 15	  }
+		}
+		})
+
+	   new Chart(document.getElementById("failedParts"),
+		{
+		type: 'horizontalBar',
+		data: {
+		  labels: <%- JSON.stringify(top10FailedPartsLabels); %>,
+
+		  datasets: [{
+		    label: "Claims",
+		    backgroundColor: 'rgb(37 99 235)',
+	       hoverBackgroundColor: 'rgb(37 99 235)',
+
+		    data: <%- JSON.stringify(top10FailedPartsData) %>,
+		    // borderWidth: 1,
+		    // borderColor: '#777',
+		    // hoverBorderWidth: 3,
+		    // hoverBorderColor: '#FFFFFF',
+		    fontSize: 10,
+
+		  }, ]
+		},
+		options: {
+		  maintainAspectRatio: false,
+		  responsive: true,
+		  scales: {
+		    xAxes: [{
+
+		      ticks: {
+		         stacked: true,
+		           barPercentage: 0.8,
+		           ticks: {
+		             display: true,
+		             beginAtZero: true,
+		             fontSize: 9,
+		             fontColor: '#fff',
+		             autoSkip: false,
+		             maxRotation: 90,
+		             minRotation: 90,
+		             // callback: function(value) {if (value % 1 === 0) {return value;}}
+		           },
+		           dataLabels: {
+		             fontSize: 2
+		           },
+
+		        display: false,
+		        beginAtZero: true,
+		        callback: function(value) {
+		          if (value % 1 === 0) {
+		            return value;
+		          }
+		        }
+		      }
+		    }]
+		  },
+		  legend: {
+		    display: false
+		  },
+		  title: {
+		    display: true,
+		    text: 'TOP 10 PARTS',
+		    fontSize: 15	  }
+		}
+		})
+
+
+
+
+
+
+	 const ctx2 = document.getElementById('t3Chart').getContext('2d');
+	 const chart2 = new Chart(ctx2, {
+    type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: <%- JSON.stringify(fullT3Labels) %>,
+        datasets: [
+          {
+            label: "Target",
+            type: "line",
+            borderColor: "red",
+            data: [ <%= newT3DPUTargetArr %> ],
+            fill: false
+          }, 
+          {
+            label: 'Closed',
+            data: [<%= newT3ClosedArr %>],
+            backgroundColor: 'green'
+          },
+          {
+            label: 'Contained',
+            data: [<%= newT3ContainedArr %>],
+            backgroundColor: 'orange',
+          },
+          {
+            label: 'Open',
+            data: [<%= newT3OpenArr %>],
+            backgroundColor: 'red',
+          },
+          {
+            label: 'WIP',
+            data: [<%= newT3UnactionedArr %>],
+            backgroundColor: <%- JSON.stringify(newT3UnactionedColorArr) %>,
+          }
+        ]
+      },
+      options: {
+        maintainAspectRatio: false,
+	     responsive: true,
+	     legend: {
+	       display: false,
+	       position: 'bottom',
+	       // labels: {
+	       //   useLineStyle: true,
+	       //   // boxWidth: 25
+	       // },
+	     },
+        scales: {
+          xAxes: [{
+            stacked: true,
+            gridLines: {
+            display: true,
+            color: "#555555",
+            drawBorder: true,
+            drawOnChartArea: false,
+            },
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 12,
+              fontColor: '#fff',
+              autoSkip: false,
+              maxRotation: 90,
+              minRotation: 90,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+           
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+            stacked: true,
+            gridLines: {
+            display:true,
+            color: "#555555",
+            drawBorder: true,
+            },
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 12,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        title: {
+          display: true,
+          text: 'T3 DPU',
+          fontSize: 15
+        },
+        legend: {
+          display: false,
+          position: 'right',
+          labels: {
+            fontColor: '#000'
+          }
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        tooltips: {
+          enabled: true,
+          mode:'label',
+          callbacks: {
+            label: function(tooltipItem, data) {
+
+              let dataset = data.datasets[tooltipItem.datasetIndex]
+              let datasetLabel = data.datasets[tooltipItem.datasetIndex].label
+
+              if (datasetLabel === "Target" || dataset.data[tooltipItem.index] === 0) {
+                return false
+              } else {
+                 
+               
+                let dpu = "DPU: "+dataset.data[tooltipItem.index];
+                
+            
+                return dpu
+              }
+            }
+         },
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          },
+        }
+
+      },
+	 })
+
+
+	 new Chart(document.getElementById("models"),
+		{
+		type: 'horizontalBar',
+		data: {
+		  labels: <%- JSON.stringify(top10ModelsLabels); %>,
+
+		  datasets: [{
+		    label: "Claims",
+		    backgroundColor: 'rgb(37 99 235)',
+	       hoverBackgroundColor: 'rgb(37 99 235)',
+
+		    data: <%- JSON.stringify(top10ModelsData) %>,
+		    // borderWidth: 1,
+		    // borderColor: '#777',
+		    // hoverBorderWidth: 3,
+		    // hoverBorderColor: '#FFFFFF',
+		    fontSize: 10,
+
+		  }, ]
+		},
+		options: {
+		  maintainAspectRatio: false,
+		  responsive: true,
+		  scales: {
+		    xAxes: [{
+
+		      ticks: {
+		         stacked: true,
+		           barPercentage: 0.8,
+		           ticks: {
+		             display: true,
+		             beginAtZero: true,
+		             fontSize: 9,
+		             fontColor: '#fff',
+		             autoSkip: false,
+		             maxRotation: 90,
+		             minRotation: 90,
+		             // callback: function(value) {if (value % 1 === 0) {return value;}}
+		           },
+		           dataLabels: {
+		             fontSize: 2
+		           },
+
+		        display: false,
+		        beginAtZero: true,
+		        callback: function(value) {
+		          if (value % 1 === 0) {
+		            return value;
+		          }
+		        }
+		      }
+		    }]
+		  },
+		  legend: {
+		    display: false
+		  },
+		  title: {
+		    display: true,
+		    text: 'TOP 10 MODELS',
+		    fontSize: 15	  }
+		}
+	})
+
+
+	 new Chart(document.getElementById("new1"),
+		{
+		type: 'horizontalBar',
+		data: {
+		  labels: <%- JSON.stringify(top10PartsLeakLabels); %>,
+
+		  datasets: [{
+		    label: "Claims",
+		    backgroundColor: 'rgb(37 99 235)',
+	       hoverBackgroundColor: 'rgb(37 99 235)',
+
+		    data: <%- JSON.stringify(top10PartsLeakData) %>,
+		    // borderWidth: 1,
+		    // borderColor: '#777',
+		    // hoverBorderWidth: 3,
+		    // hoverBorderColor: '#FFFFFF',
+		    fontSize: 10,
+
+		  }, ]
+		},
+		options: {
+		  maintainAspectRatio: false,
+		  responsive: true,
+		  scales: {
+		    xAxes: [{
+
+		      ticks: {
+		         stacked: true,
+		           barPercentage: 0.8,
+		          //  ticks: {
+		          //    display: true,
+		          //    beginAtZero: true,
+		          //    fontSize: 9,
+		          //    fontColor: '#fff',
+		          //    autoSkip: false,
+		          //    maxRotation: 90,
+		          //    minRotation: 90,
+		             // callback: function(value) {if (value % 1 === 0) {return value;}}
+		           //},
+		           dataLabels: {
+		             fontSize: 2
+		           },
+
+		        display: false,
+		        beginAtZero: true,
+		        callback: function(value) {
+		          if (value % 1 === 0) {
+		            return value;
+		          }
+		        }
+		      }
+		    }]
+		  },
+		  legend: {
+		    display: false
+		  },
+		  title: {
+		    display: true,
+		    text: 'TOP 5 PARTS',
+		    fontSize: 15	  }
+		}
+	})
+
+
+	 new Chart(document.getElementById("new2"),
+		{
+		type: 'horizontalBar',
+		data: {
+		  labels: <%- JSON.stringify(top10ModelLeakLabels); %>,
+
+		  datasets: [{
+		    label: "Claims",
+		    backgroundColor: 'rgb(37 99 235)',
+	       hoverBackgroundColor: 'rgb(37 99 235)',
+		    data: <%- JSON.stringify(top10ModelLeakData) %>,
+		  }, ]
+		},
+		options: {
+		  maintainAspectRatio: false,
+		  responsive: true,
+		  scales: {
+		    xAxes: [{
+
+		      ticks: {
+		         stacked: true,
+		           barPercentage: 0.8,
+		           ticks: {
+		             display: true,
+		             beginAtZero: true,
+		             fontSize: 9,
+		             fontColor: '#fff',
+		             autoSkip: false,
+		             maxRotation: 90,
+		             minRotation: 90,
+		             // callback: function(value) {if (value % 1 === 0) {return value;}}
+		           },
+		           dataLabels: {
+		             fontSize: 2,
+
+		           },
+
+		        display: false,
+		        beginAtZero: true,
+		        callback: function(value) {
+		          if (value % 1 === 0) {
+		            return value;
+		          }
+		        }
+		      }
+		    }]
+		  },
+		  legend: {
+		    display: false
+		  },
+		  title: {
+		    display: true,
+		    text: 'TOP 5 MODELS',
+		    fontSize: 15	  }
+		}
+	})
+
+
+	 const ctx3 = document.getElementById('leaksTrend').getContext('2d');
+	 const chart3 = new Chart(ctx3, {
+	   type: 'line',
+	    borderColor: 'orange',
+	     backgroundColor: 'transparent',
+	     pointRadius: 0,
+	     lineTension: 0,
+
+	   data: {
+	     labels: <%- JSON.stringify(fullT3Labels) %>,
+	     datasets: [
+	       {
+	         label: 'T1',
+	         data: [<%= newT1LeakArr %>],
+	         borderColor: 'rgb(37 99 235)',
+	         backgroundColor: 'transparent',
+	         pointRadius: 0,
+	         lineTension: 0,
+	         datalabels: {
+	           // display labels for this specific dataset
+	           display: true,
+	           color: 'white',
+	           rotation: -90,
+	           align: 'top',
+	           offset: -5,
+	           // anchor: 'start',
+	           formatter: function(value, context, values) {
+	             if (value > 0) {
+
+	               return value;
+	             } else {
+	               value = "";
+	               return value
+
+	             }
+	           },
+	         },
+	       },
+	       {
+	         label: 'T3',
+	         data: [<%= newT3LeakArr %>],
+	         borderColor: 'orange',
+	         backgroundColor: 'transparent',
+	         pointRadius: 0,
+	         lineTension: 0,
+	         datalabels: {
+	           // display labels for this specific dataset
+	           display: true,
+	           color: 'white',
+	           rotation: -90,
+	           align: 'top',
+	           offset: -5,
+	           // anchor: 'start',
+	           formatter: function(value, context, values) {
+	             if (value > 0) {
+
+	               return value;
+	             } else {
+	               value = "";
+	               return value
+
+	             }
+	           },
+	         },
+	       },
+
+	     ]
+	   },
+	   options: {
+	     maintainAspectRatio: false,
+	     responsive: true,
+	      legend: {
+	         labels: {
+	           useLineStyle: true,
+	           // boxWidth: 25
+	         },
+	         position: 'top',
+	       },
+	     title: {
+		    display: true,
+		    text: 'LEAKS DPU',
+		    fontSize: 15 },
+
+
+	     scales: {
+	       xAxes: [{
+	         // stacked: true,
+	         barPercentage: 0.75,
+	         ticks: {
+	           display: true,
+	           beginAtZero: true,
+	           fontSize: 12,
+	           fontColor: '#fff',
+	           autoSkip: false,
+	           maxRotation: 90,
+	           minRotation: 90,
+	           // callback: function(value) {if (value % 1 === 0) {return value;}}
+	         },
+
+	       }],
+	       yAxes: [{
+	         // stacked: true,
+	         position: 'left',
+	         //  stacked : true,
+	         display: true,
+	          fontColor:'black',
+	         ticks: {
+	           beginAtZero: true,
+	           min: 0,
+	           // max: 100,
+	           // stepSize: 0.3,
+	           fontSize: 9,
+	            fontColor:'black',
+	           //  formatter:: function(value, context, values) {
+	           //              if(context.dataIndex === context.dataset.data.length - 1){
+	           //                       return value
+	           //      }
+	           //  }
+
+	           callback: function(value) {
+	             if (value % 0.2 === 0) {
+	               return value
+	             }
+	           }
+	         },
+	       }]
+	     },
+	     plugins: {
+	       datalabels: {
+	         color: 'white',
+	         // font: {
+	         //   weight: 'bold'
+	         // },
+	         // formatter: function(value, context) {
+	         //   return Math.round(value);
+	         // }
+	       }
+	     }
+	   }
+	 })
+
+
+
+	  new Chart(document.getElementById("doughnut-chart1"), {
+	     type: 'doughnut',
+	     data: {
+	       labels: ['RFT', 'Not RFT'],
+	       datasets: [{
+	         label: "",
+	         backgroundColor: ["green", ],
+	         data: [<%= newT3Prediction1.rftNumber  %>, <%= newT3Prediction1.notRftNumber %>]
+	       }]
+	     },
+	     options: {
+	       plugins: {
+	       labels: {
+	         render: function(args) {
+	           conso
+	           if (args.percentage > 4) {
+	             return args.label + "\n" + args.percentage + '%';
+	           }
+	         },
+	         position: 'border'
+	       }
+
+	     },
+
+	       legend: {
+	         display: false,
+	       },
+	       elements: {
+	         center: {
+	           text: '60%',
+	           color: '#FFF', // Default is #000000
+	           sidePadding: 20, // Default is 20 (as a percentage)
+	           // minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+	           lineHeight: 25 // Default is 25 (in px), used for when text wraps
+	         }
+	       }
+	     }
+	   });
+	  new Chart(document.getElementById("doughnut-chart2"), {
+	     type: 'doughnut',
+	     data: {
+	       labels: ['RFT', 'Not RFT'],
+
+	       datasets: [{
+	         label: "",
+	         backgroundColor: ["green", ],
+	         data: [<%= newT3Prediction2.rftNumber  %>, <%= newT3Prediction2.notRftNumber %>],
+	       }]
+	     },
+	     options: {
+
+	       legend: {
+	         display: false,
+	       },
+	       elements: {
+	         center: {
+	           text: '60%',
+	           color: '#FFF', // Default is #000000
+	           sidePadding: 20, // Default is 20 (as a percentage)
+	           // minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+	           lineHeight: 25 // Default is 25 (in px), used for when text wraps
+	         }
+	       }
+	     }
+	   });
+	  new Chart(document.getElementById("doughnut-chart3"), {
+	     type: 'doughnut',
+	     data: {
+	       labels: ['RFT', 'Not RFT'],
+	       datasets: [{
+	         label: "",
+	         backgroundColor: ["green", ],
+
+	         data: [<%= newT3Prediction3.rftNumber  %>, <%= newT3Prediction3.notRftNumber %>],
+
+	       }]
+	     },
+	     options: {
+
+	       legend: {
+	         display: false,
+	       },
+	       elements: {
+	         center: {
+	           text: '60%',
+	           color: '#FFF', // Default is #000000
+	           sidePadding: 20, // Default is 20 (as a percentage)
+	           // minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+	           lineHeight: 25 // Default is 25 (in px), used for when text wraps
+	         }
+	       }
+	     }
+	   });
+</script>

@@ -1,0 +1,36 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+<div class="container" style="margin-left: 35%;">
+
+
+  <div class="row form-background" style="width: 500px;">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Edit Images</h1>
+    </div>
+
+    <div class="container form">
+
+      <div class="col">
+        <form action="/doa25pt/image/<%= claim._id %>" method="POST" enctype="multipart/form-data">
+
+          <label for="image">Image 1</label>
+          <input class="form-control" type="file" name="image1" name="image1" accept="image/*" required>
+          <label for="image">Image 2</label>
+          <input class="form-control" type="file" name="claim[image2]" name="image2" accept="image/*">
+          <label for="image">Image 3</label>
+          <input class="form-control" type="file" id="image3" name="claim[image3]" accept="image/*">
+          <label for="image">Image 4</label>
+          <input class="form-control" type="file" id="image4" name="claim[image4]" accept="image/*">
+          <label for="image">Image 5</label>
+          <input class="form-control" style="margin-bottom: 20px;" type="file" id="image5" name="claim[image5]" accept="image/*">
+      </div>
+      <button style="margin-bottom: 20px;" class="btn btn-md btn-success btn-block">Submit</button>
+    </div>
+
+
+
+    </form>
+  </div>

@@ -1,0 +1,66 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+
+<div class="vetting-body">
+  <header id="vettingJumbotron">
+
+    <h1 id="vetting-title" style="margin-top: -1rem;">DOA MAJOR ESCAPES</h1>
+
+
+
+
+
+  </header>
+
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 15px; height: 71vh;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 7vw;">TW Number</th>
+        <th style="width: 4vw;">Status</th>
+        <th style="width: 6vw;">Model</th>
+        <th style="width: 8vw;">Serial Number</th>
+        <th style="width: 10vw;">Failure Category</th>
+        <th style="width: 10vw;">Failure Mode</th>
+        <th style="width: 7vw;">Build Date</th>
+        <th style="width: 7vw;">Raised</th>
+        <th style="width: 7vw;">Contained</th>
+        <th style="width: 7vw;">Closed</th>
+        <th style="width: 35vw;">Narrative</th>
+      </tr>
+
+
+    </thead>
+    <tbody>
+      <% for (let doa25pt of doa25pts) { %>
+      <tr class="d-flex">
+        <td style="height: 76px; width: 7vw;"><a href="/claims/4cshow/<%=doa25pt._id%>"><%= doa25pt.claimNumber %></a></td>
+        <td style="width: 4vw;"> <%= doa25pt.status %></td>
+        <td style="width: 6vw;"> <%= doa25pt.model %></td>
+        <td style="width: 8vw;"> <%= doa25pt.name %></td>
+        <td style="width: 10vw;"> <%= doa25pt.failuretype %></td>
+        <td style="width: 10vw;"> <%= doa25pt.failuremode %></td>
+        <td style="width: 7vw;"> <%= doa25pt.buildDate %></td>
+        <td style="width: 7vw;"> <%= moment(doa25pt.vettedAt).format("DD/MM/YYYY  HH:mm") %></td>
+        <% if (doa25pt.status === 'Contained' || doa25pt.status === 'Closed' ) { %>
+        <td style="width: 7vw;"> <%= moment(doa25pt.containedAt).format("DD/MM/YYYY  HH:mm") %></td>
+        <% } else { %>
+        <td style="width: 7vw;"></td>
+        <% } %>
+        <% if (doa25pt.status === 'Closed' ) { %>
+        <td style="width: 7vw;"> <%= moment(doa25pt.closedAt).format("DD/MM/YYYY  HH:mm") %></td>
+        <% } else { %>
+        <td style="width: 7vw;"></td>
+        <% } %>
+        <td style="width: 35vw;"> <%= doa25pt.description.substring(0, 250) %>...</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+</div>

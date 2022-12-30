@@ -1,0 +1,44 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container" style="margin-left: 155px; align-items: center;">
+  <table class="table table-hover table-dark" style="font-size: 15px; width: 1550px; margin: auto; height: 750px; ">
+    <thead>
+      <tr class="d-flex">
+        <!-- <th style="width: 300px;">Zone<a class="float-right" href="/zone/new/<%= division %>"> <i class="fas fa-plus"></i></a></th> -->
+        <th style="width: 200px;">Zone</th>
+        <th style="width: 200px;">SIP</th>
+        <th style="width: 150px;">Target DPU</th>
+        <th style="width: 100px;">Rec 1</th>
+        <th style="width: 100px;">Rec 2</th>
+        <th style="width: 100px;">Rec 3</th>
+        <th style="width: 100px;">Rec 4</th>
+        <th style="width: 100px;">Rec 5</th>
+        <th style="width: 100px;">Rec 6</th>
+        <th style="width: 100px;">Rec 7</th>
+        <th style="width: 100px;">Rec 8</th>
+        <th style="width: 100px;">Rec 9</th>
+        <th style="width: 100px;">Rec 10</th>
+
+
+      </tr>
+    </thead>
+    <tbody>
+      <% stages.forEach(stage => { %>
+      <tr class="d-flex">
+        <td style=" width: 200px"><a href="/stage/edit/<%= stage._id %>"><%= stage.name %></a></td>
+        <td style=" width: 250px"><a href="/stage/edit/<%= stage._id %>"><%= stage.sip %></a></td>
+        <td style=" width: 100px; "><a href="/stage/edit/<%= stage._id %>"><%= stage.target %></a></td>
+        <td style=" width: 100px; "><a href="/stage/edit/<%= stage._id %>"><%= stage.rec1 %></a></td>
+        <td style=" width: 100px; "><a href="/stage/edit/<%= stage._id %>"><%= stage.rec2 %></a></td>
+        <td style=" width: 100px; "><a href="/stage/edit/<%= stage._id %>"><%= stage.rec3 %></a></td>
+        <td style=" width: 100px; "><a href="/stage/edit/<%= stage._id %>"><%= stage.rec4 %></a></td>
+        <td style=" width: 100px; "><a href="/stage/edit/<%= stage._id %>"><%= stage.rec5 %></a></td>
+        <td style=" width: 100px; "><a href="/stage/edit/<%= stage._id %>"><%= stage.rec6 %></a></td>
+        <td style=" width: 100px; "><a href="/stage/edit/<%= stage._id %>"><%= stage.rec7 %></a></td>
+        <td style=" width: 100px; "><a href="/stage/edit/<%= stage._id %>"><%= stage.rec8 %></a></td>
+        <td style=" width: 100px; "><a href="/stage/edit/<%= stage._id %>"><%= stage.rec9 %></a></td>
+        <td style=" width: 100px; "><a href="/stage/edit/<%= stage._id %>"><%= stage.rec10 %></a></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>

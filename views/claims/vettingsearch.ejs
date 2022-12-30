@@ -1,0 +1,49 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+
+<div class="vetting-body">
+  <header id="vettingJumbotron">
+    <h1 id="vetting-title">RE VET CLAIM</h1>
+
+    <!-- <p><strong>The all new online tracker</p></strong> -->
+
+
+
+  </header>
+
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 15px;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 5vw;">T Period</th>
+        <th style="width: 5vw;">Imported</th>
+        <th style="width: 7vw;">Claim Number</th>
+        <th style="width: 7vw;">Serial Number</th>
+        <th style="width: 6vw;">Model</th>
+        <th style="width: 7vw;">Build Date</th>
+        <th style="width: 15vw;">Failed Part</th>
+        <th style="width: 51vw;">Narrative</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (let claim of claims) { %>
+      <tr class="d-flex">
+        <td style="height: 76px; width: 5vw;"><%= claim.tPeriod %></td>
+        <td style="width: 5vw;"> <%= moment(claim.importedDate).format("DD/MM/YYYY") %></td>
+        <td style="width: 7vw;"><a href="/claims/<%=claim._id%>/edit"><%= claim.claimNumber %></a></td>
+        <td style="width: 7vw;"><%= claim.name %> - <%= claim.nameCount %></td>
+        <td style="width: 6vw;"> <%= claim.model %></td>
+        <td style="width: 7vw;"> <%= claim.buildDate%></td>
+        <td style="width: 15vw;"> <%= claim.failedPart %></td>
+        <td style="width: 51vw;"> <%= claim.description.substring(0, 180) %>...</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+</div>

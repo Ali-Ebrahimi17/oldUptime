@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-size=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="222" /> -->
+		<title>JCB - Equipment Monitoring</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" /> -->
+		<!-- <link rel="stylesheet" href="/content/bootswatch/united.css" type="text/css"> -->
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/content/font-awesome/css/all.css" type="text/css"> -->
+		<link rel="stylesheet" href="/font-v6/css/all.css" type="text/css" />
+		<link rel="stylesheet" href="/content/ui/jquery-ui.min.css" type="text/css" />
+		<script src="/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<script src="/content/ui/jquery-ui.min.js"></script>
+		<script src="/content/marquee/jquery.marquee.min.js"></script>
+		<script src="/content/timer/moment.js"></script>
+		<script src="/content/timer/dist/ez.countimer.min.js"></script>
+
+		<!-- <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" /> -->
+		<link rel="stylesheet" href="/stylesheets/app.css" />
+		<!-- <link rel="stylesheet" href="/fontawesome/css/all.css" /> -->
+	</head>
+
+	<body style="overflow-x: hidden; background-color: black; margin-top: 35px">
+		<div class="row header-top" style="top: 0; position: fixed; width: 102vw; z-index: 100; background-color: rgb(252, 176, 38)">
+			<div class="col text-left" style="padding: 4px 4px 5px 4px">
+				<img style="margin-left: 20px" height="24px" src="/media/jcb-logo.png" />
+			</div>
+			<div class="col text-right" style="padding: 5px 8px 0px 0px">
+				<!-- <a href="/equipment-monitoring/logout/<%= shortBu %>">
+                <span style="font-size: 21px; padding-top: 2px; color: black; margin-left: 5px;;" class="fas fa-cog icon-home"></span>
+            </a> -->
+				<a href="/equipment-monitoring/operations">
+					<span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 3%" class="fas fa-home icon-home"></span>
+				</a>
+			</div>
+		</div>
+
+		<div class="col-main">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center"><%= businessUnit %></h1>
+					<h1 style="font-size: 22px; color: rgb(252, 176, 38); text-align: center">Last 10 Shifts</h1>
+				</div>
+				<div class="col-lg-12" style="margin-top: 8px; border-top: 3px solid rgb(33, 35, 37)"></div>
+			</div>
+		</div>
+		<section
+			class="float-left"
+			style="
+				background-color: rgb(42, 46, 51);
+				width: 200px;
+				height: 700px;
+				color: white;
+				margin-left: 10px;
+				display: flex;
+				justify-content: space-between;
+				flex-direction: column;
+			"
+		>
+			<div style="text-align: center">
+				<h2 style="font-size: 35px">Options</h2>
+				<% if (shiftAccess) { %>
+				<hr />
+				<a href="/equipment-monitoring/admin/<%= shortBu %>">
+					<h2 style="margin-top: 15px"><i style="font-size: 35px" class="fas fa-clock"></i></h2>
+					<h2 style="font-size: 25px">Edit Shifts</h2>
+				</a>
+				<% } %>
+
+				<hr style="width: 80%; background-color: grey" />
+				<a href="/equipment-monitoring/history/<%= shortBu %>">
+					<h2 style="margin-top: 15px"><i class="fas fa-calendar-alt"></i></h2>
+					<h2 style="font-size: 25px">Shift History</h2>
+				</a>
+				<hr style="width: 80%; background-color: grey" />
+				<a href="/equipment-monitoring/notifications/<%= shortBu %>">
+					<!-- <a type="button" class="btn"  data-toggle="modal" data-target="#exampleModalCenter"><i style="font-size: 38px;" class="far fa-bell"></i></a> -->
+					<h2 style="margin-top: 15px"><i style="font-size: 38px" class="far fa-bell"></i></h2>
+					<h2 style="font-size: 25px">Notifications</h2>
+				</a>
+				<% if (userAccess) { %>
+				<hr style="width: 80%; background-color: grey" />
+				<a href="/equipment-monitoring/contacts/<%= shortBu %>">
+					<!-- <a type="button" class="btn"  data-toggle="modal" data-target="#exampleModalCenter"><i style="font-size: 38px;" class="far fa-bell"></i></a> -->
+					<h2 style="margin-top: 15px"><i style="font-size: 38px" class="fas fa-solid fa-user-plus"></i></h2>
+					<h2 style="font-size: 25px">Edit Users</h2>
+				</a>
+				<% } %>
+				<hr style="width: 80%; background-color: grey" />
+			</div>
+			<div style="text-align: center">
+				<a href="/equipment-monitoring/logout">
+					<!-- <a type="button" class="btn"  data-toggle="modal" data-target="#exampleModalCenter"><i style="font-size: 38px;" class="far fa-bell"></i></a> -->
+					<h2 style="margin-top: 15px"><i style="font-size: 38px" class="fa-solid fa-right-from-bracket"></i></h2>
+					<h2 style="font-size: 25px">Logout</h2>
+				</a>
+			</div>
+		</section>
+		<section style="margin: 0 15%">
+			<table
+				class="table table-hover table-dark"
+				style="font-size: 15px; width: 75vw; height: 700px; text-align: center; background-color: rgb(44, 47, 49)"
+			>
+				<thead style="font-size: 18px">
+					<tr class="d-flex">
+						<th style="width: 16vw">Asset</th>
+						<th style="width: 80%" colspan="5">Previous 10 Shifts</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% for (let m of machines) { %>
+					<tr class="d-flex">
+						<td style="width: 16vw; height: 100px"><%= m.machineName %></td>
+						<% for (let update of m.updates) { %> <% if (currentUser && currentUser.division === 'Group Operations' && currentUser.role !== 'Setter')
+						{ %>
+						<td>
+							<a href="" data-toggle="modal" data-target="#delete-shift-modal">
+								<%= moment(update.shiftStart).format("DD/MM/YYYY") %><br />
+								<%= moment(update.shiftStart).format("HH:mm") %> - <%= moment(update.shiftEnd).format("HH:mm") %><br />
+								<span>Eff</span> <%= update.eff %>%<br />
+							</a>
+						</td>
+
+						<% } else { %>
+						<td>
+							<%= moment(update.shiftStart).format("DD/MM/YYYY") %><br />
+							<%= moment(update.shiftStart).format("HH:mm") %> - <%= moment(update.shiftEnd).format("HH:mm") %><br />
+							<span>Eff</span> <%= update.eff %>%<br />
+						</td>
+
+						<% } %>
+
+						<!--  delete shift modal -->
+						<div class="modal fade" id="delete-shift-modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div style="background-color: rgb(252, 176, 38); height: 50px">
+										<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+										<h3 style="text-align: center; margin: 8px">Delete Shift</h3>
+									</div>
+									<div class="modal-body">
+										<fieldset>
+											<form id="theForm" action="/equipment-monitoring/deleteshift/<%= update._id %>" method="GET">
+												<div class="row" style="color: black">
+													<div class="col">
+														<p for="buildNumber">Are you sure you want to delete shift?</p>
+
+														<button
+															type="button"
+															id="modalClose"
+															data-dismiss="modal"
+															class="btn btn-danger float-right"
+															style="margin-left: 8px; color: white; border-radius: 4px"
+														>
+															Cancel
+														</button>
+														<button
+															id="btnSave"
+															class="btn btn-success float-right"
+															type="submit"
+															style="margin-bottom: 10px; color: white; border-radius: 4px"
+														>
+															Confirm
+														</button>
+													</div>
+												</div>
+											</form>
+										</fieldset>
+									</div>
+									<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+										<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+										<img height="24px" src="/7z/content/images/df.png" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<%} %>
+					</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</section>
+
+		<div
+			class="container-fluid footer"
+			style="bottom: 0; position: fixed; width: 100vw; z-index: 100; background-color: transparent; margin-top: 5px; z-index: 2"
+		>
+			<div class="row header-top">
+				<div class="col-lg-6 d-lg-block text-left" style="padding: 4px 4px 5px 4px; background-color: rgb(252, 176, 38)">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold; background-color: rgb(252, 176, 38)">
+					J.C. Bamford Excavators LTD &copy; 2022
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

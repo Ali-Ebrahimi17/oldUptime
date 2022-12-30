@@ -1,0 +1,48 @@
+<% layout('layouts/boilerplate')%>
+
+<header style="text-align: center; margin-bottom: 30px;">
+  <h1 style="font-weight: bold;">Analysis of the <%= partName %> faults</h1>
+</header>
+<div class="top50-analysis-container">
+  <div>
+    <ul style="list-style-type:none;">
+      <h2>Notes</h2>
+      <% for (let c of comments) { %>
+      <li><%= c._id %> - <%= c.count %></li>
+      <% } %>
+    </ul>
+  </div>
+  <div>
+    <ul style="list-style-type:none;">
+      <h2>Fault Codes</h2>
+      <% for (let f of faultCodes) { %>
+      <li><%= f._id %> - <%= f.count %></li>
+      <% } %>
+    </ul>
+  </div>
+  <div>
+    <ul style="list-style-type:none;">
+      <h2>Inspectors</h2>
+      <% for (let i of inspectors) { %>
+      <li><%= i._id %> - <%= i.count %></li>
+      <% } %>
+    </ul>
+  </div>
+  <div>
+    <ul style="list-style-type:none;">
+      <h2>Models</h2>
+      <% for (let m of models) { %>
+      <li><%= m._id %> - <%= m.count %></li>
+      <% } %>
+    </ul>
+  </div>
+  <div>
+    <ul style="list-style-type:none;">
+      <h2>Areas</h2>
+      <% for (let a of areas) { %>
+      <li><%= a._id %> - <%= a.count %></li>
+      <% } %>
+    </ul>
+  </div>
+
+</div>

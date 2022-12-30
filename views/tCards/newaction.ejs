@@ -1,0 +1,34 @@
+<% layout('layouts/boilerplateTCard')%>
+
+
+<div class="main-tCard-container">
+  <h2 class="main-title"> CRITICAL PLANT CHECKS</h2>
+  <div class="row" style="width: 100%;">
+    <div id="reallocation-container">
+
+
+
+      <div class="modal-form" style="width: 30%;">
+        <div class="modal-content" style="border-radius: 0;">
+          <div style="background-color: rgb(252, 176, 38); height: 50px;">
+            <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+            <h4 style="text-align: center; margin: 8px;">Create New Action</h4>
+          </div>
+          <div class="modal-body">
+            <form action="/tCard/<%= tCard._id %>/action/new" method="POST">
+              <fieldset>
+                <div class="form-group">
+                  <!-- <label for="name">Name</label> -->
+                  <textarea class="form-control" id="reasonTextarea" name="action[name]" rows="5" style="resize: none" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success float-right" style="margin-left: 8px; ">Submit</button>
+              </fieldset>
+            </form>
+          </div>
+          <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+            <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

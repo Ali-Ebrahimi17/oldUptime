@@ -1,0 +1,63 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="reallocation-container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1>Update Q Smart Problem</h1>
+      <!-- <p>Please note that requests submitted after 3pm will be not be actioned until the next day</p> -->
+    </div>
+
+
+
+    <div class="col">
+      <form action="/tracker/edit/<%= tracker._id %>" method="POST">
+        <input type="hidden" name="tracker[division]" value="<%= division %>">
+
+        <label for="buildNumber">Raised By</label>
+        <input class="form-control" type="text" id="password" name="tracker[serialNumber]" value="<%= tracker.submittedBy %>" disabled required>
+
+        <label for="buildNumber">Serial/Asset Number</label>
+        <input class="form-control" type="text" id="password" name="tracker[serialNumber]" value="<%= tracker.serialNumber %>" required>
+
+        <label for="buildNumber">Area</label>
+        <input class="form-control" type="text" id="password" name="tracker[area]" value="<%= tracker.area %>" required>
+
+        <label for="buildNumber">Team leader</label>
+        <input class="form-control" type="text" id="password" name="tracker[teamLeader]" value="<%= tracker.teamLeader %>" required>
+
+        <label for="area">Status</label>
+        <select class="form-control" type="text" name="tracker[rating]" value="<%= tracker.rating %>" autocomplete="off">
+          <option hidden><%= tracker.rating %></option>
+          <option>Red</option>
+          <option>Amber</option>
+          <option>Green</option>
+        </select>
+
+        <label for="area">Open/Closed</label>
+        <select class="form-control" type="text" name="tracker[status]" value="<%= tracker.status %>" autocomplete="off">
+          <option hidden><%= tracker.status %></option>
+          <option>Open</option>
+          <option>Closed</option>
+        </select>
+
+    </div>
+    <div class="col">
+      <label for="notes">Issue</label>
+      <textarea style="height: 110px; margin-bottom: 30px;" class="form-control" name="tracker[issue]" required><%= tracker.issue %></textarea>
+
+      <label for="notes">Comments</label>
+      <textarea style="height: 150px; margin-bottom: 30px;" class="form-control" name="tracker[comments]"><%= tracker.comments %></textarea>
+
+
+      <div class="form-group text-center">
+        <button class="btn btn-md btn-success btn-block">Submit</button>
+      </div>
+    </div>
+    </form>
+  </div>
+  <div>
+
+  </div>

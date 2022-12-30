@@ -1,0 +1,29 @@
+<% layout('layouts/boilerplateTCard')%>
+
+<div id="newbuild-container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Add Action</h1>
+    </div>
+
+
+
+    <div class="col">
+      <form action="/action/new/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/<%= frequency %>/" method="POST">
+        <input type="hidden" name="action[division]" value="<%= division %>">
+        <label for="buildNumber">Name</label>
+        <input class="form-control" type="text" name="area[name]" required>
+        <label for="buildNumber">Email</label>
+        <input class="form-control" type="email" name="area[email]" required>
+        <div class="form-group text-center">
+          <button class="btn bln-block btn-md btn-success" style="margin: 5px;">Save</button>
+        </div>
+    </div>
+    </form>
+  </div>
+  <div>
+    <a href="/area/all/<%= division %>">Go Back</a>
+  </div>

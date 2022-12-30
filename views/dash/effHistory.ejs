@@ -1,0 +1,1332 @@
+<% layout('layouts/boilerplate')%>
+<link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+<style>
+  .graph-holder {
+    background-color: rgb(36, 42, 49);
+    width: 400px;
+    height: 250px;
+    margin-bottom: 50px;
+    /* border: 1px solid white; */
+    padding-right: 8px;
+    border-radius: 4px;
+  }
+
+  .all-graph-wrapper {
+    margin-top: 75px;
+  }
+</style>
+
+<body style="background-color: rgba(6, 10, 12, 0.952); color: white; display: flex;">
+  <div style="display: flex; justify-content: space-evenly; margin-top: -10px; margin-bottom: 20px;">
+    <h2>Loadall Inspector Efficiency</h2>
+  </div>
+
+  <div class="all-graph-wrapper">
+    <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
+      <a href="/dash/qsmart/Booms/LDL">
+        <div class="graph-holder">
+          <h3 style="text-align: center;">Booms</h3>
+          <div class="graph">
+            <canvas id="zB"></canvas>
+          </div>
+        </div>
+      </a>
+      <a href="/dash/qsmart/Track 1 - Zone 2/LDL">
+        <div class="graph-holder">
+          <h3 style="text-align: center;">SIP 2</h3>
+          <div class="graph">
+            <canvas id="z2"></canvas>
+          </div>
+        </div>
+      </a>
+      <a href="/dash/qsmart/Track 1 - Zone 3/LDL">
+        <div class="graph-holder">
+          <h3 style="text-align: center;">SIP 3</h3>
+          <div class="graph">
+            <canvas id="z3"></canvas>
+          </div>
+        </div>
+      </a>
+      <a href="/dash/qsmart/Track 1 - Zone 4/LDL">
+        <div class="graph-holder">
+          <h3 style="text-align: center;">SIP 4</h3>
+          <div class="graph">
+            <canvas id="z4"></canvas>
+          </div>
+        </div>
+      </a>
+      <a href="/dash/qsmart/Track 1 - Zone 5/LDL">
+        <div class="graph-holder">
+          <h3 style="text-align: center;">SIP 5</h3>
+          <div class="graph">
+            <canvas id="z5"></canvas>
+          </div>
+        </div>
+      </a>
+      <a href="/dash/qsmart/Track 1 - Zone 6/LDL">
+        <div class="graph-holder">
+          <h3 style="text-align: center;">SIP 6</h3>
+          <div class="graph">
+            <canvas id="z6"></canvas>
+          </div>
+        </div>
+      </a>
+      <a href="/dash/qsmart/Track 3 Zone 1/LDL">
+        <div class="graph-holder">
+          <h3 style="text-align: center;">Track 3 SIP 1</h3>
+          <div class="graph">
+            <canvas id="z31"></canvas>
+          </div>
+        </div>
+      </a>
+      <a href="/dash/qsmart/Track 3 Zone 2/LDL">
+        <div class="graph-holder">
+          <h3 style="text-align: center;">Track 3 SIP 2</h3>
+          <div class="graph">
+            <canvas id="z32"></canvas>
+          </div>
+        </div>
+      </a>
+    </div>
+
+
+  </div>
+
+</body>
+
+<script>
+  Chart.defaults.global.defaultFontColor = "#fff";
+  //---------------------------------------------
+
+  // set default to straight lines - no curves
+  // Chart.defaults.global.elements.line.tension = 0;
+  // set default no fill beneath the line
+  Chart.defaults.global.elements.line.fill = false;
+
+
+  // stacked bar with 2 unstacked lines - nope
+  var z2Data = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      type: 'line',
+      label: '%',
+      yAxisID: "y-axis-1",
+      backgroundColor: "orange",
+      borderColor: "orange",
+      datalabels: {
+        display: false
+      },
+      data: [
+        <%= effZone2FiveDaysAgo %>,
+        <%= effZone2FourDaysAgo %>,
+        <%= effZone2ThreeDaysAgo %>,
+        <%= effZone2TwoDaysAgo %>,
+        <%= effZone2OneDayAgo %>,
+        <%= effZone2Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Found',
+      yAxisID: "y-axis-0",
+      backgroundColor: "green",
+      data: [
+        <%= inZone2FiveDaysAgo %>,
+        <%= inZone2FourDaysAgo %>,
+        <%= inZone2ThreeDaysAgo %>,
+        <%= inZone2TwoDaysAgo %>,
+        <%= inZone2OneDayAgo %>,
+        <%= inZone2Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Missed',
+      yAxisID: "y-axis-0",
+      backgroundColor: "red",
+
+      data: [
+        <%= outZone2FiveDaysAgo %>,
+        <%= outZone2FourDaysAgo %>,
+        <%= outZone2ThreeDaysAgo %>,
+        <%= outZone2TwoDaysAgo %>,
+        <%= outZone2OneDayAgo %>,
+        <%= outZone2Today %>,
+      ]
+    }, ]
+  };
+  var z3Data = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      type: 'line',
+      label: '%',
+      yAxisID: "y-axis-1",
+      backgroundColor: "orange",
+      borderColor: "orange",
+      datalabels: {
+        display: false
+      },
+      data: [
+        <%= effZone3FiveDaysAgo %>,
+        <%= effZone3FourDaysAgo %>,
+        <%= effZone3ThreeDaysAgo %>,
+        <%= effZone3TwoDaysAgo %>,
+        <%= effZone3OneDayAgo %>,
+        <%= effZone3Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Found',
+      yAxisID: "y-axis-0",
+      backgroundColor: "green",
+      data: [
+        <%= inZone3FiveDaysAgo %>,
+        <%= inZone3FourDaysAgo %>,
+        <%= inZone3ThreeDaysAgo %>,
+        <%= inZone3TwoDaysAgo %>,
+        <%= inZone3OneDayAgo %>,
+        <%= inZone3Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Missed',
+      yAxisID: "y-axis-0",
+      backgroundColor: "red",
+
+      data: [
+        <%= outZone3FiveDaysAgo %>,
+        <%= outZone3FourDaysAgo %>,
+        <%= outZone3ThreeDaysAgo %>,
+        <%= outZone3TwoDaysAgo %>,
+        <%= outZone3OneDayAgo %>,
+        <%= outZone3Today %>,
+      ]
+    }, ]
+  };
+  var z4Data = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      type: 'line',
+      label: '%',
+      yAxisID: "y-axis-1",
+      backgroundColor: "orange",
+      borderColor: "orange",
+      datalabels: {
+        display: false
+      },
+      data: [
+        <%= effZone4FiveDaysAgo %>,
+        <%= effZone4FourDaysAgo %>,
+        <%= effZone4ThreeDaysAgo %>,
+        <%= effZone4TwoDaysAgo %>,
+        <%= effZone4OneDayAgo %>,
+        <%= effZone4Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Found',
+      yAxisID: "y-axis-0",
+      backgroundColor: "green",
+      data: [
+        <%= inZone4FiveDaysAgo %>,
+        <%= inZone4FourDaysAgo %>,
+        <%= inZone4ThreeDaysAgo %>,
+        <%= inZone4TwoDaysAgo %>,
+        <%= inZone4OneDayAgo %>,
+        <%= inZone4Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Missed',
+      yAxisID: "y-axis-0",
+      backgroundColor: "red",
+
+      data: [
+        <%= outZone4FiveDaysAgo %>,
+        <%= outZone4FourDaysAgo %>,
+        <%= outZone4ThreeDaysAgo %>,
+        <%= outZone4TwoDaysAgo %>,
+        <%= outZone4OneDayAgo %>,
+        <%= outZone4Today %>,
+      ]
+    }, ]
+  };
+
+  var z5Data = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      type: 'line',
+      label: '%',
+      yAxisID: "y-axis-1",
+      backgroundColor: "orange",
+      borderColor: "orange",
+      datalabels: {
+        display: false
+      },
+      data: [
+        <%= effZone5FiveDaysAgo %>,
+        <%= effZone5FourDaysAgo %>,
+        <%= effZone5ThreeDaysAgo %>,
+        <%= effZone5TwoDaysAgo %>,
+        <%= effZone5OneDayAgo %>,
+        <%= effZone5Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Found',
+      yAxisID: "y-axis-0",
+      backgroundColor: "green",
+      data: [
+        <%= inZone5FiveDaysAgo %>,
+        <%= inZone5FourDaysAgo %>,
+        <%= inZone5ThreeDaysAgo %>,
+        <%= inZone5TwoDaysAgo %>,
+        <%= inZone5OneDayAgo %>,
+        <%= inZone5Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Missed',
+      yAxisID: "y-axis-0",
+      backgroundColor: "red",
+
+      data: [
+        <%= outZone5FiveDaysAgo %>,
+        <%= outZone5FourDaysAgo %>,
+        <%= outZone5ThreeDaysAgo %>,
+        <%= outZone5TwoDaysAgo %>,
+        <%= outZone5OneDayAgo %>,
+        <%= outZone5Today %>,
+      ]
+    }, ]
+  };
+
+  var z6Data = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      type: 'line',
+      label: '%',
+      yAxisID: "y-axis-1",
+      backgroundColor: "orange",
+      borderColor: "orange",
+      datalabels: {
+        display: false
+      },
+      data: [
+        <%= effZone6FiveDaysAgo %>,
+        <%= effZone6FourDaysAgo %>,
+        <%= effZone6ThreeDaysAgo %>,
+        <%= effZone6TwoDaysAgo %>,
+        <%= effZone6OneDayAgo %>,
+        <%= effZone6Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Found',
+      yAxisID: "y-axis-0",
+      backgroundColor: "green",
+      data: [
+        <%= inZone6FiveDaysAgo %>,
+        <%= inZone6FourDaysAgo %>,
+        <%= inZone6ThreeDaysAgo %>,
+        <%= inZone6TwoDaysAgo %>,
+        <%= inZone6OneDayAgo %>,
+        <%= inZone6Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Missed',
+      yAxisID: "y-axis-0",
+      backgroundColor: "red",
+
+      data: [
+        <%= outZone6FiveDaysAgo %>,
+        <%= outZone6FourDaysAgo %>,
+        <%= outZone6ThreeDaysAgo %>,
+        <%= outZone6TwoDaysAgo %>,
+        <%= outZone6OneDayAgo %>,
+        <%= outZone6Today %>,
+      ]
+    }, ]
+  };
+
+  var z31Data = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      type: 'line',
+      label: '%',
+      yAxisID: "y-axis-1",
+      backgroundColor: "orange",
+      borderColor: "orange",
+      datalabels: {
+        display: false
+      },
+      data: [
+        <%= effZone31FiveDaysAgo %>,
+        <%= effZone31FourDaysAgo %>,
+        <%= effZone31ThreeDaysAgo %>,
+        <%= effZone31TwoDaysAgo %>,
+        <%= effZone31OneDayAgo %>,
+        <%= effZone31Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Found',
+      yAxisID: "y-axis-0",
+      backgroundColor: "green",
+      data: [
+        <%= inZone31FiveDaysAgo %>,
+        <%= inZone31FourDaysAgo %>,
+        <%= inZone31ThreeDaysAgo %>,
+        <%= inZone31TwoDaysAgo %>,
+        <%= inZone31OneDayAgo %>,
+        <%= inZone31Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Missed',
+      yAxisID: "y-axis-0",
+      backgroundColor: "red",
+
+      data: [
+        <%= outZone31FiveDaysAgo %>,
+        <%= outZone31FourDaysAgo %>,
+        <%= outZone31ThreeDaysAgo %>,
+        <%= outZone31TwoDaysAgo %>,
+        <%= outZone31OneDayAgo %>,
+        <%= outZone31Today %>,
+      ]
+    }, ]
+  };
+
+  var z32Data = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      type: 'line',
+      label: '%',
+      yAxisID: "y-axis-1",
+      backgroundColor: "orange",
+      borderColor: "orange",
+      datalabels: {
+        display: false
+      },
+      data: [
+        <%= effZone32FiveDaysAgo %>,
+        <%= effZone32FourDaysAgo %>,
+        <%= effZone32ThreeDaysAgo %>,
+        <%= effZone32TwoDaysAgo %>,
+        <%= effZone32OneDayAgo %>,
+        <%= effZone32Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Found',
+      yAxisID: "y-axis-0",
+      backgroundColor: "green",
+      data: [
+        <%= inZone32FiveDaysAgo %>,
+        <%= inZone32FourDaysAgo %>,
+        <%= inZone32ThreeDaysAgo %>,
+        <%= inZone32TwoDaysAgo %>,
+        <%= inZone32OneDayAgo %>,
+        <%= inZone32Today %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Missed',
+      yAxisID: "y-axis-0",
+      backgroundColor: "red",
+
+      data: [
+        <%= outZone32FiveDaysAgo %>,
+        <%= outZone32FourDaysAgo %>,
+        <%= outZone32ThreeDaysAgo %>,
+        <%= outZone32TwoDaysAgo %>,
+        <%= outZone32OneDayAgo %>,
+        <%= outZone32Today %>,
+      ]
+    }, ]
+  };
+
+  var zBData = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      type: 'line',
+      label: '%',
+      yAxisID: "y-axis-1",
+      backgroundColor: "orange",
+      borderColor: "orange",
+      datalabels: {
+        display: false
+      },
+      data: [
+        <%= effZoneBFiveDaysAgo %>,
+        <%= effZoneBFourDaysAgo %>,
+        <%= effZoneBThreeDaysAgo %>,
+        <%= effZoneBTwoDaysAgo %>,
+        <%= effZoneBOneDayAgo %>,
+        <%= effZoneBToday %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Found',
+      yAxisID: "y-axis-0",
+      backgroundColor: "green",
+      data: [
+        <%= inZoneBFiveDaysAgo %>,
+        <%= inZoneBFourDaysAgo %>,
+        <%= inZoneBThreeDaysAgo %>,
+        <%= inZoneBTwoDaysAgo %>,
+        <%= inZoneBOneDayAgo %>,
+        <%= inZoneBToday %>,
+      ]
+    }, {
+      type: 'bar',
+      label: 'Missed',
+      yAxisID: "y-axis-0",
+      backgroundColor: "red",
+
+      data: [
+        <%= outZoneBFiveDaysAgo %>,
+        <%= outZoneBFourDaysAgo %>,
+        <%= outZoneBThreeDaysAgo %>,
+        <%= outZoneBTwoDaysAgo %>,
+        <%= outZoneBOneDayAgo %>,
+        <%= outZoneBToday %>,
+      ]
+    }, ]
+  };
+
+
+  var ctx = document.getElementById("z2").getContext("2d");
+  // allocate and initialize a chart
+  var ch = new Chart(ctx, {
+    type: 'bar',
+    data: z2Data,
+    options: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: false,
+        text: "Chart.js Bar Chart - Stacked"
+      },
+      tooltips: {
+        mode: 'label'
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          stacked: true,
+          position: "left",
+          id: "y-axis-0",
+          display: true,
+          gridLines: {
+            display: false
+          }
+        }, {
+          stacked: false,
+          position: "right",
+          id: "y-axis-1",
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            display: true,
+          },
+          gridLines: {
+            display: false
+          }
+        }]
+      }
+    }
+  });
+
+  var ctx = document.getElementById("z3").getContext("2d");
+  // allocate and initialize a chart
+  var ch = new Chart(ctx, {
+    type: 'bar',
+    data: z3Data,
+    options: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: false,
+        text: "Chart.js Bar Chart - Stacked"
+      },
+      tooltips: {
+        mode: 'label'
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          stacked: true,
+          position: "left",
+          id: "y-axis-0",
+          display: true,
+          gridLines: {
+            display: false
+          }
+        }, {
+          stacked: false,
+          position: "right",
+          id: "y-axis-1",
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            display: true,
+          },
+          gridLines: {
+            display: false
+          }
+        }]
+      }
+    }
+  });
+  var ctx = document.getElementById("z4").getContext("2d");
+  // allocate and initialize a chart
+  var ch = new Chart(ctx, {
+    type: 'bar',
+    data: z4Data,
+    options: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: false,
+        text: "Chart.js Bar Chart - Stacked"
+      },
+      tooltips: {
+        mode: 'label'
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          stacked: true,
+          position: "left",
+          id: "y-axis-0",
+          display: true,
+          gridLines: {
+            display: false
+          }
+        }, {
+          stacked: false,
+          position: "right",
+          id: "y-axis-1",
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            display: true,
+          },
+          gridLines: {
+            display: false
+          }
+        }]
+      }
+    }
+  });
+  var ctx = document.getElementById("z5").getContext("2d");
+  // allocate and initialize a chart
+  var ch = new Chart(ctx, {
+    type: 'bar',
+    data: z5Data,
+    options: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: false,
+        text: "Chart.js Bar Chart - Stacked"
+      },
+      tooltips: {
+        mode: 'label'
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          stacked: true,
+          position: "left",
+          id: "y-axis-0",
+          display: true,
+          gridLines: {
+            display: false
+          }
+        }, {
+          stacked: false,
+          position: "right",
+          id: "y-axis-1",
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            display: true,
+          },
+          gridLines: {
+            display: false
+          }
+        }]
+      }
+    }
+  });
+  var ctx = document.getElementById("z6").getContext("2d");
+  // allocate and initialize a chart
+  var ch = new Chart(ctx, {
+    type: 'bar',
+    data: z6Data,
+    options: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: false,
+        text: "Chart.js Bar Chart - Stacked"
+      },
+      tooltips: {
+        mode: 'label'
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          stacked: true,
+          position: "left",
+          id: "y-axis-0",
+          display: true,
+          gridLines: {
+            display: false
+          }
+        }, {
+          stacked: false,
+          position: "right",
+          id: "y-axis-1",
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            display: true,
+          },
+          gridLines: {
+            display: false
+          }
+        }]
+      }
+    }
+  });
+  var ctx = document.getElementById("z31").getContext("2d");
+  // allocate and initialize a chart
+  var ch = new Chart(ctx, {
+    type: 'bar',
+    data: z31Data,
+    options: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: false,
+        text: "Chart.js Bar Chart - Stacked"
+      },
+      tooltips: {
+        mode: 'label'
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          stacked: true,
+          position: "left",
+          id: "y-axis-0",
+          display: true,
+          gridLines: {
+            display: false
+          }
+        }, {
+          stacked: false,
+          position: "right",
+          id: "y-axis-1",
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            display: true,
+          },
+          gridLines: {
+            display: false
+          }
+        }]
+      }
+    }
+  });
+  var ctx = document.getElementById("z32").getContext("2d");
+  // allocate and initialize a chart
+  var ch = new Chart(ctx, {
+    type: 'bar',
+    data: z32Data,
+    options: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: false,
+        text: "Chart.js Bar Chart - Stacked"
+      },
+      tooltips: {
+        mode: 'label'
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          stacked: true,
+          position: "left",
+          id: "y-axis-0",
+          display: true,
+          gridLines: {
+            display: false
+          }
+        }, {
+          stacked: false,
+          position: "right",
+          id: "y-axis-1",
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            display: true,
+          },
+          gridLines: {
+            display: false
+          }
+        }]
+      }
+    }
+  });
+  var ctx = document.getElementById("zB").getContext("2d");
+  // allocate and initialize a chart
+  var ch = new Chart(ctx, {
+    type: 'bar',
+    data: zBData,
+    options: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: false,
+        text: "Chart.js Bar Chart - Stacked"
+      },
+      tooltips: {
+        mode: 'label'
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          stacked: true,
+          position: "left",
+          id: "y-axis-0",
+          display: true,
+          gridLines: {
+            display: false
+          }
+        }, {
+          stacked: false,
+          position: "right",
+          id: "y-axis-1",
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            display: true,
+          },
+          gridLines: {
+            display: false
+          }
+        }]
+      }
+    }
+  });
+
+
+
+
+  //------------------------------------------------
+
+
+  let options = {
+    events: false,
+    legend: {
+      display: false
+    },
+    tooltips: {
+      enabled: false
+    },
+    animation: {
+      onComplete: function() {
+        let ctx = this.chart.ctx;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        let chart = this;
+        let datasets = this.config.data.datasets;
+
+        datasets.forEach(function(dataset, i) {
+          ctx.font = "24px";
+          ctx.fillStyle = "white";
+          chart.getDatasetMeta(i).data.forEach(function(p, j) {
+            ctx.fillText(datasets[i].data[j] + "%", p._model.x, p._model.y - 20);
+          });
+        });
+      }
+    },
+
+    scales: {
+      xAxes: [{
+        barPercentage: 0.6,
+        stacked: true,
+        gridLines: {
+          display: false
+        }
+      }],
+      yAxes: [{
+          name: '1',
+          scalePositionLeft: false,
+          stacked: true,
+          gridLines: {
+            display: false
+          },
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 120,
+            display: false,
+          },
+        },
+        {
+          name: '2',
+          scalePositionLeft: true,
+          stacked: false,
+          gridLines: {
+            display: false
+          },
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 120,
+            display: false,
+          },
+        },
+      ],
+    }
+  }
+
+  var ctx = $("#zone2");
+  var data2 = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+        type: 'line',
+        yAxesGroup: "2",
+        borderColor: "orange",
+        borderWidth: 1,
+        data: [
+          <%= effZone2FiveDaysAgo %>,
+          <%= effZone2FourDaysAgo %>,
+          <%= effZone2ThreeDaysAgo %>,
+          <%= effZone2TwoDaysAgo %>,
+          <%= effZone2OneDayAgo %>,
+          <%= effZone2Today %>,
+        ],
+      },
+      {
+        type: 'bar',
+        yAxesGroup: "1",
+        backgroundColor: 'rgb(238, 28, 37)',
+        borderWidth: 1,
+        data: [
+          <%= outZone2FiveDaysAgo %>,
+          <%= outZone2FourDaysAgo %>,
+          <%= outZone2ThreeDaysAgo %>,
+          <%= outZone2TwoDaysAgo %>,
+          <%= outZone2OneDayAgo %>,
+          <%= outZone2Today %>,
+        ],
+      },
+      {
+        type: 'bar',
+        yAxesGroup: "1",
+        backgroundColor: 'rgb(0, 169, 79)',
+        borderWidth: 1,
+        data: [
+          <%= inZone2FiveDaysAgo %>,
+          <%= inZone2FourDaysAgo %>,
+          <%= inZone2ThreeDaysAgo %>,
+          <%= inZone2TwoDaysAgo %>,
+          <%= inZone2OneDayAgo %>,
+          <%= inZone2Today %>,
+        ],
+      }
+
+    ]
+  };
+
+
+
+
+  // zone 2
+  const zone2 = new Chart(ctx, {
+    type: 'bar',
+    data: data2,
+    options: options
+  });
+
+
+  var ctx = $("#zone3");
+  var data3 = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      backgroundColor: 'rgb(54, 162, 235)',
+      borderWidth: 1,
+      data: [
+        <%= effZone3FiveDaysAgo %>,
+        <%= effZone3FourDaysAgo %>,
+        <%= effZone3ThreeDaysAgo %>,
+        <%= effZone3TwoDaysAgo %>,
+        <%= effZone3OneDayAgo %>,
+        <%= effZone3Today %>,
+      ],
+    }]
+  };
+
+  /// zone 3
+  const zone3 = new Chart(ctx, {
+    type: 'bar',
+    data: data3,
+    options: options
+  });
+
+
+  var ctx = $("#zone4");
+  var data4 = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      backgroundColor: 'rgb(54, 162, 235)',
+      borderWidth: 1,
+      data: [
+        <%= effZone4FiveDaysAgo %>,
+        <%= effZone4FourDaysAgo %>,
+        <%= effZone4ThreeDaysAgo %>,
+        <%= effZone4TwoDaysAgo %>,
+        <%= effZone4OneDayAgo %>,
+        <%= effZone4Today %>,
+      ],
+    }]
+  };
+
+  /// zone 4
+  const zone4 = new Chart(ctx, {
+    type: 'bar',
+    data: data4,
+    options: options
+  });
+
+
+  //zone5
+  var ctx = $("#zone5");
+  var data5 = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      backgroundColor: 'rgb(54, 162, 235)',
+      borderWidth: 1,
+      data: [
+        <%= effZone5FiveDaysAgo %>,
+        <%= effZone5FourDaysAgo %>,
+        <%= effZone5ThreeDaysAgo %>,
+        <%= effZone5TwoDaysAgo %>,
+        <%= effZone5OneDayAgo %>,
+        <%= effZone5Today %>,
+      ],
+    }]
+  };
+
+  /// zone 5
+  const zone5 = new Chart(ctx, {
+    type: 'bar',
+    data: data5,
+    options: options
+  });
+
+
+  //zone 6
+
+  var ctx = $("#zone6");
+  var data6 = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      backgroundColor: 'rgb(54, 162, 235)',
+      borderWidth: 1,
+      data: [
+        <%= effZone6FiveDaysAgo %>,
+        <%= effZone6FourDaysAgo %>,
+        <%= effZone6ThreeDaysAgo %>,
+        <%= effZone6TwoDaysAgo %>,
+        <%= effZone6OneDayAgo %>,
+        <%= effZone6Today %>,
+      ],
+    }]
+  };
+
+  /// zone 6
+  const zone6 = new Chart(ctx, {
+    type: 'bar',
+    data: data6,
+    options: options
+  });
+
+  //track 3 zone 1
+
+
+  var ctx = $("#zone31");
+  var data31 = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      backgroundColor: 'rgb(54, 162, 235)',
+      borderWidth: 1,
+      data: [
+        <%= effZone31FiveDaysAgo %>,
+        <%= effZone31FourDaysAgo %>,
+        <%= effZone31ThreeDaysAgo %>,
+        <%= effZone31TwoDaysAgo %>,
+        <%= effZone31OneDayAgo %>,
+        <%= effZone31Today %>,
+      ],
+    }]
+  };
+
+  /// track 3 zone 1
+  const zone31 = new Chart(ctx, {
+    type: 'bar',
+    data: data31,
+    options: options
+  });
+
+
+  //track 3 zone 2
+
+  var ctx = $("#zone32");
+  var data32 = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      backgroundColor: 'rgb(54, 162, 235)',
+      borderWidth: 1,
+      data: [
+        <%= effZone32FiveDaysAgo %>,
+        <%= effZone32FourDaysAgo %>,
+        <%= effZone32ThreeDaysAgo %>,
+        <%= effZone32TwoDaysAgo %>,
+        <%= effZone32OneDayAgo %>,
+        <%= effZone32Today %>,
+      ],
+    }]
+  };
+
+  /// track 3 zone 1
+  const zone32 = new Chart(ctx, {
+    type: 'bar',
+    data: data32,
+    options: options
+  });
+
+
+  //boom subs
+
+  var ctx = $("#zoneB");
+  var dataB = {
+    labels: [
+      <%- JSON.stringify(fiveDaysAgo) -%>,
+      <%- JSON.stringify(fourDaysAgo) -%>,
+      <%- JSON.stringify(threeDaysAgo) -%>,
+      <%- JSON.stringify(twoDaysAgo) -%>,
+      <%- JSON.stringify(oneDayAgo) -%>,
+      <%- JSON.stringify(today) -%>,
+    ],
+    datasets: [{
+      backgroundColor: 'rgb(54, 162, 235)',
+      borderWidth: 1,
+      data: [
+        <%= effZoneBFiveDaysAgo %>,
+        <%= effZoneBFourDaysAgo %>,
+        <%= effZoneBThreeDaysAgo %>,
+        <%= effZoneBTwoDaysAgo %>,
+        <%= effZoneBOneDayAgo %>,
+        <%= effZoneBToday %>,
+      ],
+    }]
+  };
+
+  /// boom subs
+  const zoneB = new Chart(ctx, {
+    type: 'bar',
+    data: dataB,
+    options: options
+  });
+</script>
+
+
+
+
+
+</body>

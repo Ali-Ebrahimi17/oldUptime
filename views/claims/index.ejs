@@ -1,0 +1,391 @@
+<% layout('layouts/boilerplate')%>
+
+<body style="background-color: rgba(17, 29, 36, 0.952);">
+
+
+  <div class="fourC-title">
+    <h1 style="color: white;"><%= division %> 4C's YTD</h1>
+  </div>
+
+
+  <header class="fourc-search" style="background-color: transparent;">
+
+    <form class="form-inline float-right" action="/claims/4c/<%= division %>" method="GET">
+      <div class="form-group">
+        <label for="search"></label>
+        <input class="form-control" type="text" name="claimNumber" placeholder="Search by Claim Number" autocomplete="off" />
+      </div>
+    </form>
+    <form class="form-inline float-right" action="/claims/4c/<%= division %>" method="GET">
+      <div class="form-group">
+        <label for="search"></label>
+        <input style="margin-right: 5px;" class="form-control" type="text" name="failedPart" placeholder="Search by Part Number" autocomplete="off" />
+      </div>
+    </form>
+
+
+    <form style="margin-bottom: 5px;" class="form-inline mt-3" action="/claims/4c/<%= division %>" method="GET">
+      <div class="form-group">
+        <select style="width: 250px;" class="form-control" type="text" name="area" autocomplete="off">
+          <% areas.forEach(area => { %>
+          <option hidden></option>
+          <option label="<%= area.name %>" value="<%= area.name %>">
+            <% }) %>
+        </select>
+      </div>
+      <button style="margin-left: 5px;" class="btn btn-md btn-success"><i class="fas fa-search"></i></button>
+    </form>
+    </form>
+    <div>
+      <form class="form-inline" name="area" action="/claims/4c/<%= division %>" value="" method="GET">
+        <!-- <button class="btn btn-md btn-primary py-0">Reset</button> -->
+    </div>
+
+
+
+
+  </header>
+
+
+
+  <% let openNum = 0 %>
+  <% claims.forEach(claim => {%>
+  <% if ( claim.fourC === 'Yes' && claim.status === 'Open') { %>
+  <% openNum = openNum +1 %>
+  <% }; %>
+  <% }) %>
+  <% let containNum = 0 %>
+  <% claims.forEach(claim=> {%>
+  <% if ( claim.fourC === 'Yes' && claim.status === 'Contained') { %>
+  <% containNum = containNum +1 %>
+  <% }; %>
+  <% }) %>
+  <% let closedNum = 0 %>
+  <% claims.forEach(claim => {%>
+  <% if ( claim.fourC === 'Yes' && claim.status === 'Closed' && claim.audited !== "Yes") { %>
+  <% closedNum = closedNum +1 %>
+  <% }; %>
+  <% }) %>
+  <% let auditedNum = 0 %>
+  <% claims.forEach(claim => {%>
+  <% if ( claim.fourC === 'Yes' &&  claim.audited === "Yes") { %>
+  <% auditedNum = auditedNum +1 %>
+  <% }; %>
+  <% }) %>
+
+
+  <% const totalNum = openNum + containNum + closedNum %>
+  <div class="float-left open-list">
+    <div class="card text-white bg-secondary mb-3" style="width: 300px;">
+      <div class="card-header" style="font-weight: bold;">Open 4C's by Area</div>
+      <div class="card-body">
+        <div class="card-title">
+          <% count.forEach(count => { %>
+          <div>
+            <%= count._id %> - <%= count.count %>
+            <hr>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="float-right status-list">
+    <div class="card text-white  mb-3" style="width: 300px; background-color: red;">
+      <div class="card-header" style="text-align: center;">OPEN</div>
+      <div class="card-body">
+        <div class="card-title" style="text-align: center;">
+          <div class="status-num">
+            <%= openNum %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card text-white  mb-3" style="width: 300px; background-color: orange;">
+      <div class="card-header" style="text-align: center;">CONTAINED</div>
+      <div class="card-body">
+        <div class="card-title" style="text-align: center;">
+          <div class="status-num">
+            <%= containNum %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card text-white  mb-3" style="width: 300px; background-color: green;">
+      <div class="card-header" style="text-align: center;">CLOSED</div>
+      <div class="card-body">
+        <div class="card-title" style="text-align: center;">
+          <div class="status-num">
+            <%= closedNum %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% if (division.includes('LDL')) { %>
+    <div class="card text-white  mb-3" style="width: 300px; background-color: rgb(43, 43, 146);">
+      <div class="card-header" style="text-align: center;">AUDITED LAST 7 DAYS</div>
+      <div class="card-body">
+        <div class="card-title" style="text-align: center;">
+          <div class="status-num">
+            <%= auditedThisWeek %>/20
+            <p style="font-size: 2rem;"><%= auditedThisWeekPercent %>% completed</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } else { %>
+    <div class="card text-white  mb-3" style="width: 300px; background-color: rgb(43, 43, 146);">
+      <div class="card-header" style="text-align: center;">AUDITED</div>
+      <div class="card-body">
+        <div class="card-title" style="text-align: center;">
+          <div class="status-num">
+            <%= auditedNum %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+
+
+
+
+  <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+
+    <% claims.forEach(claim => { %>
+    <% let claimsNumber = (claim.numberOfClaims > 1) ? "Other Claims" : "Other Claim"; %>
+    <% if ( claim.fourC === 'Yes') { %>
+    <div class="col-lg-4 col-md-4 col-sm-6" style="margin-bottom: 1.7rem;">
+      <% if ( claim.status === 'Open') { %>
+      <div class="card open">
+        <img class="campground__image" height="180px" src="/uploads/<%= claim.image1 %>" alt="<%= claim.name %>" />
+        <div class="caption">
+          <% if (claim.claimNumber === 'Internal Techweb') { %>
+          <p class="caption"><%= claim.buildNumber %> - <%= claim.model %></p>
+          <% } else { %>
+          <p class="caption"><%= claim.tPeriod %> - <%= claim.claimNumber %> - <%= claim.model %></p>
+          <% if (claim.tPeriod === 'Major' && claim.numberOfClaims > 0) { %>
+          <div class="caption" style="margin-top: -10px; background-color: white; color: red; width: 50%; margin-left: 25%; ">
+            REPEAT <%= claim.numberOfClaims %> <%= claimsNumber %>
+          </div>
+          <%} %>
+
+
+          <% } %>
+
+
+          <p>Issued by <%= claim.vettedBy %> <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm") %></p>
+          
+
+
+          <% if ( claim.reOpenedBy != null) { %>
+          <p><em>Re-Opened by <%= claim.reOpenedBy %> <%= moment(claim.reOpenedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+          <% }; %>
+          <% if ( claim.reallocatedBy != null) { %>
+          <p><em>Reallocated to <%= claim.area %> by <%= claim.reallocatedBy %> <%= moment(claim.reallocatedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+          <% }; %>
+        </div>
+
+        <p>
+          <% if (claim.claimNumber === 'Leak Techweb') { %>
+          <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/leak4cshow/<%= claim._id %>">
+            <%= claim.area %> - <%- claim.linkedClaims.length + 1 %> <%- claim.linkedClaims.length > 0 ? 'Claims': 'Claim' %>
+          </a>
+          <% } else { %>
+          <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/4cshow/<%= claim._id %>">
+            <% if (claim.linkedClaims) { %>
+            <%= claim.area %> - <%- claim.linkedClaims.length + 1 %> <%- claim.linkedClaims.length > 0 ? 'Claims': 'Claim' %>
+            <% } else { %>
+            <%= claim.area %> 1 Claim
+            <% } %>
+          </a>
+          <% } %>
+        </p>
+      
+
+
+      </div>
+      <% }; %>
+      <% if ( claim.status === 'Contained') { %>
+      <div class="card contained">
+        <img class="campground__image" height="180px" src="/uploads/<%= claim.image1 %>" alt="<%= claim.name %>" />
+        <div class="caption">
+          <% if (claim.claimNumber === 'Internal Techweb') { %>
+          <p class="caption"><%= claim.buildNumber %> - <%= claim.model %></p>
+          <% } else { %>
+          <p class="caption"><%= claim.tPeriod %> - <%= claim.claimNumber %> - <%= claim.model %></p>
+          <% } %>
+          <% if (claim.tPeriod === 'Major' && claim.numberOfClaims > 0) { %>
+          <div class="caption" style="margin-top: -10px; background-color: white; color: red; width: 40%; margin-left: 30%; ">
+            REPEAT <%= claim.numberOfClaims %> Claims
+          </div>
+          <%} %>
+          <!-- <hr> -->
+          <p>Issued by <%= claim.vettedBy %> <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm") %></p>
+          <% if ( claim.reOpenedBy != null) { %>
+          <p><em>Re-Opened by <%= claim.reOpenedBy %> <%= moment(claim.reOpenedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+          <% }; %>
+          <% if ( claim.reallocatedBy != null) { %>
+          <p><em>Reallocated to <%= claim.area %> by <%= claim.reallocatedBy %> <%= moment(claim.reallocatedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+          <% }; %>
+          <p>
+            <% if ( claim.containedBy != null ) { %>
+            <em>
+              <p class="card-text">Contained by <%= claim.containedBy %> <%= moment(claim.containedAt).format("DD/MM/YYYY - HH:mm") %></p>
+            </em>
+            <% if ( moment().diff(moment(claim.containedAt), 'days') > 1) { %>
+          <p style="margin-top: -16px;">(<%= moment().diff(moment(claim.containedAt), 'days') %> Days Ago)</p>
+          <% } else { %>
+          <p style="margin-top: -16px;">(Today)</p>
+          <%  } %>
+
+          <% }; %>
+        </div>
+
+        <p>
+          <% if (claim.claimNumber === 'Leak Techweb') { %>
+          <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/leak4cshow/<%= claim._id %>">
+            <%= claim.area %> - <%- claim.linkedClaims.length + 1 %> <%- claim.linkedClaims.length > 0 ? 'Claims': 'Claim' %>
+          </a>
+          <% } else { %>
+          <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/4cshow/<%= claim._id %>">
+            <% if (claim.linkedClaims) { %>
+            <%= claim.area %> - <%- claim.linkedClaims.length + 1 %> <%- claim.linkedClaims.length > 0 ? 'Claims': 'Claim' %>
+            <% } else { %>
+            <%= claim.area %> 1 Claim
+            <% } %>
+          </a>
+          <% } %>
+        </p>
+
+      </div>
+      <% }; %>
+      <% if ( claim.status === 'Closed' && claim.audited != 'Yes' ) { %>
+      <div class="card closed">
+        <img class="campground__image" height="180px" src="/uploads/<%= claim.image1 %>" alt="<%= claim.name %>" />
+        <div class="caption">
+          <% if (claim.claimNumber === 'Internal Techweb') { %>
+          <p class="caption"><%= claim.buildNumber %> - <%= claim.model %></p>
+          <% } else { %>
+          <p class="caption"><%= claim.tPeriod %> - <%= claim.claimNumber %> - <%= claim.model %></p>
+          <% if (claim.tPeriod === 'Major' && claim.numberOfClaims > 0) { %>
+          <div class="caption" style="margin-top: -10px; background-color: white; color: red; width: 50%; margin-left: 25%; ">
+            REPEAT <%= claim.numberOfClaims %> <%= claimsNumber %>
+          </div>
+          <%} %>
+          <% } %>
+          <!-- <hr> -->
+          <p>Issued by <%= claim.vettedBy %> <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm")%></p>
+          <% if ( claim.reOpenedBy != null) { %>
+          <p><em>Re-Opened by <%= claim.reOpenedBy %> <%= moment(claim.reOpenedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+          <% }; %>
+          <% if ( claim.reallocatedBy != null) { %>
+          <p><em>Reallocated to <%= claim.area %> by <%= claim.reallocatedBy %> <%= moment(claim.reallocatedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+          <% }; %>
+          <p>
+            <% if ( claim.containedBy != null ) { %>
+            <em>
+              <p class="card-text">Contained by <%= claim.containedBy %> <%= moment(claim.containedAt).format("DD/MM/YYYY - HH:mm") %></p>
+            </em>
+            <% }; %>
+            <% if ( claim.status === 'Closed') { %>
+            <em>
+              <p class="card-text"><%= claim.status %> by <%= claim.closedBy %> <%= moment(claim.closedAt).format("DD/MM/YYYY - HH:mm") %></p>
+            </em>
+            <% }; %>
+          </p>
+        </div>
+
+        <p>
+          <% if (claim.claimNumber === 'Leak Techweb') { %>
+          <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/leak4cshow/<%= claim._id %>">
+            <% if (claim.linkedClaims) { %>
+            <%= claim.area %> - <%- claim.linkedClaims.length + 1 %> <%- claim.linkedClaims.length > 0 ? 'Claims': 'Claim' %>
+            <% } else { %>
+            <%= claim.area %> 1 Claim
+            <% } %>
+          </a>
+          <% } else { %>
+          <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/4cshow/<%= claim._id %>">
+            <% if (claim.linkedClaims) { %>
+            <%= claim.area %> - <%- claim.linkedClaims.length + 1 %> <%- claim.linkedClaims.length > 0 ? 'Claims': 'Claim' %>
+            <% } else { %>
+            <%= claim.area %> 1 Claim
+            <% } %>
+          </a>
+          <% } %>
+        </p>
+
+      </div>
+      <% }; %>
+      <% if ( claim.audited === 'Yes' && claim.status === 'Closed' ) { %>
+      <div class="card audited">
+        <img class="campground__image" height="180px" src="/uploads/<%= claim.image1 %>" alt="<%= claim.name %>" />
+        <div class="caption">
+          <% if (claim.claimNumber === 'Internal Techweb') { %>
+          <p class="caption"><%= claim.buildNumber %> - <%= claim.model %></p>
+          <% } else { %>
+          <p class="caption"><%= claim.tPeriod %> - <%= claim.claimNumber %> - <%= claim.model %></p>
+          <% if (claim.tPeriod === 'Major' && claim.numberOfClaims > 0) { %>
+          <div class="caption" style="margin-top: -10px; background-color: white; color: red; width: 50%; margin-left: 25%; ">
+            REPEAT <%= claim.numberOfClaims %> <%= claimsNumber %>
+          </div>
+          <%} %>
+          <% } %>
+          <!-- <p class="caption"><%= claim.name %></p> -->
+          <!-- <hr> -->
+          <p>Issued by <%= claim.vettedBy %> <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm")%></p>
+          <% if ( claim.reOpenedBy != null) { %>
+          <p><em>Re-Opened by <%= claim.reOpenedBy %> <%= moment(claim.reOpenedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+          <% }; %>
+          <% if ( claim.reallocatedBy != null) { %>
+          <p><em>Reallocated to <%= claim.area %> by <%= claim.reallocatedBy %> <%= moment(claim.reallocatedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+          <% }; %>
+          <p>
+            <% if ( claim.containedBy != null ) { %>
+            <em>
+              <p class="card-text">Contained by <%= claim.containedBy %> <%= moment(claim.containedAt).format("DD/MM/YYYY - HH:mm") %></p>
+            </em>
+            <% }; %>
+            <% if ( claim.status === 'Closed') { %>
+            <em>
+              <p class="card-text"><%= claim.status %> by <%= claim.closedBy %> <%= moment(claim.closedAt).format("DD/MM/YYYY - HH:mm") %></p>
+            </em>
+            <% }; %>
+            <br>
+            <% if ( claim.audited === 'Yes') { %>
+            <em>
+              <p class="card-text">Audited by <%= claim.auditedBy %> <%= moment(claim.auditedAt).format("DD/MM/YYYY - HH:mm") %></p>
+            </em>
+            <% }; %>
+          </p>
+        </div>
+
+        <p>
+          <% if (claim.claimNumber === 'Leak Techweb') { %>
+          <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/leak4cshow/<%= claim._id %>">
+            <%= claim.area %> - <%- claim.linkedClaims.length + 1 %> <%- claim.linkedClaims.length > 0 ? 'Claims': 'Claim' %>
+          </a>
+          <% } else { %>
+          <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/4cshow/<%= claim._id %>">
+            <% if (claim.linkedClaims) { %>
+            <%= claim.area %> - <%- claim.linkedClaims.length + 1 %> <%- claim.linkedClaims.length > 0 ? 'Claims': 'Claim' %>
+            <% } else { %>
+            <%= claim.area %> 1 Claim
+            <% } %>
+          </a>
+          <% } %>
+        </p>
+
+      </div>
+      <% }; %>
+    </div>
+    <% }%>
+    <% }) %>
+  </div>
+
+
+
+</body>

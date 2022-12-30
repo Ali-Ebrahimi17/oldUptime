@@ -1,0 +1,23 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container">
+  <table class="table table-hover table-dark" style="font-size: 15px; width: 500px; margin: auto; ">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 150px;">Date</th>
+        <th style="width: 100px;">Build</th>
+        <th style="width: 100px;">Faults</th>
+        <th style="width: 150px;">DPU Target<a class="float-right" href="/day/new/<%= division %>"> <i class="fas fa-plus"></i></a></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% days.forEach(day => { %>
+      <tr class="d-flex">
+        <td style=" width: 150px"><a href="/day/edit/<%= day._id %>"><%= moment(day.date).format("DD/MM/YYYY") %></a></td>
+        <td style=" width: 100px;"><%= day.build %></a></td>
+        <td style=" width: 100px"><%= day.faults %></a></td>
+        <td style=" width: 150px"><%= day.target %></a></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>

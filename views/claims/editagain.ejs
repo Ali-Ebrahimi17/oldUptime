@@ -1,0 +1,474 @@
+<% layout('layouts/boilerplate')%>
+
+<!-- Modal to link -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+
+      <div style="background-color: rgb(252, 176, 38); height: 50px;">
+        <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+        <h3 style="text-align: center; margin: 8px;">Manual 4C Link</h3>
+      </div>
+      <div class="modal-body">
+        <form action="/claims/manLinkedClaim/<%=claim._id%>" method="POST">
+          <fieldset>
+            <div class="form-group" style="color:black">
+              <label id="closeLabel" for="exampleTextarea">Please enter the 4C number that you want to link to</label>
+              <input class='form-control' name="claimLinkTo" type='text'>
+
+
+            </div>
+
+            <div>
+              <button type="button" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+              <button type="submit" class="btn btn-success float-right" style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+
+            </div>
+          </fieldset>
+
+        </form>
+
+
+
+      </div>
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+        <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- Modal to remove -->
+<div class="modal fade" id="exampleModalCenterRemove" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+
+      <div style="background-color: rgb(252, 176, 38); height: 50px;">
+        <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+        <h3 style="text-align: center; margin: 8px;">Remove Manual 4C Link</h3>
+      </div>
+      <div class="modal-body">
+        <form action="/claims/manRemoveLinkedClaim/<%=claim._id%>" method="POST">
+          <fieldset>
+            <div class="form-group" style="color:black">
+              <label id="closeLabel" for="exampleTextarea">Are you sure you want to remove manual link?</label>
+              <!-- <input class='form-control'  name="claimLinkTo" type='text'> -->
+
+
+            </div>
+
+            <div>
+              <button type="button" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+              <button type="submit" class="btn btn-success float-right" style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+
+            </div>
+          </fieldset>
+
+        </form>
+
+
+
+      </div>
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+        <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div id="edit-container">
+
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+      <div class="modal-content">
+        <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" style="margin-right: 10px; margin-top: 20px;">&times;</span>
+          </button>
+          <h3 style="text-align: center; margin: 8px;">Link this claim to previous 4C</h3>
+        </div>
+        <div class="modal-body">
+          <table class="table table-hover table-dark" style="font-size: 15px; height: fit-content;">
+            <thead>
+              <tr class="d-flex">
+                <th style="width: 120px;">#</th>
+                <th style="width: 90px;">T Period</th>
+                <th style="width: 140px;">Claim Number</th>
+                <th style="width: 120px;">4C Issued</th>
+                <th style="width: 120px;">4C Status</th>
+                <th style="width: 100px;">Model</th>
+                <th style="width: 100px;">Build Date</th>
+                <th style="width: 320px;">Narrative</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <% for (let c of fourCs) { %>
+              <tr class="d-flex">
+                <% if (c.linkedClaims.includes(claim._id)) { %>
+                <td style="height: 76px; width: 120px;"><a type="button" href='/claims/removeLinkedClaim/<%= c._id %>/<%= claim._id  %>' class="btn btn-danger">Unlink</a></td>
+                <% } else { %>
+                <td style="height: 76px; width: 120px;"><a type="button" href='/claims/addLinkedClaim/<%= c._id %>/<%= claim._id  %>' class="btn btn-success">Link</a></td>
+                <% } %>
+                <td style="height: 76px; width: 90px;"><%= c.tPeriod %></td>
+                <td style="width: 140px;"><%= c.claimNumber %></td>
+                <td style="width: 120px;"> <%= moment(c.vettedAt).format("DD/MM/YYYY - HH:mm") %></td>
+                <td style="width: 120px;"> <%= c.status %></td>
+                <td style="width: 100px;"> <%= c.model %></td>
+                <td style="width: 100px;"> <%= c.buildDate%></td>
+                <td style="width: 320px;"> <%= c.description.substring(0, 180) %>...</td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer" style="border: none;">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1>Vetting Options</h1>
+    </div>
+
+
+
+
+    <div class="col">
+
+      <form action="/claims/<%=claim._id%>?_method=PUT" method="POST" enctype="multipart/form-data">
+        <label for="claimNumber">Narrative</label>
+        <div class="valid-feedback">Looks good</div>
+        <textarea style="height: 318px;" class="form-control" type="text" name="claim[description]"><%= claim.description %></textarea>
+        <div class="valid-feedback">Looks good</div>
+        <label for="name">Dealer</label>
+        <input class="form-control" type="text" name="name" value="<%= claim.dealer %> - <%= claim.country %>" disabled>
+        <div class="valid-feedback">Looks good</div>
+        <label for="name">Customer</label>
+        <input class="form-control" type="text" name="name" value="<%= claim.customer %>" disabled>
+        <label for="name">Cost</label>
+        <input class="form-control mb-3" type="text" name="name" value="£<%= claim.cost %>" disabled>
+        <div class="valid-feedback" style="display: flex; justify-content: space-between;">
+          <a class="btn btn-primary btn-md " style="margin-bottom: 1rem; display: inline-flex;" target="_blank" href="https://internal.jcb.local/BuildLookup/?searchTerm=<%= claim.name %>&searchCategory=SERIALNUMBER">Go to BQT</a>
+          <% if (claim.linked) { %>
+          <a class="btn btn-danger btn-md " data-toggle="modal" data-target="#exampleModalCenterRemove" style="margin-bottom: 1rem; display: inline-flex;" target="_blank">Manual Unlink</a>
+          <% } else { %>
+          <a class="btn btn-info btn-md " data-toggle="modal" data-target="#exampleModalCenter" style="margin-bottom: 1rem; display: inline-flex;" target="_blank">Manual Link</a>
+          <% } %>
+
+
+
+        </div>
+    </div>
+
+
+    <div class="col" style="max-width: 20%;">
+      <input type="hidden" name="division" value="<%= division %>">
+      <label for="name">Claim Number</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.claimNumber %>" disabled>
+      <div class="valid-feedback">Looks good</div>
+      <label for="name">Serial Number</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.name %>" disabled>
+      <div class="valid-feedback">Looks good</div>
+      <label for="name">Hours</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.hours %>" disabled>
+      <div class="valid-feedback">Looks good</div>
+      <label for="name">Model</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.model %>" disabled>
+      <div class="valid-feedback">Looks good</div>
+      <label for="name">Build Date</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.buildDate %>" disabled>
+      <div class="valid-feedback">Looks good</div>
+      <label for="name">Fail Date</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.failDate %>" disabled>
+      <div class="valid-feedback">Looks good</div>
+      <label for="name">Failed Part</label>
+      <input class="form-control" type="text" name="claim[failedPart]" value="<%= claim.failedPart %>">
+      <div class="valid-feedback">Looks good</div>
+      <label for="name">Part Supplier</label>
+      <input class="form-control" type="text" style="margin-bottom: 20px;" name="name" value="<%= claim.partSupplier %>" disabled>
+      <div class="valid-feedback">Looks good</div>
+
+      <% if (fourCs.length > 0) { %>
+      <!-- Button trigger modal -->
+      <button type="button" style="height: 50px;" class="btn btn-info btn-block" data-toggle="modal" data-target="#staticBackdrop">
+        4C Exists. Click here to view & link this claim
+      </button>
+      <% } else { %>
+      <button type="button" style="height: 50px;" class="btn btn-danger btn-block">
+        No current 4C's for this part number.
+      </button>
+      <% } %>
+    </div>
+
+    <div class="col" style="max-width: 20%;">
+      <label for="area">Decision</label>
+      <select class="form-control" type="text" name="claim[outcome]" autocomplete="off" required>
+        <option hidden><%= claim.outcome %></option>
+        <option>Accept</option>
+        <option>More Info</option>
+        <option>Pictures Required</option>
+        <option>Parts Back</option>
+        <option>Z Code</option>
+        <option>Reject</option>
+        <option>Raise on Supplier</option>
+      </select>
+      <div class="valid-feedback">Looks good</div>
+      <div class="form-check form-check-inline float-right">
+        <input class="form-check-input" type="checkbox" name="claim[actioned]" id="inlineCheckbox7" value="Yes">
+        <label class="form-check-label" for="inlineCheckbox1">Already Done</label>
+      </div>
+
+      <label for="area">Grade</label>
+      <select class="form-control" type="text" name="claim[abcd]" value="<%= claim.abcd %>" autocomplete="off">
+        <option hidden><%= claim.abcd %></option>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+        <option>D</option>
+      </select>
+
+      <label for="area">ASD</label>
+      <select class="form-control" type="text" name="claim[asd]" value="<%= claim.asd %>" autocomplete="off">
+        <option hidden><%= claim.asd %></option>
+        <option>Assembly</option>
+        <option>Supplier</option>
+        <option>Design</option>
+      </select>
+
+      <label for="area">Area</label>
+      <select class="form-control" type="text" name="claim[area]" value="<%= claim.area %>" autocomplete="off">
+
+        <% areas.forEach(area => { %>
+        <option hidden><%= claim.area %></option>
+
+        <option label="<%= area.name %>" value="<%= area.name %>">
+
+          <% }) %>
+        <option>Unknown</option>
+      </select>
+
+      <label for="detection">Detection</label>
+      <select class="form-control" type="text" name="claim[detection]" autocomplete="off">
+        <% detections.forEach(detection => { %>
+        <option hidden><%= claim.detection %></option>
+
+        <option label="<%= detection.name %>" value="<%= detection.name %>">
+
+          <% }) %>
+
+      </select>
+      <label for="area">Failed in House</label>
+      <select class="form-control" type="text" name="claim[wasPickedUp]" value="<%= claim.wasPickedUp %>" autocomplete="off">
+        <option hidden><%= claim.wasPickedUp %></option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+      <label for="area">Missed In PDI</label>
+      <select class="form-control" type="text" name="claim[canBePickedUp]" value="<%= claim.canBePickedUp %>" autocomplete="off">
+        <option hidden><%= claim.canBePickedUp %></option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+
+      <label for="area">4C</label>
+      <select class="form-control" value="<%= claim.fourC %>" type="text" name="claim[fourC]" value="<%= claim.fourC %>" autocomplete="off" required>
+        <option hidden><%= claim.fourC %></option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+      <% if (division !== 'USA') { %>
+        <label for="area">Use Leak 4C Tracker</label>
+        <select style="margin-bottom: 8px;" class="form-control" value="<%= claim.leak %>" type="text" name="claim[leak]" value="<%= claim.leak %>" autocomplete="off" required>
+          <option hidden>No</option>
+          <option>Yes</option>
+          <option>No</option>
+        </select>
+      <% } %>
+    </div>
+    <div class="col">
+      <label for="area">Should/Could/Can't</label>
+      <select class="form-control" type="text" name="claim[scc]" value="<%= claim.scc %>" autocomplete="off" required>
+        <option hidden><%= claim.scc %></option>
+        <option>Should</option>
+        <option>Could</option>
+        <option>Cannot</option>
+      </select>
+
+      <label for="inspector">Claim Type</label>
+      <select class="form-control" type="text" name="claim[failuremode]" autocomplete="off" required>
+        <option hidden><%= claim.failuremode%></option>
+        <% failuremodes.forEach(failuremode => { %>
+
+        <option label="<%= failuremode.name %>" value="<%= failuremode.name %>">
+
+          <% }) %>
+
+      </select>
+      <label for="inspector">Failure Mode</label>
+      <select class="form-control" type="text" name="claim[failuretype]" autocomplete="off" required>
+        <option hidden><%= claim.failuretype%></option>
+        <% failuretypes.forEach(failuretype => { %>
+
+        <option label="<%= failuretype.name %>" value="<%= failuretype.name %>">
+
+          <% }) %>
+
+      </select>
+
+      <% if (claim.image1 != null) { %>
+      <div style="display: flex;">
+        <div>
+          <label for="image">Image 1</label>
+          <img src="<%= claim.imagePath1 %>" alt="Image" width="50" height="40">
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+
+          <input class="form-control" type="file" id="image1" name="image1" accept="image/*" placeholder="X">
+        </div>
+
+      </div>
+      <% } else { %>
+      <label for="image">Image 1</label>
+      <input class="form-control" type="file" id="image1" name="image1" accept="image/*">
+      <% } %>
+
+      <% if (claim.image2 != null) { %>
+      <div style="display: flex;">
+        <div>
+          <label for="image">Image 2</label>
+          <img src="<%= claim.imagePath2 %>" alt="Image" width="50" height="40">
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+
+          <input class="form-control" type="file" id="image2" name="image2" accept="image/*" placeholder="X">
+        </div>
+
+      </div>
+      <% } else { %>
+      <label for="image">Image 2</label>
+      <input class="form-control" type="file" id="image2" name="image2" accept="image/*">
+      <% } %>
+
+      <% if (claim.image3 != null) { %>
+      <div style="display: flex;">
+        <div>
+          <label for="image">Image 3</label>
+          <img src="<%= claim.imagePath3 %>" alt="Image" width="50" height="40">
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+
+          <input class="form-control" type="file" id="image3" name="image3" accept="image/*" placeholder="X">
+        </div>
+
+      </div>
+      <% } else { %>
+      <label for="image">Image 3</label>
+      <input class="form-control" type="file" id="image3" name="image3" accept="image/*">
+      <% } %>
+
+      <% if (claim.image4 != null) { %>
+      <div style="display: flex;">
+        <div>
+          <label for="image">Image 4</label>
+          <img src="<%= claim.imagePath4 %>" alt="Image" width="50" height="40">
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+
+          <input class="form-control" type="file" id="image4" name="image4" accept="image/*" placeholder="X">
+        </div>
+
+      </div>
+      <% } else { %>
+      <label for="image">Image 4</label>
+      <input class="form-control" type="file" id="image4" name="image4" accept="image/*">
+      <% } %>
+
+      <% if (claim.image5 != null) { %>
+      <div style="display: flex;">
+        <div>
+          <label for="image">Image 5</label>
+          <img src="<%= claim.imagePath5 %>" alt="Girl in a jacket" width="50" height="40">
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+
+          <input class="form-control" type="file" id="image5" name="image5" accept="image/*" placeholder="X">
+        </div>
+
+      </div>
+      <% } else { %>
+      <label for="image">Image 5</label>
+      <input class="form-control" type="file" id="image5" name="image5" accept="image/*">
+      <% } %>
+
+
+      <% if (division === 'LDL') { %>
+      <label for="area">CMN</label>
+      <select class="form-control" type="text" name="claim[cmn]" value="<%= claim.cmn %>" autocomplete="off">
+        <option hidden><%= claim.cmn %></option>
+        <option>Consequential Damage</option>
+        <option>Missed on CFC Inspection</option>
+        <option>Not on CFC Inspection</option>
+      </select>
+      <% } %>
+
+
+
+
+
+      <!-- <label for="image">Upload image</label> -->
+    </div>
+
+    <div class="col">
+
+      <label for="inspector">Inspector</label>
+      <select class="form-control" type="text" name="claim[inspector]" autocomplete="off" required>
+        <option hidden><%= claim.inspector%></option>
+        <% inspectors.forEach(inspector => { %>
+
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+
+          <% }) %>
+
+      </select>
+      <label for="area">On Video</label>
+      <select class="form-control" value="<%= claim.onVideo %>" type="text" name="claim[onVideo]" value="<%= claim.onVideo %>" autocomplete="off" required>
+        <option hidden><%= claim.onVideo %></option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+      <div class="valid-feedback">Looks good</div>
+
+      <label for="notes">Comments</label>
+      <textarea style="height: 380px; margin-bottom: 30px;" class="form-control" name="claim[notes]" required><%= claim.notes %></textarea>
+      <div class="form-group text-center">
+        <button class="btn btn-md btn-success btn-block">Submit</button>
+      </div>
+    </div>
+    </form>
+  </div>
+  <div>
+    <a href="/claims/<%= division %>">Go Back</a>
+    <% if (currentUser && currentUser.isAdmin)   { %>
+    <form class="delete-form" action="/claims/<%= claim._id %>?_method=DELETE" method="POST">
+      <button class="btn btn-danger" style="margin-left: .5rem;"><i class="far fa-trash-alt"></i> Delete</button>
+    </form>
+    <% } %>
+  </div>

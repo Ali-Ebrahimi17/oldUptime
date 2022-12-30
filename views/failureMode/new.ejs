@@ -1,0 +1,27 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="newbuild-container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Add Failure Area</h1>
+    </div>
+
+
+
+    <div class="col">
+      <form action="/doa25pt/newFMode/<%= id %>" method="POST">
+
+        <label for="buildNumber">Name</label>
+        <input class="form-control" type="text" name="failureMode[name]" required>
+        <div class="form-group text-center">
+          <button class="btn bln-block btn-md btn-success" style="margin: 5px;">Save</button>
+        </div>
+    </div>
+    </form>
+  </div>
+  <div>
+    <a href="/doa25pt/grade/<%= id%>">Go Back</a>
+  </div>

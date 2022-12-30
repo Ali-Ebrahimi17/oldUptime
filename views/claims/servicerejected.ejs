@@ -1,0 +1,69 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="vetting-body">
+	<header id="vettingJumbotron">
+		<% if ( number == 1) { %>
+		<h1 id="vetting-title"><i class="fas fa-tasks"></i>LATEST <%= number %> REJECTIONS FROM SERVICE</h1>
+		<% }; %> <% if ( number != 1) { %>
+		<h1 id="vetting-title"><i class="fas fa-tasks"></i>LATEST <%= number %> REJECTIONS FROM SERVICE</h1>
+		<% }; %>
+
+		<!-- <p><strong>The all new online tracker</p></strong> -->
+		<!-- <form class="form-inline" action="/claims/servicerejected/<% division %>" method="GET">
+      <div class="form-group">
+
+        <select class="form-control" type="text" name="search" autocomplete="off">
+          <option></option>
+          <option>Jan-20</option>
+          <option>Feb-20</option>
+          <option>Mar-20</option>
+          <option>Apr-20</option>
+          <option>May-20</option>
+          <option>Jun-20</option>
+          <option>Jul-20</option>
+          <option>Aug-20</option>
+          <option>Sep-20</option>
+          <option>Oct-20</option>
+          <option>Nov-20</option>
+          <option>Dec-20</option>
+        </select>
+      </div>
+      <button class="btn btn-md btn-success"><i class="fas fa-search"></i></button>
+    </form> -->
+	</header>
+
+	<table class="table table-hover table-dark" style="font-size: 15px; height: 76vh">
+		<thead>
+			<tr class="d-flex">
+				<th style="width: 8vw">Claim Number</th>
+				<th style="width: 8vw">Serial Number</th>
+				<th style="width: 8vw">Request</th>
+				<th style="width: 6vw">Actioned</th>
+				<th style="width: 6vw">Build Month</th>
+				<th style="width: 25vw">Narrative</th>
+				<th style="width: 25vw"><%= division %> Comments</th>
+				<th style="width: 25vw">Service Comments</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% for (let claim of claims) { %>
+			<tr class="d-flex">
+				<td style="height: 79px; width: 8vw"><a href="/claims/serviceresponded/<%= claim._id %>"><%= claim.claimNumber %></a></td>
+				<td style="width: 8vw"><%= claim.name %></td>
+				<td style="width: 8vw"><%= claim.outcome %></td>
+				<td style="width: 6vw"><%= claim.actioned %></td>
+				<td style="width: 6vw"><%= claim.buildmonth %></td>
+				<td style="width: 25vw"><%= claim.description.substring(0, 100) %>...</td>
+				<td style="width: 25vw">
+					<em><%= claim.vettedBy %> - <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm") %></em> <br />
+					<%= claim.notes.substring(0, 75) %>... %>
+				</td>
+				<td style="width: 25vw">
+					<em><%= claim.serviceResBy %> - <%= moment(claim.serviceResAt).format("DD/MM/YYYY - HH:mm") %></em> <br />
+					<%= claim.serviceRes %>
+				</td>
+			</tr>
+			<% } %>
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,297 @@
+<% layout('layouts/heatmap')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/8z/content/bootstrap/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css" />
+<link rel="stylesheet" href="/content/table2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/ldlHeatmap.css" type="text/css" />
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<style>
+	body {
+		background-color: black;
+	}
+
+	h5 {
+		color: white;
+		font-size: 1.5rem;
+		margin-bottom: -15px;
+	}
+
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+
+	h2 {
+		font-weight: bold;
+		color: black;
+	}
+
+	h1 {
+		font-size: 4rem;
+	}
+
+	h6 {
+		font-size: 1rem;
+	}
+
+	hr {
+		background-color: #6a6d6d;
+	}
+
+	.zone-stat {
+		font-size: 60px;
+		margin-top: -10px;
+	}
+
+	.zone-span {
+		font-size: 60px;
+		padding-top: 6px;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: white;
+	}
+</style>
+
+<div class="main-header-holder">
+	<h1>Loadall T3 <%= type %> Warranty Heatmap</h1>
+</div>
+
+<div class="loadall-main-wrapper">
+	<div class="top-row">
+		<a href="/dash/heatmapClaims/LDL/Zone 7 Rec/<%= type %>">
+			<div class="track-area">
+				<p>Zone 7 Rec</p>
+				<p class="zone-stat"><%= zone7Rec.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Rolling Road/<%= type %>">
+			<div class="track-area">
+				<p>Rolling Road</p>
+				<p class="zone-stat"><%= RollingRoad.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Zone 7/<%= type %>">
+			<div class="track-area">
+				<p>Zone 7</p>
+				<p class="zone-stat"><%= Zone7.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Kitting/<%= type %>">
+			<div class="track-area">
+				<p>Kitting</p>
+				<p class="zone-stat"><%= kitting.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Booms/<%= type %>">
+			<div class="track-area booms">
+				<p>Booms Sub Assembly</p>
+				<p class="zone-stat"><%= booms.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Engine Subs/<%= type %>">
+			<div class="track-area">
+				<p>Engine Subs</p>
+				<p class="zone-stat"><%= engineSubs.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Axle Subs/<%= type %>">
+			<div class="track-area">
+				<p>Axle Subs</p>
+				<p class="zone-stat"><%= axleSubs.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Cabs Systems/<%= type %>">
+			<div class="track-area">
+				<p>Cabs</p>
+				<p class="zone-stat"><%= cabs.length %></p>
+			</div>
+		</a>
+	</div>
+	<div class="middle-row">
+		<a href="/dash/heatmapClaims/LDL/Cycle Test/<%= type %>">
+			<div class="track-area">
+				<p>Cycle Test</p>
+				<p class="zone-stat"><%= cycleTest.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/PDI/<%= type %>">
+			<div class="track-area">
+				<p>PDI</p>
+				<p class="zone-stat"><%= pdi.length %></p>
+			</div>
+		</a>
+		<div class="track-area track-3">
+			<div class="booms-zone-2">
+				<a href="/dash/heatmapClaims/LDL/Track 3 Zone 2/<%= type %>"
+					>Track 3 Zone 2<br />
+					<div class="zone-span"><%= track3Zone2.length %></div>
+				</a>
+			</div>
+			<div class="booms-zone-1">
+				<a href="/dash/heatmapClaims/LDL/Track 3 Zone 1/<%= type %>"
+					>Track 3 Zone 1<br />
+					<div class="zone-span"><%= track3Zone1.length %></div>
+				</a>
+			</div>
+		</div>
+		<a href="/dash/heatmapClaims/LDL/Overheads/<%= type %>">
+			<div class="track-area">
+				<p>Overheads</p>
+				<p class="zone-stat"><%= overHeads.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Paint Plant/<%= type %>">
+			<div class="track-area">
+				<p>Paint Plant</p>
+				<p class="zone-stat"><%= paintPlant.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Transmissions/<%= type %>">
+			<div class="track-area">
+				<p>Transmissions</p>
+				<p class="zone-stat"><%= transmissions.length %></p>
+			</div>
+		</a>
+	</div>
+	<div class="middle-row">
+		<a href="/dash/heatmapClaims/LDL/Attachments/<%= type %>">
+			<div class="track-area">
+				<p>Attachments</p>
+				<p class="zone-stat"><%= attachments.length %></p>
+			</div>
+		</a>
+		<div class="track-area track-1">
+			<div class="track1-zone-6">
+				<a href="/dash/heatmapClaims/LDL/Track 1 - Zone 6/<%= type %>"
+					>Track 1 Zone 6<br />
+					<div class="zone-span"><%= track1Zone6.length %></div>
+				</a>
+			</div>
+			<div class="track1-zone-5">
+				<a href="/dash/heatmapClaims/LDL/Track 1 - Zone 5/<%= type %>"
+					>Track 1 Zone 5<br />
+					<div class="zone-span"><%= track1Zone5.length %></div>
+				</a>
+			</div>
+			<div class="track1-zone-4">
+				<a href="/dash/heatmapClaims/LDL/Track 1 - Zone 4/<%= type %>"
+					>Track 1 Zone 4<br />
+					<div class="zone-span"><%= track1Zone4.length %></div>
+				</a>
+			</div>
+			<div class="track1-zone-3">
+				<a href="/dash/heatmapClaims/LDL/Track 1 - Zone 3/<%= type %>"
+					>Track 1 Zone 3<br />
+					<div class="zone-span"><%= track1Zone3.length %></div>
+				</a>
+			</div>
+			<div class="track1-zone-2">
+				<a href="/dash/heatmapClaims/LDL/Track 1 - Zone 2/<%= type %>"
+					>Track 1 Zone 2<br />
+					<div class="zone-span"><%= track1Zone2.length %></div>
+				</a>
+			</div>
+		</div>
+		<a href="/dash/heatmapClaims/LDL/T4 Exhaust Sub/<%= type %>">
+			<div class="track-area">
+				<p>T4 Exhaust Sub</p>
+				<p class="zone-stat"><%= t4Exhaust.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/HBU/<%= type %>">
+			<div class="track-area">
+				<p>HBU</p>
+				<p class="zone-stat"><%= hbu.length %></p>
+			</div>
+		</a>
+	</div>
+	<div class="bottom-row">
+		<a href="/dash/heatmapClaims/LDL/HBU/<%= type %>">
+			<div class="track-area">
+				<p>CFC</p>
+				<p class="zone-stat"><%= cfc.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Rad Subs/<%= type %>">
+			<div class="track-area">
+				<p>Rad Subs</p>
+				<p class="zone-stat"><%= radSubs.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Compact Booms/<%= type %>">
+			<div class="track-area">
+				<p>Compact Booms</p>
+				<p class="zone-stat"><%= compactBooms.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/516 Axle/<%= type %>">
+			<div class="track-area">
+				<p>516 Axle</p>
+				<p class="zone-stat"><%= axle516.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Quickhitch Subs/<%= type %>">
+			<div class="track-area">
+				<p>Quickhitch Subs</p>
+				<p class="zone-stat"><%= qhSubs.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Leg Subs/<%= type %>">
+			<div class="track-area">
+				<p>Leg Subs</p>
+				<p class="zone-stat"><%= legSubs.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Clean Room/<%= type %>">
+			<div class="track-area">
+				<p>Clean Room</p>
+				<p class="zone-stat"><%= cleanRoom.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Ram Subs/<%= type %>">
+			<div class="track-area">
+				<p>Ram Subs</p>
+				<p class="zone-stat"><%= ramSubs.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Fabrication/<%= type %>">
+			<div class="track-area">
+				<p>Fabrication</p>
+				<p class="zone-stat"><%= fabrication.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Supplier Quality/<%= type %>">
+			<div class="track-area">
+				<p>Supplier Quality</p>
+				<p class="zone-stat"><%= supplierQuality.length %></p>
+			</div>
+		</a>
+		<a href="/dash/heatmapClaims/LDL/Powersystems/<%= type %>">
+			<div class="track-area">
+				<p>Power Systems</p>
+				<p class="zone-stat"><%= powerSystems.length %></p>
+			</div>
+		</a>
+	</div>
+</div>
+
+<div class="container-fluid footer">
+	<div class="row header-top">
+		<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+			<img height="24px" src="/7z/content/images/jcb-logo.png" />
+			<img height="24px" src="/7z/content/images/df.png" />
+		</div>
+		<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+	</div>
+</div>

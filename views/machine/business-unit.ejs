@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-size=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="refresh" content="3000">
+  <title>JCB - Equipment Monitoring</title>
+  <link rel="icon" href="/home/jcb.png" />
+  <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+  <link rel="stylesheet" href="/content/bootswatch/united.css" type="text/css">
+  <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+  <link rel="stylesheet" href="/content/font-awesome/css/all.css" type="text/css">
+  <link rel="stylesheet" href="/content/ui/jquery-ui.min.css" type="text/css">
+  <script src="/content/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/content/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/content/ui/jquery-ui.min.js"></script>
+  <script src="/content/marquee/jquery.marquee.min.js"></script>
+  <script src="/content/timer/moment.js"></script>
+  <script src="/content/timer/dist/ez.countimer.min.js"></script>
+</head>
+
+<style>
+  .update-history {
+    border: 1px solid rgb(221, 214, 214);
+    background-color: #e9e9e9;
+    border-radius: 5px;
+    height: 66vh;
+    list-style-type: none;
+    padding-top: 10px;
+    overflow-x: hidden;
+    /* Hide horizontal scrollbar */
+    overflow-y: auto;
+    /* Add vertical scrollbar */
+  }
+
+  .update-history ul {
+    list-style-type: none;
+    margin-left: -30px;
+    color: black;
+  }
+</style>
+
+<body style="margin-bottom: 50px;">
+  <%- include('../../views/partials/flash.ejs')%>
+  <!-- convert ms into HH:MM:SS -->
+  <% function msToTime(duration) { %>
+  <%  let milliseconds = parseInt((duration%1000)/100) %>
+  <%  seconds = (parseInt((duration/1000)%60)) %>
+  <%  minutes = parseInt((duration/(1000*60))%60) %>
+  <%  hours = parseInt((duration/(1000*60*60))%24); %>
+  <%   minutes = (minutes < 10) ? "0" + minutes : minutes; %>
+  <%   seconds = (seconds < 10) ? "0" + seconds : seconds; %>
+  <% if (minutes < 1 && hours < 1) { %>
+  <%  return '<1m' %>
+  <%  } %>
+  <% if (hours > 0) { %>
+  <%  return hours + ":" + minutes + ":" + seconds  %>
+  <%  } %>
+  <%  return minutes + ":" + seconds %>
+  <% } %>
+
+  <!-- machine notes modal -->
+  <div class="modal fade" id="machine_notes_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div style="background-color: rgb(252, 176, 38); height: 50px; margin-top: -10px; padding-top: 2px;">
+          <h3 style="text-align: center; margin: 8px;"><%= businessUnit %> Notes</h3>
+        </div>
+        <div class="modal-body">
+          <fieldset>
+            <div class="form-group" style="color:black">
+
+              <div class="form-group update-history">
+                <ul>
+                  <% for (let note of notes) { %>
+                  <div class="float-right" style="margin-right: 20px;">
+                    <em><%= moment(note.createdAt).format("DD/MM/YYYY - HH:mm") %></em>
+                  </div>
+                  <li><strong><%=  note.assetName %></strong><br>
+                    <%=  note.body %><br>
+                    <% if (note.read) { %>
+                    <span style="color: rgb(0, 196, 70);">Acknowledged <em><%= moment(note.createdAt).format("DD/MM/YYYY - HH:mm") %></em></span>
+                    <% } else { %>
+                    <span style="color: red;">Not Acknowledged</span>
+                    <% } %>
+                  </li>
+                  <hr style="width: 99%; margin-left: -2px; background-color: rgb(202, 196, 196); height: 1px;">
+                  <% } %>
+                </ul>
+              </div>
+              <div class="form-group" style="color:black; margin-top: 25px; ">
+                <label for="exampleSelect1"></label>
+              </div>
+              <div style="margin-top: -50px;">
+                <button type="button" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; margin-bottom: 8px; color: white; border-radius: 4px;">Close</button>
+              </div>
+          </fieldset>
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container-fluid">
+
+    <div class="row header-top">
+      <div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/media/jcb-logo.png">
+      </div>
+      <div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+        <!-- <a href="/equipment-monitoring/login/<%= shortBu %>">
+                <span style="font-size: 21px; padding-top: 2px; color: black; margin-left: 5px;" class="fas fa-cog icon-home"></span>
+            </a> -->
+        <a href="/equipment-monitoring/operations">
+          <span style="font-size: 19px; padding-top: 2px; margin-right: 4px; color: black; font-weight: bold; border-right: 2px solid black;">Last Update: <%= moment(update.lastUpdate).format("DD/MM/YYYY - HH:mm:ss") %> </span>
+          <span style="font-size: 22px; padding-top: 2px; color: black" class="fas fa-home icon-home"></span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-main">
+
+        <div class="row">
+
+          <div class="col-lg-3" style="padding-top: 20px;">
+            <a href="/equipment-monitoring/login/<%= shortBu %>"><i class="fas fa-user-cog"></i></a>
+            <span style="margin-left: 10px;"><a href="/equipment-monitoring/machineAnalysis/<%= weldingRobots[0]._id %>/1/1/1/1/1"><i class="fas fa-chart-pie"></i></a></span>
+            <!-- <span style="margin-left: 10px;"><a href="/equipment-monitoring/machineAnalysis/<%= shortBu %>/all"><i class="fas fa-chart-pie"></i></a></span> -->
+            <a type="button" href='/equipment-monitoring/weeklyReport' target="_blank" fullscreen=yes><i style="margin-left: 14px;" class="fas fa-file-pdf"></i></a>
+            <a href="/equipment-monitoring/updatesCSVDownloadAll/<%= shortBu %>"><i style="margin-left: 14px;" class="fas fa-file-csv"></i></a>
+            <% if (unReadNotes > 0) { %>
+            <a type="button" data-toggle="modal" data-target="#machine_notes_modal"><i style="margin-left: 14px; font-size: 35px;  color: red;" class="far fa-comment-dots"></i></a>
+            <% } else { %>
+            <a type="button" data-toggle="modal" data-target="#machine_notes_modal"><i style="margin-left: 14px; font-size: 35px;  color: rgb(204, 192, 192);" class="far fa-comment-dots"></i></a>
+            <%  } %>
+            <a type="button" href='/equipment-monitoring/shift-vs-load/<%= shortBu %>'=><i style="margin-left: 14px;" class="fas fa-chart-bar"></i></a>
+            <a type="button" href='/dash/josh/robot-effWeek/<%= shortBu %>'><i style="margin-left: 14px; font-size: 35px; color: rgb(204, 192, 192);" class="fa fa-table"></i></a>
+
+
+
+          </div>
+          <div class="col-lg-6" style="margin-bottom: -2px;">
+            <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center"><%= businessUnit %></h1>
+            <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: 0px 0px 16px 0px; text-align: center">Equipment Status</h1>
+          </div>
+          <div class="col-lg-3" style="display: flex; justify-content: end;">
+            <div style="margin-top: 15px">
+          
+              
+              <div class="btn-group dropleft">
+                <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: rgb(102, 101, 110); color: white;">
+                  Screens
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/equipment-monitoring/business-unit/<%= shortBu %>"><%= shortBu %></a>
+                  <% screens.map((screen) => { %>
+                    <a class="dropdown-item" href="/equipment-monitoring/screen/<%= shortBu %>/<%= screen %>"><%= screen %></a>
+                  <% }) %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-12" style="margin-bottom: 24px; padding: 8px 0px 8px 0px; border-top: 3px solid rgb(26, 28, 30); border-bottom: 3px solid rgb(26, 28, 30)">
+
+
+
+            <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Welding Robots</h1>
+              <h1 class="line-measure-value-top " style="color: grey;"><span><%= weldPercent %>%</span> <span>(<%= weldPercentT %>%)</span></h1>
+            </div>
+            <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Laser Cutters</h1>
+              <h1 class="line-measure-value-top" style="color: grey;"><span><%= laserPercent %>%</span> <span>(<%= laserPercentT %>%)</span></h1>
+            </div>
+            <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Plasma Cutters</h1>
+              <h1 class="line-measure-value-top" style="color: grey;"><span><%= plasmaPercent %>%</span> <span>(<%= plasmaPercentT %>%)</span></h1>
+            </div>
+
+          </div>
+
+          <div style="display: flex;  align-items: flex-start; justify-content: center; margin-left: 10px; margin-top: -4px;">
+            <div style="float: left; width: 33vw; padding: 0px 18px 0px 18px">
+              <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                <% for (let r of weldingRobots) { %>
+                <% if (r.programming) { %>
+                <a href="/equipment-monitoring/machine/<%=r._id %>">
+                  <div style="float: left; width: 85px; padding: 6px 6px 18px 6px">
+
+                    <% if (r.dataStatus === 'ok') { %>
+                    <h1 style="text-align: center; color: rgb(0, 196, 70); font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (r.dataStatus === 'white') { %>
+                    <h1 style="text-align: center; color: white; font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (r.dataStatus === 'wrong') { %>
+                    <h1 style="text-align: center; color: red; font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (r.dataStatus === 'to check') { %>
+                    <h1 style="text-align: center; color: rgb(252, 176, 38); font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <div class="bg-no-signal" style="height: 65px; margin-bottom: 8px">
+                      <% if (!r.signal) { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 18px;"><i class="fas fa-wrench"></i></h6>
+                      <% } else { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 18px;"><i class="fas fa-wrench"></i></h6>
+                      <% } %>
+                    </div>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">Program mode</h1>
+                  </div>
+                </a>
+
+                <% } else { %>
+                <% if (r.signal && r.inShift) { %>
+                <a href="/equipment-monitoring/machine/<%=r._id %>">
+                  <div style="float: left; width: 85px; padding: 6px 6px 18px 6px">
+
+                    <% if (r.dataStatus === 'ok') { %>
+                    <h1 style="text-align: center; color: rgb(0, 196, 70); font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (r.dataStatus === 'white') { %>
+                    <h1 style="text-align: center; color: white; font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (r.dataStatus === 'wrong') { %>
+                    <h1 style="text-align: center; color: red; font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (r.dataStatus === 'to check') { %>
+                    <h1 style="text-align: center; color: rgb(252, 176, 38); font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <div class="<% if (r.state === 'Breakdown') { %>bg-danger<% } else if  (r.state === 'Planned Stoppage') { %>bg-wire<% } else if  (r.state === 'Unplanned Stoppage') { %>bg-info<% }  else if  (r.andon) { %>bg-andon<% }  else { %>bg-success<% } %>" style="height: 65px; margin-bottom: 8px">
+                      <% if (r.state === 'Running') { %>
+                      <% if (r.thelastSignal > r.shiftStart) { %>
+                      <h6 style="font-weight: bold; font-size: 16px; text-align: center; color: white; padding-top: 10px;"><%= r.eff  %>%</h6>
+                      <h6 style="font-weight: bold; font-size: 16px; text-align: center; color: black; margin-top: -5px;">(<%= r.teff  %>%)</h6>
+
+                      <% } else { %>
+                      <h6 style="font-weight: bold; font-size: 16px; padding-top: 8px; text-align: center; color: white;">--</h6>
+                      <h6 style="font-weight: bold; font-size: 16px; margin-top: -2px; text-align: center; color: black;">--</h6>
+
+                      <% } %>
+
+                      <% } else { %>
+                      <% if (r.stoppages[0].createdAt > new Date(r.shiftStart)) { %>
+                      <% str = msToTime(Date.now() - new Date(r.stoppages[0].createdAt)) %>
+                      <% } else { %>
+                      <% str = msToTime(Date.now() - new Date(r.shiftStart)) %>
+                      <% } %>
+                      <h6 style="font-weight: bold; font-size: 15px; text-align: center; color: white; padding: 20px 0"><%= str%></h6>
+                      <% } %>
+                    </div>
+                    <% if (r.state === 'Running' && r.inShift) { %>
+                    <% if (r.thelastSignal > r.shiftStart) { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold"><%= moment(r.thelastSignal).format('HH:mm:ss') %></h1>
+                    <%  } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold"><%= moment(r.shiftStart).format('HH:mm:ss') %></h1>
+                    <%  } %>
+                    <% } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">--</h1>
+                    <% } %>
+                  </div>
+                </a>
+                <% } else { %>
+                <a href="/equipment-monitoring/machine/<%=r._id %>">
+                  <div style="float: left; width: 85px; padding: 6px 6px 18px 6px">
+
+                    <% if (r.dataStatus === 'ok') { %>
+                    <h1 style="text-align: center; color: rgb(0, 196, 70); font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (r.dataStatus === 'white') { %>
+                    <h1 style="text-align: center; color: white; font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (r.dataStatus === 'wrong') { %>
+                    <h1 style="text-align: center; color: red; font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (r.dataStatus === 'to check') { %>
+                    <h1 style="text-align: center; color: rgb(252, 176, 38); font-size: 10px; font-weight: bold"><%= r.abbreviatedName %></h1>
+                    <% } %>
+                    <div class="bg-no-signal" style="height: 65px; margin-bottom: 8px">
+                      <% if (!r.signal) { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 21px;">X</h6>
+                      <% } else { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 21px;">--</h6>
+                      <% } %>
+                    </div>
+                    <% if (r.state === 'Running' && r.inShift) { %>
+                    <% if (r.thelastSignal > r.shiftStart) { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold"><%= moment(r.thelastSignal).format('HH:mm:ss') %></h1>
+                    <%  } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">Waiting Signal</h1>
+                    <%  } %>
+                    <% } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">--</h1>
+                    <% } %>
+                  </div>
+                </a>
+                <% } %>
+
+                <% } %>
+
+                <% } %>
+              </div>
+            </div>
+
+            <div style="float: left; width: 33vw; padding: 0px 18px 0px 18px">
+              <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                <% for (let l of laserCutters) { %>
+                <% if (l.programming) { %>
+                <a href="/equipment-monitoring/machine/<%=l._id %>">
+                  <div style="float: left; width: 85px; padding: 6px 6px 18px 6px">
+
+                    <% if (l.dataStatus === 'ok') { %>
+                    <h1 style="text-align: center; color: rgb(0, 196, 70); font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (l.dataStatus === 'white') { %>
+                    <h1 style="text-align: center; color: white; font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (l.dataStatus === 'wrong') { %>
+                    <h1 style="text-align: center; color: red; font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (l.dataStatus === 'to check') { %>
+                    <h1 style="text-align: center; color: rgb(252, 176, 38); font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <div class="bg-no-signal" style="height: 65px; margin-bottom: 8px">
+                      <% if (!l.signal) { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 18px;"><i class="fas fa-wrench"></i></h6>
+                      <% } else { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 18px;"><i class="fas fa-wrench"></i></h6>
+                      <% } %>
+                    </div>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">Program mode</h1>
+                  </div>
+                </a>
+
+                <% } else { %>
+                <% if (l.signal && l.inShift) { %>
+                <a href="/equipment-monitoring/machine/<%=l._id %>">
+                  <div style="float: left; width: 85px; padding: 6px 6px 18px 6px">
+
+                    <% if (l.dataStatus === 'ok') { %>
+                    <h1 style="text-align: center; color: rgb(0, 196, 70); font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (l.dataStatus === 'white') { %>
+                    <h1 style="text-align: center; color: white; font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (l.dataStatus === 'wrong') { %>
+                    <h1 style="text-align: center; color: red; font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (l.dataStatus === 'to check') { %>
+                    <h1 style="text-align: center; color: rgb(252, 176, 38); font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <div class="<% if (l.state === 'Breakdown') { %>bg-danger<% } else if  (l.state === 'Planned Stoppage') { %>bg-wire<% } else if  (l.state === 'Unplanned Stoppage') { %>bg-info<% }  else if  (l.andon) { %>bg-andon<% }  else { %>bg-success<% } %>" style="height: 65px; margin-bottom: 8px">
+                      <% if (l.state === 'Running') { %>
+                      <% if (l.thelastSignal > l.shiftStart) { %>
+                      <h6 style="font-weight: bold; font-size: 16px; text-align: center; color: white; padding-top: 10px;"><%= l.eff  %>%</h6>
+                      <h6 style="font-weight: bold; font-size: 16px; text-align: center; color: black; margin-top: -5px;">(<%= l.teff  %>%)</h6>
+
+                      <% } else { %>
+                      <h6 style="font-weight: bold; font-size: 16px; padding-top: 8px; text-align: center; color: white;">--</h6>
+                      <h6 style="font-weight: bold; font-size: 16px; margin-top: -2px; text-align: center; color: black;">--</h6>
+
+                      <% } %>
+                      <% } else { %>
+                      <% if (l.stoppages[0].createdAt > new Date(l.shiftStart)) { %>
+                      <% str = msToTime(Date.now() - new Date(l.stoppages[0].createdAt)) %>
+                      <% } else { %>
+                      <% str = msToTime(Date.now() - new Date(l.shiftStart)) %>
+                      <% } %>
+                      <h6 style="font-weight: bold; font-size: 15px; text-align: center; color: white; padding: 20px 0;"><%= str%></h6>
+                      <% } %>
+                    </div>
+                    <% if (l.state === 'Running' && l.inShift) { %>
+                    <% if (l.thelastSignal > l.shiftStart) { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold"><%= moment(l.thelastSignal).format('HH:mm:ss') %></h1>
+                    <%  } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">Waiting Signal</h1>
+                    <%  } %>
+                    <% } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">--</h1>
+                    <% } %>
+
+                  </div>
+                </a>
+                <% } else { %>
+                <a href="/equipment-monitoring/machine/<%=l._id %>">
+                  <div style="float: left; width: 85px; padding: 6px 6px 18px 6px">
+
+                    <% if (l.dataStatus === 'ok') { %>
+                    <h1 style="text-align: center; color: rgb(0, 196, 70); font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (l.dataStatus === 'white') { %>
+                    <h1 style="text-align: center; color: white; font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (l.dataStatus === 'wrong') { %>
+                    <h1 style="text-align: center; color: red; font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (l.dataStatus === 'to check') { %>
+                    <h1 style="text-align: center; color: rgb(252, 176, 38); font-size: 10px; font-weight: bold"><%= l.abbreviatedName %></h1>
+                    <% } %>
+                    <div class="bg-no-signal" style="height: 65px; margin-bottom: 8px">
+                      <% if (!l.signal) { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 21px;">X</h6>
+                      <% } else { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 21px;">--</h6>
+                      <% } %>
+                    </div>
+                    <% if (l.state === 'Running' && l.inShift) { %>
+                    <% if (l.thelastSignal > l.shiftStart) { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold"><%= moment(l.thelastSignal).format('HH:mm:ss') %></h1>
+                    <%  } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">Waiting Signal</h1>
+                    <%  } %>
+                    <% } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">--</h1>
+                    <% } %>
+                  </div>
+                </a>
+
+                <% } %>
+
+                <% } %>
+                <% } %>
+              </div>
+            </div>
+
+            <div style="float: left; width: 33vw; padding: 0px 18px 0px 18px">
+              <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                <% for (let p of plasmaCutters) { %>
+                <% if (p.programming) { %>
+                <a href="/equipment-monitoring/machine/<%=p._id %>">
+                  <div style="float: left; width: 85px; padding: 6px 6px 18px 6px">
+
+                    <% if (p.dataStatus === 'ok') { %>
+                    <h1 style="text-align: center; color: rgb(0, 196, 70); font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (p.dataStatus === 'white') { %>
+                    <h1 style="text-align: center; color: white; font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (p.dataStatus === 'wrong') { %>
+                    <h1 style="text-align: center; color: red; font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (p.dataStatus === 'to check') { %>
+                    <h1 style="text-align: center; color: rgb(252, 176, 38); font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <div class="bg-no-signal" style="height: 65px; margin-bottom: 8px">
+                      <% if (!p.signal) { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 18px;"><i class="fas fa-wrench"></i></h6>
+                      <% } else { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 18px;"><i class="fas fa-wrench"></i></h6>
+                      <% } %>
+                    </div>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">Program mode</h1>
+                  </div>
+                </a>
+
+                <% } else { %>
+                <% if (p.signal && p.inShift) { %>
+                <a href="/equipment-monitoring/machine/<%=p._id %>">
+                  <div style="float: left; width: 85px; padding: 6px 6px 18px 6px">
+
+                    <% if (p.dataStatus === 'ok') { %>
+                    <h1 style="text-align: center; color: rgb(0, 196, 70); font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (p.dataStatus === 'white') { %>
+                    <h1 style="text-align: center; color: white; font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (p.dataStatus === 'wrong') { %>
+                    <h1 style="text-align: center; color: red; font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (p.dataStatus === 'to check') { %>
+                    <h1 style="text-align: center; color: rgb(252, 176, 38); font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <div class="<% if (p.state === 'Breakdown') { %>bg-danger<% } else if  (p.state === 'Planned Stoppage') { %>bg-wire<% } else if  (p.state === 'Unplanned Stoppage') { %>bg-info<% }  else if  (p.andon) { %>bg-andon<% }  else { %>bg-success<% } %>" style="height: 65px; margin-bottom: 8px">
+                      <% if (p.state === 'Running') { %>
+                      <% if (p.thelastSignal > p.shiftStart) { %>
+                      <h6 style="font-weight: bold; font-size: 16px; text-align: center; color: white; padding-top: 10px;"><%= p.eff  %>%</h6>
+                      <h6 style="font-weight: bold; font-size: 16px; text-align: center; color: black; margin-top: -5px;">(<%= p.teff  %>%)</h6>
+
+                      <% } else { %>
+                      <h6 style="font-weight: bold; font-size: 16px; padding-top: 8px; text-align: center; color: white;">--</h6>
+                      <h6 style="font-weight: bold; font-size: 16px; margin-top: -2px; text-align: center; color: black;">--</h6>
+
+                      <% } %>
+                      <% } else { %>
+                      <% if (p.stoppages[0].createdAt > new Date(p.shiftStart)) { %>
+                      <% str = msToTime(Date.now() - new Date(p.stoppages[0].createdAt)) %>
+                      <% } else { %>
+                      <% str = msToTime(Date.now() - new Date(p.shiftStart)) %>
+                      <% } %>
+                      <h6 style="font-weight: bold; font-size: 15px; text-align: center; color: white; padding: 20px 0;"><%= str%></h6>
+                      <% } %>
+                    </div>
+                    <% if (p.state === 'Running' && p.inShift) { %>
+                    <% if (p.thelastSignal > p.shiftStart) { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold"><%= moment(p.thelastSignal).format('HH:mm:ss') %></h1>
+                    <%  } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">Waiting Signal</h1>
+                    <%  } %>
+                    <% } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">--</h1>
+                    <% } %>
+                  </div>
+                </a>
+                <% } else { %>
+                <a href="/equipment-monitoring/machine/<%=p._id %>">
+                  <div style="float: left; width: 85px; padding: 6px 6px 18px 6px">
+
+                    <% if (p.dataStatus === 'ok') { %>
+                    <h1 style="text-align: center; color: rgb(0, 196, 70); font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (p.dataStatus === 'white') { %>
+                    <h1 style="text-align: center; color: white; font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (p.dataStatus === 'wrong') { %>
+                    <h1 style="text-align: center; color: red; font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <% if (p.dataStatus === 'to check') { %>
+                    <h1 style="text-align: center; color: rgb(252, 176, 38); font-size: 10px; font-weight: bold"><%= p.abbreviatedName %></h1>
+                    <% } %>
+                    <div class="bg-no-signal" style="height: 65px; margin-bottom: 8px">
+                      <% if (!p.signal) { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 21px;">X</h6>
+                      <% } else { %>
+                      <h6 style="font-weight: bold; font-size: 18px; text-align: center; color: white; padding-top: 21px;">--</h6>
+                      <% } %>
+                    </div>
+                    <% if (p.state === 'Running' && p.inShift) { %>
+                    <% if (p.thelastSignal > p.shiftStart) { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold"><%= moment(p.thelastSignal).format('HH:mm:ss') %></h1>
+                    <%  } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold"><%= moment(p.shiftStart).format('HH:mm:ss') %></h1>
+                    <%  } %>
+                    <% } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">--</h1>
+                    <% } %>
+                  </div>
+                </a>
+
+                <% } %>
+
+                <% } %>
+                <% } %>
+              </div>
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid footer" style="background-color: black;">
+    <div style="margin-left: -11px;  width: 105%; margin-bottom: 100px; padding: 8px 35px 8px 0px; border-bottom: 3px solid rgb(26, 28, 30)">
+      <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px; margin-top: 25px;">
+        <h1 class="line-sub-header-top">Planned Stoppage</h1>
+        <h1 class="line-measure-value-top text-grey"><%= sumOfBdTime %></h1>
+      </div>
+      <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px; margin-top: 25px;">
+        <h1 class="line-sub-header-top">Unplanned Stoppage</h1>
+        <h1 class="line-measure-value-top text-info"><%= sumOfUnknownBdTime %></h1>
+      </div>
+
+      <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px; margin-top: 25px;">
+        <h1 class="line-sub-header-top">Breakdown</h1>
+        <h1 class="line-measure-value-top text-danger"><%= sumOfWireTime %></h1>
+      </div>
+    </div>
+    <div class="marquee <% if (totalWire > 0) { %> text-danger text-alert <% } else { %>''<% } %>" data-duration="16000" data-gap="2500" data-duplicated="true" style=" margin-left: -15px; width: 100vw;">
+      Live Status : Planned Stoppages (<%= totalKnownBreakdown %>),
+      Unplanned Stoppages (<%= totalUnKnownBreakdown %>),
+      Breakdowns (<%= totalWire %>)
+    </div>
+    <!-- <div style="color: white; background-color: red; width: 110%; margin-left: -12px;" class="marquee <% if (totalWire > 0) { %>  <% } else { %>''<% } %>" data-duration="16000" data-gap="2500" data-duplicated="true" style=" margin-left: -15px; width: 100vw;" >
+        LiveLink System Currently Under Maintenance. Please Check Back For Updates. 
+    </div> -->
+    <div class="row header-top">
+      <div class="col-lg-6  d-lg-block text-left" style="padding: 4px 4px 5px 4px;">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+        <img height="24px" src="/7z/content/images/df.png">
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+        J.C. Bamford Excavators LTD &copy; 2022
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+
+      // $('.timer-2').countimer();
+
+      $('.marquee').marquee({
+        //duration in milliseconds of the marquee
+        duration: 7000,
+        //gap in pixels between the tickers
+        gap: 100000,
+        //time in milliseconds before the marquee will start animating
+        delayBeforeStart: 10,
+        //'left' or 'right'
+        direction: 'left',
+        //true or false - should the marquee be duplicated to show an effect of continues flow
+        duplicated: true
+      });
+
+    });
+
+
+
+    function displayTime() {
+      var time = moment().format('HH:mm:ss');
+
+      $('#clock').html(time);
+
+      setTimeout(displayTime, 1000);
+    }
+
+    $(document).ready(function() {
+      displayTime();
+    });
+  </script>
+
+</body>
+
+</html>

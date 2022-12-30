@@ -1,0 +1,86 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="zone-container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Edit Top 5 Faults</h1>
+    </div>
+
+
+
+
+    <div class="col">
+      <form action="/zone/editTrack/<%= zone._id %>" method="POST">
+        <label for="buildNumber">Issue 1</label>
+        <input class="form-control" type="text" name="zone[issue1]" value="<%= zone.issue1 %>" disabled>
+        <label for="buildNumber">Status</label>
+        <select class="form-control" type="text" name="zone[status1]" value="<%= zone.status1 %>" autocomplete="off">
+          <option hidden><%= zone.status1 %></option>
+          <option>Open</option>
+          <option>Contained</option>
+          <option>Closed</option>
+        </select>
+        <label for="buildNumber">Cut In</label>
+        <input class="form-control" type="text" name="zone[cutIn1]" value="<%= zone.cutIn1 %>">
+    </div>
+    <div class="col">
+      <label for="buildNumber">Issue 2</label>
+      <input class="form-control" type="text" name="zone[issue2]" value="<%= zone.issue2 %>" disabled>
+      <label for="buildNumber">Status</label>
+      <select class="form-control" type="text" name="zone[status2]" value="<%= zone.status2 %>" autocomplete="off">
+        <option hidden><%= zone.status2 %></option>
+        <option>Open</option>
+        <option>Contained</option>
+        <option>Closed</option>
+      </select>
+      <label for="buildNumber">Cut In</label>
+      <input class="form-control" type="text" name="zone[cutIn2]" value="<%= zone.cutIn2 %>">
+    </div>
+    <div class="col">
+      <label for="buildNumber">Issue 3</label>
+      <input class="form-control" type="text" name="zone[issue3]" value="<%= zone.issue3 %>" disabled>
+      <label for="buildNumber">Status</label>
+      <select class="form-control" type="text" name="zone[status3]" value="<%= zone.status3 %>" autocomplete="off">
+        <option hidden><%= zone.status3 %></option>
+        <option>Open</option>
+        <option>Contained</option>
+        <option>Closed</option>
+      </select>
+      <label for="buildNumber">Cut In</label>
+      <input class="form-control" type="text" name="zone[cutIn3]" value="<%= zone.cutIn3 %>">
+    </div>
+    <div class="col">
+      <label for="buildNumber">Issue 4</label>
+      <input class="form-control" type="text" name="zone[issue4]" value="<%= zone.issue4 %>" disabled>
+      <label for="buildNumber">Status</label>
+      <select class="form-control" type="text" name="zone[status4]" value="<%= zone.status4 %>" autocomplete="off">
+        <option hidden><%= zone.status4 %></option>
+        <option>Open</option>
+        <option>Contained</option>
+        <option>Closed</option>
+      </select>
+      <label for="buildNumber">Cut In</label>
+      <input class="form-control" type="text" name="zone[cutIn4]" value="<%= zone.cutIn4 %>">
+    </div>
+    <div class="col">
+      <label for="buildNumber">Issue 5</label>
+      <input class="form-control" type="text" name="zone[issue5]" value="<%= zone.issue5 %>" disabled>
+      <label for="buildNumber">Status</label>
+      <select class="form-control" type="text" name="zone[status5]" value="<%= zone.status5 %>" autocomplete="off">
+        <option hidden><%= zone.status5 %></option>
+        <option>Open</option>
+        <option>Contained</option>
+        <option>Closed</option>
+      </select>
+      <label for="buildNumber">Cut In</label>
+      <input class="form-control" type="text" name="zone[cutIn5]" value="<%= zone.cutIn5 %>">
+
+      <div class="form-group text-center">
+        <button class="btn btn-md btn-success " style="margin: 5px;">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>

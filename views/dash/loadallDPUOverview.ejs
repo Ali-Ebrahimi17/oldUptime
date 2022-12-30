@@ -1,0 +1,371 @@
+<% layout('layouts/heatmap')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/8z/content/bootstrap/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css" />
+<link rel="stylesheet" href="/content/table2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/ldlHeatmap.css" type="text/css" />
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+<style>
+	body {
+		background-color: black;
+	}
+
+	h5 {
+		color: white;
+		font-size: 1.5rem;
+		margin-bottom: -15px;
+	}
+
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+
+	h2 {
+		font-weight: bold;
+		color: black;
+	}
+
+	h1 {
+		font-size: 4rem;
+	}
+
+	h6 {
+		font-size: 1rem;
+	}
+
+	hr {
+		background-color: #6a6d6d;
+	}
+
+	.zone-stat {
+		font-size: 60px;
+		margin-top: -10px;
+	}
+
+	.zone-span {
+		font-size: 60px;
+		padding-top: 6px;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: white;
+	}
+
+	.graph-holder1 {
+		background-color: rgb(36, 42, 49);
+		width: 1700px;
+		height: 350px;
+		margin-bottom: 50px;
+		/* border: 1px solid white; */
+		padding-right: 8px;
+		border-radius: 4px;
+		overflow: scroll;
+		overflow-y: hidden;
+	}
+
+	.graph-holder1::-webkit-scrollbar {
+		display: none;
+	}
+
+	.graph-holder2 {
+		background-color: rgb(36, 42, 49);
+		width: 1700px;
+		height: 250px;
+		margin-bottom: 50px;
+		/* border: 1px solid white; */
+		padding-right: 8px;
+		border-radius: 4px;
+	}
+
+	.main-wrapper {
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+		flex-direction: column;
+		/* margin-left: 75px; */
+	}
+
+	.chartWrapper {
+		position: relative;
+	}
+
+	.chartWrapper > canvas {
+		position: absolute;
+		left: 0;
+		top: 0;
+		pointer-events: none;
+	}
+
+	.chartAreaWrapper {
+		width: 2700px;
+		overflow-x: hidden;
+	}
+</style>
+
+<div class="main-header-holder">
+	<div style="position: absolute; right: 0; margin-right: 115px">
+		<a href="/dash/dpuD/LDL" type="button" class="btn btn-primary" style="color: white; border-radius: 4">Switch to Rolling 7 days</a>
+	</div>
+	<h1><%= fullDivision %> Faults Overview</h1>
+	<small>Rolling 6 Weeks (Excluding Shortages)</small>
+	<small>Total Of <%= totalNumberOfFaults %> Faults Found - <%= top10Percent %>% In Top 10 Areas </small>
+</div>
+
+<div class="main-wrapper" style="margin-top: 10px">
+	<!-- <div class="graph-holder1">
+        <canvas style="padding-top: 10px; padding-bottom: 45px;" id="canvas1" height="80" width="330" ></canvas>
+    </div>
+    <div class="graph-holder2">
+        <canvas id="line-chart" style="padding-top: 10px; padding-bottom: 55px; padding-right: 5px;" height="60" width="330"></canvas>
+     
+    </div> -->
+
+	<div class="graph-holder1">
+		<div class="chartWrapper">
+			<div class="chartAreaWrapper">
+				<canvas id="canvas1" style="padding-top: 10px" height="170" width="1300"></canvas>
+			</div>
+		</div>
+	</div>
+
+	<div class="graph-holder2">
+		<% if (division === 'LDL') { %>
+		<canvas id="line-chart" style="padding-top: 10px; padding-bottom: 55px; padding-right: 5px" height="60" width="330"></canvas>
+		<% } else { %>
+		<canvas style="padding-top: 10px; padding-bottom: 55px; padding-right: 5px" height="60" width="330"></canvas>
+		<% } %>
+	</div>
+</div>
+
+<div class="container-fluid footer">
+	<div class="row header-top">
+		<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+			<img height="24px" src="/7z/content/images/jcb-logo.png" />
+			<img height="24px" src="/7z/content/images/df.png" />
+		</div>
+		<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+	</div>
+</div>
+
+<script>
+	  Chart.defaults.global.defaultFontColor = '#fff';
+	  Chart.defaults.scale.gridLines.display = false;
+
+	  <% let labelsBHL = [] %>
+	  <% let effBHL = [] %>
+	  <% let teffBHL = [] %>
+	  <% let ceffBHL = [] %>
+	  <% let colorsBHL = 'rgb(255, 123, 0)' %>
+
+
+
+	  <% for (let l of areas) { %>
+	  <% labelsBHL.push(l._id) %>
+	  <% effBHL.push(l.count)  %>
+	  <% ceffBHL.push(`${l.count} (${Math.round(l.count/allFaults * 100)}%)`) %>
+
+	  <% } %>
+
+
+
+
+	  let barChartData1 = {
+	    labels: <%- JSON.stringify(labelsBHL); %>,
+	    newLabels: <%- JSON.stringify(ceffBHL) %>,
+	    datasets: [
+
+	      {
+	        label: 'Count',
+	        backgroundColor: <%- JSON.stringify(colorsBHL); %>,
+	        yAxisID: 'bar-y-axis',
+	        datalabels: {
+	          // display labels for this specific dataset
+	          display: true,
+	          color: 'white',
+	          align: 'end',
+	          anchor: 'end',
+	          formatter: function(value, context) {
+	            return context.chart.data.newLabels[context.dataIndex];
+	            // return value + '%';
+	          },
+	          font: {
+	            size: 12,
+	          },
+	        },
+	        data: <%- JSON.stringify(effBHL); %>,
+	      },
+	    ],
+	  };
+
+	  let options = {
+	    title: {
+	      display: false,
+	      text: 'Faults Volume By Area',
+	    },
+	    legend: {
+	      display: false,
+	    },
+	    tooltips: {
+	      mode: 'label',
+	      enabled: false,
+	      callbacks: {
+	        label: function(tooltipItems, data) {
+	          // if (data.datasets[tooltipItems.datasetIndex].label != "Running Time")  {
+	          return data.datasets[tooltipItems.datasetIndex].label;
+	        }
+	        // },
+	      }
+	    },
+	    responsive: true,
+	    scales: {
+	      xAxes: [{
+	        stacked: true,
+	        barPercentage: 0.8,
+	      }, ],
+	      yAxes: [{
+	          stacked: false,
+	          display: false,
+	          ticks: {
+	            beginAtZero: true,
+
+
+	          },
+	          scaleLabel: {
+	            display: false,
+	            labelString: 'Hours',
+	          },
+	        },
+	        {
+	          id: 'bar-y-axis',
+	          stacked: true,
+	          display: true,
+	          ticks: {
+	            beginAtZero: true,
+	            min: 0,
+	            max: 12000,
+	            stepSize: 2000,
+
+	          },
+	          type: 'linear',
+	        },
+	      ],
+	    },
+
+	  }
+
+	  window.onload = function() {
+	    var data = <%- JSON.stringify(effBHL) %>
+	    var labels = <%- JSON.stringify(labelsBHL) %>
+	    var bgColor = <%- JSON.stringify(colorsBHL) %>
+	    var bu = <%- JSON.stringify(division) %>
+
+
+	    var ctx = document.getElementById("canvas1");
+	    var myChart = new Chart(ctx, {
+	      type: 'bar',
+	      data: barChartData1,
+	      options: options
+	    });
+	    document.getElementById("canvas1").onclick = function(evt) {
+	      var activePoints = myChart.getElementsAtEvent(evt);
+	      var firstPoint = activePoints[0];
+	      // var bu = shortBu
+	      var label = myChart.data.labels[firstPoint._index];
+	      var value = myChart.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+
+	      if (firstPoint !== undefined)
+
+	        window.location.href = `/dash/dpu/${bu}/${label}`
+
+	    };
+	  }
+
+	  <% let labels = [
+
+	] %>
+	  <% let dpu = [] %>
+	  <% let target = [] %>
+	  <% let colors = 'rgb(255, 123, 0)' %>
+
+
+
+	  <% for (let l of allFaultsWithoutShortages) { %>
+	  <% labels.push(l._id.week)  %>
+	  <% dpu.push(+l.dpu)  %>
+	  <% target.push(l.target) %>
+
+	  <% } %>
+
+
+	  new Chart(document.getElementById("line-chart"), {
+	    type: 'line',
+	    data: {
+	      labels: <%- JSON.stringify(labels) %>,
+	      datasets: [{
+	        data: <%- JSON.stringify(dpu) %>,
+	        label: "DPU",
+	        borderColor: "#3e95cd",
+	        fill: false
+	      }, {
+	        data: <%- JSON.stringify(target) %>,
+	        label: "Target",
+	        borderColor: "red",
+	        fill: false
+	      }, ]
+	    },
+	    options: {
+	      title: {
+	        display: false,
+	        text: 'Loadall DPU By Week'
+	      },
+	      legend: {
+	        display: false,
+	      },
+	      scales: {
+	        xAxes: [{
+
+	          gridLines: {
+	            display: false
+	          }
+	        }],
+	        yAxes: [{
+	          ticks: {
+	            beginAtZero: true,
+	            min: 0,
+	            // max         : 20,
+	            display: true,
+	          },
+	          gridLines: {
+	            display: false
+	          },
+	        }, {
+
+	          ticks: {
+	            beginAtZero: true,
+	            min: 0,
+	            // max         : 100,
+	            display: false,
+	          },
+	          gridLines: {
+	            display: false
+	          }
+	        }]
+	      }
+	    }
+	  });
+</script>

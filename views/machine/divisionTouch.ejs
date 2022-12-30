@@ -1,0 +1,378 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <meta http-equiv="refresh" content="120"> -->
+    <title>JCB - Equipment Monitoring</title>
+    <link rel="icon" href="/home/jcb.png" />
+    <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+    <!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+    <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+    <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+    <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+    <!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+    <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+    <link rel="stylesheet" href="/stylesheets/app.css" />
+    <link rel="stylesheet" href="/fontawesome/css/all.css" />
+</head>
+<body>
+
+   
+
+<div class="container-fluid">
+
+    <div class="row header-top">
+        <div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+            <img height="24px" src="/7z/content/images/jcb-logo.png">
+        </div>
+        <div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+            <a href="/equipment-monitoring/operations">
+                <span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 5px" class="fas fa-home icon-home"></span>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-main">
+            
+
+            <div class="row">
+
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Daily LiveLink Status</h1>
+                    <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: 0px 0px 16px 0px; text-align: center"><span style="margin-right: 5px;"><img src="/media/uk-small.png" alt="" width="30" height="30"></span>Program Touch Time</h1>
+
+                </div>
+                
+                
+               
+                
+
+                  
+                    <div class="col-lg-12" style="margin-top: -4px; margin-bottom: 22px; padding: 8px 0px 8px 0px; border-bottom: 3px solid rgb(26, 28, 30); border-top: 3px solid rgb(26, 28, 30)">
+                        <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+                            <h1 class="line-sub-header-top">Best Performing - Current Shift</h1>
+                            <h1 class="line-measure-value-top " style="color:  rgb(0, 196, 70);" ><span ><%= bestMachine[0]._id %></span>  <span>(<%= bestMachine[0].averageTEff %>%)</span></h1>
+                        </div>
+                        <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+                            <h1 class="line-sub-header-top">Welding Robots</h1>
+                            <h1 class="line-measure-value-top " style="color: grey;" ><span ><%= averageMachine[0].averageTEff %>%</span></h1>
+                        </div>
+                        <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+                            <h1 class="line-sub-header-top">Worst Performing - Current Shift</h1>
+                            <h1 class="line-measure-value-top " style="color: rgb(238, 28, 37);" ><span ><%= worstMachine[0]._id %></span>  <span>(<%= worstMachine[0].averageTEff %>%)</span></h1>
+                        </div>
+                        </div>
+                      
+                    </div>
+
+                
+                    <div style="display: flex; width: 100%;">
+                        <div class="col" style=" margin: 0 10px; width: 50%; display: flex; justify-content: space-evenly; flex-wrap: wrap;">
+                            <div style="margin-bottom: 20px;">
+                                <div style="text-align: center; color: white;"><h3><%= fullBusinessUnit  %></h3></div>
+                                <div style="text-align: center;  color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Current Day</p></div>
+                                <!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+                                <canvas style="margin-top: -95px;" id="canvas1" height="650" width="850" ></canvas>
+                            </div>
+                            
+                        </div>
+                        <hr style="width: 1px; height: 95%; display: inline-block; background-color: grey; ">
+
+                        <!-- second side -->
+                        <div class="col" style=" margin: 0 10px; width: 50%; display: flex; justify-content: space-evenly; flex-wrap: wrap;">
+                           
+                            <div style="margin-bottom: 20px;">
+                                <% if (asset === 'All') { %>
+                                    <div style="text-align: center; color: white;"><h3><%= fullBusinessUnit  %></h3></div>
+                                <% } else { %>
+                                    <div style="text-align: center; color: white;"><h3><%= asset %></h3></div>
+                                <% } %>
+                                <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Rolling 14 Days</p></div>
+                                <!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+                                <canvas id="canvas2" height="650" width="850" style="margin-top: -95px;" ></canvas>
+                            </div>
+                           
+                            
+                        </div>
+                    </div>
+                
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid footer">
+        
+    <div class="row header-top">
+        <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+            <img height="24px" src="/7z/content/images/df.png">
+        </div>
+        <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+            J.C. Bamford Excavators LTD &copy; 2022
+        </div>
+    </div>
+
+</div>
+
+<script  src="/7z/content/modal/modal.js"></script>
+
+
+
+
+
+<script>
+
+
+    Chart.defaults.global.defaultFontColor = '#fff';
+
+    <% let labelsBHL = [] %>
+    <% let effBHL = [] %>
+    <% let teffBHL = [] %>
+    <% let ceffBHL = [] %>
+    <% let colorsBHL = [] %>
+
+
+    
+    <% GraphBHL.forEach(l => {%>
+        <% labelsBHL.push(l._id); %>
+        <% if (l.averageTEff < 101 ) { %>
+            <% effBHL.push(l.averageTEff)  %>
+            <% ceffBHL.push(l.averageTEff); %>
+        <% } else { %>
+            <% effBHL.push(100)  %>
+            <% ceffBHL.push(100); %>
+        <% } %>
+
+        <% if (l._id === asset && l.averageTEff >= 75) { %>
+            <%  colorsBHL.push('rgba(0, 196, 70, .4)') %>
+        <% } else if (l._id === asset && l.averageTEff >= 50) {  %>
+            <%  colorsBHL.push('rgba(255, 123, 0, .4)') %>
+        <% } else if (l._id === asset) { %>
+            <%  colorsBHL.push('rgba(238, 28, 37, .4)') %>
+        <% } else if (l.averageTEff >= 75) { %>
+            <%  colorsBHL.push('rgb(0, 196, 70)') %>
+        <% } else if (l.averageTEff >= 50) { %>
+            <%  colorsBHL.push('rgb(255, 123, 0)') %>
+       <% } else { %>
+        <%  colorsBHL.push('rgb(238, 28, 37)') %>
+      <% } %>
+    <% }) %>
+
+    
+
+    <% let labelsLDL = [] %>
+    <% let effLDL = [] %>
+    <% let teffLDL = [] %>
+    <% let ceffLDL = [] %>
+    <% let colorsLDL = [] %>
+    <% GraphLDL.forEach(l => {%>
+        <% labelsLDL.push(`${l._id.day}/${l._id.month}`); %>
+        <% if (l.averageTEff < 101 ) { %>
+            <% effLDL.push(l.averageTEff)  %>
+            <% ceffLDL.push(l.averageTEff); %>
+        <% } else { %>
+            <% effLDL.push(100)  %>
+            <% ceffLDL.push(100); %>
+        <% } %>
+        <% if (l.averageTEff >= 75) { %>
+          <%  colorsLDL.push('rgb(0, 196, 70)') %>
+        <% } else if (l.averageTEff >= 50) { %>
+            <%  colorsLDL.push('rgb(255, 123, 0)') %>
+        <% } else { %>
+            <%  colorsLDL.push('rgb(238, 28, 37)') %>
+       <% } %>
+    <% }) %>
+
+    
+
+    
+    
+
+    let barChartData1 = {
+        labels   : <%- JSON.stringify(labelsBHL); %>,
+        newLabels: <%- JSON.stringify(ceffBHL) %>,
+        datasets : [
+
+            {
+                label           : 'Running Time',
+                backgroundColor : <%- JSON.stringify(colorsBHL); %>,
+                yAxisID         : 'bar-y-axis',
+                datalabels: {
+                    // display labels for this specific dataset
+                    display: true,
+                    color:'white',
+                    align: 'end',
+                    anchor: 'end',
+                    formatter: function (value, context ) {
+                        return  context.chart.data.newLabels[context.dataIndex] + '%' ;
+                    // return value + '%';
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12,
+                        },
+                    },
+                data: <%- JSON.stringify(effBHL); %>,
+            },
+        ],
+    };
+    let barChartData2 = {
+        labels   : <%- JSON.stringify(labelsLDL) %>,
+        newLabels: <%- JSON.stringify(ceffLDL) %>,
+        datasets : [
+
+           
+    
+            {
+                label           : 'Running Time',
+                backgroundColor : <%- JSON.stringify(colorsLDL); %>,
+                yAxisID         : 'bar-y-axis',
+                datalabels: {
+                    // display labels for this specific dataset
+                    display: true,
+                    color:'white',
+                    align: 'end',
+                    anchor: 'end',
+                    formatter: function (value, context ) {
+                        return  context.chart.data.newLabels[context.dataIndex] + '%' ;
+                    // return value + '%';
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12,
+                        },
+                    },
+                data: <%- JSON.stringify(effLDL) %>,
+            },
+        ],
+    };
+    
+   let options = {
+                title      : {
+                    display : false,
+                    text    : 'Title Here',
+                },
+                legend     : {
+                    display : false,
+                },
+                tooltips: {
+			      mode: 'label',
+                  enabled: false,
+                  callbacks: {
+                  label: function(tooltipItems, data) {
+                    if (data.datasets[tooltipItems.datasetIndex].label != "Running Time")  {
+                    return data.datasets[tooltipItems.datasetIndex].label +': ' + tooltipItems.yLabel + ' %';
+                        }
+                    },
+                }
+			    },
+                responsive : true,
+                            scales     : {
+                    xAxes : [
+                        {
+                            stacked       : true,
+                            barPercentage : 0.8,
+                        },
+                    ],
+                    yAxes : [
+                        {
+                            stacked    : false,
+                            display:false,
+                            ticks      : {
+                                beginAtZero : true,
+                                min         : 0,
+                                max         : 120,
+                                stepSize: 20,
+                            },
+                            scaleLabel : {
+                                display     : false,
+                                labelString : 'Hours',
+                            },
+                        },
+                        {
+                            id      : 'bar-y-axis',
+                            stacked : true,
+                            display : true,
+                            ticks   : {
+                                beginAtZero : true,
+                                min         : 0,
+                                max         : 120,
+                                callback: function (value) {
+                                if (value > 100) return "";
+                                return value;
+                                }
+                            },
+                            type    : 'linear',
+                        },
+                    ],
+                },
+
+            }
+
+
+    window.onload = function() {
+
+        let ctx2 = document.getElementById('canvas2').getContext('2d');
+        window.myBar = new Chart(ctx2, {
+            type    : 'bar',
+            data    : barChartData2,
+            options : options
+        });
+       
+        
+    };
+    
+    var data = <%- JSON.stringify(effBHL) %>
+    var labels = <%- JSON.stringify(labelsBHL) %>
+    var bgColor = <%- JSON.stringify(colorsBHL) %>
+    var bu = <%- JSON.stringify(businessUnit) %>
+	
+	var ctx = document.getElementById("canvas1");
+	var myChart = new Chart(ctx, {
+		type: 'bar',
+		data    : barChartData1,
+        options : options
+	});
+		document.getElementById("canvas1").onclick = function(evt){
+			var activePoints = myChart.getElementsAtEvent(evt);
+			var firstPoint = activePoints[0];
+            // var bu = shortBu
+			var label = myChart.data.labels[firstPoint._index];
+			var value = myChart.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			if (firstPoint !== undefined)
+				// alert('Hello');
+                window.location.href=`/equipment-monitoring/divisionTouch/${bu}/${label}`
+		};
+
+
+    </script>
+
+    <script>
+      
+
+    </script>
+    
+
+
+
+
+
+</body>
+</html>

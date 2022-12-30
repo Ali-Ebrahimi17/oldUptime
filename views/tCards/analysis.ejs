@@ -1,0 +1,1188 @@
+<% layout('layouts/boilertCardNew')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/8z/content/bootstrap/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css" />
+
+<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/cards.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/analysis.css" type="text/css" />
+
+<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+<!-- <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script> -->
+
+<style>
+	body {
+		background-color: black;
+	}
+
+	h5 {
+		color: white;
+		font-size: 1.5rem;
+		margin-bottom: -15px;
+	}
+
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+
+	h2 {
+		font-weight: bold;
+		color: black;
+	}
+
+	h1 {
+		font-size: 4rem;
+	}
+
+	h6 {
+		font-size: 1rem;
+	}
+
+	hr {
+		background-color: #6a6d6d;
+	}
+
+	small {
+		font-size: 15px;
+	}
+</style>
+<div class="main-header-holder">
+	<h1 style="font-weight: bold">PAINT PLANT HEALTH STATUS</h1>
+</div>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-main">
+			<div class="row">
+				<!-- <div class="col-lg-12" style="margin-top: -12px;">
+                    <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Group Operations Uptime</h1>
+                   
+                </div> -->
+
+				<div class="col-lg-6" style="margin-top: -20px; margin-bottom: 22px; padding: 8px 0px 8px 0px">
+					<div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+						<h1 class="line-sub-header-top">Current Shift</h1>
+					</div>
+				</div>
+
+				<div class="col-lg-6" style="margin-top: -20px; margin-bottom: 22px; padding: 8px 0px 8px 0px">
+					<div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+						<h1 class="line-sub-header-top">Rolling 7 Days</h1>
+					</div>
+				</div>
+
+				<div style="display: flex; width: 120%; margin-bottom: 20px; margin-top: -20px">
+					<!-- Right Side -->
+					<div class="col" style="margin-right: -30px; margin-left: 10px; width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap">
+						<!-- top row -->
+						<div class="row" style="width: 100%; display: flex; justify-content: space-evenly; margin-bottom: 25px">
+							<!-- bhl -->
+							<div class="division-holder">
+								<p>Backhoe Loader</p>
+								<div class="last-checked-holder">
+									<small>Last checked by <%= bhlUpdate.checkedBy %> <%= moment(bhlUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %> </small>
+								</div>
+								<hr class="division-hr" />
+								<div class="progress" style="height: 200px; border-radius: 0; width: 100%; background-color: black">
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= bhlPassedPercent %>%"
+									>
+										<%= bhlPassedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(255, 123, 0); font-size: 20px; color: black; font-weight: bold; width: <%= bhlContainedPercent %>%"
+									>
+										<%= bhlContainedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: red; font-size: 20px; color: black; font-weight: bold; width: <%= bhlfailedPercent %>%"
+									>
+										<%= bhlfailedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= bhlOpenPercent %>%"
+									>
+										<%= bhlOpenPercent %>%
+									</div>
+								</div>
+
+								<div class="check-result-holder">
+									<div class="Passed">Passed - <%= bhlPassed %></div>
+									<div class="contained">Contained - <%= bhlContained %></div>
+									<div class="Failed">Failed - <%= bhlFailed %></div>
+									<div class="open">To Do - <%= bhlOpen %></div>
+								</div>
+							</div>
+
+							<!-- cabs -->
+							<div class="division-holder">
+								<p>Cab Systems</p>
+								<div class="last-checked-holder">
+									<small>Last checked by <%= cabsUpdate.checkedBy %> <%= moment(cabsUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %> </small>
+								</div>
+								<hr class="division-hr" />
+								<div class="progress" style="height: 200px; border-radius: 0; width: 100%; background-color: black">
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= cabsPassedPercent %>%"
+									>
+										<%= cabsPassedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(255, 123, 0); font-size: 20px; color: black; font-weight: bold; width: <%= cabsContainedPercent %>%"
+									>
+										<%= cabsContainedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(238, 28, 37); font-size: 20px; color: black; font-weight: bold; width: <%= cabsfailedPercent %>%"
+									>
+										<%= cabsfailedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= cabsOpenPercent %>%"
+									>
+										<%= cabsOpenPercent %>%
+									</div>
+								</div>
+
+								<div class="check-result-holder">
+									<div class="Passed">Passed - <%= cabsPassed %></div>
+									<div class="contained">Contained - <%= cabsContained %></div>
+									<div class="Failed">Failed - <%= cabsFailed %></div>
+									<div class="open">To Do - <%= cabsOpen %></div>
+								</div>
+							</div>
+						</div>
+
+						<!-- second row -->
+						<div class="row" style="width: 100%; display: flex; justify-content: space-evenly; margin-bottom: 25px">
+							<!-- compact-->
+							<div class="division-holder">
+								<p>Compact Products</p>
+								<div class="last-checked-holder">
+									<small
+										>Last checked by <%= compactUpdate.checkedBy %> <%= moment(compactUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %>
+									</small>
+								</div>
+								<hr class="division-hr" />
+								<div class="progress" style="height: 200px; border-radius: 0; width: 100%; background-color: black">
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= cpPassedPercent %>%"
+									>
+										<%= cpPassedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(255, 123, 0); font-size: 20px; color: black; font-weight: bold; width: <%= cpContainedPercent %>%"
+									>
+										<%= cpContainedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(238, 28, 37); font-size: 20px; color: black; font-weight: bold; width: <%= cpfailedPercent %>%"
+									>
+										<%= cpfailedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= cpOpenPercent %>%"
+									>
+										<%= cpOpenPercent %>%
+									</div>
+								</div>
+
+								<div class="check-result-holder">
+									<div class="Passed">Passed - <%= cpPassed %></div>
+									<div class="contained">Contained - <%= cpContained %></div>
+									<div class="Failed">Failed - <%= cpFailed %></div>
+									<div class="open">To Do - <%= cpOpen %></div>
+								</div>
+							</div>
+
+							<!-- em -->
+							<div class="division-holder">
+								<p>Earthmovers</p>
+								<div class="last-checked-holder">
+									<small
+										>Last checked by <%= earthMoversUpdate.checkedBy %> <%= moment(earthMoversUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %>
+									</small>
+								</div>
+								<hr class="division-hr" />
+								<div class="progress" style="height: 200px; border-radius: 0; width: 100%; background-color: black">
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= emPassedPercent %>%"
+									>
+										<%= emPassedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(255, 123, 0); font-size: 20px; color: black; font-weight: bold; width: <%= emContainedPercent %>%"
+									>
+										<%= emContainedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(238, 28, 37); font-size: 20px; color: black; font-weight: bold; width: <%= emfailedPercent %>%"
+									>
+										<%= emfailedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= emOpenPercent %>%"
+									>
+										<%= emOpenPercent %>%
+									</div>
+								</div>
+
+								<div class="check-result-holder">
+									<div class="Passed">Passed - <%= emPassed %></div>
+									<div class="contained">Contained - <%= emContained %></div>
+									<div class="Failed">Failed - <%= emFailed %></div>
+									<div class="open">To Do - <%= emOpen %></div>
+								</div>
+							</div>
+						</div>
+
+						<!-- third row-->
+						<div class="row" style="width: 100%; display: flex; justify-content: space-evenly; margin-bottom: 25px">
+							<!-- hbu -->
+							<div class="division-holder">
+								<p>HBU</p>
+								<div class="last-checked-holder">
+									<small>Last checked by <%= hbuUpdate.checkedBy %> <%= moment(hbuUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %> </small>
+								</div>
+								<hr class="division-hr" />
+								<div class="progress" style="height: 200px; border-radius: 0; width: 100%; background-color: black">
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= hbuPassedPercent %>%"
+									>
+										<%= hbuPassedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(255, 123, 0); font-size: 20px; color: black; font-weight: bold; width: <%= hbuContainedPercent %>%"
+									>
+										<%= hbuContainedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(238, 28, 37); font-size: 20px; color: black; font-weight: bold; width: <%= hbufailedPercent %>%"
+									>
+										<%= hbufailedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= hbuOpenPercent %>%"
+									>
+										<%= hbuOpenPercent %>%
+									</div>
+								</div>
+
+								<div class="check-result-holder">
+									<div class="Passed">Passed - <%= hbuPassed %></div>
+									<div class="contained">Contained - <%= hbuContained %></div>
+									<div class="Failed">Failed - <%= hbuFailed %></div>
+									<div class="open">To Do - <%= hbuOpen %></div>
+								</div>
+							</div>
+
+							<!-- hp -->
+							<div class="division-holder">
+								<p>Heavy products</p>
+								<div class="last-checked-holder">
+									<small>Last checked by <%= heavyUpdate.checkedBy %> <%= moment(heavyUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %> </small>
+								</div>
+								<hr class="division-hr" />
+								<div class="progress" style="height: 200px; border-radius: 0; width: 100%; background-color: black">
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= hpPassedPercent %>%"
+									>
+										<%= hpPassedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(255, 123, 0); font-size: 20px; color: black; font-weight: bold; width: <%= hpContainedPercent %>%"
+									>
+										<%= hpContainedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(238, 28, 37); font-size: 20px; color: black; font-weight: bold; width: <%= hpfailedPercent %>%"
+									>
+										<%= hpfailedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= hpOpenPercent %>%"
+									>
+										<%= hpOpenPercent %>%
+									</div>
+								</div>
+
+								<div class="check-result-holder">
+									<div class="Passed">Passed - <%= hpPassed %></div>
+									<div class="contained">Contained - <%= hpContained %></div>
+									<div class="Failed">Failed - <%= hpFailed %></div>
+									<div class="open">To Do - <%= hpOpen %></div>
+								</div>
+							</div>
+						</div>
+
+						<!-- bottom -->
+						<div class="row" style="width: 100%; display: flex; justify-content: space-evenly">
+							<!-- loadall-->
+							<div class="division-holder">
+								<p>Loadall</p>
+								<div class="last-checked-holder">
+									<small>Last checked by <%= ldlUpdate.checkedBy %> <%= moment(ldlUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %> </small>
+								</div>
+								<hr class="division-hr" />
+								<div class="progress" style="height: 200px; border-radius: 0; width: 100%; background-color: black">
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= ldlPassedPercent %>%"
+									>
+										<%= ldlPassedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(255, 123, 0); font-size: 20px; color: black; font-weight: bold; width: <%= ldlContainedPercent %>%"
+									>
+										<%= ldlContainedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(238, 28, 37); font-size: 20px; color: black; font-weight: bold; width: <%= ldlfailedPercent %>%"
+									>
+										<%= ldlfailedPercent %>%
+									</div>
+									<div
+										class="progress-bar progress-bar-striped progress-bar-animated"
+										role="progressbar"
+										aria-valuenow="75"
+										aria-valuemin="0"
+										aria-valuemax="100"
+										style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= ldlOpenPercent %>%"
+									>
+										<%= ldlOpenPercent %>%
+									</div>
+								</div>
+
+								<div class="check-result-holder">
+									<div class="Passed">Passed - <%= ldlPassed %></div>
+									<div class="contained">Contained - <%= ldlContained %></div>
+									<div class="Failed">Failed - <%= ldlFailed %></div>
+									<div class="open">To Do - <%= ldlOpen %></div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<hr style="width: 1px; height: 110%; display: inline-block; background-color: grey; margin-top: -1%" />
+
+					<!-- Right Side -->
+
+					<div class="col" style="width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap">
+						<!-- top row -->
+						<div class="row" style="width: 100%; display: flex; justify-content: space-evenly; margin-bottom: 25px">
+							<!-- bhl -->
+							<div class="division-holder">
+								<p>Backhoe Loader</p>
+								<div class="last-checked-holder">
+									<small>Rolling 7 days </small>
+								</div>
+								<hr class="division-hr" />
+								<canvas id="bhl" height="82"></canvas>
+							</div>
+
+							<!-- cabs -->
+							<div class="division-holder">
+								<p>Cab Systems</p>
+								<div class="last-checked-holder">
+									<small>Rolling 7 days </small>
+								</div>
+								<hr class="division-hr" />
+								<canvas id="cabs" height="82"></canvas>
+							</div>
+						</div>
+
+						<!-- second row -->
+						<div class="row" style="width: 100%; display: flex; justify-content: space-evenly; margin-bottom: 25px">
+							<!-- compact-->
+							<div class="division-holder">
+								<p>Compact Products</p>
+								<div class="last-checked-holder">
+									<small>Rolling 7 days </small>
+								</div>
+								<hr class="division-hr" />
+								<canvas id="compact" height="82"></canvas>
+							</div>
+
+							<!-- em -->
+							<div class="division-holder">
+								<p>Earthmovers</p>
+								<div class="last-checked-holder">
+									<small>Rolling 7 days </small>
+								</div>
+								<hr class="division-hr" />
+								<canvas id="earthMovers" height="82"></canvas>
+							</div>
+						</div>
+
+						<!-- third row-->
+						<div class="row" style="width: 100%; display: flex; justify-content: space-evenly; margin-bottom: 25px">
+							<!-- hbu -->
+							<div class="division-holder">
+								<p>HBU</p>
+								<div class="last-checked-holder">
+									<small>Rolling 7 days </small>
+								</div>
+								<hr class="division-hr" />
+								<canvas id="hbu" height="82"></canvas>
+							</div>
+
+							<!-- hp -->
+							<div class="division-holder">
+								<p>Heavy products</p>
+								<div class="last-checked-holder">
+									<small>Rolling 7 days </small>
+								</div>
+								<hr class="division-hr" />
+								<canvas id="heavyProducts" height="82"></canvas>
+							</div>
+						</div>
+
+						<!-- bottom -->
+						<div class="row" style="width: 100%; display: flex; justify-content: space-evenly">
+							<!-- loadall-->
+							<div class="division-holder">
+								<p>Loadall</p>
+								<div class="last-checked-holder">
+									<small>Rolling 7 days </small>
+								</div>
+								<hr class="division-hr" />
+								<canvas id="loadall" height="82"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid footer">
+	<div class="row header-top">
+		<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+			<img height="24px" src="/7z/content/images/jcb-logo.png" />
+			<img height="24px" src="/7z/content/images/df.png" />
+		</div>
+		<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+	</div>
+</div>
+
+<script>
+	Chart.defaults.global.defaultFontSize = 12;
+	Chart.defaults.scale.gridLines.display = false;
+
+	const options = {
+	  plugins: {
+	    datalabels: {
+	      display: false,
+	    },
+	  },
+	  scales: {
+	    xAxes: [{
+	      stacked: true,
+	      barPercentage: 0.8,
+	      ticks: {
+	        display: true,
+	        beginAtZero: true,
+	        fontSize: 12,
+	        fontColor: '#fff'
+	        // callback: function(value) {if (value % 1 === 0) {return value;}}
+	      },
+	      dataLabels: {
+	        fontSize: 2
+	      },
+	    }],
+	    yAxes: [{
+	      stacked: true,
+	      ticks: {
+	        display: true,
+	        beginAtZero: true,
+	        fontSize: 8,
+	        fontColor: '#fff'
+	        // callback: function(value) {if (value % 1 === 0) {return value;}}
+	      },
+	      dataLabels: {
+	        fontSize: 2
+	      },
+	    }]
+	  },
+	  title: {
+	    display: false,
+	    text: 'DOA DPU',
+	    fontSize: 15
+	  },
+	  legend: {
+	    display: false,
+	    position: 'right',
+	    labels: {
+	      fontColor: '#000'
+	    }
+	  },
+	  layout: {
+	    padding: {
+	      left: 0,
+	      right: 0,
+	      bottom: 0,
+	      top: 0
+	    }
+	  },
+	  tooltips: {
+	    enabled: true
+	  },
+	  plugins: {
+	    datalabels: {
+	      display: false,
+	    },
+	  }
+
+	}
+
+	const bhlData = {
+
+	  labels: <%- JSON.stringify(dates) %>,
+	  //    labels   :  buLabels,
+	  datasets: [{
+	      label: 'Passed',
+
+	      data: [
+	        <%= bhlPassedSevenDaysAgo %>,
+	        <%= bhlPassedSixDaysAgo %>,
+	        <%= bhlPassedFiveDaysAgo%>,
+	        <%= bhlPassedFourDaysAgo%>,
+	        <%= bhlPassedThreeDaysAgo%>,
+	        <%= bhlPassedTwoDaysAgo%>,
+	        <%= bhlPassedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'green',
+
+	    }, {
+	      label: 'Contained',
+
+	      data: [
+	        <%= bhlContainedSevenDaysAgo %>,
+	        <%= bhlContainedSixDaysAgo %>,
+	        <%= bhlContainedFiveDaysAgo%>,
+	        <%= bhlContainedFourDaysAgo%>,
+	        <%= bhlContainedThreeDaysAgo%>,
+	        <%= bhlContainedTwoDaysAgo%>,
+	        <%= bhlContainedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'rgb(255, 123, 0)',
+
+	    }, {
+	      label: 'Failed',
+
+	      data: [
+	        <%= bhlFailedSevenDaysAgo %>,
+	        <%= bhlFailedSixDaysAgo %>,
+	        <%= bhlFailedFiveDaysAgo%>,
+	        <%= bhlFailedFourDaysAgo%>,
+	        <%= bhlFailedThreeDaysAgo%>,
+	        <%= bhlFailedTwoDaysAgo%>,
+	        <%= bhlFailedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'red',
+	    },
+	    {
+	      label: 'Missed',
+
+	      data: [
+	        <%= bhlMissedSevenDaysAgo %>,
+	        <%= bhlMissedSixDaysAgo %>,
+	        <%= bhlMissedFiveDaysAgo%>,
+	        <%= bhlMissedFourDaysAgo%>,
+	        <%= bhlMissedThreeDaysAgo%>,
+	        <%= bhlMissedTwoDaysAgo%>,
+	        <%= bhlMissedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'grey',
+	    },
+
+	  ]
+	}
+
+	const cabsData = {
+
+	  labels: <%- JSON.stringify(dates) %>,
+	  //    labels   :  buLabels,
+	  datasets: [{
+	      label: 'Passed',
+
+	      data: [
+	        <%= cabsPassedSevenDaysAgo %>,
+	        <%= cabsPassedSixDaysAgo %>,
+	        <%= cabsPassedFiveDaysAgo%>,
+	        <%= cabsPassedFourDaysAgo%>,
+	        <%= cabsPassedThreeDaysAgo%>,
+	        <%= cabsPassedTwoDaysAgo%>,
+	        <%= cabsPassedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'green',
+
+	    }, {
+	      label: 'Contained',
+
+	      data: [
+	        <%= cabsContainedSevenDaysAgo %>,
+	        <%= cabsContainedSixDaysAgo %>,
+	        <%= cabsContainedFiveDaysAgo%>,
+	        <%= cabsContainedFourDaysAgo%>,
+	        <%= cabsContainedThreeDaysAgo%>,
+	        <%= cabsContainedTwoDaysAgo%>,
+	        <%= cabsContainedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'rgb(255, 123, 0)',
+
+	    }, {
+	      label: 'Failed',
+
+	      data: [
+	        <%= cabsFailedSevenDaysAgo %>,
+	        <%= cabsFailedSixDaysAgo %>,
+	        <%= cabsFailedFiveDaysAgo%>,
+	        <%= cabsFailedFourDaysAgo%>,
+	        <%= cabsFailedThreeDaysAgo%>,
+	        <%= cabsFailedTwoDaysAgo%>,
+	        <%= cabsFailedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'red',
+	    },
+	    {
+	      label: 'Missed',
+
+	      data: [
+	        <%= cabsMissedSevenDaysAgo %>,
+	        <%= cabsMissedSixDaysAgo %>,
+	        <%= cabsMissedFiveDaysAgo%>,
+	        <%= cabsMissedFourDaysAgo%>,
+	        <%= cabsMissedThreeDaysAgo%>,
+	        <%= cabsMissedTwoDaysAgo%>,
+	        <%= cabsMissedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'grey',
+	    },
+
+	  ]
+	}
+	const cpData = {
+
+	  labels: <%- JSON.stringify(dates) %>,
+	  //    labels   :  buLabels,
+	  datasets: [{
+	      label: 'Passed',
+
+	      data: [
+	        <%= cpPassedSevenDaysAgo %>,
+	        <%= cpPassedSixDaysAgo %>,
+	        <%= cpPassedFiveDaysAgo%>,
+	        <%= cpPassedFourDaysAgo%>,
+	        <%= cpPassedThreeDaysAgo%>,
+	        <%= cpPassedTwoDaysAgo%>,
+	        <%= cpPassedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'green',
+
+	    }, {
+	      label: 'Contained',
+
+	      data: [
+	        <%= cpContainedSevenDaysAgo %>,
+	        <%= cpContainedSixDaysAgo %>,
+	        <%= cpContainedFiveDaysAgo%>,
+	        <%= cpContainedFourDaysAgo%>,
+	        <%= cpContainedThreeDaysAgo%>,
+	        <%= cpContainedTwoDaysAgo%>,
+	        <%= cpContainedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'rgb(255, 123, 0)',
+
+	    }, {
+	      label: 'Failed',
+
+	      data: [
+	        <%= cpFailedSevenDaysAgo %>,
+	        <%= cpFailedSixDaysAgo %>,
+	        <%= cpFailedFiveDaysAgo%>,
+	        <%= cpFailedFourDaysAgo%>,
+	        <%= cpFailedThreeDaysAgo%>,
+	        <%= cpFailedTwoDaysAgo%>,
+	        <%= cpFailedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'red',
+	    },
+	    {
+	      label: 'Missed',
+
+	      data: [
+	        <%= cpMissedSevenDaysAgo %>,
+	        <%= cpMissedSixDaysAgo %>,
+	        <%= cpMissedFiveDaysAgo%>,
+	        <%= cpMissedFourDaysAgo%>,
+	        <%= cpMissedThreeDaysAgo%>,
+	        <%= cpMissedTwoDaysAgo%>,
+	        <%= cpMissedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'grey',
+	    },
+
+	  ]
+	}
+
+	const emData = {
+
+	  labels: <%- JSON.stringify(dates) %>,
+	  //    labels   :  buLabels,
+	  datasets: [{
+	      label: 'Passed',
+
+	      data: [
+	        <%= emPassedSevenDaysAgo %>,
+	        <%= emPassedSixDaysAgo %>,
+	        <%= emPassedFiveDaysAgo%>,
+	        <%= emPassedFourDaysAgo%>,
+	        <%= emPassedThreeDaysAgo%>,
+	        <%= emPassedTwoDaysAgo%>,
+	        <%= emPassedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'green',
+
+	    }, {
+	      label: 'Contained',
+
+	      data: [
+	        <%= emContainedSevenDaysAgo %>,
+	        <%= emContainedSixDaysAgo %>,
+	        <%= emContainedFiveDaysAgo%>,
+	        <%= emContainedFourDaysAgo%>,
+	        <%= emContainedThreeDaysAgo%>,
+	        <%= emContainedTwoDaysAgo%>,
+	        <%= emContainedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'rgb(255, 123, 0)',
+
+	    }, {
+	      label: 'Failed',
+
+	      data: [
+	        <%= emFailedSevenDaysAgo %>,
+	        <%= emFailedSixDaysAgo %>,
+	        <%= emFailedFiveDaysAgo%>,
+	        <%= emFailedFourDaysAgo%>,
+	        <%= emFailedThreeDaysAgo%>,
+	        <%= emFailedTwoDaysAgo%>,
+	        <%= emFailedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'red',
+	    },
+	    {
+	      label: 'Missed',
+
+	      data: [
+	        <%= emMissedSevenDaysAgo %>,
+	        <%= emMissedSixDaysAgo %>,
+	        <%= emMissedFiveDaysAgo%>,
+	        <%= emMissedFourDaysAgo%>,
+	        <%= emMissedThreeDaysAgo%>,
+	        <%= emMissedTwoDaysAgo%>,
+	        <%= emMissedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'grey',
+	    },
+
+	  ]
+	}
+	const hbuData = {
+
+	  labels: <%- JSON.stringify(dates) %>,
+	  //    labels   :  buLabels,
+	  datasets: [{
+	      label: 'Passed',
+
+	      data: [
+	        <%= hbuPassedSevenDaysAgo %>,
+	        <%= hbuPassedSixDaysAgo %>,
+	        <%= hbuPassedFiveDaysAgo%>,
+	        <%= hbuPassedFourDaysAgo%>,
+	        <%= hbuPassedThreeDaysAgo%>,
+	        <%= hbuPassedTwoDaysAgo%>,
+	        <%= hbuPassedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'green',
+
+	    }, {
+	      label: 'Contained',
+
+	      data: [
+	        <%= hbuContainedSevenDaysAgo %>,
+	        <%= hbuContainedSixDaysAgo %>,
+	        <%= hbuContainedFiveDaysAgo%>,
+	        <%= hbuContainedFourDaysAgo%>,
+	        <%= hbuContainedThreeDaysAgo%>,
+	        <%= hbuContainedTwoDaysAgo%>,
+	        <%= hbuContainedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'rgb(255, 123, 0)',
+
+	    }, {
+	      label: 'Failed',
+
+	      data: [
+	        <%= hbuFailedSevenDaysAgo %>,
+	        <%= hbuFailedSixDaysAgo %>,
+	        <%= hbuFailedFiveDaysAgo%>,
+	        <%= hbuFailedFourDaysAgo%>,
+	        <%= hbuFailedThreeDaysAgo%>,
+	        <%= hbuFailedTwoDaysAgo%>,
+	        <%= hbuFailedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'red',
+	    },
+	    {
+	      label: 'Missed',
+
+	      data: [
+	        <%= hbuMissedSevenDaysAgo %>,
+	        <%= hbuMissedSixDaysAgo %>,
+	        <%= hbuMissedFiveDaysAgo%>,
+	        <%= hbuMissedFourDaysAgo%>,
+	        <%= hbuMissedThreeDaysAgo%>,
+	        <%= hbuMissedTwoDaysAgo%>,
+	        <%= hbuMissedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'grey',
+	    },
+
+	  ]
+	}
+
+	const hpData = {
+
+	  labels: <%- JSON.stringify(dates) %>,
+	  //    labels   :  buLabels,
+	  datasets: [{
+	      label: 'Passed',
+
+	      data: [
+	        <%= hpPassedSevenDaysAgo %>,
+	        <%= hpPassedSixDaysAgo %>,
+	        <%= hpPassedFiveDaysAgo%>,
+	        <%= hpPassedFourDaysAgo%>,
+	        <%= hpPassedThreeDaysAgo%>,
+	        <%= hpPassedTwoDaysAgo%>,
+	        <%= hpPassedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'green',
+
+	    }, {
+	      label: 'Contained',
+
+	      data: [
+	        <%= hpContainedSevenDaysAgo %>,
+	        <%= hpContainedSixDaysAgo %>,
+	        <%= hpContainedFiveDaysAgo%>,
+	        <%= hpContainedFourDaysAgo%>,
+	        <%= hpContainedThreeDaysAgo%>,
+	        <%= hpContainedTwoDaysAgo%>,
+	        <%= hpContainedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'rgb(255, 123, 0)',
+
+	    }, {
+	      label: 'Failed',
+
+	      data: [
+	        <%= hpFailedSevenDaysAgo %>,
+	        <%= hpFailedSixDaysAgo %>,
+	        <%= hpFailedFiveDaysAgo%>,
+	        <%= hpFailedFourDaysAgo%>,
+	        <%= hpFailedThreeDaysAgo%>,
+	        <%= hpFailedTwoDaysAgo%>,
+	        <%= hpFailedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'red',
+	    },
+	    {
+	      label: 'Missed',
+
+	      data: [
+	        <%= hpMissedSevenDaysAgo %>,
+	        <%= hpMissedSixDaysAgo %>,
+	        <%= hpMissedFiveDaysAgo%>,
+	        <%= hpMissedFourDaysAgo%>,
+	        <%= hpMissedThreeDaysAgo%>,
+	        <%= hpMissedTwoDaysAgo%>,
+	        <%= hpMissedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'grey',
+	    },
+
+	  ]
+	}
+
+	const ldlData = {
+
+	  labels: <%- JSON.stringify(dates) %>,
+	  //    labels   :  buLabels,
+	  datasets: [{
+	      label: 'Passed',
+
+	      data: [
+	        <%= ldlPassedSevenDaysAgo %>,
+	        <%= ldlPassedSixDaysAgo %>,
+	        <%= ldlPassedFiveDaysAgo%>,
+	        <%= ldlPassedFourDaysAgo%>,
+	        <%= ldlPassedThreeDaysAgo%>,
+	        <%= ldlPassedTwoDaysAgo%>,
+	        <%= ldlPassedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'green',
+
+	    }, {
+	      label: 'Contained',
+
+	      data: [
+	        <%= ldlContainedSevenDaysAgo %>,
+	        <%= ldlContainedSixDaysAgo %>,
+	        <%= ldlContainedFiveDaysAgo%>,
+	        <%= ldlContainedFourDaysAgo%>,
+	        <%= ldlContainedThreeDaysAgo%>,
+	        <%= ldlContainedTwoDaysAgo%>,
+	        <%= ldlContainedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'rgb(255, 123, 0)',
+
+	    }, {
+	      label: 'Failed',
+
+	      data: [
+	        <%= ldlFailedSevenDaysAgo %>,
+	        <%= ldlFailedSixDaysAgo %>,
+	        <%= ldlFailedFiveDaysAgo%>,
+	        <%= ldlFailedFourDaysAgo%>,
+	        <%= ldlFailedThreeDaysAgo%>,
+	        <%= ldlFailedTwoDaysAgo%>,
+	        <%= ldlFailedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'red',
+	    },
+	    {
+	      label: 'Missed',
+
+	      data: [
+	        <%= ldlMissedSevenDaysAgo %>,
+	        <%= ldlMissedSixDaysAgo %>,
+	        <%= ldlMissedFiveDaysAgo%>,
+	        <%= ldlMissedFourDaysAgo%>,
+	        <%= ldlMissedThreeDaysAgo%>,
+	        <%= ldlMissedTwoDaysAgo%>,
+	        <%= ldlMissedOneDaysAgo%>,
+	      ],
+
+	      backgroundColor: 'grey',
+	    },
+
+	  ]
+	}
+
+
+	const bhl1 = new Chart(bhl, {
+	  type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+	  data: bhlData,
+	  options: options
+	})
+	const cabs1 = new Chart(cabs, {
+	  type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+	  data: cabsData,
+	  options: options
+	})
+	const compact1 = new Chart(compact, {
+	  type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+	  data: cpData,
+	  options: options
+	})
+	const earthMovers1 = new Chart(earthMovers, {
+	  type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+	  data: emData,
+	  options: options
+	})
+	const hbu1 = new Chart(hbu, {
+	  type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+	  data: hbuData,
+	  options: options
+	})
+	const heavyProducts1 = new Chart(heavyProducts, {
+	  type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+	  data: hpData,
+	  options: options
+	})
+	const loadall1 = new Chart(loadall, {
+	  type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+	  data: ldlData,
+	  options: options
+	})
+</script>

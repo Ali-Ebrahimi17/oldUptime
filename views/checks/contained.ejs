@@ -1,0 +1,65 @@
+<% layout('layouts/boilerplateTCard')%>
+
+
+<div class="main-tCard-container">
+  <h2 class="main-title"> CRITICAL PLANT CHECKS</h2>
+  <div class="row" style="width: 100%;">
+    <div id="reallocation-container">
+
+
+      <div class="modal-form" style="width: 900px; margin-top: -80px;">
+        <div class="modal-content" style="border-radius: 0;">
+          <div style="background-color: rgb(252, 176, 38); height: 70px;">
+            <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+            <h5 style="text-align: center; margin: 8px;">Contained - <%= check.division %> <%= check.area %>, <%= check.location %></h5>
+          </div>
+          <div class="modal-body">
+            <form>
+              <fieldset>
+                <div class="form-group">
+                  <label for="exampleTextarea">Check</label>
+                  <textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none; margin-bottom: 15px;" disabled> <%= check.name  %></textarea>
+                  <label for="exampleTextarea">Pass Requirements</label>
+                  <textarea class="form-control" id="reasonTextarea" rows="3" style="resize: none" disabled><%= check.description  %></textarea>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <label for="exampleTextarea">Failure For Reason</label>
+                    <textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none; margin-bottom: 15px;" disabled> <%= check.reason  %></textarea>
+                  </div>
+                  <div class="col">
+                    <label for="exampleTextarea">Containment Action Taken</label>
+                    <textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none" disabled><%= check.action  %></textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label for="exampleTextarea">Comments</label>
+                    <textarea class="form-control" name="check[comments]" id="reasonTextarea" rows="3" style="resize: none; margin-bottom: 15px;" disabled><%= check.comments %></textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label for="exampleTextarea">Notes</label>
+                    <div class="form-group update-history">
+                      <ul>
+                        <% for (let note of tCard.notes) { %>
+                        <li><em><%= moment(note.createdAt).format("DD/MM/YYYY - HH:mm") %></em><br><%=  note.maintenanceNotes %></li>
+                        <hr style="width: 90%;">
+                        <% } %>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </fieldset>
+            </form>
+          </div>
+          <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+            <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

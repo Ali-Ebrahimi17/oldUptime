@@ -1,0 +1,61 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="reallocation-container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1>Submit a Reallocation Request</h1>
+      <p>Please note that requests submitted after 3pm will be not be actioned until the next day</p>
+    </div>
+
+
+
+    <div class="col">
+      <form action="/reallocation/new/<%= division %>" method="POST">
+        <input type="hidden" name="reallocation[division]" value="<%= division %>">
+        <label for="buildNumber">Full Claim Number</label>
+        <input class="form-control" type="text" id="password" name="reallocation[buildNumber]" minlength="9" maxlength="9" required>
+        <!-- <input class="form-control" type="text" name="buildNumber" required /> -->
+
+
+        <label for="area">Current Area</label>
+        <select class="form-control" type="text" name="reallocation[areaFrom]" autocomplete="off" required>
+          <% areas.forEach(a => { %>
+          <option hidden></option>
+
+          <option label="<%= a.name %>" value="<%= a.name %>">
+
+            <% }) %>
+        </select>
+        <label for="detection">Reallocate To</label>
+        <select class="form-control" type="text" name="reallocation[areaTo]" autocomplete="off" required>
+          <% areas.forEach(a => { %>
+          <option hidden></option>
+
+          <option label="<%= a.name %>" value="<%= a.name %>">
+
+            <% }) %>
+        </select>
+
+        <label for="buildDate">Fault</label>
+        <textarea style="height: 170px; margin-bottom: 30px;" class="form-control" name="reallocation[fault]" required></textarea>
+
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" name="reallocation[agreed]" id="inlineCheckbox7" value="Yes" required>
+          <label class="form-check-label" for="inlineCheckbox1">I confirm that the group leader accepts this reallocation</label>
+        </div>
+    </div>
+    <div class="col">
+      <label for="notes">Reason for reallocation</label>
+      <textarea style="height: 383px; margin-bottom: 30px;" class="form-control" name="reallocation[reason]" required></textarea>
+      <div class="form-group text-center">
+        <button class="btn btn-md btn-success btn-block">Submit</button>
+      </div>
+    </div>
+    </form>
+  </div>
+  <div>
+    <a href="/reallocation/<%= division %>">Go Back to 4C Page</a>
+  </div>

@@ -1,0 +1,1135 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- <meta http-equiv="refresh" content="120"> -->
+  <title>Equipment Monitoring</title>
+  <link rel="icon" href="/home/jcb.png" />
+  <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+  <!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+  <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+  <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+  <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+  <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script> -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css"> -->
+
+
+
+  <!-- Include the plugin's CSS and JS: -->
+  <script type="text/javascript" src="/bootstrap-multiselect-master/dist/js/bootstrap-multiselect.js"></script>
+  <link rel="stylesheet" href="/bootstrap-multiselect-master/dist/css/bootstrap-multiselect.css" type="text/css" />
+
+
+
+  <link rel="stylesheet" href="/stylesheets/app.css" />
+  <link rel="stylesheet" href="/fontawesome/css/all.css" />
+
+  <style>
+    /* QuickReset */
+    * {
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    .dropdown-container {
+      position: relative;
+    }
+
+    .dropdown-label {
+      padding: 4px 10px 4px 0;
+    }
+
+    .dropdown-label:before {
+      content: "\25BC";
+    }
+
+    .dropdown-container.is-active .dropdown-label:before {
+      content: "\25B2";
+    }
+
+    .dropdown-button {
+      cursor: pointer;
+      padding: 10px;
+      border: 1px solid #d5d5d5;
+      background: white;
+      display: flex;
+      flex-flow: row wrap;
+      margin-left: -15px;
+      width: 466px;
+    }
+
+    .dropdown-quantity {
+      flex: 1;
+      display: flex;
+      flex-flow: row wrap;
+    }
+
+    .dropdown-sel {
+      display: inline-block;
+      background: #eee;
+      border-radius: 3em;
+      padding: 2px 10px;
+      margin: 0 3px 3px 0;
+    }
+
+    .dropdown-list {
+      position: absolute;
+      overflow-y: auto;
+      z-index: 9999999;
+      top: calc(100% - 2px);
+      width: 100%;
+      max-height: 40vh;
+      padding: 10px;
+      padding-top: 0;
+      border: 1px solid #d5d5d5;
+      border-top: 0;
+      background: white;
+      display: none;
+    }
+
+    .dropdown-container.is-active .dropdown-list {
+      display: block;
+    }
+
+    .dropdown-list input[type="search"] {
+      padding: 5px;
+      display: block;
+      width: 100%;
+    }
+
+    .dropdown-list ul {
+      padding: 0;
+      padding-top: 10px;
+      list-style: none;
+    }
+
+    .dropdown-list li {
+      padding: 0.24em 0;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    /* HELPER CLASSES */
+    .noselect {
+      user-select: none;
+    }
+
+    .is-hidden {
+      display: none;
+    }
+  </style>
+
+<body>
+  <%- include('../../views/partials/flash.ejs')%>
+
+  <!-- convert ms into HH:MM:SS -->
+  <% function msToTime(duration) { %>
+  <%  let milliseconds = parseInt((duration%1000)/100) %>
+  <%  seconds = (parseInt((duration/1000)%60)) %>
+  <%  minutes = parseInt((duration/(1000*60))%60) %>
+  <%  hours = parseInt((duration/(1000*60*60))%24); %>
+  <%   hours = (hours < 10) ? "0" + hours : hours;      %>
+  <%   minutes = (minutes < 10) ? "0" + minutes : minutes; %>
+  <%   seconds = (seconds < 10) ? "0" + seconds : seconds; %>
+  <%  return hours + ":" + minutes + ":" + seconds %>
+  <% } %>
+
+
+
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+          <h3 style="text-align: center; margin: 8px;">Options</h3>
+        </div>
+        <div class="modal-body">
+
+
+          <div>
+            <fieldset>
+              <form action="/equipment-monitoring/machineAnalysis/<%= donorMachine._id %>/2/1/1" method="POST">
+
+                <div class="col">
+
+                  <div class="form-group" style="color:black;">
+                    <span style="margin-left: -15px;">Select Assets</span>
+                    <select class="form-group" required type='text' id="example-form-group" multiple="multiple" name="ids">
+                      <optgroup label="Welding Robots">
+                        <% robots.forEach(r => { %>
+                        <option value="<%= r._id %>" data-name="<%= r.machineName %>"><%= r.machineName %></option>
+                        <% }) %>
+                      </optgroup>
+                      <optgroup label="Laser Cutters">
+                        <% lasers.forEach(l => { %>
+                        <option value="<%= l._id %>" data-name="<%= l.machineName %>"><%= l.machineName %></option>
+                        <% }) %>
+                      </optgroup>
+                      <optgroup label="Plasma Cutters">
+                        <% plasmas.forEach(p => { %>
+                        <option value="<%= p._id %>" data-name="<%= p.machineName %>"><%= p.machineName %></option>
+                        <% }) %>
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="row" style="color:black">
+                  <div class="col">
+
+
+                    <label for="buildNumber">Start Date</label>
+                    <input class="form-control" type="date" name="startDate" style="margin-bottom: 10px;" value="" required>
+                    <input class="form-control" type="time" name="startTime" value="" required>
+
+
+                  </div>
+                  <div class="col">
+                    <label for="buildNumber">End Date</label>
+                    <input class="form-control" type="date" name="endDate" style="margin-bottom: 10px;" value="" required>
+                    <input class="form-control" type="time" name="endTime" value="" required style="margin-bottom: 10px;">
+
+
+                    <a href="/equipment-monitoring/machineAnalysis/<%= donorMachine._id %>/<%= type %>/<%= stoppage %>/<%= reason %>/1/1" class="btn btn-danger float-right" style="margin-left: 8px; color: white; border-radius: 4px;">Cancel</a>
+                    <button class="btn btn-success float-right" style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                  </div>
+
+                </div>
+
+              </form>
+
+              <!-- <button type="close" class="btn btn-danger float-right">Cancel</button> -->
+            </fieldset>
+          </div>
+
+
+
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div class="container-fluid">
+
+
+    <div class="row header-top">
+
+      <div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+      </div>
+      <div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+        <span style="font-size: 19px; padding-top: 2px; margin-right: 4px; color: black; font-weight: bold; ">Last Update: <%= moment(update.lastUpdate).format("DD/MM/YYYY - HH:mm:ss") %> </span>
+        <!-- <a href="/equipment-monitoring/home">
+                <span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 5px" class="fas fa-home icon-home"></span>
+            </a> -->
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-main">
+
+        <div class="row">
+
+
+
+          <div style=" width: 100%; display: flex; flex-direction: column;">
+
+
+            <div>
+              <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center;"><a href="/equipment-monitoring/business-unit/<%= donorMachine.shortBu %>"><%= donorMachine.businessUnit %></a></h1>
+              <% if (type === '1') { %>
+              <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin-bottom: 14px; text-align: center"><a href="/equipment-monitoring/business-unit/<%= donorMachine.shortBu %>">All Assets Last 14 Days</a></h1>
+              <% } else if (theIds.length === allAssets.length) { %>
+              <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin-bottom: 14px; text-align: center"><a href="/equipment-monitoring/business-unit/<%= donorMachine.shortBu %>">All Assets (<%= moment(newStart).format("DD/MM/YYYY - HH:mm") %>) - (<%= moment(newEnd).format("DD/MM/YYYY - HH:mm") %>)</a></h1>
+              <% } else { %>
+              <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin-bottom: 14px; text-align: center"><a href="/equipment-monitoring/business-unit/<%= donorMachine.shortBu %>">Multiple Assets (<%= moment(newStart).format("DD/MM/YYYY - HH:mm") %>) - (<%= moment(newEnd).format("DD/MM/YYYY - HH:mm") %>)</a></h1>
+              <% } %>
+
+
+              <span style="margin-top: -70px;" class='float-left'>
+
+                <a type="button" class="btn" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-cogs"></i></a>
+                <a href="/equipment-monitoring/machineAnalysis/<%= donorMachine._id %>/1/1/1/1/1" type="button" class="btn" style='margin-left: -15px;'><i class="fas fa-undo-alt"></i></a>
+                <a href="/equipment-monitoring/downloadStoppages/<%= theIds %>/<%= type %>/<%= stoppage %>/<%= newStart %>/<%= newEnd %>" type="button" style='margin-left: -15px;' class="btn"><i class="fas fa-download"></i></a>
+
+              </span>
+
+            </div>
+          </div>
+
+
+
+
+          <div style=" display: flex; width: 100%; justify-content: space-around; height: 91px; margin-bottom: 18px;  padding: 8px 0px 8px 0px; border-top: 3px solid rgb(26, 28, 30); border-bottom: 3px solid rgb(26, 28, 30)">
+
+
+
+            <div class="col-measure" style=" float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Running Time</h1>
+              <h1 class="line-measure-value-top text-warning"><%= sumOfRunningTime %></h1>
+            </div>
+
+            <% if (totalNumberOfPlanned > 0) { %>
+            <a href="/equipment-monitoring/machineAnalysis/<%= theIds %>/<%= type %>/Planned Stoppage/1/<%= newStart %>/<%= newEnd %>">
+              <div class="col-measure" style=" float: left; text-align: center; margin: 0px">
+                <h1 class="line-sub-header-top">Planned Stoppage</h1>
+                <h1 class="line-measure-value-top text-grey"><%= sumOfBdTime %> (<%= totalNumberOfPlanned %>)</h1>
+              </div>
+            </a>
+            <% } else { %>
+            <a>
+              <div class="col-measure" style=" float: left; text-align: center; margin: 0px">
+                <h1 class="line-sub-header-top">Planned Stoppage</h1>
+                <h1 class="line-measure-value-top text-grey"><%= sumOfBdTime %> (<%= totalNumberOfPlanned %>)</h1>
+              </div>
+            </a>
+            <% } %>
+            <% if (totalNumberOfUnplanned ) { %>
+            <a href="/equipment-monitoring/machineAnalysis/<%= theIds %>/<%= type %>/Unplanned Stoppage/1/<%= newStart %>/<%= newEnd %>">
+              <div class="col-measure" style=" float: left; text-align: center; margin: 0px">
+                <h1 class="line-sub-header-top">Unplanned Stoppage</h1>
+                <h1 class="line-measure-value-top text-info"><%= sumOfUnknownBdTime %> (<%= totalNumberOfUnplanned %>)</h1>
+              </div>
+            </a>
+            <% } else { %>
+            <a>
+              <div class="col-measure" style=" float: left; text-align: center; margin: 0px">
+                <h1 class="line-sub-header-top">Unplanned Stoppage</h1>
+                <h1 class="line-measure-value-top text-info"><%= sumOfUnknownBdTime %> (<%= totalNumberOfUnplanned %>)</h1>
+              </div>
+            </a>
+            <% } %>
+            <% if (totalNumberOfBreakdowns > 0) { %>
+            <a href="/equipment-monitoring/machineAnalysis/<%= theIds %>/<%= type %>/Breakdown/1/<%= newStart %>/<%= newEnd %>">
+              <div class="col-measure" style=" float: left; text-align: center; margin: 0px">
+                <h1 class="line-sub-header-top">Breakdown</h1>
+                <h1 class="line-measure-value-top" style="color: rgb(255, 10, 10)"><%= sumOfWireTime %> (<%= totalNumberOfBreakdowns %>)</h1>
+              </div>
+            </a>
+            <% } else { %>
+            <a>
+              <div class="col-measure" style=" float: left; text-align: center; margin: 0px">
+                <h1 class="line-sub-header-top">Breakdown</h1>
+                <h1 class="line-measure-value-top" style="color: rgb(255, 10, 10)"><%= sumOfWireTime %> (<%= totalNumberOfBreakdowns %>)</h1>
+              </div>
+            </a>
+            <% } %>
+
+          </div>
+
+
+          <!-- <div class="col-lg-12">
+                    <h1 style="font-size: 24px; color: white; margin: 0px 0px 13px 0px; text-align: center">Current Shift Performance</h1>
+ 
+                </div> -->
+
+          <!-- left side -->
+          <div class="col-lg-6">
+            <div style="height: 620px;">
+              <div style="text-align: center; color: white; height: 420px; ">
+                <h4 style='margin-bottom: 20px;'>Stoppages</h4>
+                <canvas id="canvas1" height="160" width="430"></canvas>
+
+              </div>
+              <!-- <div style="text-align: center; color: white; height: 200px; background-color: #27292c; border-radius: 5px;"> -->
+              <div style="text-align: center; color: white; height: 200px;">
+                <!-- <h4 >Line Chart</h4> -->
+                <canvas id="line-chart" height="90" width="430"></canvas>
+
+
+              </div>
+            </div>
+          </div>
+
+
+
+          <!-- right side -->
+          <div class="col-lg-6">
+            <div style="height: 620px;">
+              <div style="text-align: center; color: white; height: 350px; margin-bottom: 20px; ">
+                <% if (stoppage === '1') { %>
+                <h4>Top 10 All Stoppage Reasons</h4>
+                <% } else { %>
+                <h4>Top 10 <%= stoppage %> Reasons</h4>
+                <% } %>
+
+                <canvas id="canvas2" height="150" width="430"></canvas>
+              </div>
+              <div style="text-align: center; color: white; height: 270px; ">
+                <% if (reason === '1') { %>
+                <%  if (graph1axis.length > 0) { %>
+                <h4><%= graph1axis[0] %> Trend Analysis</h4>
+                <% } else { %>
+                <h4>Trend Analysis</h4>
+                <% } %>
+
+                <% } else { %>
+                <h4><%= reason %> Trend Analysis</h4>
+                <% } %>
+
+                <canvas id="canvas3" height="110" width="430"></canvas>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid footer">
+
+    <div class="row header-top">
+      <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+        <img height="24px" src="/7z/content/images/df.png">
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+        J.C. Bamford Excavators LTD &copy; 2022
+      </div>
+    </div>
+
+  </div>
+
+  >
+
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#example-form-group').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        buttonContainer: '<div class="btn-group" style="width: 470px; margin-left: -18px" />',
+        enableClickableOptGroups: true,
+        //    enableCollapsibleOptGroups: true,
+        maxHeight: 500,
+        width: 500,
+      });
+      $('.multiselect-container .multiselect-filter', $('#example-fix-filter').parent()).css({
+        'position': 'sticky',
+        'top': '0px',
+        'z-index': 1,
+      })
+    });
+  </script>
+
+
+
+
+  <script src="/7z/content/modal/modal3.js"></script>
+  <script src="/multi/script.js"></script>
+
+  <script>
+    Chart.defaults.global.defaultFontColor = "#fff";
+    Chart.defaults.global.defaultFontSize = 18;
+    Chart.defaults.scale.gridLines.display = false;
+
+    <% if (stoppage === 'Planned Stoppage') { %>
+    <% theColor = 'rgb(128, 128, 128)'%>
+    <% hoverBackgroundColor  = 'rgba(128, 128, 128, 0.6)'%>
+    <% } else if (stoppage === 'Unplanned Stoppage') { %>
+    <% theColor = 'rgb(0, 173, 238)' %>
+    <% hoverBackgroundColor  = 'rgba(0, 173, 238, 0.6)'%>
+    <% } else if (stoppage === 'Breakdown') { %>
+    <% theColor = 'rgb(255, 10, 10)' %>
+    <% hoverBackgroundColor  = 'rgba(255, 10, 10, 0.6)'%>
+    <% } else { %>
+    <% theColor = 'rgb(255, 123, 0)' %>
+    <% hoverBackgroundColor  = 'rgba(255, 123, 0, 0.6)'%>
+    <% } %>
+
+    let theColor = 'red'
+
+    let defaultLabels = [
+      'Planned',
+      'Unplanned',
+      'Breakdown',
+      'Running',
+      'Unaccounted',
+    ]
+    let linkLabels = [
+      'Planned Stoppage',
+      'Unplanned Stoppage',
+      'Breakdown',
+      '1',
+      '1',
+    ]
+    let typeLabels = [
+      <%=  type %>,
+      <%=  type %>,
+      <%=  type %>,
+      <%=  type %>,
+      <%=  type %>,
+      <%=  type %>,
+      <%=  type %>,
+      <%=  type %>,
+      <%=  type %>,
+      <%=  type %>,
+    ]
+
+    let idLabels = <%- JSON.stringify(theIds) %>
+    let start = <%- JSON.stringify(newStart) %>
+    let end = <%- JSON.stringify(newEnd) %>
+
+    let reasonLabels = [
+      <%- JSON.stringify(reason) %>,
+      <%- JSON.stringify(reason) %>,
+      <%- JSON.stringify(reason) %>,
+      <%- JSON.stringify(reason) %>,
+      <%- JSON.stringify(reason) %>,
+      <%- JSON.stringify(reason) %>,
+      <%- JSON.stringify(reason) %>,
+      <%- JSON.stringify(reason) %>,
+      <%- JSON.stringify(reason) %>,
+      <%- JSON.stringify(reason) %>,
+    ]
+    let stoppageLabels = [
+      <%- JSON.stringify(stoppage) %>,
+      <%- JSON.stringify(stoppage) %>,
+      <%- JSON.stringify(stoppage) %>,
+      <%- JSON.stringify(stoppage) %>,
+      <%- JSON.stringify(stoppage) %>,
+      <%- JSON.stringify(stoppage) %>,
+      <%- JSON.stringify(stoppage) %>,
+      <%- JSON.stringify(stoppage) %>,
+      <%- JSON.stringify(stoppage) %>,
+      <%- JSON.stringify(stoppage) %>,
+    ]
+
+
+    let barChartData1 = {
+      labels: defaultLabels,
+      linkLabels: linkLabels,
+      typeLabels: typeLabels,
+      idLabels: idLabels,
+      reasonLabels: reasonLabels,
+
+      datasets: [{
+        label: '',
+        backgroundColor: [
+          'rgb(128, 128, 128)',
+          'rgb(0, 173, 238)',
+          'rgb(255, 10, 10)',
+          'rgb(255, 123, 0)',
+          'rgb(43, 45, 47)',
+        ],
+        borderColor: 'black',
+        borderWidth: 6,
+        // hoverBackgroundColor: 'rgba(255, 255, 255, 0.8)',
+        hoverBorderColor: 'black',
+        hoverBackgroundColor: [
+          'rgba(128, 128, 128, 0.6)',
+          'rgba(0, 173, 238, 0.6)',
+          'rgba(255, 10, 10, 0.6)',
+          'rgba(255, 123, 0, 1)',
+          'rgba(43, 45, 47, 1)',
+        ],
+        yAxisID: 'bar-y-axis',
+        datalabels: {
+          // display labels for this specific dataset
+          display: false,
+          color: 'white',
+          align: 'end',
+          anchor: 'end',
+          formatter: function(value, context, values) {
+            if (value > 0) {
+              value = value.toString();
+              value = value.split(/(?=(?:...)*$)/);
+              value = value.join(',');
+              return context.chart.data.newLabels1[context.dataIndex];
+            } else {
+              value = "";
+              return value
+
+            }
+          },
+        },
+        data: [
+          <%= totalPlannedPiePercent  %>,
+          <%= totalUnplannedPiePercent  %>,
+          <%= totalBreakdownPiePercent %>,
+          <%= totalRunningPiePercent %>,
+          <%= totalMissingPiePercent %>,
+        ],
+      }, ],
+    }
+
+    let pieOptions = {
+      plugins: {
+        labels: {
+          render: function(args) {
+            if (args.percentage > 4) {
+              return args.label + "\n" + args.percentage + '%';
+            }
+          },
+          position: 'border'
+        }
+
+      },
+
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        enabled: false,
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          display: false,
+          stacked: false,
+          barPercentage: 0.8,
+        }, ],
+        yAxes: [{
+            stacked: true,
+            display: false,
+
+            ticks: {
+              beginAtZero: true,
+              // min         : 0,
+              // max         : 180,
+              // stepSize: 40,
+            },
+
+          },
+          {
+            id: 'bar-y-axis',
+            stacked: false,
+            display: false,
+
+            ticks: {
+              beginAtZero: true,
+              // min         : 0,
+              // max         : 180,
+              // stepSize: 40,
+              callback: function(value) {
+                if (value > 160) return "";
+                return value;
+              }
+            },
+            type: 'linear',
+
+          },
+        ],
+      },
+    }
+
+
+
+
+    window.onload = function() {
+
+
+      var ctx = document.getElementById("canvas1");
+      var myChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: barChartData1,
+          options: pieOptions
+        },
+        document.getElementById("canvas1").onclick = function(evt) {
+          var activePoints = myChart.getElementsAtEvent(evt);
+          var firstPoint = activePoints[0];
+          var type = myChart.data.typeLabels[firstPoint._index];
+          var reason = myChart.data.reasonLabels[firstPoint._index];
+          var id = myChart.data.idLabels;
+          var label = myChart.data.linkLabels[firstPoint._index];
+          var value = myChart.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+          if (firstPoint !== undefined)
+            if (label !== '1') {
+              // alert(label);
+              window.location.href = `/equipment-monitoring/machineAnalysis/${id}/${type}/${label}/1/${start}/${end}`
+            }
+
+        })
+
+
+      // var ctx = document.getElementById("canvas1");
+      // var myChart = new Chart(ctx, {
+      //     type: 'pie',
+      //     data    : barChartData1,
+      //     options : pieOptions
+      // })
+
+
+
+
+      new Chart(document.getElementById("line-chart"), {
+        type: 'line',
+        data: {
+          labels: <%- JSON.stringify(lineLabels) %>,
+
+
+          datasets: [{
+            data: [<%= lineRunning %>],
+            label: "Running",
+            borderColor: "rgb(255, 123, 0)",
+            backgroundColor: "rgb(255, 123, 0)",
+            fill: false,
+            datalabels: {
+              // display labels for this specific dataset
+              display: false,
+              type: 'line',
+            },
+          }, {
+            data: [<%= linePlanned %>],
+            label: "Planned",
+            borderColor: "grey",
+            backgroundColor: "grey",
+            fill: false,
+            datalabels: {
+              // display labels for this specific dataset
+              display: false,
+              type: 'line',
+            }
+          }, {
+            data: [<%= lineUnplanned %>],
+            label: "Unplanned",
+            borderColor: "rgb(0, 173, 238)",
+            backgroundColor: "rgb(0, 173, 238)",
+            fill: false,
+            datalabels: {
+              // display labels for this specific dataset
+              display: false,
+              type: 'line',
+            }
+          }, {
+            data: [<%= lineBreakdown %>],
+            label: "Breakdown",
+            borderColor: "rgb(255, 10, 10)",
+            backgroundColor: "rgb(255, 10, 10)",
+            fill: false,
+            datalabels: {
+              // display labels for this specific dataset
+              display: false,
+              type: 'line',
+            }
+          }]
+        },
+
+
+        options: {
+          title: {
+            display: false,
+            text: 'Title'
+          },
+          legend: {
+            display: true,
+            labels: {
+              fontSize: 12, //change the size of the labels
+            }
+          },
+          tooltips: {
+            // callbacks: {
+            // label: function(tooltipItem) {
+            // return Number(tooltipItem.yLabel)  + " Minutes"
+            //     }
+            // },
+
+
+            // callbacks: {
+            // label: function(tooltipItem, dataset) {
+
+            // return JSON.stringify(dataset)
+            //     }
+            // },
+
+
+
+            enabled: true,
+            mode: 'label',
+            backgroundColor: '#FFF',
+            titleFontSize: 16,
+            titleFontColor: '#0066ff',
+            bodyFontColor: '#000',
+            bodyFontSize: 14,
+            displayColors: false
+          },
+
+          elements: {
+            line: {
+              tension: 0 // disables bezier curves
+            }
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                fontSize: 12,
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Minutes',
+                fontSize: 12,
+              },
+            }],
+            xAxes: [{
+              ticks: {
+                fontSize: 12,
+                beginAtZero: true,
+              }
+            }]
+          }
+        }
+      });
+
+
+      let barOptions = {
+        plugins: {
+          labels: {
+            // render 'label', 'value', 'percentage', 'image' or custom function, default is 'percentage'
+            render: 'value',
+
+
+            // font size, default is defaultFontSize
+            fontSize: 16,
+
+            // font color, can be color array for each data or function for dynamic color, default is defaultFontColor
+            fontColor: '#fff',
+
+            // position to draw label, available value is 'default', 'border' and 'outside'
+            // bar chart ignores this
+            // default is 'default'
+            position: 'border',
+          }
+        },
+        layout: {
+          padding: {
+            left: 50
+          }
+        },
+
+        legend: {
+          display: false,
+        },
+        tooltips: {
+          enabled: false,
+        },
+        responsive: true,
+        scales: {
+          xAxes: [{
+            stacked: true,
+            barPercentage: 0.8,
+            ticks: {
+              beginAtZero: true,
+              fontSize: 14,
+              //    min         : 0,
+              //    max         : 180,
+              //    stepSize: 40,
+            },
+
+          }, ],
+          yAxes: [{
+              stacked: true,
+              display: true,
+              ticks: {
+                beginAtZero: true,
+                fontSize: 12,
+
+                min: 0,
+                max: 1500,
+                //    stepSize: 40,
+                callback: function(value) {
+                  if (value >= 0) return "";
+                  return value;
+                }
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Minutes',
+                fontSize: 12,
+              },
+
+
+            },
+            {
+              id: 'bar-y-axis',
+              stacked: true,
+              display: false,
+              ticks: {
+                beginAtZero: true,
+                fontSize: 12,
+                display: false,
+                min: 0,
+                max: <%= graph1Data[0] %> + <%= graph1Data[0] * 0.2 %>,
+                //    min         : 0,
+                //    max         : 180,// add highest value here
+                //    stepSize: 40,
+                //    callback: function (value) {
+                //    if (value > 160) return "";
+                //    return value;
+                //    }
+              },
+              type: 'linear',
+
+            },
+          ],
+        },
+      }
+
+      let barOptions2 = {
+        plugins: {
+          labels: {
+            // render 'label', 'value', 'percentage', 'image' or custom function, default is 'percentage'
+            render: 'value',
+
+
+            // font size, default is defaultFontSize
+            fontSize: 16,
+
+            // font color, can be color array for each data or function for dynamic color, default is defaultFontColor
+            fontColor: '#fff',
+
+            // position to draw label, available value is 'default', 'border' and 'outside'
+            // bar chart ignores this
+            // default is 'default'
+            position: 'border',
+          }
+        },
+        layout: {
+          padding: {
+            left: 50
+          }
+        },
+
+        legend: {
+          display: false,
+        },
+        tooltips: {
+          enabled: false,
+        },
+        responsive: true,
+        scales: {
+          xAxes: [{
+            stacked: true,
+            barPercentage: 0.8,
+            ticks: {
+              beginAtZero: true,
+              fontSize: 14,
+              //    min         : 0,
+              //    max         : 180,
+              //    stepSize: 40,
+            },
+
+          }, ],
+          yAxes: [{
+              stacked: true,
+              display: true,
+              ticks: {
+                beginAtZero: true,
+                fontSize: 12,
+
+                min: 0,
+                max: 1500,
+                //    stepSize: 40,
+                callback: function(value) {
+                  if (value >= 0) return "";
+                  return value;
+                }
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Minutes',
+                fontSize: 12,
+              },
+
+
+            },
+            {
+              id: 'bar-y-axis',
+              stacked: true,
+              display: false,
+              ticks: {
+                beginAtZero: true,
+                fontSize: 12,
+                display: false,
+                min: 0,
+                max: <%= highest%> + <%= highest * 0.2 %>,
+                //    min         : 0,
+                //    max         : 180,// add highest value here
+                //    stepSize: 40,
+                //    callback: function (value) {
+                //    if (value > 160) return "";
+                //    return value;
+                //    }
+              },
+              type: 'linear',
+
+            },
+          ],
+        },
+      }
+
+      let barChartData2 = {
+        labels: <%- JSON.stringify(graph1axis) %>,
+        linkLabels: linkLabels,
+        typeLabels: typeLabels,
+        idLabels: idLabels,
+        stoppageLabels: stoppageLabels,
+        datasets: [
+
+          {
+            label: '',
+            backgroundColor: <%- JSON.stringify(theColor) %>,
+            hoverBackgroundColor: <%- JSON.stringify(hoverBackgroundColor) %>,
+            yAxisID: 'bar-y-axis',
+            datalabels: {
+              // display labels for this specific dataset
+              display: false,
+              color: 'white',
+              align: 'end',
+              anchor: 'end',
+              formatter: function(value, context, values) {
+                if (value > 0) {
+                  value = value.toString();
+                  value = value.split(/(?=(?:...)*$)/);
+                  value = value.join(',');
+                  return context.chart.data.newLabels2[context.dataIndex];
+                } else {
+                  return '';
+
+                }
+              },
+            },
+
+            data: <%- JSON.stringify(graph1Data); %>,
+          },
+        ],
+      }
+
+      let barChartData3 = {
+        labels: <%- JSON.stringify(graph2axis) %>,
+
+        newLabels2: [
+          '01/09',
+          '02/09',
+          '03/09',
+          '04/09',
+          '05/09',
+          '06/09',
+          '07/09',
+          '08/09',
+          '09/09',
+          '10/09',
+        ],
+        datasets: [
+
+          {
+            label: '',
+            backgroundColor: <%- JSON.stringify(theColor) %>,
+            yAxisID: 'bar-y-axis',
+            datalabels: {
+              // display labels for this specific dataset
+              display: false,
+              color: 'white',
+              align: 'end',
+              anchor: 'end',
+              formatter: function(value, context, values) {
+                if (value > 0) {
+                  value = value.toString();
+                  value = value.split(/(?=(?:...)*$)/);
+                  value = value.join(',');
+                  return context.chart.data.newLabels2[context.dataIndex];
+                } else {
+                  return '';
+
+                }
+              },
+            },
+
+            data: <%- JSON.stringify(graph2Data); %>,
+          },
+        ],
+      }
+
+
+
+      var ctx2 = document.getElementById("canvas2");
+      var myChart2 = new Chart(ctx2, {
+          type: 'bar',
+          data: barChartData2,
+          options: barOptions
+        },
+        document.getElementById("canvas2").onclick = function(evt) {
+          var activePoints = myChart2.getElementsAtEvent(evt);
+          var firstPoint = activePoints[0];
+          var type = myChart2.data.typeLabels[firstPoint._index];
+          var stoppage = myChart2.data.stoppageLabels[firstPoint._index];
+          var id = myChart2.data.idLabels;
+          var label = myChart2.data.labels[firstPoint._index];
+          var value = myChart2.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+          // let start = newStart
+          // let end = newEnd
+          if (firstPoint !== undefined)
+            if (label !== '1') {
+              // alert(start);
+              window.location.href = `/equipment-monitoring/machineAnalysis/${id}/2/${stoppage}/${label}/${start}/${end}`
+            }
+
+        })
+
+      var ctx3 = document.getElementById("canvas3");
+      var myChart3 = new Chart(ctx3, {
+        type: 'bar',
+        data: barChartData3,
+        options: barOptions2
+      })
+
+
+      // var ctx2 = document.getElementById("canvas2");
+      // var myChart2 = new Chart(ctx2, {
+      //     type: 'bar',
+      //     data    : barChartData2,
+      //     options : barOptions
+      // })
+
+      // var ctx3 = document.getElementById("canvas3");
+      // var myChart3 = new Chart(ctx3, {
+      //     type: 'bar',
+      //     data    : barChartData3,
+      //     options : barOptions
+      // })
+
+
+    }
+  </script>
+
+</body>
+
+</html>

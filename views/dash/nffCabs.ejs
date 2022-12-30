@@ -1,0 +1,1573 @@
+<% layout('layouts/cabsHeatmap')%>
+<!-- <meta http-equiv="refresh" content="90"> -->
+<link rel="stylesheet" href="/8z/content/bootstrap/css/bootstrap.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css">
+<link rel="stylesheet" href="/content/table2.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/ldlHeatmap.css" type="text/css">
+
+
+<style>
+  body {
+    background-color: black;
+  }
+
+  h5 {
+    color: white;
+    font-size: 1rem;
+  }
+
+  h3 {
+    color: white;
+    font-size: 2rem;
+  }
+
+  h2 {
+    color: white;
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  hr {
+    background-color: #6a6d6d;
+  }
+
+  a {
+    text-decoration: none;
+
+  }
+
+  a:hover {
+    color: white;
+
+  }
+
+  small {
+    font-weight: bold;
+  }
+
+  .main-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+  }
+
+  .top-row {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-bottom: -10px;
+    margin-top: 10px;
+  }
+
+  .middle_row {
+    /* display: flex;
+        width: 97%; */
+    /* justify-content: flex-end;  */
+    margin-left: 600px;
+
+
+  }
+
+
+  .list_item {
+    background-color: rgb(36, 42, 49);
+    line-height: 0.5;
+    color: white;
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 6px;
+    padding-bottom: 8px;
+
+  }
+
+  .area_title {
+    text-align: center;
+    color: black;
+    background-color: #fcb026;
+    font-weight: bold;
+    line-height: 2.0;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .area_card {
+    width: 58px;
+    font-size: 10px;
+    padding: 0;
+
+  }
+
+  .forward_card {
+    width: 4rem;
+    font-size: 10px;
+    width: 80px;
+    margin-left: 7px;
+    margin-right: 7px;
+  }
+
+  .division_name {
+    width: 97%;
+    text-align: center;
+    color: white;
+    background-color: rgb(36, 42, 49);
+    align-items: center;
+    height: 35px;
+    font-size: 25px;
+    border: 1px solid white;
+  }
+
+  .stat {
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+
+  .percent_stat {
+    font-size: 1rem;
+    margin-top: 4px;
+  }
+
+  .arrow {
+    width: 120px;
+    margin-top: 25px;
+  }
+
+  .horizontal_line {
+    margin-top: -14px;
+    width: 1285px;
+    background: rgb(177, 167, 167);
+    height: 10px;
+    /* float:left; */
+    margin-left: -360px;
+  }
+
+  .vertical_line1 {
+    /* margin-top:-14px; */
+    width: 10px;
+    background: rgb(177, 167, 167);
+    height: 40px;
+    float: right;
+    margin-right: -805px;
+    margin-top: -50px;
+  }
+
+  .vertical_line2 {
+    /* margin-top:-14px; */
+    width: 10px;
+    background: rgb(177, 167, 167);
+    height: 60px;
+    /* float:left; */
+    margin-left: -360px;
+    z-index: 100;
+  }
+
+  .point {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 30px solid rgb(177, 167, 167);
+    margin-left: -375px;
+  }
+</style>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px;">
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" style="padding: 10px; font-size: 40px;">&times;</span>
+        </button>
+        <h3 style="text-align: center; margin: 8px; color: black;">Set Times</h3>
+      </div>
+      <div class="modal-body">
+        <div class="col">
+          <form action="/dash/nffCabs/<%= startTimeAddress %>/<%= endTimeAddress %>" method="POST">
+            <label for="buildNumber">Start Date</label>
+            <input class="form-control" type="date" name="startDate" style="margin-bottom: 10px;" value="" required>
+            <input class="form-control" type="time" name="startTime" value="" required>
+
+
+        </div>
+        <div class="col">
+          <label for="buildNumber">End Date</label>
+          <input class="form-control" type="date" name="endDate" style="margin-bottom: 10px;" value="" required>
+          <input class="form-control" type="time" name="endTime" value="" required>
+
+
+          <div class="form-group text-center">
+            <button class="btn btn-md btn-block btn-success" style="margin-top: 10px;">Update</button>
+          </div>
+          </form>
+        </div>
+      </div>
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+        <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class='main-header-holder' style="display: flex; justify-content: center;">
+
+  <div class='division_name'>Cabs Systems</div>
+</div>
+
+<div class="main-wrapper" style="margin-top: 10px;">
+
+  <div class="top-row">
+
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        MF
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list_item">Found <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Fixed <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Forward <br />
+          <div class='stat'>--</div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'>--</div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>--%</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Paint
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list_item">Found <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Fixed <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Forward <br />
+          <div class='stat'>--</div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'>--</div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>--%</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Kitting
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list_item">Found <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Fixed <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Forward <br />
+          <div class='stat'>--</div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'>--</div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>--%</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Assy Start
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list_item">Found <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Fixed <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Forward <br />
+          <div class='stat'>--</div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'>--</div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>--%</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        SIP 1
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list_item">Found <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Fixed <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Forward <br />
+          <div class='stat'>--</div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'>--</div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>--%</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Elec Test
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list_item">Found <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Fixed <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Forward <br />
+          <div class='stat'>--</div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'>--</div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>--%</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        EOL SIP
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list_item">Found <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Fixed <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Forward <br />
+          <div class='stat'>--</div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'>--</div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>--%</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Water Test
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list_item">Found <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Fixed <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Forward <br />
+          <div class='stat'>--</div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'>--</div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>--%</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Rec Validation
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list_item">Found <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Fixed <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Forward <br />
+          <div class='stat'>--</div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'>--</div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>--%</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Cust Validation
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list_item">Found <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Fixed <br />
+          <div class='stat'>--</div>
+        </li>
+        <li class="list-group-item list_item">Forward <br />
+          <div class='stat'>--</div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex;">
+
+        <div style="margin-top: 10px; margin-left: 25px;">
+          <i style="font-size: 50px;" class="fas fa-level-down-alt"></i>
+        </div>
+
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'>--</div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>--%</div>
+            </li>
+            <div style="text-align: center;" style='display: flex; flex-direction: column;'>
+
+            </div>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- area end -->
+
+  </div>
+  <div class="arrow">
+    <div class="vertical_line1"></div>
+    <div class="horizontal_line"></div>
+    <div class="vertical_line2"></div>
+    <div class="point"></div>
+  </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+<!-- Loadall -->
+
+<div class='main-header-holder' style="display: flex; justify-content: center; margin-top: -70px;">
+  <div class='division_name'>Loadall</div>
+</div>
+
+<div class="main-wrapper" style="margin-top: 10px; ">
+
+  <div class="top-row">
+
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        SIP 1
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= zone1FoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= zone1FoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= zone1FixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= zone1NotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuZone1 %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'><%= zone1NotFixedInArea %> (<%= totalFaultsPercentZone1%>%)</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        SIP 2
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/SIP 2 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= zone2FoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= zone2FoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/SIP 2 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= zone2FixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/SIP 2 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= zone2NotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuZone2 %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'><%= zone1NotFixedInArea + +zone2NotFixedInArea %> (<%= totalFaultsPercentZone2 %>%)</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        SIP 3
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/SIP 3 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= zone3FoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= zone3FoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/SIP 3 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= zone3FixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/SIP 3 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= zone3NotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuZone3 %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'><%= zone1NotFixedInArea + +zone2NotFixedInArea + +zone3NotFixedInArea %> (<%= totalFaultsPercentZone3 %>%)</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Cab Insp
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/NEW Cab Inspection/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= cabsFoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= cabsFoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/NEW Cab Inspection/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= cabsFixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/NEW Cab Inspection/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= cabsNotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuCabs %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'><%= zone1NotFixedInArea + +zone2NotFixedInArea + +zone3NotFixedInArea + +cabsNotFixedInArea %> (<%= totalFaultsPercentCabs %>%)</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        SIP 4
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/SIP 4 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= zone4FoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= zone4FoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/SIP 4 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= zone4FixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/SIP 4 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= zone4NotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuZone4 %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>
+                <%= zone1NotFixedInArea +
+                            +zone2NotFixedInArea +
+                            +zone3NotFixedInArea +
+                            +cabsNotFixedInArea +
+                            +boomsNotFixedInArea +
+                            +zone4NotFixedInArea %>
+                (<%= totalFaultsPercentZone4 %>%)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        SIP 5
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/SIP 5 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= zone5FoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= zone5FoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/SIP 5 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= zone5FixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/SIP 5 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= zone5NotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuZone5 %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>
+                <%= zone1NotFixedInArea +
+                            +zone2NotFixedInArea +
+                            +zone3NotFixedInArea +
+                            +cabsNotFixedInArea +
+                            +boomsNotFixedInArea +
+                            +zone4NotFixedInArea +
+                            +t3NotFixedInArea +
+                            +zone5NotFixedInArea %>
+                (<%= totalFaultsPercentZone5 %>%)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        SIP 6
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/SIP 6 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= zone6FoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= zone6FoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/SIP 6 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= zone6FixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/SIP 6 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= zone6NotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuZone6 %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>
+                <%= zone1NotFixedInArea +
+                            +zone2NotFixedInArea +
+                            +zone3NotFixedInArea +
+                            +cabsNotFixedInArea +
+                            +boomsNotFixedInArea +
+                            +zone4NotFixedInArea +
+                            +t3NotFixedInArea +
+                            +zone5NotFixedInArea +
+                            +zone6NotFixedInArea %>
+                (<%= totalFaultsPercentZone6 %>%)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        UV 1
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/UV 1 Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= uv1FoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= uv1FoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/UV 1 Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= uv1FixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/UV 1 Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= uv1NotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuUV1 %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>
+                <%= zone1NotFixedInArea +
+                        +zone2NotFixedInArea +
+                        +zone3NotFixedInArea +
+                        +cabsNotFixedInArea +
+                        +boomsNotFixedInArea +
+                        +zone4NotFixedInArea +
+                        +t3NotFixedInArea +
+                        +zone5NotFixedInArea +
+                        +zone6NotFixedInArea +
+                        +uv1NotFixedInArea %>
+                (<%= totalFaultsPercentUV1%>%)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Spec Check
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/SIP SPEC Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= specFoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= specFoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/SIP SPEC Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= specFixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/SIP SPEC Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= specNotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-right"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuSpec %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'>
+                <%= zone1NotFixedInArea +
+                        +zone2NotFixedInArea +
+                        +zone3NotFixedInArea +
+                        +cabsNotFixedInArea +
+                        +boomsNotFixedInArea +
+                        +zone4NotFixedInArea +
+                        +t3NotFixedInArea +
+                        +zone5NotFixedInArea +
+                        +zone6NotFixedInArea +
+                        +uv1NotFixedInArea +
+                        +specNotFixedInArea %>
+                (<%= totalFaultsPercentSpec %>%)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Zone 7 & R/Road
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/Zone 7/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= z7FoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= z7FoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/Zone 7/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= zone1NotFixedInArea +
+                    +zone2NotFixedInArea +
+                    +zone3NotFixedInArea +
+                    +cabsNotFixedInArea +
+                    +boomsNotFixedInArea +
+                    +zone4NotFixedInArea +
+                    +t3NotFixedInArea +
+                    +zone5NotFixedInArea +
+                    +zone6NotFixedInArea +
+                    +uv1NotFixedInArea +
+                    +specNotFixedInArea + 
+                    +z7NotFixedInArea -+
+                    +faultsForwardTo16 %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/Zone 7/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= z7NotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex;">
+        <div style="margin-top: 10px; margin-left: 25px;">
+          <i style="font-size: 50px;" class="fas fa-level-down-alt"></i>
+        </div>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuZ7 %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'><%= faultsForwardTo16 %> (<%= percentForwadTo16 %>%)</div>
+            </li>
+            <div style="text-align: center;" style='display: flex; flex-direction: column; margin-top: 20px; '>
+              <i style="font-size: 60px;" class="fas fa-long-arrow-alt-down"></i>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+
+  </div>
+
+  <div class="top-row" style="margin-top: 20px;">
+
+
+    <!-- area start -->
+    <div class="card area_card" style="margin-left: 725px;">
+      <div class="card-header area_title">
+        Booms
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/Boom Sub Assembly LDL/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= boomsFoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= boomsFoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/Boom Sub Assembly LDL/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= boomsFixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/Boom Sub Assembly LDL/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= boomsNotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex;">
+        <div style="margin-top: -40px; margin-left: 35px;">
+          <i style="font-size: 50px;" class="fas fa-level-up-alt"></i>
+        </div>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuBooms %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'><%= totalFaultsPercentBooms %>%</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Track 3
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/Track 3/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= t3FoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= t3FoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/Track 3/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= t3FixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/Track 3/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= t3NotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex;">
+        <div style="margin-top: -40px; margin-left: 35px;">
+          <i style="font-size: 50px;" class="fas fa-level-up-alt"></i>
+        </div>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= totDpuT3 %></div>
+            </li>
+            <li class="list-group-item list_item">Open Faults<br />
+              <div class='stat'><%= totalFaultsPercentT3 %>%</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+
+    <!-- area start -->
+    <div class="card area_card" style="margin-left: 270px;">
+      <div class="card-header area_title">
+        CFC
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list_item">Found <br />
+          <div class='stat'><%= faultsFoundInCFC %></div>
+        </li>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= dpuInCFC %></div>
+        </li>
+        <li class="list-group-item list_item">Fixed <br />
+          <div class='stat'><%= fixedInCFC %></div>
+        </li>
+        <li class="list-group-item list_item">Forward <br />
+          <div class='stat'><%= faultsOutOfCFC %></div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-left"></i>
+      </div>
+      <div style="display: flex;">
+        <div class="card forward_card" style="width: 100px;">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list_item">DPU<br />
+              <div class='stat'><%= dputoCFC %></div>
+            </li>
+            <a href="/dash/trackFaultsToCFC/<%= startTimeFormat %>/<%= endTimeFormat %>">
+              <li class="list-group-item list_item">Open Faults<br />
+                <div class='stat'><%= faultsForwardToCFC %>(<%= faultsPercentToCFC %>%)</div>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        PDI
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/After Stage 17/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= faultsFoundAfterStage17 %>
+            </div>
+          </li>
+        </a>
+
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= pdiFoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/After Stage 17/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= numberFixedInPDI %>
+            </div>
+          </li>
+        </a>
+
+        <a href="/dash/trackFaultsForwardAll/LDL/After Stage 17/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= forwardFromPDI %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: center; margin-top: -10px;">
+        <i style="font-size: 60px;" class="fas fa-long-arrow-alt-left"></i>
+      </div>
+      <div class="card forward_card" style="width: 100px;">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item list_item">DPU<br />
+            <div class='stat'><%= dpuFprwardToPDI %></div>
+          </li>
+          <li class="list-group-item list_item">Open Faults<br />
+            <div class='stat'><%= faultsForwardFromCycleTest %> (<%= faultsForwardToPDIPercent %>%)</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- area end -->
+    <!-- area start -->
+    <div class="card area_card">
+      <div class="card-header area_title">
+        Cycle Test
+      </div>
+      <ul class="list-group list-group-flush">
+        <a href="/dash/trackFaultsInAreaAll/LDL/Cycle Test New/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Found<br />
+            <div class="stat">
+              <%= cycleTestFoundInArea %>
+            </div>
+          </li>
+        </a>
+        <li class="list-group-item list_item">DPU <br />
+          <div class='stat'><%= cycleTestFoundInAreaDPU %></div>
+        </li>
+        <a href="/dash/trackFaultsFixedInAreaAll/LDL/Cycle Test New/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Fixed<br />
+            <div class="stat">
+              <%= cycleTestFixedInArea %>
+            </div>
+          </li>
+        </a>
+        <a href="/dash/trackFaultsForwardAll/LDL/Cycle Test New/<%= startTimeFormat %>/<%= endTimeFormat %>">
+          <li class="list-group-item list_item">Forward<br />
+            <div class="stat">
+              <%= cycleTestNotFixedInArea %>
+            </div>
+          </li>
+        </a>
+
+      </ul>
+    </div>
+
+    <!-- <div style="display: flex; flex-direction: column; margin-top: 30px;">
+        <div style="display: flex; flex-direction: column;">
+           
+           <div class="card-header area_title" style="width: 130px; height: 152px; ">
+            Z7 Graveyard
+            <a href="/dash/faultstotest/<%= startTimeFormat %>/<%= endTimeFormat %>">
+                <ul class="list-group list-group-flush" style="margin: 1px; font-size: 10px;">
+                    <li class="list-group-item list_item">Machines to Test<br /> <div class='stat' style="font-size: 15px;"><%= stage16.length %></div></li>
+                    <li class="list-group-item list_item">DPU to Test<br /> <div class='stat' style="font-size: 15px;"><%= dpuForwadTo16 %></div></li>
+                    <li class="list-group-item list_item">Faults to Test<br /> <div class='stat' style="font-size: 15px;"><%= faultsForwardTo16 %>(<%= percentForwadTo16 %>%)</div></li>
+                </ul>
+            </a>
+            
+          </div>
+           
+            
+        </div>
+    </div> -->
+    <!-- area end -->
+
+
+
+    <!-- second row -->
+
+
+  </div>
+  <div style="position: absolute; bottom: 50px; left: 50px;">
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+      <i class="fas fa-clock"></i>
+    </button>
+
+
+    <div style="color: white; padding-top: 10PX; ">(<%= moment(startTime).format("DD/MM/YYYY  HH:mm") %> - <%= moment(endTime).format("DD/MM/YYYY  HH:mm") %>) <br />
+      build - T1 (<%= lay %>) T3 (<%= track3lay %>)<br />
+
+
+    </div>
+
+
+    <div style="color: white; padding-top: 10PX;"><%= stage16.length %> Machines booked on to stage 16
+      <a href="/dash/totest/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <span style="margin-left: 10px;"><i style="font-size: 18px; color: #fcb026;" class="fas fa-info"></i></span>
+      </a>
+    </div>
+    <div style="color: white; padding-top: 10PX;"><%= stage17.length %> Machines booked on to stage 17
+      <a href="/dash/toPDI/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <span style="margin-left: 10px;"><i style="font-size: 18px; color: #fcb026;" class="fas fa-info"></i></span>
+      </a>
+    </div>
+
+
+
+    <div style="color: white; padding-top: 10PX;"><%= inCFC.length %> Machines through CFC</div>
+
+  </div>
+
+
+
+
+
+  <div class="container-fluid footer">
+
+    <div class="row header-top">
+      <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+        <img height="24px" src="/7z/content/images/df.png">
+      </div>
+      <div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+        J.C. Bamford Excavators LTD &copy; 2022
+      </div>
+    </div>
+  </div>

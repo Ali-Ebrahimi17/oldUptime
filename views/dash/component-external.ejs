@@ -1,0 +1,46 @@
+<% layout('layouts/boilerplate')%>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- <meta http-equiv="refresh" content="150"> -->
+
+		<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+		<script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+		<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+
+		<link rel="icon" href="/images/jcb.png" />
+		<link rel="stylesheet" href="/stylesheets/bootstrap.css" />
+		<link rel="stylesheet" href="/stylesheets/component.css" />
+	</head>
+
+	<body>
+		<% let today = new Date() %> <% let day = today.getDate() %> <% let month = today.getMonth() + 1 %> <% let year = today.getFullYear() %> <% let
+		hours = today.getHours() %> <% let minutes = today.getMinutes() %> <% if (day < 10) day = '0' + day %> <% if (month < 10) month = '0' + month %>
+		<% if (hours < 10) hours = '0' + hours %> <% if (minutes < 10) minutes = '0' + minutes %> <% let dateTime = day + ' ' + month + ' ' + year + ' - '
+		+ hours + ':' + minutes %>
+
+		<!-- Get the prediction months -->
+		<% let prediction1Month = moment().subtract(4, 'months').format('MMM-YY').toUpperCase()%> <% let prediction2Month = moment().subtract(3,
+		'months').format('MMM-YY').toUpperCase()%> <% let prediction3Month = moment().subtract(2, 'months').format('MMM-YY').toUpperCase()%>
+
+		<!-- The dash layout -->
+
+		<section class="dash-layout">
+			<div class="card card-2tall"></div>
+
+			<div class="card card-2tall"></div>
+
+			<div class="card card-2tall"></div>
+
+			<div class="card card-full"></div>
+
+			<div class="card card-4tall"></div>
+		</section>
+
+		<script></script>
+	</body>
+</html>

@@ -1,0 +1,154 @@
+<% layout('layouts/boilertCardNew')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+<link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css" />
+<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+<link rel="stylesheet" href="/stylesheets/app.css" />
+<link rel="stylesheet" href="/fontawesome/css/all.css" />
+
+<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/cards.css" type="text/css" />
+<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<style>
+	body {
+		background-color: black;
+	}
+
+	h5 {
+		color: white;
+		font-size: 1.5rem;
+		margin-bottom: -15px;
+	}
+
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+
+	h2 {
+		font-weight: bold;
+		color: black;
+	}
+
+	h1 {
+		font-weight: bold;
+		font-size: 4rem;
+	}
+
+	h6 {
+		font-size: 1rem;
+	}
+
+	hr {
+		background-color: #6a6d6d;
+	}
+
+	.graph-row {
+		display: flex;
+		justify-content: space-evenly;
+		width: 100%;
+		padding-top: 35px;
+	}
+
+	.table-row {
+		display: flex;
+		justify-content: space-around;
+		width: 85%;
+		padding-top: 35px;
+		flex-direction: column;
+	}
+
+	.graph-box {
+		height: 200px;
+		width: 400px;
+		background-color: white;
+		border-radius: 5px;
+	}
+
+	hr {
+		height: 3px;
+		border: none;
+		background: -webkit-gradient(linear, 0 0, 100% 0, from(transparent), to(transparent), color-stop(50%, white));
+	}
+</style>
+
+<div class="main-header-holder">
+	<h1><%= division %> ESCALATIONS</h1>
+</div>
+<hr />
+
+<div class="outside-holder">
+	<!-- Cabs -->
+	<div class="graph-row">
+		<div class="graph-box"></div>
+		<div class="graph-box"></div>
+		<div class="graph-box"></div>
+	</div>
+	<div class="table-row">
+		<div style="margin-bottom: 25px; display: flex">
+			<h5>Open Escalations</h5>
+		</div>
+		<table class="table table-hover table-dark" style="height: 400px; text-align: center; background-color: rgb(44, 47, 49)">
+			<thead>
+				<tr class="d-flex" style="font-size: 14px">
+					<th style="width: 100px">Status</th>
+					<th style="width: 150px">Area</th>
+					<th style="width: 150px">Process Check</th>
+					<th style="width: 150px">Date of Failure</th>
+					<th style="width: 140px">Pass Limits</th>
+					<th style="width: 130px">Checked Value</th>
+					<th style="width: 130px">Checked By</th>
+					<th style="width: 200px">Action</th>
+					<th style="width: 310px">Notes</th>
+					<th style="width: 120px">Days in Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% for (let c of checks) { %>
+				<tr class="d-flex" style="height: 50px; font-size: 12px">
+					<td style="width: 100px"><%= c.checks[0].result %></td>
+					<td style="width: 150px"><%= c.location %></td>
+					<td style="width: 150px"><%= c.name %></td>
+					<td style="width: 150px"><%= moment(c.updatedAt).format("DD/MM/YYYY") %></td>
+					<% if (c.type === 'OK/Not OK') { %>
+					<td style="width: 140px">OK/Not OK</td>
+					<% } else { %>
+					<td style="width: 140px"><%= c.min %> - <%= c.max %> <%= c.unit %></td>
+					<% } %> <% if (c.type === 'OK/Not OK') { %>
+					<td style="width: 130px"><%= c.agreed %></td>
+					<% } else { %>
+					<td style="width: 130px"><%= c.value %></td>
+					<% } %>
+					<td style="width: 130px"><%= c.checkedBy %></td>
+					<% if (c.status === 'Failed') { %>
+					<td style="width: 200px">N/A</td>
+					<% } else { %>
+					<td style="width: 200px"><%= c.action %></td>
+					<% } %>
+					<td style="width: 310px">1</td>
+					<td style="width: 120px">1</td>
+				</tr>
+				<% } %>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="container-fluid footer">
+	<div class="row header-top">
+		<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+			<img height="24px" src="/7z/content/images/jcb-logo.png" />
+			<img height="24px" src="/7z/content/images/df.png" />
+		</div>
+		<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+	</div>
+</div>
+
+<script></script>

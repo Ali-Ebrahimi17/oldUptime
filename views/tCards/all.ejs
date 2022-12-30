@@ -1,0 +1,62 @@
+<% layout('layouts/boilerplateTCard')%>
+
+
+<div class="main-tCard-container">
+  <h2 class="main-title"><%= division.toUpperCase() %> <%= area.toUpperCase()%> <%= shiftP.toUpperCase() %> SHIFT</h2>
+  <div class="row" style="width: 100%;">
+    <div class="col-lg check-row">
+      <h3>Daily Checks</h3>
+      <hr>
+      <div class="cards-container">
+        <% for (let card of tCardsDaily) { %>
+        <div class="card-wrapper">
+          <div class="card-content">
+            <h6><%= card.name %></h6>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <div class="col-lg check-row">
+      <h3>Weekly Checks</h3>
+      <hr>
+      <div class="cards-container">
+        <% for (let card of tCardsWeekly) { %>
+        <div class="card-wrapper">
+          <div class="card-content">
+            <h6><%= card.name %></h6>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <div class="col-lg check-row">
+      <h3>Monthly Checks</h3>
+      <hr>
+      <div class="cards-container">
+        <% for (let card of tCardsMonthly) { %>
+        <div class="card-wrapper">
+          <div class="card-content">
+            <h6><%= card.name %></h6>
+          </div>
+        </div>
+        <% } %>
+      </div>
+
+    </div>
+    <div class="col-lg check-row">
+      <h3>Contractor Checks</h3>
+      <hr>
+      <div class="cards-container">
+        <% for (let card of tCardsWeekly) { %>
+        <div class="card-wrapper">
+          <div class="card-content">
+            <h6><%= card.name %></h6>
+          </div>
+        </div>
+        <% } %>
+      </div>
+
+    </div>
+  </div>
+</div>

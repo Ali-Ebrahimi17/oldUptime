@@ -1,0 +1,36 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container">
+  <table class="table table-hover table-dark" style="font-size: 15px; width: 300px; margin: auto; ">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 300px;">SIP</th>
+
+
+      </tr>
+    </thead>
+    <% if (currentUser && currentUser.isAdmin)  { %>
+    <tbody>
+      <% sips.forEach(sip => { %>
+      <tr class="d-flex">
+        <% if (sip.name != 'Update Lay' && sip.name != 'Times' ) { %>
+        <td style=" width: 300px"><a href="/dash/sip/edit/<%= sip._id %>"><%= sip.name %></a></td>
+      </tr>
+      <% } %>
+      <% }) %>
+    </tbody>
+    <% } else { %>
+    <tbody>
+      <% sips.forEach(sip => { %>
+      <% if (sip.name != 'Update Lay' && sip.name != 'Times') { %>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/dash/sip/edit/<%= sip._id %>"><%= sip.name %></a></td>
+      </tr>
+      <% } %>
+      <% }) %>
+    </tbody>
+    <% } %>
+  </table>
+  <!-- <div style="text-align: center; font-weight: bold;">
+	<a href="/dash/sip/all/LDL">Go Back</a>
+</div> -->

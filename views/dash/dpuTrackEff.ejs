@@ -1,0 +1,590 @@
+<% layout('layouts/heatmap')%>
+<!-- <meta http-equiv="refresh" content="900" /> -->
+
+<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css" />
+<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css" />
+<link rel="stylesheet" href="/content/table2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/ldlHeatmap.css" type="text/css" />
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<style>
+	body {
+		background-color: black;
+		overflow: hidden;
+	}
+
+	h5 {
+		color: white;
+		font-size: 1rem;
+	}
+
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+
+	h2 {
+		color: white;
+		font-size: 18px;
+	}
+
+	h1 {
+		font-size: 4rem;
+	}
+
+	h6 {
+		font-size: 1rem;
+	}
+
+	hr {
+		background-color: #6a6d6d;
+	}
+
+	.zone-stat {
+		font-size: 60px;
+		margin-top: -10px;
+	}
+
+	.zone-span {
+		font-size: 60px;
+		padding-top: 6px;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: white;
+	}
+
+	small {
+		font-weight: bold;
+	}
+
+	.main-wrapper {
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+		flex-direction: column;
+	}
+
+	.date-holder {
+		color: white;
+		margin-top: -30px;
+		padding-left: 20px;
+	}
+
+	.top-row {
+		display: flex;
+	}
+
+	.bottom-row {
+		display: flex;
+		padding-left: 482px;
+	}
+
+	.found {
+		color: white;
+		font-size: 15px;
+		padding-top: 6px;
+	}
+
+	.found-bottom {
+		color: white;
+		font-size: 15px;
+		padding-top: 40px;
+	}
+
+	.sent-forward {
+		color: white;
+		font-size: 15px;
+		/* padding-top: 35px; */
+	}
+
+	.fixed {
+		color: white;
+		font-size: 15px;
+		/* padding-top: 35px; */
+	}
+
+	.escaped {
+		color: white;
+		font-size: 15px;
+		/* padding-top: 35px; */
+	}
+
+	.pof-dpu-title {
+		color: white;
+		font-size: 20px;
+		margin-top: -10px;
+		/* padding-top: 35px; */
+	}
+
+	.shortage-dpu-title {
+		color: white;
+		font-size: 20px;
+		/* padding-top: 35px; */
+		margin-bottom: -8px;
+	}
+
+	.total-dpu-title {
+		color: white;
+		font-size: 20px;
+		margin-top: -8px;
+	}
+
+	.forward {
+		color: red;
+		font-size: 20px;
+		padding-top: 90px;
+		width: 50px;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.area-name {
+		color: white;
+		text-align: center;
+		font-size: 20px;
+	}
+
+	.found-dpu {
+		color: white;
+		text-align: center;
+		font-size: 17px;
+		padding-top: 2px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.forward-dpu {
+		color: white;
+		text-align: center;
+		font-size: 15px;
+	}
+
+	.fixed-faults {
+		color: white;
+		text-align: center;
+		font-size: 17px;
+		margin-top: -3px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.not-fixed-faults {
+		color: red;
+		text-align: center;
+		font-size: 18px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.not-fixed-faults-red {
+		color: red;
+		text-align: center;
+		font-size: 18px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.not-fixed-faults-green {
+		color: green;
+		text-align: center;
+		font-size: 18px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.pof-dpu-stat {
+		color: white;
+		text-align: center;
+		font-size: 20px;
+		margin-top: -10px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.shortage-dpu-stat {
+		color: white;
+		text-align: center;
+		font-size: 20px;
+		margin-bottom: -8px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.total-dpu-stat {
+		color: white;
+		text-align: center;
+		font-size: 22px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.area-holder {
+		background-color: rgb(36, 42, 49);
+		border-radius: 4px;
+		width: 150px;
+		height: 388px;
+	}
+
+	.graph-holder3 {
+		background-color: rgb(36, 42, 49);
+		width: 300px;
+		height: 288px;
+		margin-top: 35px;
+		border-radius: 4px;
+		margin-right: 65px;
+	}
+
+	.modal-fullscreen .modal-dialog {
+		max-width: 100%;
+		margin: 0;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 100vh;
+		display: flex;
+		position: fixed;
+		z-index: 100000;
+	}
+
+	thead,
+	tbody,
+	tr,
+	td,
+	th {
+		display: block;
+	}
+
+	tr:after {
+		content: ' ';
+		display: block;
+		visibility: hidden;
+		clear: both;
+	}
+
+	thead th {
+		height: 50px;
+
+		/*text-align: left;*/
+	}
+
+	tbody {
+		height: 650px;
+		overflow-y: auto;
+	}
+
+	tbody td,
+	thead th {
+		width: 19.2%;
+		float: left;
+	}
+
+	.modal-dialog-1 {
+		max-width: 100%;
+		margin: 0;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 100vh;
+		display: flex;
+	}
+
+	/* .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+  } */
+
+	/* .modal-backdrop.show:nth-of-type(even) {
+    z-index: 1051 !important;
+  } */
+</style>
+
+<!-- general modals -->
+
+<!--  change date & times -->
+<div class="modal fade" id="change-times" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px">
+				<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+				<h3 style="text-align: center; margin: 8px; color: black">Select Date Range</h3>
+			</div>
+			<div class="modal-body">
+				<fieldset>
+					<form id="theForm" action="/dash/dpuTrackEff/LDL" method="POST" onsubmit="myButton.disabled = true; return true;">
+						<div class="row" style="color: black">
+							<div class="col">
+								<label for="buildNumber">Start Date</label>
+								<input class="form-control" type="date" name="startDate" style="margin-bottom: 10px" value="" required />
+								<input class="form-control" type="time" name="startTime" value="" required />
+								<!-- <label for="buildNumber" style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; ">Maximum of 48 hours</label> -->
+							</div>
+							<div class="col">
+								<label for="buildNumber">End Date</label>
+								<input class="form-control" type="date" name="endDate" style="margin-bottom: 10px" value="" required />
+								<input class="form-control" type="time" name="endTime" value="" required style="margin-bottom: 10px" />
+
+								<button
+									type="button"
+									id="modalClose"
+									data-dismiss="modal"
+									class="btn btn-danger float-right"
+									style="margin-left: 8px; color: white; border-radius: 4px"
+								>
+									Cancel
+								</button>
+								<button
+									id="btnSave"
+									name="myButton"
+									class="btn btn-success float-right"
+									type="submit"
+									style="margin-bottom: 10px; color: white; border-radius: 4px"
+								>
+									Confirm
+								</button>
+							</div>
+						</div>
+					</form>
+				</fieldset>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+				<img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- end of general modals -->
+
+<div class="main-header-holder" data-toggle="modal" data-target="#change-times" style="cursor: pointer">
+	<h1>Loadall Inspector Efficiency</h1>
+	<small
+		>(<%= moment(startTime).format("DD/MM/YYYY HH:mm") %> - <%= moment(endTime).format("DD/MM/YYYY HH:mm") %>) <br />build - T1 (<%= lay %>) T3 (<%=
+		track3lay %>)
+	</small>
+</div>
+
+<section style="display: flex; flex-direction: column">
+	<div style="display: flex; justify-content: space-evenly; margin-top: 25px; flex-wrap: wrap">
+		<% for (let a of theArrayOfDataT1) { %>
+		<!-- modals -->
+		<div class="modal fade" id="myModal<%= a.id  %>">
+			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+						<h3 style="text-align: center; margin: 8px; color: black"><%= a.escapedAreaNumber %> Escaped from <%= a.areaName %></h3>
+					</div>
+					<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+						<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+							<thead>
+								<tr class="d-flex">
+									<th style="width: 50px">#</th>
+									<th style="width: 200px">Date/Time</th>
+									<th style="width: 130px">Build Number</th>
+									<th style="width: 150px">Model</th>
+									<th style="width: 150px">Failed At</th>
+									<th style="width: 130px">Failed By</th>
+									<th style="width: 170px">Fixed By</th>
+									<th style="width: 170px">Fault Area</th>
+									<th style="width: 170px">Fault Type</th>
+									<th style="width: 250px">Fault Detail</th>
+									<th style="width: 250px">Comments</th>
+									<!-- <th style="width: 50px;"></th> -->
+								</tr>
+							</thead>
+							<tbody>
+								<% let escapedx = 0 %> <% let escapedx1 = -1 %> <% for (let j of a.escapedAreaFaults) { %> <% escapedx++ %> <% escapedx1++ %>
+								<tr class="d-flex">
+									<td style="width: 50px"><%= escapedx %></td>
+									<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+									<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+									<td style="width: 150px"><%= j.Model %></td>
+									<td style="width: 150px"><%= j.Zone %></td>
+									<td style="width: 150px"><%= j['Created By'] %></td>
+									<td style="width: 150px"><%= j['Fixed By'] %></td>
+									<td style="width: 170px"><%= j['Fault Area'] %></td>
+									<td style="width: 170px"><%= j['Fault Code'] %></td>
+									<td style="width: 250px"><%= j['User Defined Test'] %></td>
+									<td style="width: 250px"><%= j.Comments %></td>
+									<% if (currentUser && currentUser.isLoadallDPU) { %>
+									<td style="width: 20px">
+										<a data-toggle="modal" data-target="#myModal2<%= j._id  %>" class="btn btn-danger btn-sm">x</a>
+									</td>
+									<% } %>
+								</tr>
+								<div class="modal fade" id="myModal2<%= j._id %>" data-backdrop="static">
+									<form action="/dash/createIgnore" method="POST">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h4 class="modal-title">Are you sure?</h4>
+													<input type="hidden" id="" name="fault" value="<%= j['Fault Code'] %> - <%= j['User Defined Test'] %>" />
+													<input type="hidden" id="" name="faultArea" value="<%= j['Fault Area'] %>" />
+													<div class="container"></div>
+													<div class="modal-body">Add <%= j['User Defined Test'] %> to ignore list</div>
+													<div class="modal-footer">
+														<a data-dismiss="modal" style="color: white" class="btn btn-danger">Close</a>
+														<button type="submit" class="btn btn-success">Confirm</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+
+								<% } %>
+							</tbody>
+						</table>
+					</div>
+					<div
+						style="
+							background-color: rgb(252, 176, 38);
+							display: flex;
+							align-items: center;
+							height: 50px;
+							display: flex;
+							justify-content: space-between;
+						"
+					>
+						<div>
+							<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+							<img height="24px" src="/7z/content/images/df.png" />
+						</div>
+						<div style="margin-right: 20px; margin-bottom: 11px">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- escaped area -->
+		<!-- found-->
+		<div
+			class="modal fade"
+			id="found<%= a.id  %>"
+			data-backdrop="static"
+			data-keyboard="false"
+			tabindex="-1"
+			aria-labelledby="staticBackdropLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+						<h3 style="text-align: center; margin: 8px; color: black"><%= a.foundInAreaNumber %> Found in <%= a.areaName %></h3>
+					</div>
+					<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+						<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+							<thead>
+								<tr class="d-flex">
+									<th style="width: 50px">#</th>
+									<th style="width: 200px">Date/Time</th>
+									<th style="width: 130px">Build Number</th>
+									<th style="width: 150px">Model</th>
+									<th style="width: 150px">Failed At</th>
+									<th style="width: 170px">Failed By</th>
+									<th style="width: 170px">Fixed By</th>
+									<th style="width: 170px">Fault Area</th>
+									<th style="width: 170px">Fault Type</th>
+									<th style="width: 250px">Fault Detail</th>
+									<th style="width: 250px">Comments</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% let foundx = 0 %> <% for (let j of a.foundInAreaFaultsAll) { %> <% foundx++ %>
+								<tr class="d-flex">
+									<td style="width: 50px"><%= foundx %></td>
+									<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+									<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+									<td style="width: 150px"><%= j.Model %></td>
+									<td style="width: 150px"><%= j.Zone %></td>
+									<td style="width: 170px"><%= j['Created By'] %></td>
+									<td style="width: 170px"><%= j['Fixed By'] %></td>
+									<td style="width: 170px"><%= j['Fault Area'] %></td>
+									<td style="width: 170px"><%= j['Fault Code'] %></td>
+									<td style="width: 250px"><%= j['User Defined Test'] %></td>
+									<td style="width: 250px"><%= j.Comments %></td>
+								</tr>
+								<% } %>
+							</tbody>
+						</table>
+					</div>
+					<div
+						style="
+							background-color: rgb(252, 176, 38);
+							display: flex;
+							align-items: center;
+							height: 50px;
+							display: flex;
+							justify-content: space-between;
+						"
+					>
+						<div>
+							<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+							<img height="24px" src="/7z/content/images/df.png" />
+						</div>
+						<div style="margin-right: 20px; margin-bottom: 11px">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- end of modals -->
+		<div class="area-holder">
+			<div class="area-name" style="margin-bottom: 25px"><%= a.areaName %></div>
+
+			<div class="fixed-faults" data-toggle="modal" data-target="#found<%= a.id  %>" style="cursor: pointer">
+				<div>Found</div>
+			</div>
+			<div class="fixed-faults" data-toggle="modal" data-target="#found<%= a.id  %>" style="cursor: pointer; font-size: 45px">
+				<div><%= a.foundInAreaFaultsAllNumber%></div>
+			</div>
+			<div class="fixed-faults" data-toggle="modal" data-target="#myModal<%= a.id  %>" style="cursor: pointer">
+				<div>Escaped</div>
+				<!-- <a data-toggle="modal" href="#myModal<%= a.id  %>" class="btn btn-primary">Launch modal</a> -->
+			</div>
+			<div class="fixed-faults" data-toggle="modal" data-target="#myModal<%= a.id  %>" style="cursor: pointer; font-size: 45px">
+				<div><%= a.escapedAreaNumber%></div>
+			</div>
+			<hr />
+			<div class="fixed-faults">
+				<div>Eefficiency</div>
+			</div>
+			<div class="fixed-faults" style="font-size: 45px">
+				<div><%= a.escapedAreaDPU %>%</div>
+			</div>
+		</div>
+
+		<% } %>
+	</div>
+</section>
+
+<section style="display: flex; flex-direction: column; margin-top: 45px">
+	<h3 style="color: white">Average Efficiency <%= totalAverage %>%</h3>
+	<small>(Excluding Booms & Cabs)</small>
+</section>
+
+<div class="container-fluid footer">
+	<div class="row header-top">
+		<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+			<img height="24px" src="/7z/content/images/jcb-logo.png" />
+			<img height="24px" src="/7z/content/images/df.png" />
+		</div>
+		<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+	</div>
+</div>

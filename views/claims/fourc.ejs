@@ -1,0 +1,1917 @@
+<% layout('layouts/fourcboilerplate')%>
+<wrapper>
+
+  <side1>
+
+    <% if ( moment(claim.vettedAt).isAfter('2020-10-03')) { %>
+    <link rel="stylesheet" href="/stylesheets/fourc.css">
+
+
+
+
+    <!-- The  layout -->
+
+    <% if ( claim.abcd === 'A' || claim.abcd === 'B' ) { %>
+
+
+    <section class="dash-layout">
+
+      <div class="card card-c">
+        <div class="c">
+          <p>C1</p>
+        </div>
+        <div class="c-full">
+          <p>
+            Cause</p>
+        </div>
+        <div class="c-description">
+          <p>Description of the problem</p>
+        </div>
+
+
+      </div>
+
+
+      <div class="card card-wide">
+        <div class="machine-info">
+          <div class="machine-info-container">
+            <div style="max-width: 80%;">
+              <h3>Machine Details</h3>
+              <ul>
+                <% if ( claim.claimNumber === 'Internal Techweb') { %>
+                <li>Claim Number - <%= claim.claimNumber %></li>
+                <li>Model - <%= claim.model %></li>
+                <li>Build Number - <%= claim.buildNumber %></li>
+                <li>Narrative - <%= claim.description %></li>
+
+                <% if ((currentUser && !currentUser.isVetter) && (claim.division === 'BHL' || claim.division === 'SD' ||claim.division === 'EM' || claim.division === 'LP')){ %>
+                <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/reallocation/newFourC/<%= division %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+                <% } else { %>
+                <% if (claim.division === 'LDL') { %>
+                <% if (currentUser && currentUser.isVetter) { %>
+                <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+                <% } else { %>
+                <div></div>
+                <% } %>
+
+                <% } else { %>
+                <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+                <% } %>
+
+
+
+
+
+                <% } %>
+                <% } %>
+
+
+                <% if ( claim.claimNumber != 'Internal Techweb') { %>
+                <li>Claim Numbers - <%= claim.claimNumber %> <%- otherClaimNumbersHelp.length > 0 ? otherClaimNumbers: ''  %></li>
+                <li>Claim Grade - <%= claim.abcd %></li>
+                <li>Model - <%= claim.model %></li>
+                <li>T Period - <%= claim.tPeriod %></li>
+                <li>Serial Number - <%= claim.name %></li>
+                <li>Hours - <%= claim.hours %></li>
+                <li>Build Date - <%= claim.buildDate %></li>
+                <li>Dealer - <%= claim.dealer %></li>
+                <li>Country - <%= claim.country %></li>
+                <li>Failed part - <%= claim.failedPart %></li>
+                <li>Claim Cost - £<%= claim.cost %></li>
+                <li>Additional Information - <%= claim.notes %></li>
+                <li>Narrative - <%= claim.description %></li>
+              </ul>
+            </div>
+            <div>
+
+              <% if ((currentUser && !currentUser.isVetter) && (claim.division === 'BHL' || claim.division === 'SD' || claim.division === 'EM' || claim.division === 'LP')){ %>
+              <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/reallocation/newFourC/<%= division %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+              <% } else { %>
+              <% if (claim.division === 'LDL') { %>
+              <% if (currentUser && currentUser.isVetter) { %>
+              <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+              <% } else { %>
+              <div></div>
+              <% } %>
+
+              <% } else { %>
+              <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+              <% } %>
+              <% } %>
+              <% } %>
+
+
+              <% if (claim.area === 'Cabs Systems' || claim.division === 'Cabs') { %>
+              <div style="display: flex; flex-direction: column; width: fit-content;">
+                <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocateCabs/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Assign to Area</a>
+                <% if (claim.cabs) { %>
+                <h9 style="color: white; margin-top: 8px;">Assigned to <%= claim.cabs %></h9>
+                <% } %>
+              </div>
+              <% } %>
+
+
+
+
+
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
+      <div class="card card-c">
+        <div class="c">
+          <p>Images</p>
+          <% if (currentUser && currentUser.isVetter && claim.level === 'Major' ) { %>
+          <a class="btn btn-info" href="/doa25pt/image/<%= claim._id %>">Add Images</a>
+          <a class="btn btn-primary btn-sm float-left" style=" height: 1.9rem; margin-left: 49px; margin-top: 25px;" target="_blank" href="https://jdsportal.jcb.com/jds/web/eng/techweb/hd/hd_view_call.w?call_id=<%=  claim.claimNumber%>&show_call=ok">Go to Techweb</a>
+          <% } %>
+        </div>
+
+      </div>
+
+
+      <div class="card card-wide">
+        <div class="machine-info">
+          <div class="machine-info-container">
+
+            <div class="image-holder">
+              <% if ( claim.imagePath1 != null) { %>
+              <a href="<%= claim.imagePath1 %>" target="_blank">
+                <img class="claim-image" src="<%= claim.imagePath1 %>">
+              </a>
+              <% }; %>
+            </div>
+            <div class="image-holder">
+              <% if ( claim.imagePath2 != null) { %>
+              <a href="<%= claim.imagePath2 %>" target="_blank">
+                <img class="claim-image" src="<%= claim.imagePath2 %>">
+              </a>
+              <% }; %>
+            </div>
+            <div class="image-holder">
+              <% if ( claim.imagePath3 != null) { %>
+              <a href="<%= claim.imagePath3 %>" target="_blank">
+                <img class="claim-image" src="<%= claim.imagePath3 %>">
+              </a>
+              <% }; %>
+            </div>
+            <div class="image-holder">
+              <% if ( claim.imagePath4 != null) { %>
+              <a href="<%= claim.imagePath4 %>" target="_blank">
+                <img class="claim-image" src="<%= claim.imagePath4 %>">
+              </a>
+              <% }; %>
+            </div>
+            <div class="image-holder">
+              <% if ( claim.imagePath5 != null) { %>
+              <a href="<%= claim.imagePath5 %>" target="_blank">
+                <img class="claim-image" src="<%= claim.imagePath5 %>">
+              </a>
+              <% }; %>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-c">
+        <div class="c">
+          <p>C2</p>
+        </div>
+        <div class="c-full">
+          <p><span class="interim">Interim</span><br>
+            Containment</p>
+        </div>
+        <div class="c-description">
+          <p>What are the immediate actions taken to prevent a repeat issue?</p>
+        </div>
+      </div>
+
+      <div class="card card-wide">
+        <div class="c2-form-container">
+          <% if ( claim.status === 'Open') { %>
+          <form style="margin-left: 20px; margin-top: 20px;" action="/claims/contain/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label for="processVal">SOP Correct</label>
+                  <select class="form-control" type="text" name="claim[cSop]" value="<%= claim.cSop %>" required>
+                    <option hidden><%= claim.cSop%></option>
+                    <option>Yes</option>
+
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Process Validation Done</label>
+                  <select class="form-control" type="text" name="claim[pVal]" value="<%= claim.pVal %>" required>
+                    <option hidden><%= claim.pVal%></option>
+                    <option>Yes</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Skills Matrix Up To Date</label>
+                  <select class="form-control" type="text" name="claim[sMatrix]" value="<%= claim.sMatrix %>" required>
+                    <option hidden><%= claim.sMatrix%></option>
+                    <option>Yes</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Quality Alert Issued</label>
+                  <select class="form-control" type="text" name="claim[qAlert]" value="<%= claim.qAlert %>" required>
+                    <option hidden><%= claim.qAlert%></option>
+                    <option>Yes</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Yard/Stock Sweep Carried Out</label>
+                  <select class="form-control" type="text" name="Claim[ySweep]" value="<%= claim.ySweep %>" required>
+                    <option hidden><%= claim.ySweep%></option>
+                    <option>Yes</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="form-group">
+                  <label for="image">Upload SOPP</label>
+                  <input class="form-control" type="file" <% claim.image6 === null ? 'required': '' %> id="image6" name="image6" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Process Validation</label>
+                  <input class="form-control" type="file" <% claim.image7 === null ? 'required': '' %> id="image7" name="image7" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Skills Matrix</label>
+                  <input class="form-control" type="file" <% claim.image8 === null ? 'required': '' %> id="image8" name="image8" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Quality Alert</label>
+                  <input class="form-control" type="file" <% claim.image9 === null ? 'required': '' %> id="image9" name="image9" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Yard/Stock Sweep</label>
+                  <input class="form-control" type="file" <% claim.image10 === null ? 'required': '' %> id="image10" name="image10" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </div>
+
+
+
+              </div>
+
+
+
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Details Of Containment</label>
+                  <textarea style="height: 246px; width: 500px; " class="form-control" name="claim[containNotes]" required><%= claim.containNotes %></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="buildNumber">Containment Cut In Number</label>
+                  <input class="form-control" type="text" id="password" name="claim[containCutIn]" value="<%= claim.containCutIn %>" required>
+                </div>
+                <div class="form-group">
+                  <button class="btn btn-success btn-block btn-lg py-0">Contained</button>
+                </div>
+              </div>
+          </form>
+
+          <!-- <div class="col">
+                <form style="margin-left: 20px; margin-top: 20px;" action="/claims/<%= claim._id %>/containmentUpdate?_method=PUT" method="POST" enctype="multipart/form-data">
+    
+                <div class="form-group" style="margin-top: -20px">
+                  <label for="exampleFormControlTextarea1">Update 4C</label>
+                  <textarea style="height: 246px; width: 500px;" class="form-control" name="claim[containUpdate]" ><%= claim.containUpdate %> <%= claim.containUpdateBy %> - <%= moment(claim.containUpdateAt).format("DD/MM/YYYY - HH:mm") %></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <button class="btn btn-success btn-block btn-lg py-0">Save Update</button>
+                  </div>
+              </div>
+            </form>
+              -->
+
+
+
+
+          <% }; %>
+          <% if ( claim.status === 'Contained' || claim.status === 'Closed') { %>
+          <form style="margin-left: 20px; margin-top: 20px;" action="/claims/contain/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label for="processVal">SOP Correct</label>
+                  <select class="form-control" type="text" name="claim[cSop]" value="<%= claim.cSop %>" required disabled>
+                    <option hidden><%= claim.cSop%></option>
+                    <option>Yes</option>
+
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Process Validation Done</label>
+                  <select class="form-control" type="text" name="claim[pVal]" value="<%= claim.pVal %>" required disabled>
+                    <option hidden><%= claim.pVal%></option>
+                    <option>Yes</option>
+
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Skills Matrix Up To Date</label>
+                  <select class="form-control" type="text" name="claim[sMatrix]" value="<%= claim.sMatrix %>" required disabled>
+                    <option hidden><%= claim.sMatrix%></option>
+                    <option>Yes</option>
+
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Quality Alert Issued</label>
+                  <select class="form-control" type="text" name="claim[qAlert]" value="<%= claim.qAlert %>" required disabled>
+                    <option hidden><%= claim.qAlert%></option>
+                    <option>Yes</option>
+
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Yard/Stock Sweep Carried Out</label>
+                  <select class="form-control" type="text" name="claim[ySweep]" value="<%= claim.ySweep %>" required disabled>
+                    <option hidden><%= claim.ySweep%></option>
+                    <option>Yes</option>
+
+                  </select>
+                </div>
+              </div>
+
+              <div class="col">
+
+
+                <div class="form-group">
+                  <label for="image">Upload SOP</label>
+                  <input class="form-control" type="file" <% claim.image6 === null ? 'required': '' %> id="image6" name="image6" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled>
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Process Validation</label>
+                  <input class="form-control" type="file" <% claim.image7 === null ? 'required': '' %> id="image7" name="image7" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled>
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Skills Matrix</label>
+                  <input class="form-control" type="file" <% claim.image8 === null ? 'required': '' %> id="image8" name="image8" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled>
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Quality Alert</label>
+                  <input class="form-control" type="file" <% claim.image9 === null ? 'required': '' %> id="image9" name="image9" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled>
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Yard/Stock Sweep</label>
+                  <input class="form-control" type="file" <% claim.image10 === null ? 'required': '' %> id="image10" name="image10" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled>
+                </div>
+
+
+              </div>
+
+
+
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Details Of Containment</label>
+                  <textarea style="height: 295px; width: 500px; " class="form-control" name="claim[containNotes]" required disabled><%= claim.containNotes %></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="buildNumber">Containment Cut In Number</label>
+                  <input class="form-control" type="text" id="password" name="claim[containCutIn]" value="<%= claim.containCutIn %>" required disabled>
+                </div>
+              </div>
+          </form>
+
+
+
+
+
+          <% }; %>
+
+
+
+          <div style="font-size: 0.8rem; margin-left: -20px;">
+
+            <ul>
+              <% if ( claim.imagePath6 != null) { %>
+              <li>
+                <a href="<%= claim.imagePath6 %>" target="_blank">
+                  <p>SOP Download</p>
+                </a>
+              </li>
+              <% }; %>
+              <% if ( claim.imagePath7 != null) { %>
+              <li>
+                <a href="<%= claim.imagePath7 %>" target="_blank">
+                  <p>Process Val Download</p>
+                </a>
+              </li>
+              <% }; %>
+              <% if ( claim.imagePath8 != null) { %>
+              <li>
+                <a href="<%= claim.imagePath8 %>" target="_blank">
+                  <p>Skills Matrix Download</p>
+                </a>
+              </li>
+              <% }; %>
+              <% if ( claim.imagePath9 != null) { %>
+              <li>
+                <a href="<%= claim.imagePath9 %>" target="_blank">
+                  <p>Quality Alert Download</p>
+                </a>
+              </li>
+              <% }; %>
+              <% if ( claim.imagePath10 != null) { %>
+              <li>
+                <a href="<%= claim.imagePath10 %>" target="_blank">
+                  <p>Stock/Yard Sweep Download</p>
+                </a>
+              </li>
+              <% }; %>
+            </ul>
+
+          </div>
+        </div>
+      </div>
+
+
+      </div>
+
+      <div class="card card-c">
+        <h1 class="c">C3</h1>
+        <p class="c-full">
+          Countermeasure</p>
+        <div class="c-description">
+
+        </div>
+
+      </div>
+
+      <div class="card card-wide">
+        <div class="c2-form-container">
+
+          <% if ( claim.status === 'Contained' ) { %>
+
+          <form style="margin-left: 20px; margin-top: 20px;" action="/claims/counter/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Why did we have the failure?</label>
+                  <textarea style="height: 300px; width: 340px; " class="form-control" name="claim[counterWhyNotes]" required><%= claim.counterWhyNotes %></textarea>
+                </div>
+
+              </div>
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1"> What have has been done to prevent re-occurrence?</label>
+                  <textarea style="height: 300px; width: 390px; " class="form-control" name="claim[counterWhatNotes]" required><%= claim.counterWhatNotes %></textarea>
+                </div>
+
+              </div>
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Root Cause</label>
+                  <textarea style="height: 161px; width: 340px; " class="form-control" name="claim[rootCause]" required><%= claim.rootCause %></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="buildNumber">Closure Cut In Number</label>
+                  <input class="form-control" type="text" id="cutin" name="claim[closeCutIn]" value="<%= claim.closeCutIn %>" required>
+                </div>
+                <div class="form-group">
+                  <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                </div>
+
+              </div>
+
+            </div>
+
+        </div>
+        </form>
+
+        <% }; %>
+        <% if ( claim.status != 'Contained' ) { %>
+
+        <form style="margin-left: 20px; margin-top: 20px;" action="/claims/counter/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+          <div class="row">
+            <div class="col">
+
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Why did we have the failure?</label>
+                <textarea style="height: 300px; width: 340px; " class="form-control" name="claim[counterWhyNotes]" required disabled><%= claim.counterWhyNotes %></textarea>
+              </div>
+
+            </div>
+            <div class="col">
+
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1"> What have has been done to prevent re-occurrence?</label>
+                <textarea style="height: 300px; width: 390px; " class="form-control" name="claim[counterWhatNotes]" required disabled><%= claim.counterWhatNotes %></textarea>
+              </div>
+
+            </div>
+            <div class="col">
+
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Root Cause</label>
+                <textarea style="height: 300px; width: 340px; " class="form-control" name="claim[rootCause]" required disabled><%= claim.rootCause %></textarea>
+              </div>
+              <!-- <div class="form-group">
+                      <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                      </div> -->
+
+            </div>
+
+          </div>
+
+      </div>
+      </form>
+
+      <% }; %>
+
+      </div>
+
+      </div>
+
+      <div class="card card-c" style="margin-bottom: 25px;">
+        <div class="c">
+          <p>C4</p>
+        </div>
+        <div class="c-full">
+          <p>
+            Confirmation</p>
+        </div>
+
+      </div>
+
+      <div class="card card-wide">
+        <div class="c4-holder1">
+
+          <% if (claim.level === 'Major') { %>
+
+          <div class="c4-holder2">
+            <% if (currentUser && currentUser.isAdmin && claim.status === 'Closed')   { %>
+            <form style="margin-left: 20px; margin-top: 20px;" action="/claims/close/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <div class="row">
+
+
+                <div class="col">
+
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1"> Audit Notes</label>
+                    <textarea style="height: 162px; width: 900px; " class="form-control" name="claim[closeNotes]"><%= claim.closeNotes %></textarea>
+                  </div>
+                  <div class="form-group">
+                    <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <% } else { %>
+
+            <form style="margin-left: 20px; margin-top: 20px;" action="/claims/close<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <div class="row">
+
+
+
+                <div class="col">
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Audit Notes</label>
+                    <textarea style="height: 124px; width: 900px; " class="form-control" name="claim[closeNotes]" disabled><%= claim.closeNotes %></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">Closure Cut In Number</label>
+                    <input class="form-control" type="text" id="password" name="claim[closeCutIn]" value="<%= claim.closeCutIn %>" required disabled>
+                  </div>
+                  <!-- <div class="form-group">
+                          <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                          </div> -->
+                </div>
+              </div>
+            </form>
+
+            <% }; %>
+
+
+            <div style="margin-left: 3rem;">
+              <% if (currentUser && currentUser.isGroupAdmin)   { %>
+
+              <form action="/claims/nofourc/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-danger py-0 " style="margin-left: .5rem;"><i class="far fa-trash-alt"></i> Delete</button>
+              </form>
+              <% } %>
+              <% if (currentUser && currentUser.isAdmin)   { %>
+              <form action="/claims/reopen/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Re-Open 4C Keep Notes</button>
+              </form>
+              <form action="/claims/reopenClear/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Re-Open 4C Clear Notes</button>
+              </form>
+              <form action="/claims/recontain/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Back to Contained</button>
+              </form>
+              <% } %>
+            </div>
+          </div>
+
+          <% } else { %>
+
+          <div class="c4-holder2">
+            <% if (currentUser && currentUser.isAdmin && claim.status === 'Closed')   { %>
+            <form style="margin-left: 20px; margin-top: 20px;" action="/claims/close/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="processVal">Post Cut In Internal Failures</label>
+                    <select class="form-control" type="text" name="claim[qSmart]" value="<%= claim.qSmart %>" required>
+                      <option hidden><%= claim.qSmart%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Post Cut In Warranty Failures</label>
+                    <select class="form-control" type="text" name="claim[warranty]" value="<%= claim.warranty %>" required>
+                      <option hidden><%= claim.warranty%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Sign Off</label>
+                    <select class="form-control" type="text" name="claim[sOff]" value="<%= claim.sOff %>" required>
+                      <option hidden><%= claim.sOff%></option>
+                      <option>Operations</option>
+                      <option>Quality</option>
+                      <option>Design</option>
+                      <option>Man Eng</option>
+                    </select>
+                  </div>
+
+                </div>
+
+                <div class="col">
+
+                  <div class="form-group">
+                    
+                     
+                        <label for="exampleFormControlTextarea1"> Audit Passed</label>
+                        <select class="form-control" type="text" name="claim[auditPassed]" value="<%= claim.auditPassed %>" autocomplete="off" required>
+                          <option hidden><%= claim.auditPassed %></option>
+                          <option>Yes</option>
+                          <option>No</option>
+                        </select>
+                      
+                    
+                    <label for="exampleFormControlTextarea1">Notes</label>
+                    <textarea style="height: 93px; width: 500px; " class="form-control" name="claim[closeNotes]"><%= claim.closeNotes %></textarea>
+                  </div>
+                  <div class="form-group">
+                    <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <% } else { %>
+
+            <form style="margin-left: 20px; margin-top: 20px;" action="/claims/close<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="processVal">Post Cut In Internal Failures</label>
+                    <select class="form-control" type="text" name="claim[qSmart]" value="<%= claim.qSmart %>" required disabled>
+                      <option hidden><%= claim.qSmart%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Post Cut In Warranty Failures</label>
+                    <select class="form-control" type="text" name="claim[warranty]" value="<%= claim.warranty %>" required disabled>
+                      <option hidden><%= claim.warranty%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Sign Off</label>
+                    <select class="form-control" type="text" name="claim[sOff]" value="<%= claim.sOff %>" required disabled>
+                      <option hidden><%= claim.sOff%></option>
+                      <option>Operations</option>
+                      <option>Quality</option>
+                      <option>Design</option>
+                      <option>Man Eng</option>
+                    </select>
+                  </div>
+
+                </div>
+
+                <div class="col">
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Notes</label>
+                    <textarea style="height: 124px; width: 500px; " class="form-control" name="claim[closeNotes]" disabled><%= claim.closeNotes %></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">Closure Cut In Number</label>
+                    <input class="form-control" type="text" id="password" name="claim[closeCutIn]" value="<%= claim.closeCutIn %>" required disabled>
+                  </div>
+                  <!-- <div class="form-group">
+                          <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                          </div> -->
+                </div>
+              </div>
+            </form>
+
+            <% }; %>
+
+
+            <div style="margin-left: 3rem;">
+              <% if (currentUser && currentUser.isAdmin)   { %>
+
+              <form action="/claims/nofourc/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-danger py-0 " style="margin-left: .5rem;"><i class="far fa-trash-alt"></i> Delete</button>
+              </form>
+              <% } %>
+              <% if (currentUser && currentUser.isAdmin)   { %>
+              <form action="/claims/reopen/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Re-Open 4C Keep Notes</button>
+              </form>
+              <form action="/claims/reopenClear/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Re-Open 4C Clear Notes</button>
+              </form>
+              <form action="/claims/recontain/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Back to Contained</button>
+              </form>
+              <% } %>
+            </div>
+          </div>
+
+          <% } %>
+
+
+
+
+
+        </div>
+      </div>
+
+
+
+    </section>
+    <% }; %>
+
+    <% if ( claim.abcd === 'C' || claim.abcd === 'D' ) { %>
+
+
+    <section class="dash-layout">
+
+      <div class="card card-c">
+        <div class="c">
+          <p>C1</p>
+        </div>
+        <div class="c-full">
+          <p>
+            Cause</p>
+        </div>
+        <div class="c-description">
+          <p>Description of the problem</p>
+        </div>
+
+
+      </div>
+
+
+      <div class="card card-wide">
+        <div class="machine-info">
+          <div class="machine-info-container">
+            <div style="max-width: 80%;">
+              <h3>Machine Details</h3>
+              <ul>
+                <% if ( claim.claimNumber === 'Internal Techweb') { %>
+                <li>Claim Number - <%= claim.claimNumber %></li>
+                <li>Model - <%= claim.model %></li>
+                <li>Build Number - <%= claim.buildNumber %></li>
+                <li>Narrative - <%= claim.description %></li>
+                <a class="btn btn-primary btn-sm" style="margin-top: 2.5rem; height: 1.9rem" target="_blank" href="https://internal.jcb.local/BuildLookup/?searchTerm=<%= claim.buildNumber %>&searchCategory=BUILD">Go to BQT</a>
+                <% if (currentUser &&  "5f7ed8347f39c7b0887a39b3" === currentUser._id.toString()) { %>
+                <a class="btn btn-danger btn-sm " style="margin-top: 2.5rem; margin-left: 20px; height: 1.9rem" target="_blank" href="/claims/closemark/<%= claim._id %>/<%= currentUser._id  %>">MN Close</a>
+                <% } %>
+                <% if ((currentUser && !currentUser.isVetter) && (claim.division === 'BHL' || claim.division === 'SD' || claim.division === 'EM' || claim.division === 'LP')){ %>
+                <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/reallocation/newFourC/<%= division %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+                <% } else { %>
+                <% if (claim.division === 'LDL') { %>
+                <% if (currentUser && currentUser.isVetter) { %>
+                <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+                <% } else { %>
+                <div></div>
+                <% } %>
+
+                <% } else { %>
+                <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+                <% } %>
+                <% } %>
+                <% } %>
+
+                <% if ( claim.claimNumber != 'Internal Techweb') { %>
+                <li>Claim Numbers - <%= claim.claimNumber %> <%- otherClaimNumbersHelp.length > 0 ? otherClaimNumbers : ''  %></li>
+                <li>Claim Grade - <%= claim.abcd %></li>
+                <li>Model - <%= claim.model %></li>
+                <li>T Period - <%= claim.tPeriod %></li>
+                <li>Serial Number - <%= claim.name %></li>
+                <li>Hours - <%= claim.hours %></li>
+                <li>Build Date - <%= claim.buildDate %></li>
+                <li>Dealer - <%= claim.dealer %></li>
+                <li>Country - <%= claim.country %></li>
+                <li>Failed part - <%= claim.failedPart %></li>
+                <li>Claim Cost - £<%= claim.cost %></li>
+                <li>Additional Information - <%= claim.notes %></li>
+                <li>Narrative - <%= claim.description %></li>
+              </ul>
+            </div>
+            <div>
+              <a class="btn btn-primary btn-sm" style="margin-top: 2.5rem; height: 1.9rem" target="_blank" href="https://internal.jcb.local/BuildLookup/?searchTerm=<%= claim.name %>&searchCategory=SERIALNUMBER">Go to BQT</a>
+              <% if (currentUser &&  "5f7ed8347f39c7b0887a39b3" === currentUser._id.toString()) { %>
+              <a class="btn btn-danger btn-sm " style="margin-top: 2.5rem; margin-left: 20px; height: 1.9rem" target="_blank" href="/claims/closemark/<%= claim._id %>/<%= currentUser._id  %>">MN Close</a>
+              <% } %>
+
+
+              <% if ((currentUser && !currentUser.isVetter) && (claim.division === 'BHL' || claim.division === 'SD' || claim.division === 'EM' || claim.division === 'LP')){ %>
+              <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/reallocation/newFourC/<%= division %>"><i class="fas fa-exchange-alt"></i> Reallocate 22 4C</a>
+              <% } else { %>
+              <% if (claim.division === 'LDL') { %>
+              <% if (currentUser && currentUser.isVetter) { %>
+              <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+              <% } else { %>
+              <div></div>
+              <% } %>
+
+              <% } else { %>
+              <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate  4C</a>
+              <% } %>
+              <% } %>
+              <% } %>
+
+
+
+              <% if (claim.area === 'Cabs Systems' || claim.division === 'Cabs') { %>
+              <div style="display: flex; flex-direction: column; width: fit-content;">
+                <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocateCabs/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Assign to Area</a>
+                <% if (claim.cabs) { %>
+                <h9 style="color: white; margin-top: 8px;">Assigned to <%= claim.cabs %></h9>
+                <% } %>
+              </div>
+              <% } %>
+
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
+      <div class="card card-c">
+        <div class="c">
+          <p>Images</p>
+          <% if (currentUser && currentUser.isVetter && claim.level === 'Major' ) { %>
+          <a class="btn btn-info" href="/doa25pt/image/<%= claim._id %>">Add Images</a>
+          <a class="btn btn-primary btn-sm float-left" style=" height: 1.9rem; margin-left: 49px; margin-top: 25px;" target="_blank" href="https://jdsportal.jcb.com/jds/web/eng/techweb/hd/hd_view_call.w?call_id=<%=  claim.claimNumber%>&show_call=ok">Go to Techweb</a>
+          <% } %>
+        </div>
+
+      </div>
+
+
+      <div class="card card-wide">
+        <div class="machine-info">
+          <div class="machine-info-container">
+
+            <div class="image-holder">
+              <% if ( claim.imagePath1 != null) { %>
+              <a href="<%= claim.imagePath1 %>" target="_blank">
+                <img class="claim-image" src="<%= claim.imagePath1 %>">
+              </a>
+              <% }; %>
+            </div>
+            <div class="image-holder">
+              <% if ( claim.imagePath2 != null) { %>
+              <a href="<%= claim.imagePath2 %>" target="_blank">
+                <img class="claim-image" src="<%= claim.imagePath2 %>">
+              </a>
+              <% }; %>
+            </div>
+            <div class="image-holder">
+              <% if ( claim.imagePath3 != null) { %>
+              <a href="<%= claim.imagePath3 %>" target="_blank">
+                <img class="claim-image" src="<%= claim.imagePath3 %>">
+              </a>
+              <% }; %>
+            </div>
+            <div class="image-holder">
+              <% if ( claim.imagePath4 != null) { %>
+              <a href="<%= claim.imagePath4 %>" target="_blank">
+                <img class="claim-image" src="<%= claim.imagePath4 %>">
+              </a>
+              <% }; %>
+            </div>
+            <div class="image-holder">
+              <% if ( claim.imagePath5 != null) { %>
+              <a href="<%= claim.imagePath5 %>" target="_blank">
+                <img class="claim-image" src="<%= claim.imagePath5 %>">
+              </a>
+              <% }; %>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-c">
+        <div class="c">
+          <p>C2</p>
+        </div>
+        <div class="c-full">
+          <p><span class="interim">Interim</span><br>
+            Containment</p>
+        </div>
+        <div class="c-description">
+          <p>What are the immediate actions taken to prevent a repeat issue?</p>
+        </div>
+      </div>
+
+      <div class="card card-wide">
+        <div class="c2-form-container">
+          <% if ( claim.status === 'Open') { %>
+          <form style="margin-left: 20px; margin-top: 20px;" action="/claims/contain/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label for="processVal">SOP Correct</label>
+                  <select class="form-control" type="text" name="claim[cSop]" value="<%= claim.cSop %>" required>
+                    <option hidden><%= claim.cSop%></option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>N/A</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Process Validation Done</label>
+                  <select class="form-control" type="text" name="claim[pVal]" value="<%= claim.pVal %>" required>
+                    <option hidden><%= claim.pVal%></option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>N/A</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Skills Matrix Up To Date</label>
+                  <select class="form-control" type="text" name="claim[sMatrix]" value="<%= claim.sMatrix %>" required>
+                    <option hidden><%= claim.sMatrix%></option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>N/A</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Quality Alert Issued</label>
+                  <select class="form-control" type="text" name="claim[qAlert]" value="<%= claim.qAlert %>" required>
+                    <option hidden><%= claim.qAlert%></option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>N/A</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Yard/Stock Sweep Carried Out</label>
+                  <select class="form-control" type="text" name="claim[ySweep]" value="<%= claim.ySweep %>" required>
+                    <option hidden><%= claim.ySweep%></option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>N/A</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="form-group">
+                  <label for="image">Upload SOP</label>
+                  <input class="form-control" type="file" id="image6" name="image6" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Process Validation</label>
+                  <input class="form-control" type="file" id="image7" name="image7" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Skills Matrix</label>
+                  <input class="form-control" type="file" id="image8" name="image8" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Quality Alert</label>
+                  <input class="form-control" type="file" id="image9" name="image9" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Yard/Stock Sweep</label>
+                  <input class="form-control" type="file" id="image10" name="image10" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </div>
+
+
+              </div>
+
+
+
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Details Of Containment</label>
+                  <textarea style="height: 246px; width: 500px; " class="form-control" name="claim[containNotes]" required><%= claim.containNotes %></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="buildNumber">Containment Cut In Number</label>
+                  <input class="form-control" type="text" id="password" name="claim[containCutIn]" value="<%= claim.containCutIn %>" required>
+                </div>
+                <div class="form-group">
+                  <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                </div>
+              </div>
+          </form>
+
+          <!-- <div class="col">
+                <form style="margin-left: 20px; margin-top: 20px;" action="/claims/containupdate<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+    
+                <div class="form-group" style="margin-top: -20px">
+                  <label for="exampleFormControlTextarea1">Update 4C</label>
+                  <textarea style="height: 246px; width: 500px;" class="form-control" name="claim[containUpdate]" required ><%= claim.containUpdate %> <%= claim.containUpdateBy %> - <%= moment(claim.containUpdateAt).format("DD/MM/YYYY - HH:mm") %></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <button class="btn btn-success btn-block btn-lg py-0">Save Update</button>
+                  </div>
+              </div>
+            </form> -->
+
+
+
+
+          <% }; %>
+          <% if ( claim.status === 'Contained' || claim.status === 'Closed') { %>
+          <form style="margin-left: 20px; margin-top: 20px;" action="/claims/contain/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label for="processVal">SOP Correct</label>
+                  <select class="form-control" type="text" name="claim[cSop]" value="<%= claim.cSop %>" required disabled>
+                    <option hidden><%= claim.cSop%></option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>N/A</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Process Validation Done</label>
+                  <select class="form-control" type="text" name="claim[pVal]" value="<%= claim.pVal %>" required disabled>
+                    <option hidden><%= claim.pVal%></option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>N/A</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Skills Matrix Up To Date</label>
+                  <select class="form-control" type="text" name="claim[sMatrix]" value="<%= claim.sMatrix %>" required disabled>
+                    <option hidden><%= claim.sMatrix%></option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>N/A</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Quality Alert Issued</label>
+                  <select class="form-control" type="text" name="claim[qAlert]" value="<%= claim.qAlert %>" required disabled>
+                    <option hidden><%= claim.qAlert%></option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>N/A</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="processVal">Yard/Stock Sweep Carried Out</label>
+                  <select class="form-control" type="text" name="claim[ySweep]" value="<%= claim.ySweep %>" required disabled>
+                    <option hidden><%= claim.ySweep%></option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>N/A</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="form-group">
+                  <label for="image">Upload SOP</label>
+                  <input class="form-control" type="file" <% claim.image6 === null ? 'required': '' %> id="image6" name="image6" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled>
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Process Validation</label>
+                  <input class="form-control" type="file" <% claim.image7 === null ? 'required': '' %> id="image7" name="image7" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled>
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Skills Matrix</label>
+                  <input class="form-control" type="file" <% claim.image8 === null ? 'required': '' %> id="image8" name="image8" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled>
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Quality Alert</label>
+                  <input class="form-control" type="file" <% claim.image9 === null ? 'required': '' %> id="image9" name="image9" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled>
+                </div>
+                <div class="form-group">
+                  <label for="image">Upload Yard/Stock Sweep</label>
+                  <input class="form-control" type="file" <% claim.image10 === null ? 'required': '' %> id="image10" name="image10" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled>
+                </div>
+
+
+              </div>
+
+
+
+
+
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Details Of Containment</label>
+                  <textarea style="height: 295px; width: 500px; " class="form-control" name="claim[containNotes]" required disabled><%= claim.containNotes %></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="buildNumber">Containment Cut In Number</label>
+                  <input class="form-control" type="text" id="password" name="claim[containCutIn]" value="<%= claim.containCutIn %>" required disabled>
+                </div>
+                <!-- <div class="form-group">
+                      <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                      </div> -->
+              </div>
+          </form>
+
+
+
+          <!-- <div class="col">
+                <form style="margin-left: 20px; margin-top: 20px;" action="/claims/containupdate<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+    
+                <div class="form-group" style="margin-top: -20px">
+                  <label for="exampleFormControlTextarea1">Update 4C</label>
+                  <textarea style="height: 246px; width: 500px;" class="form-control" name="claim[containUpdate]" disabled ><%= claim.containUpdate %> <%= claim.containUpdateBy %> - <%= moment(claim.containUpdateAt).format("DD/MM/YYYY - HH:mm") %></textarea>
+                </div>
+                
+                
+              </div>
+            </form> -->
+
+          <% }; %>
+
+
+
+          <div style="font-size: 0.8rem; margin-left: -20px;">
+
+            <ul>
+              <% if ( claim.imagePath6 != null) { %>
+              <li>
+                <a href="<%= claim.imagePath6 %>" target="_blank">
+                  <p>SOP Download</p>
+                </a>
+              </li>
+              <% }; %>
+              <% if ( claim.imagePath7 != null) { %>
+              <li>
+                <a href="<%= claim.imagePath7 %>" target="_blank">
+                  <p>Process Val Download</p>
+                </a>
+              </li>
+              <% }; %>
+              <% if ( claim.imagePath8 != null) { %>
+              <li>
+                <a href="<%= claim.imagePath8 %>" target="_blank">
+                  <p>Skills Matrix Download</p>
+                </a>
+              </li>
+              <% }; %>
+              <% if ( claim.imagePath9 != null) { %>
+              <li>
+                <a href="<%= claim.imagePath9 %>" target="_blank">
+                  <p>Quality Alert Download</p>
+                </a>
+              </li>
+              <% }; %>
+              <% if ( claim.imagePath10 != null) { %>
+              <li>
+                <a href="<%= claim.imagePath10 %>" target="_blank">
+                  <p>Stock/Yard Sweep Download</p>
+                </a>
+              </li>
+              <% }; %>
+            </ul>
+
+          </div>
+        </div>
+      </div>
+
+
+      </div>
+
+      <div class="card card-c">
+        <h1 class="c">C3</h1>
+        <p class="c-full">
+          Countermeasure</p>
+        <div class="c-description">
+
+        </div>
+
+      </div>
+
+      <div class="card card-wide">
+        <div class="c2-form-container">
+
+          <% if ( claim.status === 'Contained' ) { %>
+
+          <form style="margin-left: 20px; margin-top: 20px;" action="/claims/counter/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Why did we have the failure?</label>
+                  <textarea style="height: 300px; width: 340px; " class="form-control" name="claim[counterWhyNotes]" required><%= claim.counterWhyNotes %></textarea>
+                </div>
+
+              </div>
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1"> What have has been done to prevent re-occurrence?</label>
+                  <textarea style="height: 300px; width: 390px; " class="form-control" name="claim[counterWhatNotes]" required><%= claim.counterWhatNotes %></textarea>
+                </div>
+
+              </div>
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Root Cause</label>
+                  <textarea style="height: 161px; width: 340px; " class="form-control" name="claim[rootCause]" required><%= claim.rootCause %></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="buildNumber">Closure Cut In Number</label>
+                  <input class="form-control" type="text" id="password" name="claim[closeCutIn]" value="<%= claim.closeCutIn %>" required>
+                </div>
+                <div class="form-group">
+                  <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                </div>
+
+              </div>
+
+            </div>
+
+        </div>
+        </form>
+
+        <% }; %>
+        <% if ( claim.status != 'Contained' ) { %>
+
+        <form style="margin-left: 20px; margin-top: 20px;" action="/claims/counter/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+          <div class="row">
+            <div class="col">
+
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Why did we have the failure?</label>
+                <textarea style="height: 300px; width: 340px; " class="form-control" name="claim[counterWhyNotes]" required disabled><%= claim.counterWhyNotes %></textarea>
+              </div>
+
+            </div>
+            <div class="col">
+
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1"> What have has been done to prevent re-occurrence?</label>
+                <textarea style="height: 300px; width: 390px; " class="form-control" name="claim[counterWhatNotes]" required disabled><%= claim.counterWhatNotes %></textarea>
+              </div>
+
+            </div>
+            <div class="col">
+
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Root Cause</label>
+                <textarea style="height: 300px; width: 340px; " class="form-control" name="claim[rootCause]" required disabled><%= claim.rootCause %></textarea>
+              </div>
+              <!-- <div class="form-group">
+                      <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                      </div> -->
+
+            </div>
+
+          </div>
+
+      </div>
+      </form>
+
+      <% }; %>
+
+      </div>
+
+      </div>
+
+      <div class="card card-c" style="margin-bottom: 25px;">
+        <div class="c">
+          <p>C4</p>
+        </div>
+        <div class="c-full">
+          <p>
+            Confirmation</p>
+        </div>
+
+      </div>
+
+      <div class="card card-wide">
+        <div class="c4-holder1">
+
+          <% if (claim.level === 'Major') { %>
+
+          <div class="c4-holder2">
+            <% if (currentUser && currentUser.isAdmin && claim.status === 'Closed')   { %>
+            <form style="margin-left: 20px; margin-top: 20px;" action="/claims/close/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <div class="row">
+               
+                <div class="col">
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1"> Audit Passed</label>
+                    <select class="form-control" type="text" name="claim[auditPassed]" value="<%= claim.auditPassed %>" autocomplete="off" required>
+                      <option hidden><%= claim.auditPassed %></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col">
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1"> Audit Notes</label>
+                    <textarea style="height: 162px; width: 700px; " class="form-control" name="claim[closeNotes]"><%= claim.closeNotes %></textarea>
+                  </div>
+                  <div class="form-group">
+                    <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <% } else { %>
+
+            <form style="margin-left: 20px; margin-top: 20px;" action="/claims/close<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <div class="row">
+                <!-- <div class="col">
+                        <div class="form-group">
+                          <label for="processVal">Post Cut In Internal Failures</label>
+                          <select class="form-control" type="text"   name="claim[qSmart]"  value="<%= claim.qSmart %>"required disabled>
+                            <option hidden ><%= claim.qSmart%></option>
+                            <option>Yes</option>
+                            <option>No</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="processVal">Post Cut In Warranty Failures</label>
+                          <select class="form-control" type="text"  name="claim[warranty]"  value="<%= claim.warranty %>"required disabled>
+                            <option hidden ><%= claim.warranty%></option>
+                            <option>Yes</option>
+                            <option>No</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="processVal">Sign Off</label>
+                          <select class="form-control" type="text"  name="claim[sOff]"  value="<%= claim.sOff %>"required disabled>
+                            <option hidden ><%= claim.sOff%></option>
+                            <option>Operations</option>
+                            <option>Quality</option>
+                            <option>Design</option>
+                            <option>Man Eng</option>
+                          </select>
+                        </div>
+    
+                      </div> -->
+
+                <div class="col">
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Audit Notes</label>
+                    <textarea style="height: 124px; width: 900px; " class="form-control" name="claim[closeNotes]" disabled><%= claim.closeNotes %></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">Closure Cut In Number</label>
+                    <input class="form-control" type="text" id="password" name="claim[closeCutIn]" value="<%= claim.closeCutIn %>" required disabled>
+                  </div>
+                  <!-- <div class="form-group">
+                          <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                          </div> -->
+                </div>
+              </div>
+            </form>
+
+            <% }; %>
+
+
+            <div style="margin-left: 3rem;">
+              <% if (currentUser && currentUser.isGroupAdmin)   { %>
+
+              <form action="/claims/nofourc/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-danger py-0 " style="margin-left: .5rem;"><i class="far fa-trash-alt"></i> Delete</button>
+              </form>
+              <% } %>
+              <% if (currentUser && currentUser.isAdmin)   { %>
+              <form action="/claims/reopen/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Re-Open 4C Keep Notes</button>
+              </form>
+              <form action="/claims/reopenClear/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Re-Open 4C Clear Notes</button>
+              </form>
+              <form action="/claims/recontain/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Back to Contained</button>
+              </form>
+              <% } %>
+            </div>
+          </div>
+
+          <% } else { %>
+
+          <div class="c4-holder2">
+            <% if (currentUser && currentUser.isAdmin && claim.status === 'Closed')   { %>
+            <form style="margin-left: 20px; margin-top: 20px;" action="/claims/close/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="processVal">Post Cut In Internal Failures</label>
+                    <select class="form-control" type="text" name="claim[qSmart]" value="<%= claim.qSmart %>" required>
+                      <option hidden><%= claim.qSmart%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Post Cut In Warranty Failures</label>
+                    <select class="form-control" type="text" name="claim[warranty]" value="<%= claim.warranty %>" required>
+                      <option hidden><%= claim.warranty%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Sign Off</label>
+                    <select class="form-control" type="text" name="claim[sOff]" value="<%= claim.sOff %>" required>
+                      <option hidden><%= claim.sOff%></option>
+                      <option>Operations</option>
+                      <option>Quality</option>
+                      <option>Design</option>
+                      <option>Man Eng</option>
+                    </select>
+                  </div>
+
+                </div>
+
+                <div class="col">
+
+                  <div class="form-group">
+                    
+                    <label for="exampleFormControlTextarea1"> Audit Passed</label>
+                    
+                    <select class="form-control" type="text" name="claim[auditPassed]" value="<%= claim.auditPassed %>" autocomplete="off">
+                      <option hidden><%= claim.auditPassed %></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                    <label for="exampleFormControlTextarea1">Notes</label>
+                    <textarea style="height: 93px; width: 500px; " class="form-control" name="claim[closeNotes]"><%= claim.closeNotes %></textarea>
+                  </div>
+                  <div class="form-group">
+                    <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <% } else { %>
+
+            <form style="margin-left: 20px; margin-top: 20px;" action="/claims/close<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="processVal">Post Cut In Internal Failures</label>
+                    <select class="form-control" type="text" name="claim[qSmart]" value="<%= claim.qSmart %>" required disabled>
+                      <option hidden><%= claim.qSmart%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Post Cut In Warranty Failures</label>
+                    <select class="form-control" type="text" name="claim[warranty]" value="<%= claim.warranty %>" required disabled>
+                      <option hidden><%= claim.warranty%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Sign Off</label>
+                    <select class="form-control" type="text" name="claim[sOff]" value="<%= claim.sOff %>" required disabled>
+                      <option hidden><%= claim.sOff%></option>
+                      <option>Operations</option>
+                      <option>Quality</option>
+                      <option>Design</option>
+                      <option>Man Eng</option>
+                    </select>
+                  </div>
+
+                </div>
+
+                <div class="col">
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Notes</label>
+                    <textarea style="height: 124px; width: 500px; " class="form-control" name="claim[closeNotes]" disabled><%= claim.closeNotes %></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">Closure Cut In Number</label>
+                    <input class="form-control" type="text" id="password" name="claim[closeCutIn]" value="<%= claim.closeCutIn %>" required disabled>
+                  </div>
+                  <!-- <div class="form-group">
+                          <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                          </div> -->
+                </div>
+              </div>
+            </form>
+
+            <% }; %>
+
+
+            <div style="margin-left: 3rem;">
+              <% if (currentUser && currentUser.isAdmin)   { %>
+
+              <form action="/claims/nofourc/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-danger py-0 " style="margin-left: .5rem;"><i class="far fa-trash-alt"></i> Delete</button>
+              </form>
+              <% } %>
+              <% if (currentUser && currentUser.isAdmin)   { %>
+              <form action="/claims/reopen/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Re-Open 4C Keep Notes</button>
+              </form>
+              <form action="/claims/reopenClear/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Re-Open 4C Clear Notes</button>
+              </form>
+              <form action="/claims/recontain/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Back to Contained</button>
+              </form>
+              <% } %>
+            </div>
+          </div>
+
+          <% } %>
+
+
+
+
+
+        </div>
+      </div>
+
+
+
+    </section>
+    <% }; %>
+
+    <% } else { %>
+
+
+
+
+    <div class="container">
+
+
+      <div class="row">
+        <div class="col-md-3">
+
+          <div class="list-group mb-3">
+            <div class="card text-white bg-secondary mb-3" style="width: 300px; margin-left: -50px;">
+              <div class="card-header" style="font-weight: bold;">
+                <h3>Machine Details</h3>
+              </div>
+              <div class="card-body">
+                <div class="card-title">
+                  <div>
+                    <% if ( claim.claimNumber === 'Internal Techweb') { %>
+                    <h5>Claim Number - <%= claim.claimNumber %></h5>
+                    <hr>
+                    <h5>Model - <%= claim.model %></h5>
+                    <hr>
+                    <h5>Build Number - <%= claim.buildNumber %></h5>
+                    <hr>
+                    <a class="btn btn-primary btn-lg btn-block" style="margin-bottom: 1rem;" target="_blank" href="https://internal.jcb.local/BuildLookup/?searchTerm=<%= claim.buildNumber %>&searchCategory=BUILD">Go to Machine Details</a>
+                    <% }; %>
+
+                    <% if ( claim.claimNumber != 'Internal Techweb') { %>
+                    <h5>Claim Number - <%= claim.claimNumber %></h5>
+                    <hr>
+                    <h5>T Period - <%= claim.tPeriod %></h5>
+                    <hr>
+                    <h5>Serial Number - <%= claim.name %></h5>
+                    <hr>
+                    <h5>Hours - <%= claim.hours %></h5>
+                    <hr>
+                    <h5>Model - <%= claim.model %></h5>
+                    <hr>
+                    <h5>Build Date - <%= claim.buildDate %></h5>
+                    <hr>
+                    <h5>Dealer - <%= claim.dealer %></h5>
+                    <hr>
+                    <h5>Country - <%= claim.country %></h5>
+                    <hr>
+                    <h5>Failed part - <%= claim.failedPart %></h5>
+                    <hr>
+                    <h5>Claim Cost - £<%= claim.cost %></h5>
+                    <hr>
+                    <a class="btn btn-primary btn-lg btn-block" style="margin-bottom: 1rem;" target="_blank" href="https://internal.jcb.local/BuildLookup/?searchTerm=<%= claim.name %>&searchCategory=SERIALNUMBER">Go to Machine Details</a>
+                    <% }; %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-9">
+
+          <div class="card mb-3">
+            <img class="outline" height="400px" src="<%= claim.imagePath1 %>">
+            <% if ( claim.imagePath2 != null) { %>
+            <img class="outline" height="400px" src="<%= claim.imagePath2 %>">
+            <% }; %>
+            <% if ( claim.imagePath3 != null) { %>
+            <img class="outline" height="400px" src="<%= claim.imagePath3 %>">
+            <% }; %>
+            <% if ( claim.imagePath4 != null) { %>
+            <img class="outline" height="400px" src="<%= claim.imagePath4 %>">
+            <% }; %>
+            <% if ( claim.imagePath5 != null) { %>
+            <img class="outline" height="400px" src="<%= claim.imagePath5 %>">
+            <% }; %>
+            <div class="card-body">
+              <!-- claim info -->
+              <div class="card-text">
+                <!-- this uses 'moment' to determine how long it has been since the comment was made -->
+                <p><em>Issued by <%= claim.vettedBy %>, <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+                <% if ( claim.reOpenedBy != null) { %>
+                <p><em>Re-Opened by <%= claim.reOpenedBy %> <%= moment(claim.reOpenedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+                <% }; %>
+                <% if ( claim.reallocatedBy != null) { %>
+                <p><em>Reallocated to <%= claim.area %> by <%= claim.reallocatedBy %> <%= moment(claim.reallocatedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+                <% }; %>
+                <p class="d-inline">
+                  <% if ( claim.containedBy != null ) { %>
+                  <em>
+                    <p class="card-text">Contained by <%= claim.containedBy %> <%= moment(claim.containedAt).format("DD/MM/YYYY - HH:mm") %>
+                  </em> -
+                  Cut in <%= claim.containCutIn %>
+                </p>
+                <% }; %>
+                <% if ( claim.status === 'Closed') { %>
+                <em>
+                  <p class="card-text"><%= claim.status %> by <%= claim.closedBy %> <%= moment(claim.closedAt).format("DD/MM/YYYY - HH:mm") %>
+                </em>
+                Cut in <%= claim.closeCutIn %></p>
+                <% }; %>
+                </p>
+              </div>
+              <hr>
+              <p class="card-text"><%= claim.description %></p>
+              <div>
+                <h4><strong>Additional Information</strong></h4>
+                <p><%= claim.notes %></p>
+              </div>
+              <!-- edit claim button -->
+
+
+              <% if ((currentUser && !currentUser.isVetter) && (claim.division === 'BHL' || claim.division === 'SD' || claim.division === 'EM' || claim.division === 'LP')){ %>
+              <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/reallocation/newFourC/<%= division %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+              <% } else { %>
+              <% if (claim.division === 'LDL') { %>
+              <% if (currentUser && currentUser.isVetter) { %>
+              <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+              <% } else { %>
+              <div></div>
+              <% } %>
+
+              <% } else { %>
+              <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+              <% } %>
+              <% } %>
+
+
+              <% if (claim.area === 'Cabs Systems' || claim.division === 'Cabs') { %>
+              <div style="display: flex; flex-direction: column; width: fit-content;">
+                <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocateCabs/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Assign to Area</a>
+                <% if (claim.cabs) { %>
+                <h9 style="color: white; margin-top: 8px;">Assigned to <%= claim.cabs %></h9>
+                <% } %>
+              </div>
+              <% } %>
+
+
+
+              <!-- checks if user is logged in and if it is also the author of the current claim -->
+              <% if ( currentUser )   { %>
+
+              <form action="/claims/nofourc/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-danger py-0 float-right" style="margin-left: .5rem;"><i class="far fa-trash-alt"></i> Delete</button>
+              </form>
+              <form action="/claims/reopen/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 float-right" style="margin-left: .5rem;"><i class="fas fa-redo-alt"></i> Re-Open 4C Keep Notes</button>
+              </form>
+              <form action="/claims/reopenClear/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Re-Open 4C Clear Notes</button>
+              </form>
+              <% } %>
+              <% if (currentUser )   { %>
+              <!-- edit 4c button -->
+              <a class="btn btn-warning py-0 float-right" href="/claims/<%= claim._id %>/editclaim"><i class="fas fa-pencil-alt"></i> Edit</a>
+              <!-- audit 4c button -->
+              <% } %>
+              <% if (currentUser && currentUser.isAdmin)   { %>
+              <a class="btn btn-success py-0 float-right" style="margin-right: .5rem;" href="#"><i class="far fa-thumbs-up"></i> Audited</a>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="card mb-3">
+            <!-- show open/contained/closed status and by who -->
+            <div class="card-header" id="commentHeader">
+              <p class="d-inline">
+
+                <em>
+                  <h4 class="card-text float-right"><%= claim.status %></h4>
+                </em>
+
+
+
+                <% if ( claim.status != 'James') { %>
+                <!-- button to add new comment -->
+                <a class="btn btn-primary btn-sm float-left" role="button" data-toggle="collapse" href="#collapseComment" aria-expanded="false" aria-controls="collapseComment">
+                  <i class="fas fa-pencil-alt"></i> Update 4C
+                </a>
+              <div class=form-inline>
+                <div class="form-group">
+                  <% if ( claim.status === 'Open' && claim.reviews.length != 0 &&  currentUser ) { %>
+                  <!-- <button class="btn btn-sm btn-warning" style="margin-left: 0.5rem;"><i class="fas fa-wrench"></i> Mark 4C as Contained</button> -->
+                  <a class="btn btn-sm btn-warning" style="margin-left: 0.5rem;" href="/claims/<%= claim._id %>/contain"><i class="fas fa-wrench"></i> Mark 4C as Contained</a>
+                  <% }; %>
+                </div>
+                <div class="form-group form-inline">
+                  <% if ( claim.status === 'Contained' && claim.reviews.length != 1 &&  currentUser ) { %>
+                  <a class="btn btn-sm btn-success" style="margin-left: 0.5rem;" href="/claims/<%= claim._id %>/close"><i class="far fa-thumbs-up"></i> Mark 4C as Closed</a>
+                  <% }; %>
+                </div>
+              </div>
+              <% } else { %>
+              <h5>Closure Details</h5>
+              <% }; %>
+            </div>
+            <div class="collapse" id="collapseComment">
+              <div class="card-body">
+                <% if (!currentUser) { %>
+                <h5>You need to be logged in first. Click <a href="/login">here</a> to go to the login page.</h5>
+                <% } %>
+                <% if (currentUser) { %>
+                <h5>Update this 4C <i class="fas fa-pencil-alt"></i></h5>
+                <form id="add-comment-form" action="/claims/<%= claim._id %>/reviews" method="POST">
+                  <div class="form-group">
+                    <input class="form-control" type="text" disabled value="<%= currentUser.firstName %> <%= currentUser.lastName %>">
+                  </div>
+                  <div class="form-group">
+                    <textarea class="form-control" name="review[text]" placeholder="Give as much detail as possible on containment and closure details." form="add-comment-form" rows="5" cols="70" autocomplete="off" required></textarea>
+                  </div>
+                  <div class="form-group">
+                    <button class="btn btn-success btn-sm">Save</button>
+                  </div>
+                </form>
+                <% } %>
+              </div>
+            </div>
+
+            <% if (claim.reviews.length === 0) { %>
+            <em style="color: white; margin-left: 1rem;">4C must be updated with containment details before status can be changed.</em>
+            <% } %>
+            <!-- display existing comments -->
+            <div class="card-body">
+              <% claim.reviews.forEach(function(review){ %>
+              <div class="row">
+                <div class="col-md-12">
+                  <strong>
+                    <a href="/users/<%= review.author.id %>"><%= review.author.firstName %> <%= review.author.lastName %></a>
+                  </strong>
+                  <span class="float-right"><%= moment(review.createdAt).format("DD/MM/YYYY - HH:mm") %></span>
+                  <div><%= review.text %>
+                    <!-- check if user logged in is also the author of the comment -->
+                    <% if (currentUser && currentUser.isAdmin) {%>
+                    <% if ( claim.status != 'Closed' || currentUser && currentUser.isAdmin) { %>
+                    <form class="d-inline" id="delete-form" action="/claims/<%= claim._id %>/comments/<%= review._id %>?_method=DELETE" method="POST">
+                      <button class="btn btn-danger btn-sm float-right py-0" style="margin-left: .5rem;">Delete</button>
+                      <a class="btn btn-warning btn-sm float-right py-0" role="button" data-toggle="collapse" href="#collapseEdit<%= review._id %>" aria-expanded="false" aria-controls="collapse<%= review._id %>">Edit</a>
+                    </form>
+                    <% } %>
+                    <!--Edit comment form-->
+                    <!--make each id attribute unique by adding comment._id-->
+                    <div class="collapse" id="collapseEdit<%= review._id %>">
+                      <div class="card-body" style="margin-top: 15px;">
+                        <h4><i class="fas fa-pencil-alt"></i> Edit your comment</h4>
+                        <form id="edit-comment-form" action="/claims/<%= claim._id %>/comments/<%= review._id %>?_method=PUT" method="POST">
+                          <div class="form-group">
+                            <input class="form-control" type="text" disabled value="<%= currentUser.firstName %> <%= currentUser.lastName %>">
+                          </div>
+                          <div class="form-group">
+                            <textarea class="form-control" name="review[text]" placeholder="Go into as much detail as possible" rows="5" cols="70" autocomplete="off"><%= comment.text %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <button class="btn btn-warning btn-sm py-0">Save</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                    <% } %>
+                  </div>
+                  <hr>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+
+
+        <% }; %>
+
+  </side1>
+
+  <side2>
+    <div>
+      <% if( currentUser && claim.author.equals(currentUser._id)) {%>
+      <div class="card-body">
+        <a class="card-link btn btn-info" href="/claims/<%=claim._id%>/edit">Edit</a>
+        <form class="d-inline" action="/claims/<%=claim._id%>?_method=DELETE" method="POST">
+          <button class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+      <% } %>
+    </div>
+    </div>
+    <div class="col">
+      <% if(currentUser){ %>
+      <h2>Update 4C Notes</h2>
+      <form action="/claims/<%=claim._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
+
+        <div class="mb-3">
+          <label class="form-label" for="body"></label>
+          <textarea class="form-control" name="review[body]" id="body" cols="30" rows="6" required></textarea>
+          <div class="valid-feedback">Looks good!</div>
+        </div>
+        <button class="btn btn-success">Submit</button>
+      </form>
+      <% } %>
+      <% for(let review of claim.reviews) { %>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title"><%= review.author.firstName %> <%= review.author.lastName %> <%= moment(review.createdAt).format("DD/MM/YYYY - HH:mm") %></h5>
+          <p class="card-text"><%= review.body %></p>
+          <% if( claim.status != "Closed") {%>
+          <% if( currentUser && review.author.equals(currentUser._id)) {%>
+          <form action="/claims/<%=claim._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
+            <button class="btn btn-sm btn-danger">Delete</button>
+          </form>
+          <% } %>
+          <% } %>
+        </div>
+      </div>
+      <% } %>
+
+    </div>
+
+
+
+  </side2>
+
+
+
+</wrapper>
+
+
+
+
+
+</body>
+
+</html>

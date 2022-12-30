@@ -1,0 +1,1415 @@
+<% layout('layouts/heatmap')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css">
+<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css">
+<link rel="stylesheet" href="/content/table2.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/ldlHeatmap.css" type="text/css">
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+<!-- <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script> -->
+
+
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+
+
+
+<style>
+  body {
+    background-color: black;
+  }
+
+  h5 {
+    color: white;
+    font-size: 1rem;
+  }
+
+  h3 {
+    color: white;
+    font-size: 2rem;
+  }
+
+  h2 {
+    color: white;
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 4rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  hr {
+    background-color: #6a6d6d;
+  }
+
+  .zone-stat {
+    font-size: 60px;
+    margin-top: -10px;
+  }
+
+  .zone-span {
+    font-size: 60px;
+    padding-top: 6px;
+  }
+
+  a {
+    text-decoration: none;
+
+  }
+
+  a:hover {
+    color: white;
+
+  }
+
+  .graph-holder1 {
+    background-color: rgb(36, 42, 49);
+    width: 323px;
+    height: 160px;
+    margin: 0px 10px 10px 10px;
+    /* border: 1px solid white; */
+    padding-top: 8px;
+    border-radius: 4px;
+  }
+
+  .graph-holder2 {
+    background-color: rgb(36, 42, 49);
+    width: 1700px;
+    height: 250px;
+    margin-bottom: 50px;
+    /* border: 1px solid white; */
+    padding-right: 8px;
+    border-radius: 4px;
+  }
+
+  .main-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+  }
+
+  .top-row {
+    display: flex;
+  }
+
+  .middle-row {
+    display: flex;
+  }
+
+  .over-3 {
+    color: white;
+    text-align: center;
+    font-size: 65px;
+  }
+
+  .eff-data {
+    color: white;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .eff-stat {
+    color: white;
+    text-align: center;
+    font-size: 65px;
+  }
+
+  thead,
+  tbody,
+  tr,
+  td,
+  th {
+    display: block;
+  }
+
+  tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+  }
+
+  thead th {
+    height: 50px;
+
+    /*text-align: left;*/
+  }
+
+  tbody {
+    height: 650px;
+    overflow-y: auto;
+  }
+
+  tbody td,
+  thead th {
+    width: 19.2%;
+    float: left;
+  }
+
+  .modal-dialog-1 {
+    max-width: 100%;
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    display: flex;
+  }
+</style>
+
+
+<!-- faults 1 -->
+<div class="modal fade" id="number1" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= issues[0].count %> Faults for <%= issues[0]._id.substring(0, 30) %> (No Shortages)</h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38);">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 300px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 50px;">#</th>
+              <th style="width: 200px;">Date/Time</th>
+              <th style="width: 130px;">Build Number</th>
+              <th style="width: 150px;">Model</th>
+              <th style="width: 150px;">Failed At</th>
+              <th style="width: 170px;">Failed By</th>
+              <th style="width: 170px;">Fixed By</th>
+              <th style="width: 170px;">Fault Area</th>
+              <th style="width: 170px;">Fault Type</th>
+              <th style="width: 250px;">Fault Detail</th>
+              <th style="width: 250px;">Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let faultsArr1 = 0 %>
+            <% for (let j of faultsArr[0]) { %>
+            <% faultsArr1++ %>
+            <tr class="d-flex">
+              <td style="width: 50px;"><%= faultsArr1 %></td>
+              <td style="width: 200px;"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+              <td style="height: 55px; width: 130px;"><%= j['Build Number'] %></td>
+              <td style="width: 150px;"><%= j.Model %></td>
+              <td style="width: 150px;"><%= j.Zone %></td>
+              <td style="width: 170px;"><%= j['Created By'] %></td>
+              <td style="width: 170px;"><%= j['Fixed By'] %></td>
+              <td style="width: 170px;"><%= j['Fault Area'] %></td>
+              <td style="width: 170px;"><%= j['Fault Code'] %></td>
+              <td style="width: 250px;"><%= j['User Defined Test'] %></td>
+              <td style="width: 250px;"><%= j.Comments %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- faults 2 -->
+<div class="modal fade" id="number2" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= issues[1].count %> Faults for <%= issues[1]._id.substring(0, 30) %> (No Shortages)</h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38);">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 300px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 50px;">#</th>
+              <th style="width: 200px;">Date/Time</th>
+              <th style="width: 130px;">Build Number</th>
+              <th style="width: 150px;">Model</th>
+              <th style="width: 150px;">Failed At</th>
+              <th style="width: 170px;">Failed By</th>
+              <th style="width: 170px;">Fixed By</th>
+              <th style="width: 170px;">Fault Area</th>
+              <th style="width: 170px;">Fault Type</th>
+              <th style="width: 250px;">Fault Detail</th>
+              <th style="width: 250px;">Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let faultsArr2 = 0 %>
+            <% for (let j of faultsArr[1]) { %>
+            <% faultsArr2++ %>
+            <tr class="d-flex">
+              <td style="width: 50px;"><%= faultsArr2 %></td>
+              <td style="width: 200px;"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+              <td style="height: 55px; width: 130px;"><%= j['Build Number'] %></td>
+              <td style="width: 150px;"><%= j.Model %></td>
+              <td style="width: 150px;"><%= j.Zone %></td>
+              <td style="width: 170px;"><%= j['Created By'] %></td>
+              <td style="width: 170px;"><%= j['Fixed By'] %></td>
+              <td style="width: 170px;"><%= j['Fault Area'] %></td>
+              <td style="width: 170px;"><%= j['Fault Code'] %></td>
+              <td style="width: 250px;"><%= j['User Defined Test'] %></td>
+              <td style="width: 250px;"><%= j.Comments %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- faults 3 -->
+<div class="modal fade" id="number3" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= issues[2].count %> Faults for <%= issues[2]._id.substring(0, 30) %> (No Shortages)</h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38);">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 300px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 50px;">#</th>
+              <th style="width: 200px;">Date/Time</th>
+              <th style="width: 130px;">Build Number</th>
+              <th style="width: 150px;">Model</th>
+              <th style="width: 150px;">Failed At</th>
+              <th style="width: 170px;">Failed By</th>
+              <th style="width: 170px;">Fixed By</th>
+              <th style="width: 170px;">Fault Area</th>
+              <th style="width: 170px;">Fault Type</th>
+              <th style="width: 250px;">Fault Detail</th>
+              <th style="width: 250px;">Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let faultsArr3 = 0 %>
+            <% for (let j of faultsArr[2]) { %>
+            <% faultsArr3++ %>
+            <tr class="d-flex">
+              <td style="width: 50px;"><%= faultsArr3 %></td>
+              <td style="width: 200px;"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+              <td style="height: 55px; width: 130px;"><%= j['Build Number'] %></td>
+              <td style="width: 150px;"><%= j.Model %></td>
+              <td style="width: 150px;"><%= j.Zone %></td>
+              <td style="width: 170px;"><%= j['Created By'] %></td>
+              <td style="width: 170px;"><%= j['Fixed By'] %></td>
+              <td style="width: 170px;"><%= j['Fault Area'] %></td>
+              <td style="width: 170px;"><%= j['Fault Code'] %></td>
+              <td style="width: 250px;"><%= j['User Defined Test'] %></td>
+              <td style="width: 250px;"><%= j.Comments %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- faults 4 -->
+<div class="modal fade" id="number4" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= issues[3].count %> Faults for <%= issues[3]._id.substring(0, 30) %> (No Shortages)</h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38);">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 300px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 50px;">#</th>
+              <th style="width: 200px;">Date/Time</th>
+              <th style="width: 130px;">Build Number</th>
+              <th style="width: 150px;">Model</th>
+              <th style="width: 150px;">Failed At</th>
+              <th style="width: 170px;">Failed By</th>
+              <th style="width: 170px;">Fixed By</th>
+              <th style="width: 170px;">Fault Area</th>
+              <th style="width: 170px;">Fault Type</th>
+              <th style="width: 250px;">Fault Detail</th>
+              <th style="width: 250px;">Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let faultsArr4 = 0 %>
+            <% for (let j of faultsArr[3]) { %>
+            <% faultsArr4++ %>
+            <tr class="d-flex">
+              <td style="width: 50px;"><%= faultsArr3 %></td>
+              <td style="width: 200px;"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+              <td style="height: 55px; width: 130px;"><%= j['Build Number'] %></td>
+              <td style="width: 150px;"><%= j.Model %></td>
+              <td style="width: 150px;"><%= j.Zone %></td>
+              <td style="width: 170px;"><%= j['Created By'] %></td>
+              <td style="width: 170px;"><%= j['Fixed By'] %></td>
+              <td style="width: 170px;"><%= j['Fault Area'] %></td>
+              <td style="width: 170px;"><%= j['Fault Code'] %></td>
+              <td style="width: 250px;"><%= j['User Defined Test'] %></td>
+              <td style="width: 250px;"><%= j.Comments %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- faults 5 -->
+<div class="modal fade" id="number5" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= issues[4].count %> Faults for <%= issues[4]._id.substring(0, 30) %> (No Shortages)</h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38);">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 300px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 50px;">#</th>
+              <th style="width: 200px;">Date/Time</th>
+              <th style="width: 130px;">Build Number</th>
+              <th style="width: 150px;">Model</th>
+              <th style="width: 150px;">Failed At</th>
+              <th style="width: 170px;">Failed By</th>
+              <th style="width: 170px;">Fixed By</th>
+              <th style="width: 170px;">Fault Area</th>
+              <th style="width: 170px;">Fault Type</th>
+              <th style="width: 250px;">Fault Detail</th>
+              <th style="width: 250px;">Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let faultsArr5 = 0 %>
+            <% for (let j of faultsArr[4]) { %>
+            <% faultsArr5++ %>
+            <tr class="d-flex">
+              <td style="width: 50px;"><%= faultsArr4 %></td>
+              <td style="width: 200px;"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+              <td style="height: 55px; width: 130px;"><%= j['Build Number'] %></td>
+              <td style="width: 150px;"><%= j.Model %></td>
+              <td style="width: 150px;"><%= j.Zone %></td>
+              <td style="width: 170px;"><%= j['Created By'] %></td>
+              <td style="width: 170px;"><%= j['Fixed By'] %></td>
+              <td style="width: 170px;"><%= j['Fault Area'] %></td>
+              <td style="width: 170px;"><%= j['Fault Code'] %></td>
+              <td style="width: 250px;"><%= j['User Defined Test'] %></td>
+              <td style="width: 250px;"><%= j.Comments %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- faults over 2 -->
+<div class="modal fade" id="number6" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= issuesOver2 %> Issues over 2 (No Shortages)</h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38);">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 300px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 50px;">#</th>
+              <th style="width: 200px;">Date/Time</th>
+              <th style="width: 130px;">Build Number</th>
+              <th style="width: 150px;">Model</th>
+              <th style="width: 150px;">Failed At</th>
+              <th style="width: 170px;">Failed By</th>
+              <th style="width: 170px;">Fixed By</th>
+              <th style="width: 170px;">Fault Area</th>
+              <th style="width: 170px;">Fault Type</th>
+              <th style="width: 250px;">Fault Detail</th>
+              <th style="width: 250px;">Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let over2Arrayx = 0 %>
+            <% for (let j of issuesOver2Arr) { %>
+            <% over2Arrayx++ %>
+            <tr class="d-flex">
+              <td style="width: 50px;"><%= over2Arrayx %></td>
+              <td style="width: 200px;"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+              <td style="height: 55px; width: 130px;"><%= j['Build Number'] %></td>
+              <td style="width: 150px;"><%= j.Model %></td>
+              <td style="width: 150px;"><%= j.Zone %></td>
+              <td style="width: 170px;"><%= j['Created By'] %></td>
+              <td style="width: 170px;"><%= j['Fixed By'] %></td>
+              <td style="width: 170px;"><%= j['Fault Area'] %></td>
+              <td style="width: 170px;"><%= j['Fault Code'] %></td>
+              <td style="width: 250px;"><%= j['User Defined Test'] %></td>
+              <td style="width: 250px;"><%= j.Comments %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- faults over 4 -->
+<div class="modal fade" id="number7" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= issuesOver4 %> Issues over 4 (No Shortages)</h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38);">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 300px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 50px;">#</th>
+              <th style="width: 200px;">Date/Time</th>
+              <th style="width: 130px;">Build Number</th>
+              <th style="width: 150px;">Model</th>
+              <th style="width: 150px;">Failed At</th>
+              <th style="width: 170px;">Failed By</th>
+              <th style="width: 170px;">Fixed By</th>
+              <th style="width: 170px;">Fault Area</th>
+              <th style="width: 170px;">Fault Type</th>
+              <th style="width: 250px;">Fault Detail</th>
+              <th style="width: 250px;">Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let over4Arrayx = 0 %>
+            <% for (let j of issuesOver4Arr) { %>
+            <% over4Arrayx++ %>
+            <tr class="d-flex">
+              <td style="width: 50px;"><%= over4Arrayx %></td>
+              <td style="width: 200px;"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+              <td style="height: 55px; width: 130px;"><%= j['Build Number'] %></td>
+              <td style="width: 150px;"><%= j.Model %></td>
+              <td style="width: 150px;"><%= j.Zone %></td>
+              <td style="width: 170px;"><%= j['Created By'] %></td>
+              <td style="width: 170px;"><%= j['Fixed By'] %></td>
+              <td style="width: 170px;"><%= j['Fault Area'] %></td>
+              <td style="width: 170px;"><%= j['Fault Code'] %></td>
+              <td style="width: 250px;"><%= j['User Defined Test'] %></td>
+              <td style="width: 250px;"><%= j.Comments %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- faults over 6 -->
+<div class="modal fade" id="number8" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= issuesOver6 %> Issues over 6 (No Shortages)</h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38);">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 300px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 50px;">#</th>
+              <th style="width: 200px;">Date/Time</th>
+              <th style="width: 130px;">Build Number</th>
+              <th style="width: 150px;">Model</th>
+              <th style="width: 150px;">Failed At</th>
+              <th style="width: 170px;">Failed By</th>
+              <th style="width: 170px;">Fixed By</th>
+              <th style="width: 170px;">Fault Area</th>
+              <th style="width: 170px;">Fault Type</th>
+              <th style="width: 250px;">Fault Detail</th>
+              <th style="width: 250px;">Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let over6Arrayx = 0 %>
+            <% for (let j of issuesOver6Arr) { %>
+            <% over6Arrayx++ %>
+            <tr class="d-flex">
+              <td style="width: 50px;"><%= over6Arrayx %></td>
+              <td style="width: 200px;"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+              <td style="height: 55px; width: 130px;"><%= j['Build Number'] %></td>
+              <td style="width: 150px;"><%= j.Model %></td>
+              <td style="width: 150px;"><%= j.Zone %></td>
+              <td style="width: 170px;"><%= j['Created By'] %></td>
+              <td style="width: 170px;"><%= j['Fixed By'] %></td>
+              <td style="width: 170px;"><%= j['Fault Area'] %></td>
+              <td style="width: 170px;"><%= j['Fault Code'] %></td>
+              <td style="width: 250px;"><%= j['User Defined Test'] %></td>
+              <td style="width: 250px;"><%= j.Comments %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- data over 2 -->
+<div class="modal fade" id="number9" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md ">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= issuesOver2 %> Issues over 2 (No Shortages)</h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38);">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 300px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 50px;">#</th>
+              <th style="width: 255px;">Name</th>
+              <th style="width: 130px;">Count</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <% let over2x = 0 %>
+            <% for (let j of issuesOver2Data) { %>
+            <% over2x++ %>
+            <tr class="d-flex">
+              <td style="width: 50px;"><%= over2x %></td>
+              <td style="width: 255px;"><a href="" data-dismiss="modal" data-toggle="modal" data-target="#number6" style="cursor: pointer;"><%= j._id %></a></td>
+              <td style="height: 55px; width: 130px;"><%= j.count %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- data over 4 -->
+<div class="modal fade" id="number10" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md ">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= issuesOver4 %> Issues over 4 (No Shortages)</h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38);">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 300px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 50px;">#</th>
+              <th style="width: 255px;">Name</th>
+              <th style="width: 130px;">Count</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <% let over4x = 0 %>
+            <% for (let j of issuesOver4Data) { %>
+            <% over4x++ %>
+            <tr class="d-flex">
+              <td style="width: 50px;"><%= over4x %></td>
+              <td style="width: 255px;"><a href="" data-dismiss="modal" data-toggle="modal" data-target="#number6" style="cursor: pointer;"><%= j._id %></a></td>
+              <td style="height: 55px; width: 130px;"><%= j.count %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- data over 6 -->
+<div class="modal fade" id="number11" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md ">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= issuesOver6 %> Issues over 4 (No Shortages)</h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38);">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 300px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 50px;">#</th>
+              <th style="width: 255px;">Name</th>
+              <th style="width: 130px;">Count</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <% let over6x = 0 %>
+            <% for (let j of issuesOver6Data) { %>
+            <% over6x++ %>
+            <tr class="d-flex">
+              <td style="width: 50px;"><%= over6x %></td>
+              <td style="width: 255px;"><a href="" data-dismiss="modal" data-toggle="modal" data-target="#number6" style="cursor: pointer;"><%= j._id %></a></td>
+              <td style="height: 55px; width: 130px;"><%= j.count %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class='main-header-holder'>
+  <!-- <div style="position: absolute; right: 0; margin-right: 115px;"><a href="/dash/dpuD/LDL/<%= area %>" type="button" class="btn btn-primary" style="color: white; border-radius: 4;">Switch to Rolling 7 Days</a></div>
+    <div style="position: absolute; right: 0; margin-right: 325px;"><a href="/dash/dpuD/LDL/<%= area %>" type="button" class="btn btn-primary" style="color: white; border-radius: 4;">Switch to Rolling 24 Hours</a></div> -->
+  <h1><%= fullDivision %> <%= area %></h1>
+  <small>Rolling 6 Weeks (Excluding Shortages)</small>
+
+</div>
+
+
+<div class="main-wrapper" style="margin-top: 10px;">
+  <div class="top-row">
+    <% if (issues.length > 0) { %>
+    <a href="" data-toggle="modal" data-target="#number1">
+      <div class="graph-holder1">
+        <h5><%= issues[0]._id.substring(0, 30) %> - <%= issues[0].count %></h5>
+        <div style="margin-bottom: -50px;">
+          <canvas id="canvas1" height="11" width="28"></canvas>
+        </div>
+      </div>
+    </a>
+    <% } %>
+    <% if (issues.length > 1) { %>
+    <a href="" data-toggle="modal" data-target="#number2">
+      <div class="graph-holder1">
+        <h5><%= issues[1]._id.substring(0, 30) %> - <%= issues[1].count %></h5>
+        <div style="margin-bottom: -50px;">
+          <canvas id="canvas2" height="11" width="28"></canvas>
+        </div>
+      </div>
+      <a />
+      <% } %>
+      <% if (issues.length > 2) { %>
+      <a href="" data-toggle="modal" data-target="#number3">
+        <div class="graph-holder1">
+          <h5><%= issues[2]._id.substring(0, 30) %> - <%= issues[2].count %></h5>
+          <div style="margin-bottom: -50px;">
+            <canvas id="canvas3" height="11" width="28"></canvas>
+          </div>
+        </div>
+      </a>
+      <% } %>
+      <% if (issues.length > 3) { %>
+      <a href="" data-toggle="modal" data-target="#number4">
+        <div class="graph-holder1">
+          <h5><%= issues[3]._id.substring(0, 30) %> - <%= issues[3].count %></h5>
+          <div style="margin-bottom: -50px;">
+            <canvas id="canvas4" height="11" width="28"></canvas>
+          </div>
+        </div>
+      </a>
+      <% } %>
+      <% if (issues.length > 4) { %>
+      <a href="" data-toggle="modal" data-target="#number5">
+        <div class="graph-holder1">
+          <h5><%= issues[4]._id.substring(0, 30) %> - <%= issues[4].count %></h5>
+          <div style="margin-bottom: -50px;">
+            <canvas id="canvas5" height="11" width="28"></canvas>
+          </div>
+        </div>
+      </a>
+      <% } %>
+  </div>
+  <div class="top-row">
+    <div class="graph-holder1">
+      <h2>Escalations</h2>
+      <div style="display: flex; justify-content: space-evenly; margin-top: 15px;">
+        <div data-toggle="modal" data-target="#number9" style="cursor: pointer;">
+          <h2 style="margin-bottom: -2px;">Over 2</h2>
+          <div class="over-3" style="font-size: 36px;">
+            <%= issuesOver2  %>
+          </div>
+        </div>
+        <div data-toggle="modal" data-target="#number" ">
+                        <h2 style=" margin-bottom: -2px;">Over 4</h2>
+          <div class="over-3" style="font-size: 36px;">
+            <%= issuesOver4 %>
+          </div>
+        </div>
+        <div data-toggle="modal" data-target="#number" ">
+                        <h2 style=" margin-bottom: -2px;">Over 6</h2>
+          <div class="over-3" style="font-size: 36px;">
+            <%= issuesOver6  %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if (division === 'LDL') { %>
+    <div class="graph-holder1">
+      <a href="/dash/notFixed/<%= area %>/LDL">
+        <h2>Not Fixed In Area</h2>
+        <div class="over-3">
+          <%= allFaultsNotFixedInArea.length  %>
+        </div>
+        <div class="eff-data" style="margin-top: -15px;">
+          <%= allFaultsForNotFixed.length  %> Total Faults
+        </div>
+        <div class="eff-data">
+          <%= notFixedPercentage %>% Sent Forward
+        </div>
+      </a>
+    </div>
+
+    <% } else { %>
+    <div class="graph-holder1">
+
+    </div>
+
+    <% } %>
+
+    <% if (division === 'LDL') { %>
+    <div class="graph-holder1">
+      <h2>Faults Fixed In Area</h2>
+      <div class="over-3">
+        <%= allFaultsForNotFixed.length - allFaultsNotFixedInArea.length %>
+      </div>
+      <div class="eff-data" style="margin-top: -15px;">
+        <%= 100 - notFixedPercentage %>%
+      </div>
+    </div>
+
+    <% } else { %>
+    <div class="graph-holder1">
+
+    </div>
+    <% } %>
+
+    <!-- <div class="graph-holder1">
+            <a href="/dash/notRFT/<%= area %>/LDL">
+            <h2>RFT %</h2>
+                <div class="eff-stat">
+                    <%= rftPercent  %>%
+                </div>
+                <div class="eff-data" style="margin-top: -15px;">
+                    <%= allBuildCount  %> Total Build
+                </div>
+                <div class="eff-data">
+                    <%= rftAmount  %> RFT
+                </div>
+            </a>
+        </div> -->
+    <% if (division === 'LDL') { %>
+    <div class="graph-holder1">
+      <a href="/dash/notRFT/<%= area %>/LDL">
+        <h2>RFT %</h2>
+        <div class="eff-stat">
+          --%
+        </div>
+        <div class="eff-data" style="margin-top: -15px;">
+          -- Total Build
+        </div>
+        <div class="eff-data">
+          -- RFT
+        </div>
+      </a>
+    </div>
+
+    <% } else { %>
+    <div class="graph-holder1">
+
+    </div>
+
+    <% } %>
+
+    <% if (division === 'LDL') { %>
+    <div class="graph-holder1">
+      <% if (theSipStation === 'N/A' ) { %>
+      <h2>Efficiency N/A</h2>
+
+      <% } else { %>
+      <a href="/dash/escapes/loadall/<%= area %>">
+        <h2><%= theSipStation %> Efficiency</h2>
+        <div class="eff-stat">
+          <%= effPercent  %>%
+        </div>
+        <div class="eff-data" style="margin-top: -15px;">
+          <%= allFaults.length  %> Total Faults
+        </div>
+        <div class="eff-data">
+          <%= allFoundFaults.length  %> Found - <%= allEscapes.length  %> Escaped
+        </div>
+      </a>
+      <% } %>
+
+    </div>
+
+    <% } else { %>
+    <div class="graph-holder1">
+
+    </div>
+
+    <% } %>
+
+  </div>
+
+
+
+  <div class="graph-holder2">
+
+    <% if (division === 'LDL') { %>
+    <canvas id="line-chart" style="padding-top: 10px; padding-bottom: 55px;" height="60" width="330"></canvas>
+    <% } else { %>
+    <canvas id="" style="padding-top: 10px; padding-bottom: 55px;" height="60" width="330"></canvas>
+    <% } %>
+
+
+  </div>
+
+
+
+
+</div>
+
+
+
+
+
+<div class="container-fluid footer">
+
+  <div class="row header-top">
+    <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+      <img height="24px" src="/7z/content/images/jcb-logo.png">
+      <img height="24px" src="/7z/content/images/df.png">
+    </div>
+    <div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+      J.C. Bamford Excavators LTD &copy; 2022
+    </div>
+  </div>
+</div>
+
+
+<script>
+  Chart.defaults.global.defaultFontColor = '#fff';
+  Chart.defaults.scale.gridLines.display = false;
+
+
+
+  <% let labels = [] %>
+  <% let dpu = [] %>
+  <% let target = [] %>
+  <% let colors = 'rgb(255, 123, 0)' %>
+
+
+
+  <% for (let l of allFaultsWithoutShortages) { %>
+  <% labels.push(l._id.week) %>
+  <% dpu.push(+l.dpu)  %>
+  <% target.push(l.target) %>
+
+  <% } %>
+
+
+
+
+  <% let labelsBHL1 = [] %>
+  <% let effBHL1 = [] %>
+
+  <% let labelsBHL2 = [] %>
+  <% let effBHL2 = [] %>
+
+  <% let labelsBHL3 = [] %>
+  <% let effBHL3 = [] %>
+
+  <% let labelsBHL4 = [] %>
+  <% let effBHL4 = [] %>
+
+  <% let labelsBHL5 = [] %>
+  <% let effBHL5 = [] %>
+
+
+  <% if (issues.length > 0) { %>
+  <% for (i of issues[0].graph) { %>
+  <%  labelsBHL1.push(i._id.week) %>
+  <% } %>
+  <% for (i of issues[0].graph) { %>
+  <%  effBHL1.push(i.count ) %>
+  <% } %>
+  <% } %>
+
+
+
+  <% if (issues.length > 1) { %>
+  <% for (i of issues[1].graph) { %>
+  <%  labelsBHL2.push(i._id.week) %>
+  <% } %>
+  <% for (i of issues[1].graph) { %>
+  <%  effBHL2.push(i.count ) %>
+  <% } %>
+  <% } %>
+
+
+  <% if (issues.length > 2) { %>
+  <% for (i of issues[2].graph) { %>
+  <%  labelsBHL3.push(i._id.week) %>
+  <% } %>
+  <% for (i of issues[2].graph) { %>
+  <%  effBHL3.push(i.count ) %>
+  <% } %>
+  <% } %>
+
+  <% if (issues.length > 3) { %>
+  <% for (i of issues[3].graph) { %>
+  <%  labelsBHL4.push(i._id.week) %>
+  <% } %>
+  <% for (i of issues[3].graph) { %>
+  <%  effBHL4.push(i.count ) %>
+  <% } %>
+  <% } %>
+
+  <% if (issues.length > 4) { %>
+  <% for (i of issues[4].graph) { %>
+  <%  labelsBHL5.push(i._id.week) %>
+  <% } %>
+  <% for (i of issues[4].graph) { %>
+  <%  effBHL5.push(i.count ) %>
+  <% } %>
+  <% } %>
+
+  let options = {
+    title: {
+      display: false,
+      text: 'Faults Volume By Area',
+    },
+    legend: {
+      display: false,
+    },
+    tooltips: {
+      mode: 'label',
+      enabled: false,
+      callbacks: {
+        label: function(tooltipItems, data) {
+          // if (data.datasets[tooltipItems.datasetIndex].label != "Running Time")  {
+          return data.datasets[tooltipItems.datasetIndex].label;
+        }
+        // },
+      }
+    },
+    responsive: true,
+    scales: {
+      xAxes: [{
+        stacked: true,
+        barPercentage: 0.8,
+      }, ],
+      yAxes: [{
+          stacked: false,
+          display: false,
+          ticks: {
+            beginAtZero: true,
+
+          },
+          scaleLabel: {
+            display: false,
+            labelString: 'Hours',
+          },
+        },
+        {
+          id: 'bar-y-axis',
+          stacked: true,
+          display: false,
+          ticks: {
+            beginAtZero: true,
+
+          },
+          type: 'linear',
+        },
+      ],
+    },
+
+  }
+
+
+
+
+  let barChartData1 = {
+
+    labels: <%- JSON.stringify(labelsBHL1); %>,
+    newLabels: <%- JSON.stringify(effBHL1); %>,
+    datasets: [
+
+      {
+        label: 'Count',
+        backgroundColor: <%- JSON.stringify(colors); %>,
+        yAxisID: 'bar-y-axis',
+        datalabels: {
+          // display labels for this specific dataset
+          display: true,
+          color: 'white',
+          align: 'middle',
+          anchor: 'middle',
+          formatter: function(value, context) {
+            return context.chart.data.newLabels[context.dataIndex];
+            // return value + '%';
+          },
+          font: {
+            size: 12,
+          },
+        },
+        data: <%- JSON.stringify(effBHL1); %>,
+      },
+    ],
+  };
+
+  // graph 2
+  let barChartData2 = {
+
+    labels: <%- JSON.stringify(labelsBHL2); %>,
+    newLabels: <%- JSON.stringify(effBHL2); %>,
+    datasets: [
+
+      {
+        label: 'Count',
+        backgroundColor: <%- JSON.stringify(colors); %>,
+        yAxisID: 'bar-y-axis',
+        datalabels: {
+          // display labels for this specific dataset
+          display: true,
+          color: 'white',
+          align: 'middle',
+          anchor: 'middle',
+          formatter: function(value, context) {
+            return context.chart.data.newLabels[context.dataIndex];
+            // return value + '%';
+          },
+          font: {
+            size: 12,
+          },
+        },
+        data: <%- JSON.stringify(effBHL2); %>,
+      },
+    ],
+  };
+
+  // graph 3
+  let barChartData3 = {
+
+    labels: <%- JSON.stringify(labelsBHL3); %>,
+    newLabels: <%- JSON.stringify(effBHL3); %>,
+    datasets: [
+
+      {
+        label: 'Count',
+        backgroundColor: <%- JSON.stringify(colors); %>,
+        yAxisID: 'bar-y-axis',
+        datalabels: {
+          // display labels for this specific dataset
+          display: true,
+          color: 'white',
+          align: 'middle',
+          anchor: 'middle',
+          formatter: function(value, context) {
+            return context.chart.data.newLabels[context.dataIndex];
+            // return value + '%';
+          },
+          font: {
+            size: 12,
+          },
+        },
+        data: <%- JSON.stringify(effBHL3); %>,
+      },
+    ],
+  };
+
+  // graph 4
+  let barChartData4 = {
+
+    labels: <%- JSON.stringify(labelsBHL4); %>,
+    newLabels: <%- JSON.stringify(effBHL4); %>,
+    datasets: [
+
+      {
+        label: 'Count',
+        backgroundColor: <%- JSON.stringify(colors); %>,
+        yAxisID: 'bar-y-axis',
+        datalabels: {
+          // display labels for this specific dataset
+          display: true,
+          color: 'white',
+          align: 'middle',
+          anchor: 'middle',
+          formatter: function(value, context) {
+            return context.chart.data.newLabels[context.dataIndex];
+            // return value + '%';
+          },
+          font: {
+            size: 12,
+          },
+        },
+        data: <%- JSON.stringify(effBHL4); %>,
+      },
+    ],
+  };
+
+  // graph 5
+  let barChartData5 = {
+
+    labels: <%- JSON.stringify(labelsBHL5); %>,
+    newLabels: <%- JSON.stringify(effBHL5); %>,
+    datasets: [
+
+      {
+        label: 'Count',
+        backgroundColor: <%- JSON.stringify(colors); %>,
+        yAxisID: 'bar-y-axis',
+        datalabels: {
+          // display labels for this specific dataset
+          display: true,
+          color: 'white',
+          align: 'middle',
+          anchor: 'middle',
+          formatter: function(value, context) {
+            return context.chart.data.newLabels[context.dataIndex];
+            // return value + '%';
+          },
+          font: {
+            size: 12,
+          },
+        },
+        data: <%- JSON.stringify(effBHL5); %>,
+      },
+    ],
+  };
+
+
+
+
+  window.onload = function() {
+
+    var ctx = document.getElementById("canvas1");
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: barChartData1,
+      options: options
+    });
+
+
+    //graph 2
+
+    var ctx2 = document.getElementById("canvas2");
+    var myChart2 = new Chart(ctx2, {
+      type: 'bar',
+      data: barChartData2,
+      options: options
+    });
+
+
+    //graph 3
+
+    var ctx3 = document.getElementById("canvas3");
+    var myChart3 = new Chart(ctx3, {
+      type: 'bar',
+      data: barChartData3,
+      options: options
+    });
+
+
+    var ctx4 = document.getElementById("canvas4");
+    var myChart4 = new Chart(ctx4, {
+      type: 'bar',
+      data: barChartData4,
+      options: options
+    });
+
+    //graph 5
+
+    var ctx5 = document.getElementById("canvas5");
+    var myChart5 = new Chart(ctx5, {
+      type: 'bar',
+      data: barChartData5,
+      options: options
+    });
+
+  }
+
+  new Chart(document.getElementById("line-chart"), {
+    type: 'line',
+    data: {
+      labels: <%- JSON.stringify(labels) %>,
+      datasets: [{
+        data: <%- JSON.stringify(dpu) %>,
+        label: "DPU",
+        borderColor: "#3e95cd",
+        fill: false
+      }, {
+        data: <%- JSON.stringify(target) %>,
+        label: "Target",
+        borderColor: "red",
+        fill: false
+      }, ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Loadall DPU By Week'
+      },
+      legend: {
+        display: false,
+      },
+      scales: {
+        xAxes: [{
+
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            // max         : 20,
+            display: true,
+          },
+          gridLines: {
+            display: false
+          },
+        }, {
+
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            display: false,
+          },
+          gridLines: {
+            display: false
+          }
+        }]
+      }
+    }
+  });
+</script>

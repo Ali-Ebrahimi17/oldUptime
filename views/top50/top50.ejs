@@ -1,0 +1,570 @@
+<% layout('layouts/boilerplate')%>
+
+<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+<script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+
+<style>
+	.main-wrapper-top50 {
+		padding: 0px 20px;
+    
+	}
+	.main-header-top50 {
+		display: flex;
+		justify-content: space-between;
+		/* margin-bottom: 35px; */
+		margin-top: -20px;
+	}
+
+	.header-section-top50 {
+		width: 350px;
+		height: 180px;
+		text-align: center;
+		/* background-color: grey; */
+		display: flex;
+		margin-bottom: 10px;
+		justify-content: center;
+	}
+
+	.page-title-top50 {
+		color: white;
+		font-size: 35px;
+		font-weight: bold;
+		
+	}
+	.title-top50-section {
+		color: white;
+		font-size: 25px;
+		/* font-weight: bold; */
+	}
+</style>
+
+<body style="background-color: black">
+	<div class="main-wrapper-top50">
+	
+
+		<div class="main-header-top50">
+      <div class="header-section-top50 page-title-top50">
+        <div style="display:flex ; flex-direction: column;" >
+          <div>
+            <%= headerTextUpper %>
+          </div>
+          <div class="title-top50-section h-200 mt-64 flex ">
+            Total claims in the date range
+          </div>
+          <div>
+            <%= allCount %>
+          </div>
+          <div>
+            <h5 class="mb-2 text-2xl font-bold"># Red text = Claim in last 48 hours</h5>
+          </div>
+        </div>
+       </div>
+			<div class="header-section-top50">
+				<div class="title-top50-section">
+					<div style="height: 20%">In/Out Top <%= number %></div>
+					<div style="height: 80%"><canvas id="doughnut-chart-warranty"></canvas></div>
+					<h4 style="position: relative; color: white; margin-top: -29%"><%= top50Percent %>%</h5>
+					<p style="position: relative; color: white; margin-top: -15%; margin-left: -85%; font-size: 15px;">
+						<%= top50Count %> Claims <br />
+						In Top <%= number %>
+          </p>
+					<p style="position: relative; color: white; margin-top: -18%; margin-right: -85%; font-size: 15px;">
+						<%= outTop50Count %> Claims <br />
+						Out Of Top <%= number %>
+          </p>
+				</div>
+			</div>
+			<div class="header-section-top50">
+				<div class="title-top50-section">
+					<div style="height: 20%">RAG <span style="font-size: 20px;"> (by total claim count)</span></div>
+          <div class="progress" style="height: 80%; border-radius: 0; width: 320px; background-color: black">
+            <div
+              class="progress-bar progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style="background-color: green; font-size: 20px; color: white; font-weight: bold; width: <%= closedPercent %>%"
+            >
+            <%= closedPercent %>%
+            </div>
+            <div
+              class="progress-bar progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style="background-color: orange; font-size: 20px; color: white; font-weight: bold; width: <%= containedPercent %>%"
+            >
+            <%= containedPercent %>%
+            </div>
+            <div
+              class="progress-bar progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style="background-color: red; font-size: 20px; color: white; font-weight: bold; width: <%= openPercent %>%"
+            >
+            <%= openPercent %>%
+            </div>
+            <div
+              class="progress-bar progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style="background-color: grey; font-size: 20px; color: white; font-weight: bold; width: <%= noActionPercent %>%"
+            >
+            <%= noActionPercent %>%
+            </div>
+          </div>
+				
+					
+				</div>
+			</div>
+      <div class="header-section-top50">
+        <div class="title-top50-section">
+          <div style="height: 20%">ASD</div>
+          <div style="height: 80%"><canvas id="pie-chart-asd"></canvas></div>
+        </div>
+      </div>
+      
+			<div class="header-section-top50 title-top50-section">
+        
+        <div style="display: flex; flex-direction: column;">
+          <div>
+            Post Cut In Repeats
+          </div>
+          <div style="font-size: 55px; margin-top: 18px;">
+            <%= failedPostCutIn %> (<%= failedPostCutInPercent %>%)
+          </div>
+          <div style="position: relative; margin-right: -73px; margin-top: 10px;">
+            <form class="form-inline float-right" action="/top50/<%= number %>/<%= period %>/<%=division%>/<%= type %>" value="" method="GET">
+              <button class="btn btn-md btn-danger" style="margin-right: 5px;"><i class="fas fa-times-circle"></i> Clear Filters</button>
+            </form>
+          </div>
+
+
+        </div>
+      </div>
+		</div>
+
+		<div class="progress" style="height: 60px; border-radius: 0; width: auto; background-color: black">
+			<div
+				class="progress-bar progress-bar-animated"
+				role="progressbar"
+				aria-valuenow="75"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				style="background-color: grey; font-size: 20px; color: black; font-weight: bold; width: 311px"
+			>
+				
+			</div>
+			<div
+				class="progress-bar progress-bar-animated"
+				role="progressbar"
+				aria-valuenow="75"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				style="background-color: grey; font-size: 20px; color: black; font-weight: bold; width: 320px"
+			>
+				
+			</div>
+			<div
+				class="progress-bar progress-bar-animated"
+				role="progressbar"
+				aria-valuenow="75"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				style="background-color: green; font-size: 18px; color: white; font-weight: bold; width: 155px;"
+			>
+      <a  href="/top50/<%= number %>/<%= period %>/<%=division%>/<%= type %>?rag=Closed">Closed - <%= closedCount %></a>
+        
+			</div>
+			<div
+				class="progress-bar progress-bar-animated"
+				role="progressbar"
+				aria-valuenow="75"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				style="background-color: orange; font-size: 18px; color: white; font-weight: bold; width: 155px"
+			>
+      <a  href="/top50/<%= number %>/<%= period %>/<%=division%>/<%= type %>?rag=Contained">Contained - <%= containedCount %></a>
+			</div>
+			<div
+				class="progress-bar progress-bar-animated"
+				role="progressbar"
+				aria-valuenow="75"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				style="background-color: red; font-size: 20px; color: white; font-weight: bold; width: 155px"
+			>
+      <a  href="/top50/<%= number %>/<%= period %>/<%=division%>/<%= type %>?rag=Open">Open - <%= openCount %></a>
+			</div>
+      <div
+				class="progress-bar progress-bar-animated"
+				role="progressbar"
+				aria-valuenow="75"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				style="background-color: grey; font-size: 20px; color: white; font-weight: bold; width: 155px"
+			>
+      <a  href="/top50/<%= number %>/<%= period %>/<%=division%>/<%= type %>?rag=TBC">TBC - <%= noActionCount %></a>
+			</div>
+      <div
+				class="progress-bar progress-bar-animated"
+				role="progressbar"
+				aria-valuenow="75"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				style="background-color: rgb(0, 173, 238); font-size: 20px; color: white; font-weight: bold; width: 155px"
+			>
+        <a href="/top50/<%= number %>/<%= period %>/<%=division%>/<%= type %>?asd=Assembly">Assembly - <%= assemblyCount %></a>
+			</div>
+			<div
+				class="progress-bar progress-bar-animated"
+				role="progressbar"
+				aria-valuenow="75"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				style="background-color: rgb(0, 173, 238); font-size: 20px; color: white; font-weight: bold; width: 155px"
+			>
+      <a href="/top50/<%= number %>/<%= period %>/<%=division%>/<%= type %>?asd=Supplier">Supplier - <%= supplierCount %></a>
+			</div>
+			<div
+				class="progress-bar progress-bar-animated"
+				role="progressbar"
+				aria-valuenow="75"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				style="background-color: rgb(0, 173, 238); font-size: 20px; color: white; font-weight: bold; width: 155px"
+			>
+      <a href="/top50/<%= number %>/<%= period %>/<%=division%>/<%= type %>?asd=Design">Design - <%= designCount %></a>
+			</div>
+			<div
+				class="progress-bar progress-bar-animated"
+				role="progressbar"
+				aria-valuenow="75"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				style="background-color: rgb(0, 173, 238); font-size: 20px; color: white; font-weight: bold; width: 164px"
+			>
+      <a href="/top50/<%= number %>/<%= period %>/<%=division%>/<%= type %>?repeat=true">Repeats - <%= failedPostCutIn %></a>
+			</div>
+		</div>
+
+		<table class="table table-hover table-dark" style="font-size: 12px; text-align: center; height: 59vh">
+			<thead>
+				<tr>
+					<th scope="col" style="width: 25px;">#</th>
+					
+          <% if (period === 't3') { %>
+            <p style="font-weight: bold;  color: red; font-size: 1rem; position: absolute; margin-left: 188px; margin-top: 30px;" >In DOA</p> 
+            <th scope="col" style="width: 225px; text-align: left; border-right: 1px solid white;">Part Number
+              
+            </th>
+            <th scope="col" style="width: 45px;"><%= tenMonthsAgoTable %></th>
+            <th scope="col" style="width: 45px;"><%= nineMonthsAgoTable %></th>
+            <th scope="col" style="width: 45px;"><%= eightMonthsAgoTable %></th>
+            <th scope="col" style="width: 45px;"><%= sevenMonthsAgoTable %></th>
+            <th scope="col" style="width: 45px;"><%= sixMonthsAgoTable %></th>
+            <th scope="col" style="width: 45px;"><%= fiveMonthsAgoTable %></th>
+            <th scope="col" style="width: 45px;"><%= fourMonthsAgoTable %></th>
+            <th scope="col" style="width: 45px;"><%= threeMonthsAgoTable %></th>
+            <th scope="col" style="width: 45px;"><%= twoMonthsAgoTable %></th>
+            <th scope="col" style="width: 45px;"><%= oneMonthAgoTable %></th>
+            <th scope="col" style="width: 45px;"><%= thisMonthTable %></th>
+            <th scope="col" style="width: 68px; border-right: 1px solid white; border-left: 1px solid white;">Count</th>
+            <th scope="col" style="width: 80px;">RAG</th>
+            <th scope="col" style="width: 75px;">ASD</th>
+            <th scope="col" style="width: 70px;">Days Open</th>
+            <th scope="col" style="width: 70px;">Days Contained</th>
+            <th scope="col" style="width: 70px;">Days Remaining</th>
+            <th scope="col" style="width: 170px;">Concern</th>
+            <th scope="col" style="width: 235px;">Action</th>
+            <th scope="col" style="width: 75px;">Cut In</th>
+            <th scope="col" style="width: 75px;">Total %</th>
+            <th scope="col" style="width: 150px;">Champion</th>
+          <% } else { %>
+            <p style="font-weight: bold;  color: red; font-size: 1rem; position: absolute; margin-left: 264px; margin-top: 30px;" >In T3</p>
+            <th scope="col" style="width: 285px; text-align: left; border-right: 1px solid white;">Part Number</th>
+            <th scope="col" style="width: 68px;"><%= fiveMonthsAgoTable %></th>
+            <th scope="col" style="width: 68px;"><%= fourMonthsAgoTable %></th>
+            <th scope="col" style="width: 68px;"><%= threeMonthsAgoTable %></th>
+            <th scope="col" style="width: 68px;"><%= twoMonthsAgoTable %></th>
+            <th scope="col" style="width: 68px;"><%= oneMonthAgoTable %></th>
+            <th scope="col" style="width: 68px;"><%= thisMonthTable %></th>
+            <th scope="col" style="width: 68px; border-right: 1px solid white; border-left: 1px solid white;">Count</th>
+            <th scope="col" style="width: 80px;">RAG</th>
+            <th scope="col" style="width: 75px;">ASD</th>
+            <th scope="col" style="width: 70px;">Days Open</th>
+            <th scope="col" style="width: 70px;">Days Contained</th>
+            <th scope="col" style="width: 70px;">Days Remaining</th>
+            <th scope="col" style="width: 180px;">Concern</th>
+            <th scope="col" style="width: 250px;">Action</th>
+            <th scope="col" style="width: 75px;">Cut In</th>
+            <th scope="col" style="width: 75px;">Total %</th>
+            <th scope="col" style="width: 150px;">Champion</th>
+          <% } %>
+          
+					<!-- <th scope="col"></th> -->
+				</tr>
+			</thead>
+			<tbody>
+        <% let x = 0 %>
+
+        <% parts.map((part) => { %>
+          <% x++ %>
+        <tr>
+					<th scope="row" style="width: 25px;"><%= x %></th>
+					
+          <% if (period === 't3') { %>
+           
+                    <td style="width: 225px; text-align: left; border-right: 1px solid white; color:<%= part.claimInLast48Hours %>">
+                      <a href="/top50/part/<%= period %>/<%= division %>/<%= type %>/<%= part._id %>">
+                        <% if (part.trend === 'down') { %>
+                          <i class="fas fa-arrow-down" aria-hidden="true" style=" font-size: 20px; float: left; margin-left: -28px; margin-top: 25px; color:green; font-weight: bold;"></i>
+                        <% } %>
+                        <% if (part.trend === 'up') { %>
+                          <i class="fas fa-arrow-up" aria-hidden="true" style=" font-size: 20px; float: left; margin-left: -28px; margin-top: 25px; color:red; font-weight: bold;"></i>
+                        <% } %>
+                        <% if (part.trend === 'same') { %>
+                          <i class="fas fa-arrows-alt-h" aria-hidden="true" style=" font-size: 20px; float: left; margin-left: -28px; margin-top: 25px; color:white; font-weight: bold;"></i>
+                        <% } %>
+                        <%= part._id.substring(0, 40).toUpperCase() %>
+                      </a>
+                      <% if (part.inOtherTop50) { %>
+                        <i style="font-weight: bold;  color: red; font-size: 1.5rem; float: right;" class="fas fa-exclamation"></i> 
+                      <% } %>
+                      
+                    </td>
+                    
+                  <td scope="col" style="width: 45px; background-color: <%= part.month1.postFaulire %>;"><%= part.month1.count %></td>
+                  <td scope="col" style="width: 45px; background-color: <%= part.month2.postFaulire %>;"><%= part.month2.count %></td>
+                  <td scope="col" style="width: 45px; background-color: <%= part.month3.postFaulire %>;"><%= part.month3.count %></td>
+                  <td scope="col" style="width: 45px; background-color: <%= part.month4.postFaulire %>;"><%= part.month4.count %></td>
+                  <td scope="col" style="width: 45px; background-color: <%= part.month5.postFaulire %>;"><%= part.month5.count %></td>
+                  <td scope="col" style="width: 45px; background-color: <%= part.month6.postFaulire %>;"><%= part.month6.count %></td>
+                  <td scope="col" style="width: 45px; background-color: <%= part.month7.postFaulire %>;"><%= part.month7.count %></td>
+                  <td scope="col" style="width: 45px; background-color: <%= part.month8.postFaulire %>;"><%= part.month8.count %></td>
+                  <td scope="col" style="width: 45px; background-color: <%= part.month9.postFaulire %>;"><%= part.month9.count %></td>
+                  <td scope="col" style="width: 45px; background-color: <%= part.month10.postFaulire %>;"><%= part.month10.count %></td>
+                  <td scope="col" style="width: 45px; background-color: <%= part.month11.postFaulire %>;"><%= part.month11.count %></td>
+                  <td scope="col" style="width: 68px; border-right: 1px solid white; border-left: 1px solid white;"><%= part.count %></td>
+                  <td scope="col" style="width: 80px; background-color: <%= part.color %>; "><%= part.status %></td>
+                  <td scope="col" style="width: 75px;"><%= part.asd %></td>
+                  <td scope="col" style="width: 70px; text-align: center;"><%= part.daysOpen %></td>
+                  <td scope="col" style="width: 70px; text-align: center;"><%= part.daysContained %></td>
+                  <td scope="col" style="width: 70px; text-align: center; color: <%= part.daysRemainingColor  %>;"><%= part.daysRemaining %></td>
+                  <td scope="col" style="width: 170px;">
+                    <%= part.concern && part.concern.substring(0, 35) %>
+                  </td>
+                  <td scope="col" style="width: 235px;">
+                    <%= part.action && part.action.substring(0, 65) %>
+                  </td>
+                  <td scope="col" style="width: 75px;"><%= part.closureDate %></td>
+                  <td scope="col" style="width: 75px;">
+                    <a href="/top50/edit/<%= period %>/<%= division %>/<%= type %>/<%=part._id%>">
+                      <%= part.percentageCont %>%
+                    </a>
+                  </td>
+                  <td scope="col" style="width: 150px;">
+                    <a href="/top50/50/<%= period %>/<%=division%>/<%= type %>?champion=<%= part.champion%>"><%= part.champion %></a>
+                  </td>
+          <% } else { %>
+
+                <td style="width: 285px; text-align: left; border-right: 1px solid white; color:<%= part.claimInLast48Hours %>">
+                  <a href="/top50/part/<%= period %>/<%= division %>/<%= type %>/<%= part._id %>">
+                    <% if (part.trend === 'down') { %>
+                      <i class="fas fa-arrow-down" aria-hidden="true" style=" font-size: 20px; float: left; margin-left: -28px; margin-top: 25px; color:green; font-weight: bold;"></i>
+                    <% } %>
+                    <% if (part.trend === 'up') { %>
+                      <i class="fas fa-arrow-up" aria-hidden="true" style=" font-size: 20px; float: left; margin-left: -28px; margin-top: 25px; color:red; font-weight: bold;"></i>
+                    <% } %>
+                    <% if (part.trend === 'same') { %>
+                      <i class="fas fa-arrows-alt-h" aria-hidden="true" style=" font-size: 20px; float: left; margin-left: -28px; margin-top: 25px; color:white; font-weight: bold;"></i>
+                    <% } %>
+                    <%= part._id.substring(0, 40).toUpperCase() %>
+                  </a>
+                  <% if (part.inOtherTop50) { %>
+                    <i style="font-weight: bold;  color: red; font-size: 1.5rem; float: right;" class="fas fa-exclamation"></i> 
+                  <% } %>
+                </td>
+              <td scope="col" style="width: 68px; background-color: <%= part.month6.postFaulire %>;"><%= part.month6.count %></td>
+              <td scope="col" style="width: 68px; background-color: <%= part.month7.postFaulire %>;"><%= part.month7.count %></td>
+              <td scope="col" style="width: 68px; background-color: <%= part.month8.postFaulire %>;"><%= part.month8.count %></td>
+              <td scope="col" style="width: 68px; background-color: <%= part.month9.postFaulire %>;"><%= part.month9.count %></td>
+              <td scope="col" style="width: 68px; background-color: <%= part.month10.postFaulire %>;"><%= part.month10.count %></td>
+              <td scope="col" style="width: 68px; background-color: <%= part.month11.postFaulire %>;"><%= part.month11.count %></td>
+              <td scope="col" style="width: 68px; border-right: 1px solid white; border-left: 1px solid white;"><%= part.count %></td>
+              <td scope="col" style="width: 80px; background-color: <%= part.color %>; "><%= part.status %></td>
+              <td scope="col" style="width: 75px;"><%= part.asd %></td>
+              <td scope="col" style="width: 70px; text-align: center;"><%= part.daysOpen %></td>
+              <td scope="col" style="width: 70px; text-align: center;"><%= part.daysContained %></td>
+              <td scope="col" style="width: 70px; text-align: center; color: <%= part.daysRemainingColor  %>;"><%= part.daysRemaining %></td>
+              <td scope="col" style="width: 180px;">
+                <%= part.concern && part.concern.substring(0, 35) %>
+              </td>
+              <td scope="col" style="width: 250px;">
+                <%= part.action && part.action.substring(0, 65) %>
+              </td>
+              <td scope="col" style="width: 75px;"><%= part.closureDate %></td>
+              <td scope="col" style="width: 75px;">
+                <a href="/top50/edit/<%= period %>/<%= division %>/<%= type %>/<%=part._id%>">
+                  <%= part.percentageCont %>%
+                </a>
+              </td>
+              <td scope="col" style="width: 150px;">
+                <a href="/top50/50/<%= period %>/<%=division%>/<%= type %>?champion=<%= part.champion%>"><%= part.champion %></a>
+              </td>
+
+          <% } %>
+          
+					
+				
+					
+				</tr>
+
+        <% }) %>
+			
+				
+				
+			</tbody>
+		</table>
+	</div>
+</body>
+
+<script>
+	Chart.defaults.global.defaultFontColor = '#fff'
+	Chart.defaults.global.defaultFontSize = '12'
+
+	new Chart(document.getElementById('doughnut-chart-warranty'), {
+		type: 'doughnut',
+		data: {
+			labels: ['In', 'Out'],
+			datasets: [
+				{
+					label: '',
+					backgroundColor: ['grey', 'rgb(54, 162, 235)'],
+					data: [<%= outTop50Count %>, <%= top50Count %>],
+				},
+			],
+		},
+		options: {
+			tooltips: {
+				enabled: false,
+				mode: 'label',
+				yAlign: 'center',
+				callbacks: {
+					title: function (tooltipItem, data) {
+						return ''
+					},
+					// label: function(tooltipItem, data) {
+					//   return data['datasets'][0]['data'][tooltipItem['index']];
+					// },
+					// afterLabel: function(tooltipItem, data) {
+					//   var dataset = data['datasets'][0];
+					//   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+					//   return '(' + percent + '%)';
+					// }
+				},
+			},
+			maintainAspectRatio: false,
+			responsive: true,
+			legend: {
+				display: false,
+			},
+			// elements: {
+			// 	center: {
+			// 		text: '50%',
+			// 		color: '#FFF', // Default is #000000
+			// 		sidePadding: 20, // Default is 20 (as a percentage)
+			// 		// minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+			// 		lineHeight: 25, // Default is 25 (in px), used for when text wraps
+			// 	},
+			// },
+		},
+	})
+
+  let barOptions_scc = {
+    tooltips: {
+      enabled: false
+    },
+
+    scales: {
+      xAxes: [{
+        gridLines: {
+          color: "rgba(0, 0, 0, 0)",
+        },
+        ticks: {
+          beginAtZero: true,
+          fontSize: 11,
+          display: false
+        },
+        scaleLabel: {
+          display: false
+        },
+        gridLines: {
+          display: false,
+        },
+        stacked: true
+      }],
+      yAxes: [{
+        gridLines: {
+          color: "rgba(0, 0, 0, 0)",
+        },
+        ticks: {
+
+          fontSize: 15,
+          fontStyle: "bold"
+        },
+        stacked: true
+      }]
+    },
+    legend: {
+      display: false
+    },
+    tooltips: {
+      enabled: false,
+    }
+
+  }
+
+  new Chart(document.getElementById("pie-chart-asd"), {
+    type: 'horizontalBar',
+    data: {
+      labels: ["Assembly", "Supplier", "Design", "Un Assigned"],
+      fontSize: 20,
+      datasets: [{
+        datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            // rotation: -90,
+            // align: 'end',
+            // offset: -8,
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                return value + '%';
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= assemblyPercent %>, <%= supplierPercent %>, <%= designPercent %>, <%= unassignedPercent %> ],
+        backgroundColor: 'rgb(54, 162, 235)',
+        fontSize: 25,
+      }, ]
+    },
+
+    options: barOptions_scc,
+
+  });
+
+</script>

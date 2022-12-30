@@ -1,0 +1,53 @@
+<% layout('layouts/boilerplate')%>
+<!-- <meta http-equiv="refresh" content="10"> -->
+
+
+
+
+
+<h2 style="margin-top: -1rem; text-align: center; font-weight: bold;"><%= faults.length %> <%= division %> Faults Today at <%= businessUnit %></h2>
+
+
+<div class="stages-wrapper">
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 15px; height: 70vh; width: fit-content; margin-top: -2rem;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 50px;">#</th>
+        <th style="width: 100px;">Time</th>
+        <th style="width: 130px;">Build Number</th>
+        <th style="width: 150px;">Model</th>
+        <th style="width: 150px;">Failed At</th>
+        <th style="width: 170px;">Failed By</th>
+        <th style="width: 170px;">Fault Area</th>
+        <th style="width: 170px;">Fault Type</th>
+        <th style="width: 500px;">Fault Detail</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <% let x = 0 %>
+      <% for (let j of faults) { %>
+      <% x++ %>
+      <tr class="d-flex">
+        <td style="width: 50px;"><%= x %></td>
+        <td style="width: 100px;"><%= moment(j['Created Date']).format("HH:mm")%></td>
+        <td style="height: 55px; width: 130px;"><%= j['Build Number'] %></td>
+        <td style="width: 150px;"><%= j.Model %></td>
+        <td style="width: 150px;"><%= j.Zone %></td>
+        <td style="width: 170px;"><%= j['Created By'] %></td>
+        <td style="width: 170px;"><%= j['Fault Area'] %></td>
+        <td style="width: 170px;"><%= j['Fault Code'] %></td>
+        <td style="width: 500px;"><%= j['User Defined Test'] %></td>
+
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+
+
+</div>

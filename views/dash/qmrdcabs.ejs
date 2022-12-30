@@ -1,0 +1,4763 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="620"> -->
+		<title>JCB - Quality Uptime</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<link rel="stylesheet" href="/content/table.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+		<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<script src="/7z/content/chart-js/chart.bundle.js"></script>
+		<!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+		<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+		<link rel="stylesheet" href="/stylesheets/app.css" />
+		<link rel="stylesheet" href="/fontawesome/css/all.css" />
+	</head>
+
+	<style>
+		.graph-holder-top1 {
+			width: 850px;
+			/* background-color: rgb(70, 73, 75); */
+			/* border-radius: 5px; */
+			margin-bottom: 15px;
+			height: 185px;
+		}
+
+		.graph-holder-top2 {
+			width: 425px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 185px;
+		}
+
+		.graph-holder-t3t6 {
+			width: 425px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 385px;
+		}
+
+		.graph-holder-top3 {
+			width: 425px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 185px;
+			/* margin-right: -20px; */
+		}
+
+		.graph-holder-top {
+			width: 475px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 205px;
+		}
+
+		.graph-holder-bars {
+			width: 455px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 205px;
+		}
+
+		.graph-holder-table {
+			width: 485px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 450px;
+		}
+
+		.graph-holder-second-thin-container {
+			width: 900px;
+
+			height: 250px;
+		}
+
+		.graph-holder-second-thin1 {
+			width: 205px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 185px;
+		}
+
+		.graph-holder-second-thin {
+			width: 275px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 272px;
+		}
+
+		.graph-holder-second-thin-table {
+			width: 345px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 272px;
+		}
+
+		.graph-holder-bottom {
+			width: 442px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 175px;
+		}
+
+		.card {
+			border: 1px solid grey;
+			margin-bottom: 5px;
+			color: white;
+			font-size: 14px;
+		}
+
+		.green-top50 {
+			background-color: green;
+		}
+
+		.amber-top50 {
+			background-color: orange;
+		}
+
+		.red-top50 {
+			background-color: red;
+		}
+
+		.graph-holder-internal-dpu {
+			width: 270px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 148px;
+			margin-left: 25px;
+		}
+	</style>
+
+	<body>
+		<!-- dpu modal Ldl -->
+		<div class="modal fade" id="modal_dpuLDL" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-md">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px">
+						<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+						<h3 style="text-align: center; margin: 8px">Update LDL Line DPU</h3>
+					</div>
+					<div class="modal-body">
+						<fieldset>
+							<form id="theForm" action="/dash/updateCabsMri/<%= cabLdlLine[0]._id %>" method="POST">
+								<div class="row" style="color: black">
+									<div class="col" style="margin-bottom: 10px">
+										<h5 style="text-align: center">Data</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input class="form-control" type="number" step="0.1" name="jan" style="margin-bottom: 10px" value="<%= cabLdlLine[0].jan %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input class="form-control" type="number" step="0.1" name="feb" style="margin-bottom: 10px" value="<%= cabLdlLine[0].feb %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input class="form-control" type="number" step="0.1" name="mar" style="margin-bottom: 10px" value="<%= cabLdlLine[0].mar %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input class="form-control" type="number" step="0.1" name="apr" style="margin-bottom: 10px" value="<%= cabLdlLine[0].apr %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input class="form-control" type="number" step="0.1" name="may" style="margin-bottom: 10px" value="<%= cabLdlLine[0].may %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input class="form-control" type="number" step="0.1" name="jun" style="margin-bottom: 10px" value="<%= cabLdlLine[0].jun %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input class="form-control" type="number" step="0.1" name="jul" style="margin-bottom: 10px" value="<%= cabLdlLine[0].jul %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input class="form-control" type="number" step="0.1" name="aug" style="margin-bottom: 10px" value="<%= cabLdlLine[0].aug %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input class="form-control" type="number" step="0.1" name="sep" style="margin-bottom: 10px" value="<%= cabLdlLine[0].sep %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input class="form-control" type="number" step="0.1" name="oct" style="margin-bottom: 10px" value="<%= cabLdlLine[0].oct %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input class="form-control" type="number" step="0.1" name="nov" style="margin-bottom: 10px" value="<%= cabLdlLine[0].nov %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input class="form-control" type="number" step="0.1" name="dec" style="margin-bottom: 10px" value="<%= cabLdlLine[0].dec %>" />
+										</div>
+									</div>
+									<div class="col">
+										<h5 style="text-align: center">Target</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jan_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].jan_target  %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="feb_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].feb_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="mar_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].mar_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="apr_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].apr_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="may_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].may_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jun_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].jun_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jul_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].jul_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="aug_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].aug_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="sep_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].sep_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="oct_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].oct_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="nov_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].nov_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="dec_target"
+												style="margin-bottom: 10px"
+												value="<%= cabLdlLine[0].dec_target%>"
+											/>
+										</div>
+
+										<button
+											type="button"
+											id="modalClose"
+											data-dismiss="modal"
+											class="btn btn-danger float-right"
+											style="margin-left: 8px; color: white; border-radius: 4px"
+										>
+											Cancel
+										</button>
+										<button
+											id="btnSave"
+											class="btn btn-success float-right"
+											type="submit"
+											style="margin-bottom: 10px; color: white; border-radius: 4px"
+										>
+											Confirm
+										</button>
+									</div>
+								</div>
+							</form>
+						</fieldset>
+					</div>
+					<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+						<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- dpu modal bhl -->
+		<div class="modal fade" id="modal_dpuBHL" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-md">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px">
+						<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+						<h3 style="text-align: center; margin: 8px">Update BHL Line DPU</h3>
+					</div>
+					<div class="modal-body">
+						<fieldset>
+							<form id="theForm" action="/dash/updateCabsMri/<%= cabBhlLine[0]._id %>" method="POST">
+								<div class="row" style="color: black">
+									<div class="col" style="margin-bottom: 10px">
+										<h5 style="text-align: center">Data</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input class="form-control" type="number" step="0.1" name="jan" style="margin-bottom: 10px" value="<%= cabBhlLine[0].jan %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input class="form-control" type="number" step="0.1" name="feb" style="margin-bottom: 10px" value="<%= cabBhlLine[0].feb %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input class="form-control" type="number" step="0.1" name="mar" style="margin-bottom: 10px" value="<%= cabBhlLine[0].mar %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input class="form-control" type="number" step="0.1" name="apr" style="margin-bottom: 10px" value="<%= cabBhlLine[0].apr %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input class="form-control" type="number" step="0.1" name="may" style="margin-bottom: 10px" value="<%= cabBhlLine[0].may %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input class="form-control" type="number" step="0.1" name="jun" style="margin-bottom: 10px" value="<%= cabBhlLine[0].jun %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input class="form-control" type="number" step="0.1" name="jul" style="margin-bottom: 10px" value="<%= cabBhlLine[0].jul %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input class="form-control" type="number" step="0.1" name="aug" style="margin-bottom: 10px" value="<%= cabBhlLine[0].aug %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input class="form-control" type="number" step="0.1" name="sep" style="margin-bottom: 10px" value="<%= cabBhlLine[0].sep %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input class="form-control" type="number" step="0.1" name="oct" style="margin-bottom: 10px" value="<%= cabBhlLine[0].oct %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input class="form-control" type="number" step="0.1" name="nov" style="margin-bottom: 10px" value="<%= cabBhlLine[0].nov %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input class="form-control" type="number" step="0.1" name="dec" style="margin-bottom: 10px" value="<%= cabBhlLine[0].dec %>" />
+										</div>
+									</div>
+									<div class="col">
+										<h5 style="text-align: center">Target</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jan_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].jan_target  %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="feb_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].feb_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="mar_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].mar_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="apr_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].apr_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="may_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].may_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jun_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].jun_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jul_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].jul_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="aug_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].aug_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="sep_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].sep_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="oct_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].oct_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="nov_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].nov_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="dec_target"
+												style="margin-bottom: 10px"
+												value="<%= cabBhlLine[0].dec_target%>"
+											/>
+										</div>
+
+										<button
+											type="button"
+											id="modalClose"
+											data-dismiss="modal"
+											class="btn btn-danger float-right"
+											style="margin-left: 8px; color: white; border-radius: 4px"
+										>
+											Cancel
+										</button>
+										<button
+											id="btnSave"
+											class="btn btn-success float-right"
+											type="submit"
+											style="margin-bottom: 10px; color: white; border-radius: 4px"
+										>
+											Confirm
+										</button>
+									</div>
+								</div>
+							</form>
+						</fieldset>
+					</div>
+					<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+						<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- dpu modal cheadle -->
+
+		<div class="modal fade" id="modal_dpuCheadle" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-md">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px">
+						<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+						<h3 style="text-align: center; margin: 8px">Update Cheadle Line DPU</h3>
+					</div>
+					<div class="modal-body">
+						<fieldset>
+							<form id="theForm" action="/dash/updateCabsMri/<%= cabCheadleLine[0]._id %>" method="POST">
+								<div class="row" style="color: black">
+									<div class="col" style="margin-bottom: 10px">
+										<h5 style="text-align: center">Data</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jan"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].jan %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="feb"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].feb %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="mar"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].mar %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="apr"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].apr %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="may"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].may %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jun"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].jun %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jul"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].jul %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="aug"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].aug %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="sep"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].sep %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="oct"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].oct %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="nov"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].nov %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="dec"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].dec %>"
+											/>
+										</div>
+									</div>
+									<div class="col">
+										<h5 style="text-align: center">Target</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jan_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].jan_target  %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="feb_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].feb_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="mar_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].mar_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="apr_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].apr_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="may_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].may_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jun_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].jun_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jul_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].jul_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="aug_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].aug_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="sep_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].sep_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="oct_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].oct_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="nov_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].nov_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="dec_target"
+												style="margin-bottom: 10px"
+												value="<%= cabCheadleLine[0].dec_target%>"
+											/>
+										</div>
+
+										<button
+											type="button"
+											id="modalClose"
+											data-dismiss="modal"
+											class="btn btn-danger float-right"
+											style="margin-left: 8px; color: white; border-radius: 4px"
+										>
+											Cancel
+										</button>
+										<button
+											id="btnSave"
+											class="btn btn-success float-right"
+											type="submit"
+											style="margin-bottom: 10px; color: white; border-radius: 4px"
+										>
+											Confirm
+										</button>
+									</div>
+								</div>
+							</form>
+						</fieldset>
+					</div>
+					<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+						<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- rft in dev modal -->
+		<div class="modal fade" id="modal_rftInDiv" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-md">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px">
+						<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+						<h3 style="text-align: center; margin: 8px">Update RFT Into Division</h3>
+					</div>
+					<div class="modal-body">
+						<fieldset>
+							<form id="theForm" action="/dash/updateCabsMri/<%= cabsRftInDiv[0]._id %>" method="POST">
+								<div class="row" style="color: black">
+									<div class="col" style="margin-bottom: 10px">
+										<h5 style="text-align: center">Data</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jan"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].jan %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="feb"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].feb %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="mar"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].mar %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="apr"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].apr %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="may"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].may %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jun"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].jun %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jul"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].jul %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="aug"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].aug %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="sep"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].sep %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="oct"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].oct %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="nov"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].nov %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="dec"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].dec %>"
+											/>
+										</div>
+									</div>
+									<div class="col">
+										<h5 style="text-align: center">Target</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jan_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].jan_target  %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="feb_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].feb_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="mar_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].mar_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="apr_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].apr_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="may_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].may_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jun_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].jun_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jul_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].jul_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="aug_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].aug_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="sep_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].sep_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="oct_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].oct_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="nov_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].nov_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="dec_target"
+												style="margin-bottom: 10px"
+												value="<%= cabsRftInDiv[0].dec_target%>"
+											/>
+										</div>
+
+										<button
+											type="button"
+											id="modalClose"
+											data-dismiss="modal"
+											class="btn btn-danger float-right"
+											style="margin-left: 8px; color: white; border-radius: 4px"
+										>
+											Cancel
+										</button>
+										<button
+											id="btnSave"
+											class="btn btn-success float-right"
+											type="submit"
+											style="margin-bottom: 10px; color: white; border-radius: 4px"
+										>
+											Confirm
+										</button>
+									</div>
+								</div>
+							</form>
+						</fieldset>
+					</div>
+					<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+						<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- top 10 operations modal -->
+		<div class="modal fade" id="modal_top10Ops" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-md">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px">
+						<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+						<h3 style="text-align: center; margin: 8px">Update Service Top 10 Operations</h3>
+					</div>
+					<div class="modal-body">
+						<fieldset>
+							<form id="theForm" action="/dash/updateCabsMri/<%= closuresOps[0]._id %>" method="POST">
+								<div class="row" style="color: black">
+									<div class="col" style="margin-bottom: 10px">
+										<h5 style="text-align: center">Accum Total Closures</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input class="form-control" type="number" step="0.1" name="jan" style="margin-bottom: 10px" value="<%= closuresOps[0].jan %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input class="form-control" type="number" step="0.1" name="feb" style="margin-bottom: 10px" value="<%= closuresOps[0].feb %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input class="form-control" type="number" step="0.1" name="mar" style="margin-bottom: 10px" value="<%= closuresOps[0].mar %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input class="form-control" type="number" step="0.1" name="apr" style="margin-bottom: 10px" value="<%= closuresOps[0].apr %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input class="form-control" type="number" step="0.1" name="may" style="margin-bottom: 10px" value="<%= closuresOps[0].may %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input class="form-control" type="number" step="0.1" name="jun" style="margin-bottom: 10px" value="<%= closuresOps[0].jun %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input class="form-control" type="number" step="0.1" name="jul" style="margin-bottom: 10px" value="<%= closuresOps[0].jul %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input class="form-control" type="number" step="0.1" name="aug" style="margin-bottom: 10px" value="<%= closuresOps[0].aug %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input class="form-control" type="number" step="0.1" name="sep" style="margin-bottom: 10px" value="<%= closuresOps[0].sep %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input class="form-control" type="number" step="0.1" name="oct" style="margin-bottom: 10px" value="<%= closuresOps[0].oct %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input class="form-control" type="number" step="0.1" name="nov" style="margin-bottom: 10px" value="<%= closuresOps[0].nov %>" />
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input class="form-control" type="number" step="0.1" name="dec" style="margin-bottom: 10px" value="<%= closuresOps[0].dec %>" />
+										</div>
+									</div>
+									<div class="col">
+										<h5 style="text-align: center">Late (Over 20 days)</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jan_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].jan_target  %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="feb_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].feb_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="mar_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].mar_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="apr_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].apr_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="may_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].may_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jun_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].jun_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jul_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].jul_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="aug_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].aug_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="sep_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].sep_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="oct_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].oct_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="nov_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].nov_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="dec_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresOps[0].dec_target%>"
+											/>
+										</div>
+
+										<button
+											type="button"
+											id="modalClose"
+											data-dismiss="modal"
+											class="btn btn-danger float-right"
+											style="margin-left: 8px; color: white; border-radius: 4px"
+										>
+											Cancel
+										</button>
+										<button
+											id="btnSave"
+											class="btn btn-success float-right"
+											type="submit"
+											style="margin-bottom: 10px; color: white; border-radius: 4px"
+										>
+											Confirm
+										</button>
+									</div>
+								</div>
+							</form>
+						</fieldset>
+					</div>
+					<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+						<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- top 10 supplier modal -->
+
+		<div class="modal fade" id="modal_top10Supp" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-md">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px">
+						<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+						<h3 style="text-align: center; margin: 8px">Update Service Top 10 Supplier</h3>
+					</div>
+					<div class="modal-body">
+						<fieldset>
+							<form id="theForm" action="/dash/updateCabsMri/<%= closuresSUpplier[0]._id %>" method="POST">
+								<div class="row" style="color: black">
+									<div class="col" style="margin-bottom: 10px">
+										<h5 style="text-align: center">Accum Total Closures</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jan"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].jan %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="feb"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].feb %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="mar"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].mar %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="apr"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].apr %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="may"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].may %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jun"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].jun %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jul"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].jul %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="aug"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].aug %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="sep"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].sep %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="oct"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].oct %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="nov"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].nov %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="dec"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].dec %>"
+											/>
+										</div>
+									</div>
+									<div class="col">
+										<h5 style="text-align: center">Late (Over 20 days)</h5>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[0] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jan_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].jan_target  %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[1] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="feb_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].feb_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[2] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="mar_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].mar_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[3] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="apr_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].apr_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[4] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="may_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].may_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[5] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jun_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].jun_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[6] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="jul_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].jul_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[7] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="aug_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].aug_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[8] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="sep_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].sep_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[9] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="oct_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].oct_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[10] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="nov_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].nov_target %>"
+											/>
+										</div>
+										<div style="display: flex">
+											<label style="width: 100px; padding-top: 8px" for="buildNumber"><%= extraShortMonths[11] %></label>
+											<input
+												class="form-control"
+												type="number"
+												step="0.1"
+												name="dec_target"
+												style="margin-bottom: 10px"
+												value="<%= closuresSUpplier[0].dec_target%>"
+											/>
+										</div>
+
+										<button
+											type="button"
+											id="modalClose"
+											data-dismiss="modal"
+											class="btn btn-danger float-right"
+											style="margin-left: 8px; color: white; border-radius: 4px"
+										>
+											Cancel
+										</button>
+										<button
+											id="btnSave"
+											class="btn btn-success float-right"
+											type="submit"
+											style="margin-bottom: 10px; color: white; border-radius: 4px"
+										>
+											Confirm
+										</button>
+									</div>
+								</div>
+							</form>
+						</fieldset>
+					</div>
+					<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+						<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row header-top">
+				<div class="col-lg-5 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<a href="/"><img height="24px" src="/7z/content/images/jcb-logo.png" /></a>
+					<!-- <a href="/"><img height="44px" src="/dog/dog.gif"></a>  -->
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid" style="overflow-x: hidden">
+			<div class="row" style="display: flex; flex-wrap: wrap">
+				<div style="display: flex; justify-content: center; background-color: black; width: 100%">
+					<h1 style="font-size: 34px; color: white; margin: 0px; text-align: center">Cabs Quality Managment Report</h1>
+				</div>
+				<div class="col-main" style="padding-left: 35px; width: 50%">
+					<div style="display: flex; flex-direction: column; justify-content: center; width: 100%">
+						<!-- top row -->
+
+						<div class="row" style="display: flex; justify-content: center">
+							<div style="margin-bottom: 22px; padding: 8px 0px">
+								<div class="col-measure" style="width: 100%; text-align: center">
+									<h1 class="line-sub-header-top">Delivered Quality</h1>
+								</div>
+							</div>
+
+							<div style="display: flex; width: 100%; margin-bottom: 20px; margin-top: -20px">
+								<div class="col" style="margin: 10px 10px; width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap">
+									<!-- original row -->
+
+									<div class="row" style="display: flex; width: 100%; margin: 0; padding: 0">
+										<a data-toggle="modal" data-target="#doa-BHL" style="cursor: pointer">
+											<div class="graph-holder-top1">
+												<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+													<!-- <div class="float-left" style="text-align: center; color: white;"><h5><i style="color: green;" class="fas fa-circle"></i></h5></div> -->
+													<div style="text-align: center; color: white">
+														<h5>Major DOA By Build Week</h5>
+													</div>
+													<canvas id="chart1" height="60"></canvas>
+												</div>
+											</div>
+										</a>
+									</div>
+
+									<div class="row" style="display: flex; width: 100%; margin: 0; padding: 0">
+										<div style="text-align: center; color: white; margin-top: 25px; width: 100%">
+											<h5>Major DOA By Division</h5>
+										</div>
+										<table class="table table-dark table-striped" style="height: 200px; font-size: 12px; line-height: 12px; width: 850px">
+											<thead>
+												<tr>
+													<th style="width: 50px">WC</th>
+													<th style="width: 55px">Week</th>
+													<th style="width: 45px">BHL</th>
+													<th style="width: 45px">CP</th>
+													<th style="width: 45px">EM</th>
+													<th style="width: 45px">HP</th>
+													<th style="width: 45px">LDL</th>
+													<th style="width: 45px">LP</th>
+													<th style="width: 45px">SD</th>
+													<th style="width: 57px">Total</th>
+												</tr>
+											</thead>
+											<tbody>
+												<% for (let d of weeksDataArr) { %>
+												<tr>
+													<td style="width: 110px">
+														<a href="" data-toggle="modal" data-target="#modal<%= d.weekNum %>"><%= moment(d.date).format("DD/MM/YYYY") %></a>
+													</td>
+													<td><%= d.weekNum %></td>
+													<td><%= d.bhl %></td>
+													<td><%= d.cp %></td>
+													<td><%= d.em %></td>
+													<td><%= d.hp %></td>
+													<td><%= d.ldl %></td>
+													<td><%= d.lp %></td>
+													<td><%= d.sd %></td>
+													<td><%= d.total %></td>
+												</tr>
+
+												<div
+													class="modal fade"
+													id="modal<%= d.weekNum %>"
+													data-backdrop="static"
+													data-keyboard="false"
+													tabindex="-1"
+													aria-labelledby="staticBackdropLabel"
+													aria-hidden="true"
+												>
+													<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" style="width: 1950px">
+														<div class="modal-content">
+															<div style="background-color: rgb(252, 176, 38); height: 50px">
+																<h3 style="text-align: center; margin: 8px">
+																	Cabs Major Escapes Build W/C <%= moment(d.date).format("DD/MM/YYYY") %>
+																</h3>
+															</div>
+															<div class="modal-body">
+																<% let xDOAEscapes = 0 %> <% for (let c of d.majorsArr) { %> <% xDOAEscapes ++ %>
+
+																<div class="card">
+																	<div class="card-body">
+																		<div style="display: flex; justify-content: space-between">
+																			<div style="text-align: start">
+																				<h5># <%= xDOAEscapes %></h5>
+																				<h5>Tw Number: <%= c.twNumber %></h5>
+																				<h5>Division: <%= c.division %></h5>
+																				<h5>Tw Submitted: <%= moment(c.importedDate).format("DD/MM/YYYY") %></h5>
+																				<h5>Serial: <%= c.name %></h5>
+																				<h5>Model: <%= c.model %></h5>
+																				<h5>Build Date: <%= c.buildDate %></h5>
+																				<h5>Status: <%= c.status %></h5>
+																			</div>
+																		</div>
+																		<div style="text-align: start">
+																			<h5>
+																				Narrative: <br />
+																				<%= c.narrative %>
+																			</h5>
+																		</div>
+																	</div>
+																</div>
+																<%} %>
+															</div>
+															<div class="modal-footer" style="border: none">
+																<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+															</div>
+															<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+																<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+																<img height="24px" src="/7z/content/images/df.png" />
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<% } %>
+											</tbody>
+										</table>
+									</div>
+
+									<div class="row" style="display: flex; width: 100%; margin: 0; padding: 0">
+										<a data-toggle="modal" data-target="#modal_rftInDiv" style="cursor: pointer">
+											<div class="graph-holder-top2">
+												<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+													<!-- <div class="float-left" style="text-align: center; color: white;"><h5><i style="color: green;" class="fas fa-circle"></i></h5></div> -->
+													<div style="text-align: center; color: white">
+														<h5>RFT Into Machine Division</h5>
+													</div>
+													<canvas id="chart2" height="100"></canvas>
+												</div>
+											</div>
+										</a>
+
+										<a data-toggle="modal" data-target="#doa-BHL" style="cursor: pointer">
+											<div class="graph-holder-top3">
+												<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+													<!-- <div class="float-left" style="text-align: center; color: white;"><h5><i style="color: green;" class="fas fa-circle"></i></h5></div> -->
+													<div style="text-align: center; color: white">
+														<h5>DOA DPU</h5>
+													</div>
+													<canvas id="chart3" height="100"></canvas>
+												</div>
+											</div>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- second row-->
+
+						<div class="row" style="display: flex; justify-content: center">
+							<div style="margin-bottom: 22px; padding: 8px 0px">
+								<div class="col-measure" style="width: 100%; text-align: center; margin-top: -50px">
+									<hr style="width: 450px" />
+									<h1 class="line-sub-header-top">Internal Quality</h1>
+								</div>
+							</div>
+
+							<div style="display: flex; width: 100%; margin-bottom: 20px; margin-top: -20px; justify-content: center; align-items: center">
+								<div class="col" style="display: flex; justify-content: space-between; flex-wrap: wrap">
+									<div class="row" style="display: flex; justify-content: space-between; width: 100%">
+										<div style="display: flex">
+											<div style="display: flex">
+												<a <% if (currentUser && currentUser.isQmr) { %>
+													data-toggle="modal" data-target="#modal_dpuLDL" style="cursor: pointer;" <% } else { %> <% } %>>
+													<div class="graph-holder-internal-dpu" style="padding-left: 8px">
+														<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+															<div style="text-align: center; color: white">
+																<h5>LDL Line</h5>
+															</div>
+															<canvas id="chart6" height="165"></canvas>
+														</div>
+													</div>
+												</a>
+
+												<a <% if (currentUser && currentUser.isQmr) { %>
+													data-toggle="modal" data-target="#modal_dpuBHL" style="cursor: pointer;" <% } else { %> <% } %>>
+													<div class="graph-holder-internal-dpu">
+														<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+															<div style="text-align: center; color: white">
+																<h5>BHL Line</h5>
+															</div>
+															<canvas id="chart7" height="165"></canvas>
+														</div>
+													</div>
+												</a>
+
+												<a <% if (currentUser && currentUser.isQmr) { %>
+													data-toggle="modal" data-target="#modal_dpuCheadle" style="cursor: pointer;" <% } else { %> <% } %>>
+													<div class="graph-holder-internal-dpu">
+														<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+															<div style="text-align: center; color: white">
+																<h5>Cheadle Line</h5>
+															</div>
+															<canvas id="chart8" height="165"></canvas>
+														</div>
+													</div>
+												</a>
+											</div>
+										</div>
+									</div>
+
+									<div class="row" style="display: flex; width: 100%; margin: 0; padding: 0">
+										<div style="text-align: center; color: white; margin-top: 10px; width: 100%">
+											<h5>DPU Top 5</h5>
+										</div>
+										<table
+											class="table table-dark table-striped"
+											style="height: 165px; font-size: 12px; line-height: 12px; width: 850px; margin-left: 10px"
+										>
+											<thead>
+												<tr>
+													<th style="width: 80px">Assy Line</th>
+													<th style="text-align: center">DPU Dec 21</th>
+													<th style="text-align: center">DPU Actual</th>
+													<th style="text-align: center">Closed Top 5</th>
+													<th style="text-align: center">Open Top 5</th>
+												</tr>
+											</thead>
+											<tbody>
+												<% for (let d of top5Dpu) { %> <% if (currentUser && currentUser.isQmr) { %>
+												<tr>
+													<td style="width: 65px"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.line %></a></td>
+													<td style="text-align: center"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.dpu_dec_21 %></a></td>
+													<td style="text-align: center">
+														<a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.dpu_Dec_21_actual %></a>
+													</td>
+													<td style="text-align: center">
+														<a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.closed_top_5 %></a>
+													</td>
+													<td style="text-align: center"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.open_top_5 %></a></td>
+												</tr>
+												<% } else { %>
+												<tr>
+													<td style="width: 65px"><%= d.line %></td>
+													<td style="text-align: center"><%= d.dpu_dec_21 %></td>
+													<td style="text-align: center"><%= d.dpu_Dec_21_actual %></td>
+													<td style="text-align: center"><%= d.closed_top_5 %></td>
+													<td style="text-align: center"><%= d.open_top_5 %></td>
+												</tr>
+												<% } %>
+
+												<div class="modal fade" id="modal<%= d._id %>" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+													<div class="modal-dialog modal-dialog-centered modal-lg">
+														<div class="modal-content">
+															<div style="background-color: rgb(252, 176, 38); height: 50px">
+																<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+																<h3 style="text-align: center; margin: 8px">Update <%= d.line %> Line</h3>
+															</div>
+															<div class="modal-body">
+																<fieldset>
+																	<form id="theForm" action="/dash/updateCabsMri/<%= d._id %>" method="POST">
+																		<div class="row" style="color: black">
+																			<div class="col" style="margin-bottom: 10px">
+																				<label for="buildNumber">Line</label>
+																				<input
+																					class="form-control"
+																					type="text"
+																					name="line"
+																					style="margin-bottom: 10px"
+																					value="<%= d.line %>"
+																					required
+																				/>
+																				<label for="buildNumber">DPU Dec-21</label>
+																				<input
+																					class="form-control"
+																					type="text"
+																					name="dpu_dec_21"
+																					style="margin-bottom: 10px"
+																					value="<%= d.dpu_dec_21 %>"
+																					required
+																				/>
+																				<label for="buildNumber">Current DPU</label>
+																				<input
+																					class="form-control"
+																					type="text"
+																					name="dpu_Dec_21_actual"
+																					style="margin-bottom: 10px"
+																					value="<%= d.dpu_Dec_21_actual %>"
+																					required
+																				/>
+																				<label for="buildNumber">Closed Top 5</label>
+																				<input
+																					class="form-control"
+																					type="text"
+																					name="closed_top_5 "
+																					style="margin-bottom: 10px"
+																					value="<%= d.closed_top_5 %>"
+																					required
+																				/>
+																				<label for="buildNumber">Open Top 5</label>
+																				<input
+																					class="form-control"
+																					type="text"
+																					name="open_top_5 "
+																					style="margin-bottom: 10px"
+																					value="<%= d.open_top_5 %>"
+																					required
+																				/>
+
+																				<!-- <label for="buildNumber" style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; ">Maximum of 48 hours</label> -->
+																				<button
+																					type="button"
+																					id="modalClose"
+																					data-dismiss="modal"
+																					class="btn btn-danger float-right"
+																					style="margin-left: 8px; color: white; border-radius: 4px"
+																				>
+																					Cancel
+																				</button>
+																				<button
+																					id="btnSave"
+																					class="btn btn-success float-right"
+																					type="submit"
+																					style="margin-bottom: 10px; color: white; border-radius: 4px"
+																				>
+																					Confirm
+																				</button>
+																			</div>
+																		</div>
+																	</form>
+																</fieldset>
+															</div>
+															<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+																<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+																<img height="24px" src="/7z/content/images/df.png" />
+															</div>
+														</div>
+													</div>
+												</div>
+												<% } %>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- third row-->
+					</div>
+				</div>
+
+				<!-- start of internal -->
+				<div class="col-main" style="width: 50%">
+					<hr class="float-left" style="margin-left: -38px; width: 1px; height: 87%; display: inline-block; background-color: grey; margin-top: 5%" />
+
+					<div style="margin-bottom: 22px; padding: 8px 0px">
+						<div class="col-measure" style="width: 100%; text-align: center">
+							<h1 class="line-sub-header-top">Customer Quality</h1>
+						</div>
+					</div>
+
+					<div class="row" style="display: flex; width: 100%; margin: 0; padding: 0; justify-content: space-between">
+						<a data-toggle="modal" data-target="#doa-BHL" style="cursor: pointer">
+							<div class="graph-holder-t3t6">
+								<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+									<div class="float-left" style="text-align: center; color: white">
+										<h5><i style="color: green" class="fas fa-circle"></i></h5>
+									</div>
+									<div style="text-align: center; color: white">
+										<h5>T3 & T6 RFT</h5>
+									</div>
+									<canvas id="chart9" height="200"></canvas>
+								</div>
+							</div>
+						</a>
+
+						<a data-toggle="modal" data-target="#doa-BHL" style="cursor: pointer">
+							<div class="graph-holder-t3t6">
+								<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+									<div class="float-left" style="text-align: center; color: white">
+										<h5><i style="color: green" class="fas fa-circle"></i></h5>
+									</div>
+									<div style="text-align: center; color: white">
+										<h5>T3 & T6 DPU</h5>
+									</div>
+									<canvas id="chart10" height="200"></canvas>
+								</div>
+							</div>
+						</a>
+					</div>
+
+					<div class="row" style="display: flex; width: 100%; margin: 0; padding: 0; justify-content: space-between">
+						<a <% if (currentUser && currentUser.isQmr) { %>
+							data-toggle="modal" data-target="#modal_top10Ops" style="cursor: pointer;" <% } else { %> <% } %>>
+
+							<div class="graph-holder-second-thin1">
+								<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+									<!-- <div class="float-left" style="text-align: center; color: white;"><h5><i style="color: green;" class="fas fa-circle"></i></h5></div> -->
+									<div style="text-align: center; color: white">
+										<h5>Service Top 10 Closures Operations</h5>
+									</div>
+									<canvas id="chart14" height="275"></canvas>
+								</div>
+							</div>
+						</a>
+
+						<a <% if (currentUser && currentUser.isQmr) { %>
+							data-toggle="modal" data-target="#modal_top10Supp" style="cursor: pointer;" <% } else { %> <% } %>>
+							<div class="graph-holder-second-thin1">
+								<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+									<!-- <div class="float-left" style="text-align: center; color: white;"><h5><i style="color: green;" class="fas fa-circle"></i></h5></div> -->
+									<div style="text-align: center; color: white">
+										<h5>Service Top 10 Closures Supplier Q</h5>
+									</div>
+									<canvas id="chart15" height="275"></canvas>
+								</div>
+							</div>
+						</a>
+
+						<div style="display: flex; flex-direction: column">
+							<!-- <div style="color: red; position: absolute; margin-top: 90px; margin-left: 55px; font-weight: bold; font-size: 35px;">
+                            <p>Correct data to follow</p>
+                        </div> -->
+
+							<div class="graph-holder-bars" style="display: flex; flex-direction: column">
+								<div style="display: flex; justify-content: space-between">
+									<div style="width: 50%">
+										<div style="text-align: center; color: white">
+											<h5>T3 Top 50 Repeats</h5>
+										</div>
+										<div style="display: flex; justify-content: space-evenly">
+											<div style="color: white; text-align: center">
+												Prev<br />
+												Month<br />
+												<span style="font-size: 35px">0%</span>
+											</div>
+											<div style="color: white; text-align: center">
+												Current<br />
+												Month<br />
+												<span style="font-size: 35px; color: green">0%</span>
+											</div>
+										</div>
+									</div>
+									<div style="width: 50%">
+										<div style="text-align: center; color: white">
+											<h5>T6 Top 50 Repeats</h5>
+										</div>
+										<div style="display: flex; justify-content: space-evenly">
+											<div style="color: white; text-align: center">
+												Prev<br />
+												Month<br />
+												<span style="font-size: 35px">0%</span>
+											</div>
+											<div style="color: white; text-align: center">
+												Current<br />
+												Month<br />
+												<span style="font-size: 35px; color: green">0%</span>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div style="display: flex; justify-content: space-between; margin-top: 20px">
+									<div style="width: 47%">
+										<a href="/top50/50cabs">
+											<div style="text-align: center; color: white; margin-top: -20px">
+												<h5>T3 Top 50 RAG</h5>
+											</div>
+											<div style="text-align: center; color: white; margin-top: -15px; margin-bottom: -15px">
+												<p>Target 75%</p>
+											</div>
+											<div
+												style="
+													background: white;
+													height: 70px;
+													width: 6px;
+													margin-top: -4px;
+													margin-left: 149px;
+													margin-right: -50px;
+													z-index: 100;
+													position: absolute;
+												"
+											></div>
+											<div class="progress" style="height: 60px; border-radius: 0px; margin-bottom: 25px; width: auto; background-color: black">
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= t3Top50Green %>%"
+												>
+													<%= t3Top50Green %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: orange; font-size: 20px; color: black; font-weight: bold; width: <%= t3Top50Amber %>%"
+												>
+													<%= t3Top50Amber %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: red; font-size: 20px; color: black; font-weight: bold; width: <%= t3Top50Red %>%"
+												>
+													<%= t3Top50Red %>%
+												</div>
+											</div>
+										</a>
+									</div>
+									<div style="width: 47%">
+										<div>
+											<div style="text-align: center; color: white; margin-top: -20px">
+												<h5>T6 Top 50 RAG</h5>
+											</div>
+											<div style="text-align: center; color: white; margin-top: -15px; margin-bottom: -15px">
+												<p>Target 75%</p>
+											</div>
+											<div
+												style="
+													background: white;
+													height: 70px;
+													width: 6px;
+													margin-top: -4px;
+													margin-left: 149px;
+													margin-right: -50px;
+													z-index: 100;
+													position: absolute;
+												"
+											></div>
+											<div class="progress" style="height: 60px; border-radius: 0px; margin-bottom: 25px; width: auto; background-color: black">
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: 0%"
+												>
+													0%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: orange; font-size: 20px; color: black; font-weight: bold; width: 0%"
+												>
+													0%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: red; font-size: 20px; color: black; font-weight: bold; width: 100%"
+												>
+													100%
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row" style="margin-top: 40px; display: flex; justify-content: center">
+							<table
+								class="table table-dark table-striped"
+								style="height: 438px; font-size: 10px; line-height: 12px; width: 920px; margin-left: 10px"
+							>
+								<thead>
+									<tr></tr>
+								</thead>
+								<tbody>
+									<div style="color: white; position: absolute; margin-top: 120px; margin-left: 30px">
+										<h1>
+											Glazing Leaks/PCM<br />
+											Coming Soon
+										</h1>
+									</div>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid footer">
+			<div class="row header-top">
+				<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+					J.C. Bamford Excavators LTD &copy; 2022
+				</div>
+			</div>
+		</div>
+
+		<script>
+			Chart.defaults.global.defaultFontColor = "white";
+			//  Chart.defaults.global.defaultFontSize = 10;
+			Chart.defaults.scale.gridLines.display = false;
+
+			let leaksOptions = {
+			  legend: {
+			    labels: {
+			      useLineStyle: true,
+			      // boxWidth: 25
+			    },
+			    position: 'top',
+			  },
+
+			  tooltips: {
+			    enabled: true,
+			    mode: 'label',
+			    yAlign: 'center',
+			    //      callbacks: {
+			    //      title: function(tooltipItem, data) {
+			    //      return ""
+			    //      },
+			    //      // label: function(tooltipItem, data) {
+			    //      //   return data['datasets'][0]['data'][tooltipItem['index']];
+			    //      // },
+			    //      // afterLabel: function(tooltipItem, data) {
+			    //      //   var dataset = data['datasets'][0];
+			    //      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+			    //      //   return '(' + percent + '%)';
+			    //      // }
+			    //  },
+
+			  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 9,
+			        fontColor: '#fff',
+			        autoSkip: false,
+			        maxRotation: 90,
+			        minRotation: 90,
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			      //     scaleLabel : {
+			      //       display     : true,
+			      //     //   labelString : 'Build Month',
+			      //       fontSize: 10,
+			      //       fontColor:'#fff'
+			      //   },
+			    }],
+			    yAxes: [{
+			        id: 'bar-y-axis',
+			        position: 'right',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 0.3,
+			          // stepSize: 0.3,
+			          fontSize: 9,
+			          //  formatter:: function(value, context, values) {
+			          //              if(context.dataIndex === context.dataset.data.length - 1){
+			          //                       return value
+			          //      }
+			          //  }
+
+			          //  callback: function(value) {
+			          //      if (value % 0.2 === 0) {
+			          //      return value
+			          //      }
+			          //  }
+			        },
+			        type: 'linear',
+
+			      },
+			      //  {
+			      //      id      : 'bar-y-axis1',
+			      //      position: 'right',
+			      //     //  stacked : true,
+			      //     //    display : true,
+			      //      ticks   : {
+			      //          beginAtZero : true,
+			      //          min         : 0,
+			      //          max         : 20,
+			      //         //  stepSize: 50,
+			      //          fontSize: 9,
+			      //         //  callback: function(value) {
+			      //         //      if (value > 100) {
+			      //         //          return ''
+			      //         //      } else {
+			      //         //      if (value % 1 === 0) {
+			      //         //          return value + '%'
+			      //         //          }
+			      //         //      }
+
+			      //         //      }
+			      //      },
+			      //      type    : 'linear',
+			      //  },
+
+			    ],
+			  },
+			}
+
+
+			let options = {
+			  legend: {
+			    display: false,
+			  },
+			  tooltips: {
+			    enabled: true,
+			    mode: 'label',
+			    yAlign: 'center',
+			    //  callbacks: {
+			    //  title: function(tooltipItem, data) {
+			    //  return ""
+			    //  },
+			    //  // label: function(tooltipItem, data) {
+			    //  //   return data['datasets'][0]['data'][tooltipItem['index']];
+			    //  // },
+			    //  // afterLabel: function(tooltipItem, data) {
+			    //  //   var dataset = data['datasets'][0];
+			    //  //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+			    //  //   return '(' + percent + '%)';
+			    //  // }
+			  },
+
+			  //  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 9,
+			        fontColor: '#fff',
+			        autoSkip: false,
+			        maxRotation: 90,
+			        minRotation: 90,
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			      //     scaleLabel : {
+			      //       display     : true,
+			      //     //   labelString : 'Build Month',
+			      //       fontSize: 10,
+			      //       fontColor:'#fff'
+			      //   },
+			    }],
+			    yAxes: [{
+			        id: 'bar-y-axis',
+			        position: 'left',
+			        //  stacked : true,
+			        display: true,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 100,
+			          // stepSize: 0.3,
+			          fontSize: 9,
+			          //  formatter:: function(value, context, values) {
+			          //              if(context.dataIndex === context.dataset.data.length - 1){
+			          //                       return value
+			          //      }
+			          //  }
+
+			          callback: function(value) {
+			            if (value > -1) {
+			              return ''
+			            } else {
+			              return value
+			            }
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			      {
+			        id: 'bar-y-axis1',
+			        position: 'right',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 120,
+			          stepSize: 20,
+			          fontSize: 9,
+			          fontColor: 'black',
+			          callback: function(value) {
+			            if (value > 100) {
+			              return ''
+			            } else {
+			              if (value % 1 === 0) {
+			                return value + '%'
+			              }
+			            }
+
+			          }
+			        },
+			        type: 'linear',
+			      },
+
+			    ],
+			  },
+			}
+
+			let majorOptions = {
+			  legend: {
+			    display: false,
+			  },
+			  tooltips: {
+			    enabled: true,
+			    mode: 'label',
+			    yAlign: 'center',
+			    //  callbacks: {
+			    //  title: function(tooltipItem, data) {
+			    //  return ""
+			    //  },
+			    //  // label: function(tooltipItem, data) {
+			    //  //   return data['datasets'][0]['data'][tooltipItem['index']];
+			    //  // },
+			    //  // afterLabel: function(tooltipItem, data) {
+			    //  //   var dataset = data['datasets'][0];
+			    //  //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+			    //  //   return '(' + percent + '%)';
+			    //  // }
+			  },
+
+			  //  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 9,
+			        fontColor: '#fff',
+			        autoSkip: false,
+			        maxRotation: 90,
+			        minRotation: 90,
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			      //     scaleLabel : {
+			      //       display     : true,
+			      //     //   labelString : 'Build Month',
+			      //       fontSize: 10,
+			      //       fontColor:'#fff'
+			      //   },
+			    }],
+			    yAxes: [{
+			        id: 'bar-y-axis',
+			        position: 'left',
+			        //  stacked : true,
+			        display: true,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 0.015,
+			          // stepSize: 0.3,
+			          fontSize: 9,
+			          //  formatter:: function(value, context, values) {
+			          //              if(context.dataIndex === context.dataset.data.length - 1){
+			          //                       return value
+			          //      }
+			          //  }
+
+			          callback: function(value) {
+			            if (value > -1) {
+			              return ''
+			            } else {
+			              return value
+			            }
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			      {
+			        id: 'bar-y-axis1',
+			        position: 'right',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 120,
+			          stepSize: 20,
+			          fontSize: 9,
+			          fontColor: 'black',
+			          callback: function(value) {
+			            if (value > 100) {
+			              return ''
+			            } else {
+			              if (value % 1 === 0) {
+			                return value + '%'
+			              }
+			            }
+
+			          }
+			        },
+			        type: 'linear',
+			      },
+
+			    ],
+			  },
+			}
+
+			let escapeOptions = {
+			  legend: {
+			    display: false,
+			  },
+			  //  tooltips: {
+			  //      enabled: true,
+			  //      mode: 'label',
+			  //      yAlign: 'center',
+			  //      callbacks: {
+			  //      title: function(tooltipItem, data) {
+			  //      return ""
+			  //      },
+			  //      // label: function(tooltipItem, data) {
+			  //      //   return data['datasets'][0]['data'][tooltipItem['index']];
+			  //      // },
+			  //      // afterLabel: function(tooltipItem, data) {
+			  //      //   var dataset = data['datasets'][0];
+			  //      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+			  //      //   return '(' + percent + '%)';
+			  //      // }
+			  //  },
+
+			  //  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 9,
+			        fontColor: '#fff',
+			        autoSkip: false,
+			        maxRotation: 90,
+			        minRotation: 90,
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			      //     scaleLabel : {
+			      //       display     : true,
+			      //     //   labelString : 'Build Month',
+			      //       fontSize: 10,
+			      //       fontColor:'#fff'
+			      //   },
+			    }],
+			    yAxes: [{
+			        id: 'bar-y-axis',
+			        position: 'left',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 100,
+			          // stepSize: 0.3,
+			          fontSize: 9,
+			          //  formatter:: function(value, context, values) {
+			          //              if(context.dataIndex === context.dataset.data.length - 1){
+			          //                       return value
+			          //      }
+			          //  }
+
+			          callback: function(value) {
+			            if (value % 0.2 === 0) {
+			              return value
+			            }
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			      {
+			        id: 'bar-y-axis1',
+			        position: 'right',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 120,
+			          stepSize: 20,
+			          fontSize: 9,
+			          fontColor: 'black',
+			          callback: function(value) {
+			            if (value > 100) {
+			              return ''
+			            } else {
+			              if (value % 1 === 0) {
+			                return value + '%'
+			              }
+			            }
+
+			          }
+			        },
+			        type: 'linear',
+			      },
+
+			    ],
+			  },
+			}
+
+			let dpuOptions = {
+			  legend: {
+			    labels: {
+			      useLineStyle: true,
+			      // boxWidth: 30
+			    },
+			    position: 'top',
+			  },
+			  //  tooltips: {
+			  //      enabled: true,
+			  //      mode: 'label',
+			  //      yAlign: 'center',
+			  //      callbacks: {
+			  //      title: function(tooltipItem, data) {
+			  //      return ""
+			  //      },
+			  //      // label: function(tooltipItem, data) {
+			  //      //   return data['datasets'][0]['data'][tooltipItem['index']];
+			  //      // },
+			  //      // afterLabel: function(tooltipItem, data) {
+			  //      //   var dataset = data['datasets'][0];
+			  //      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+			  //      //   return '(' + percent + '%)';
+			  //      // }
+			  //  },
+
+			  //  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 9,
+			        fontColor: '#fff',
+			        autoSkip: false,
+			        maxRotation: 90,
+			        minRotation: 90,
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			      //     scaleLabel : {
+			      //       display     : true,
+			      //     //   labelString : 'Build Month',
+			      //       fontSize: 10,
+			      //       fontColor:'#fff'
+			      //   },
+			    }],
+			    yAxes: [{
+			        id: 'bar-y-axis',
+			        position: 'left',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          //  max         : 100,
+			          // stepSize: 0.3,
+			          fontSize: 9,
+			          //  formatter:: function(value, context, values) {
+			          //              if(context.dataIndex === context.dataset.data.length - 1){
+			          //                       return value
+			          //      }
+			          //  }
+
+			          callback: function(value) {
+			            if (value % 0.2 === 0) {
+			              return value
+			            }
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			      {
+			        id: 'bar-y-axis1',
+			        position: 'right',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          //  max         : 120,
+			          //  stepSize: 50,
+			          fontSize: 9,
+			          //  callback: function(value) {
+			          //      if (value > 100) {
+			          //          return ''
+			          //      } else {
+			          //      if (value % 1 === 0) {
+			          //          return value + '%'
+			          //          }
+			          //      }
+
+			          //      }
+			        },
+			        type: 'linear',
+			      },
+
+			    ],
+			  },
+			}
+			let t3rftOptions = {
+			  legend: {
+			    labels: {
+			      useLineStyle: true,
+			      // boxWidth: 30
+			    },
+			    position: 'top',
+			  },
+			  //  tooltips: {
+			  //      enabled: true,
+			  //      mode: 'label',
+			  //      yAlign: 'center',
+			  //      callbacks: {
+			  //      title: function(tooltipItem, data) {
+			  //      return ""
+			  //      },
+			  //      // label: function(tooltipItem, data) {
+			  //      //   return data['datasets'][0]['data'][tooltipItem['index']];
+			  //      // },
+			  //      // afterLabel: function(tooltipItem, data) {
+			  //      //   var dataset = data['datasets'][0];
+			  //      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+			  //      //   return '(' + percent + '%)';
+			  //      // }
+			  //  },
+
+			  //  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 9,
+			        fontColor: '#fff',
+			        autoSkip: false,
+			        maxRotation: 90,
+			        minRotation: 90,
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			      //     scaleLabel : {
+			      //       display     : true,
+			      //     //   labelString : 'Build Month',
+			      //       fontSize: 10,
+			      //       fontColor:'#fff'
+			      //   },
+			    }],
+			    yAxes: [{
+			        id: 'bar-y-axis',
+			        position: 'left',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 125,
+			          // stepSize: 0.3,
+			          fontSize: 9,
+			          //  formatter:: function(value, context, values) {
+			          //              if(context.dataIndex === context.dataset.data.length - 1){
+			          //                       return value
+			          //      }
+			          //  }
+
+			          callback: function(value) {
+			            if (value % 0.2 === 0) {
+			              return value
+			            }
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			      {
+			        id: 'bar-y-axis1',
+			        position: 'right',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 105,
+			          //  stepSize: 50,
+			          fontSize: 9,
+			          //  callback: function(value) {
+			          //      if (value > 100) {
+			          //          return ''
+			          //      } else {
+			          //      if (value % 1 === 0) {
+			          //          return value + '%'
+			          //          }
+			          //      }
+
+			          //      }
+			        },
+			        type: 'linear',
+			      },
+
+			    ],
+			  },
+			}
+
+			let cfcOptions = {
+			  legend: {
+			    display: false,
+			  },
+			  //  tooltips: {
+			  //      enabled: true,
+			  //      mode: 'label',
+			  //      yAlign: 'center',
+			  //      callbacks: {
+			  //      title: function(tooltipItem, data) {
+			  //      return ""
+			  //      },
+			  //      // label: function(tooltipItem, data) {
+			  //      //   return data['datasets'][0]['data'][tooltipItem['index']];
+			  //      // },
+			  //      // afterLabel: function(tooltipItem, data) {
+			  //      //   var dataset = data['datasets'][0];
+			  //      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+			  //      //   return '(' + percent + '%)';
+			  //      // }
+			  //  },
+
+			  //  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 9,
+			        fontColor: '#fff',
+			        autoSkip: false,
+			        maxRotation: 90,
+			        minRotation: 90,
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			      //     scaleLabel : {
+			      //       display     : true,
+			      //     //   labelString : 'Build Month',
+			      //       fontSize: 10,
+			      //       fontColor:'#fff'
+			      //   },
+			    }],
+			    yAxes: [{
+			        id: 'bar-y-axis',
+			        position: 'left',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          //  max         : 100,
+			          // stepSize: 0.3,
+			          fontSize: 9,
+			          //  formatter:: function(value, context, values) {
+			          //              if(context.dataIndex === context.dataset.data.length - 1){
+			          //                       return value
+			          //      }
+			          //  }
+
+			          callback: function(value) {
+			            if (value % 0.2 === 0) {
+			              return value
+			            }
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			      {
+			        id: 'bar-y-axis1',
+			        position: 'right',
+			        //  stacked : true,
+			        //    display : true,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 120,
+			          //  stepSize: 50,
+			          fontSize: 9,
+			          callback: function(value) {
+			            if (value > 100) {
+			              return ''
+			            } else {
+			              if (value % 1 === 0) {
+			                return value + '%'
+			              }
+			            }
+
+			          }
+			        },
+			        type: 'linear',
+			      },
+
+			    ],
+			  },
+			}
+
+			let asdOptions = {
+			  legend: {
+			    labels: {
+			      useLineStyle: true,
+			      // boxWidth: 30
+			    },
+			    position: 'top',
+			  },
+			  tooltips: {
+			    enabled: true,
+			  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 9,
+			        fontColor: '#fff',
+			        autoSkip: false,
+			        maxRotation: 90,
+			        minRotation: 90,
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			      //     scaleLabel : {
+			      //       display     : true,
+			      //     //   labelString : 'Build Month',
+			      //       fontSize: 10,
+			      //       fontColor:'#fff'
+			      //   },
+			    }],
+			    yAxes: [{
+			        id: 'bar-y-axis',
+			        position: 'left',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 100,
+			          // stepSize: 0.3,
+			          fontSize: 9,
+			          //  formatter:: function(value, context, values) {
+			          //              if(context.dataIndex === context.dataset.data.length - 1){
+			          //                       return value
+			          //      }
+			          //  }
+
+			          callback: function(value) {
+			            if (value % 0.2 === 0) {
+			              return value
+			            }
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			      {
+			        id: 'bar-y-axis1',
+			        position: 'right',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 120,
+			          //  stepSize: 50,
+			          fontSize: 9,
+			          callback: function(value) {
+			            if (value > 100) {
+			              return ''
+			            } else {
+			              if (value % 1 === 0) {
+			                return value + '%'
+			              }
+			            }
+
+			          }
+			        },
+			        type: 'linear',
+			      },
+
+			    ],
+			  },
+			}
+
+			let middleOptions = {
+			  //  legend     : {
+			  //      display : false,
+
+			  //  },
+			  legend: {
+			    labels: {
+			      useLineStyle: true,
+			      // boxWidth: 25
+			    },
+			    position: 'top',
+			  },
+			  tooltips: {
+			    enabled: true,
+			  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 9,
+			        fontColor: '#fff',
+			        autoSkip: false,
+			        maxRotation: 90,
+			        minRotation: 90,
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			      //     scaleLabel : {
+			      //       display     : true,
+			      //     //   labelString : 'Build Month',
+			      //       fontSize: 10,
+			      //       fontColor:'#fff'
+			      //   },
+			    }],
+			    yAxes: [{
+			        id: 'bar-y-axis',
+			        position: 'left',
+			        //  stacked : true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 20,
+			          // stepSize: 0.3,
+			          fontSize: 9,
+			          //  formatter:: function(value, context, values) {
+			          //              if(context.dataIndex === context.dataset.data.length - 1){
+			          //                       return value
+			          //      }
+			          //  }
+
+			          callback: function(value) {
+			            if (value % 0.2 === 0) {
+			              return value
+			            }
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			      {
+			        id: 'bar-y-axis1',
+			        position: 'right',
+			        //  stacked : true,
+			        //    display : true,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 20,
+			          //  stepSize: 50,
+			          fontSize: 9,
+			          //  callback: function(value) {
+			          //      if (value > 100) {
+			          //          return ''
+			          //      } else {
+			          //      if (value % 1 === 0) {
+			          //          return value + '%'
+			          //          }
+			          //      }
+
+			          //      }
+			        },
+			        type: 'linear',
+			      },
+
+			    ],
+			  },
+			}
+
+
+			let barChartData1 = {
+			  labels: <%- JSON.stringify(weeks) %>,
+
+
+			  datasets: [
+
+
+			    {
+			      type: 'line',
+			      label: 'DPU',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      borderColor: 'orange',
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        clamp: true,
+			        align: 'top',
+			        offset: -2,
+			        //  anchor: 'start',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+
+			      data: [<%= weeksDpuArr %>],
+
+			    },
+
+			  ],
+			}
+
+			let barChartData2 = {
+			  labels: <%- JSON.stringify(extraShortMonths) %>,
+
+			  datasets: [
+
+			    {
+			      type: 'line',
+			      label: 'RFT',
+			      borderColor: 'blue',
+			      backgroundColor: 'transparent',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        align: 'bottom',
+			        // offset: 8,
+			        // anchor: 'start',
+			        formatter: function(value, context, values) {
+
+			          return value + '%'
+
+			        }
+
+			      },
+
+			      data: [<%= cabsRftInDivStats %>],
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'Target',
+			      borderColor: 'red',
+			      pointRadius: 0,
+			      borderDash: [10, 5],
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        //  rotation: -90,
+			        align: 'top',
+			        offset: -4,
+			        // anchor: 'start',
+			        formatter: function(value, context, values) {
+			          if (context.dataIndex === context.dataset.data.length - 1) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value + '%';
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= cabsRftInDivTarget %>],
+
+
+			    },
+
+
+			  ],
+			}
+
+			let barChartData3 = {
+			  labels: <%- JSON.stringify(theMonths) %>,
+
+			  datasets: [{
+			      type: 'line',
+			      label: 'DPU',
+			      borderColor: 'orange',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        clamp: true,
+			        align: 'top',
+			        offset: -2,
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        '0.032',
+			        '0.031',
+			        '0.034',
+			        '0.039',
+			        '0.065',
+			        '0.040',
+			        '0.053',
+			        '0.037',
+			        '0.037',
+			        '0.074',
+			        '0.042',
+			        '0.039',
+
+			      ],
+
+			    },
+			    //  {
+			    //      type            : 'line',
+			    //      label           : 'DPU Target',
+			    //      borderColor     : 'red',
+			    //      pointRadius: 0,
+			    //      borderDash: [10,5],
+			    //     //  segment: {
+			    //     //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+			    //     //     },
+			    //      backgroundColor : 'transparent',
+			    //      yAxisID         : 'bar-y-axis',
+			    //      datalabels: {
+			    //          // display labels for this specific dataset
+			    //          display: true,
+			    //          color:'white',
+			    //          rotation: -90,
+			    //         // anchor: 'start',
+			    //         align: 'top',
+			    //         // offset: -8,
+			    //          formatter: function(value, context) {
+			    //         if (context.dataIndex === context.dataset.data.length - 1)
+			    //         {
+			    //             return value.y;
+			    //         }
+			    //         return "";
+			    //     }
+			    //          },
+			    //     data: [
+			    //     ,
+			    //         ,
+			    //         ,
+			    //         ,
+			    //         ,
+			    //         ,
+			    //         ,
+			    //         ,
+			    //         ,
+			    //         ,
+			    //         0.012,
+			    //         0.011,
+			    //         0.010,
+			    //         0.009,
+			    //         0.008,
+			    //         0.007,
+			    //         0.006,
+			    //         0.005,
+			    //         0.004,
+			    //         0.003,
+			    //         0.002,
+			    //         0.001,
+			    //     ],
+
+			    //  },
+
+
+			  ],
+			}
+
+
+
+			let barChartData6 = {
+			  labels: <%- JSON.stringify(extraShortMonths) %>,
+
+			  datasets: [{
+			      type: 'line',
+			      label: 'DPU',
+			      borderColor: 'orange',
+			      backgroundColor: 'transparent',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      //  backgroundColor : 'orange',
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        clamp: true,
+			        align: 'bottom',
+			        //  offset: -2,
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= ldlDPU %>],
+
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'DPU Target',
+			      borderColor: 'red',
+			      pointRadius: 0,
+			      borderDash: [10, 5],
+			      //  segment: {
+			      //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+			      //     },
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        //  rotation: -90,
+			        anchor: 'start',
+			        align: 'top',
+			        //  offset: 8,
+			        formatter: function(value, context) {
+			          if (context.dataIndex === context.dataset.data.length - 1) {
+			            return value
+			          }
+			          return ""
+			        }
+			      },
+			      data: [<%= ldlDPUTarget %>],
+
+
+
+			    },
+
+
+			  ],
+			}
+
+			let barChartData7 = {
+			  labels: <%- JSON.stringify(extraShortMonths) %>,
+
+			  datasets: [{
+			      type: 'line',
+			      label: 'DPU',
+			      borderColor: 'orange',
+			      backgroundColor: 'transparent',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      //  backgroundColor : 'orange',
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        clamp: true,
+			        align: 'bottom',
+			        //  offset: -2,
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= bhlDPU %>],
+
+
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'DPU Target',
+			      borderColor: 'red',
+			      pointRadius: 0,
+			      borderDash: [10, 5],
+			      //  segment: {
+			      //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+			      //     },
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        //  rotation: -90,
+			        anchor: 'start',
+			        align: 'top',
+			        //  offset: 8,
+			        formatter: function(value, context) {
+			          if (context.dataIndex === context.dataset.data.length - 1) {
+			            return value
+			          }
+			          return ""
+			        }
+			      },
+			      data: [<%= bhlDPUTarget %>],
+
+
+
+			    },
+
+
+			  ],
+			}
+			let barChartData8 = {
+			  labels: <%- JSON.stringify(extraShortMonths) %>,
+
+			  datasets: [{
+			      type: 'line',
+			      label: 'DPU',
+			      borderColor: 'orange',
+			      backgroundColor: 'transparent',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      //  backgroundColor : 'orange',
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        clamp: true,
+			        align: 'bottom',
+			        //  offset: -2,
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= cheadleDPU %>],
+
+
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'DPU Target',
+			      borderColor: 'red',
+			      pointRadius: 0,
+			      borderDash: [10, 5],
+			      //  segment: {
+			      //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+			      //     },
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        //  rotation: -90,
+			        anchor: 'start',
+			        align: 'top',
+			        //  offset: 8,
+			        formatter: function(value, context) {
+			          if (context.dataIndex === context.dataset.data.length - 1) {
+			            return value
+			          }
+			          return ""
+			        }
+			      },
+			      data: [<%= cheadleDPUTarget %>],
+
+
+
+			    },
+
+
+			  ],
+			}
+
+			let barChartData9 = {
+			  labels: <%- JSON.stringify(theMonths) %>,
+
+			  datasets: [
+
+			    {
+			      type: 'line',
+			      label: 'T3 RFT',
+			      borderColor: 'orange',
+			      backgroundColor: 'transparent',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -45,
+			        align: 'top',
+			        anchor: 'start',
+			        offset: -6,
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        95,
+			        96,
+			        95,
+			        95,
+			        93,
+			        95,
+			        95,
+			        96,
+			        96,
+			        96,
+
+			      ],
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'T3 Target',
+			      borderColor: 'red',
+			      pointRadius: 0,
+			      borderDash: [10, 5],
+
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        //  rotation: -90,
+			        align: 'top',
+			        offset: -4,
+			        // anchor: 'start',
+			        formatter: function(value, context, values) {
+			          if (context.dataIndex === context.dataset.data.length - 1) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value + '%';
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [, , , , , , , , ,
+			        95,
+			        95,
+			        96,
+			        96,
+			        96,
+			        96,
+			        97,
+			        97,
+			        97,
+			        97,
+			        98,
+			        98,
+
+			      ],
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'T6 RFT',
+			      borderColor: 'blue',
+			      backgroundColor: 'transparent',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -45,
+			        align: 'bottom',
+			        anchor: 'start',
+			        offset: -6,
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        93,
+			        93,
+			        93,
+			        93,
+			        91,
+			        92,
+			        93,
+
+
+			      ],
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'T3 Target',
+			      borderColor: 'red',
+			      pointRadius: 0,
+			      borderDash: [10, 5],
+
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        //  rotation: -90,
+			        align: 'top',
+			        offset: -4,
+			        // anchor: 'start',
+			        formatter: function(value, context, values) {
+			          if (context.dataIndex === context.dataset.data.length - 1) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value + '%';
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [, , , , , ,
+			        92,
+			        92,
+			        92,
+			        93,
+			        93,
+			        94,
+			        94,
+			        94,
+			        95,
+			        95,
+			        96,
+			        96,
+			        96,
+
+			      ],
+
+			    }
+
+
+			  ],
+			}
+
+			let barChartData10 = {
+			  labels: <%- JSON.stringify(theMonths) %>,
+
+			  datasets: [
+
+			    {
+			      type: 'line',
+			      label: 'T3 DPU',
+			      borderColor: 'orange',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -45,
+			        align: 'bottom',
+			        anchor: 'start',
+			        offset: -6,
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        '0.055',
+			        '0.051',
+			        '0.068',
+			        '0.063',
+			        '0.087',
+			        '0.072',
+			        '0.067',
+			        '0.058',
+			        '0.058',
+			        '0.057',
+
+
+			      ],
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'T3 Target',
+			      borderColor: 'red',
+			      pointRadius: 0,
+			      borderDash: [10, 5],
+			      //  segment: {
+			      //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+			      //     },
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        // anchor: 'start',
+			        // align: 'bottom',
+			        //  offset: 8,
+			        // anchor: 'start',
+			        formatter: function(value, context) {
+			          if (context.dataIndex === context.dataset.data.length - 1) {
+			            return value;
+			          }
+			          return "";
+			        }
+			      },
+			      data: [, , , , , , , , ,
+			        0.063,
+			        0.060,
+			        0.058,
+			        0.055,
+			        0.052,
+			        0.049,
+			        0.046,
+			        0.043,
+			        0.040,
+			        0.037,
+			        0.035,
+
+
+
+
+			      ],
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'T6 DPU',
+			      borderColor: 'blue',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -45,
+			        align: 'top',
+			        anchor: 'start',
+			        offset: -6,
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        '0.086',
+			        '0.082',
+			        '0.100',
+			        '0.097',
+			        '0.128',
+			        '0.108',
+			        '0.109',
+
+
+			      ],
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'T6 Target',
+			      borderColor: 'red',
+			      pointRadius: 0,
+			      borderDash: [10, 5],
+			      //  segment: {
+			      //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+			      //     },
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        // anchor: 'start',
+			        // align: 'bottom',
+			        //  offset: 8,
+			        // anchor: 'start',
+			        formatter: function(value, context) {
+			          if (context.dataIndex === context.dataset.data.length - 1) {
+			            return value;
+			          }
+			          return "";
+			        }
+			      },
+			      data: [, , , , , ,
+			        0.106,
+			        0.102,
+			        0.097,
+			        0.093,
+			        0.088,
+			        0.083,
+			        0.079,
+			        0.074,
+			        0.069,
+			        0.065,
+			        0.060,
+			        0.056,
+
+			      ],
+
+			    },
+
+
+			  ],
+			}
+			let barChartData11 = {
+			  labels: <%- JSON.stringify(theMonths) %>,
+
+			  datasets: [
+
+
+			    {
+			      type: 'line',
+			      label: 'DPU',
+			      borderColor: 'orange',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        clamp: true,
+			        align: 'top',
+			        offset: -2,
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			      ],
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'DPU Target',
+			      borderColor: 'red',
+			      pointRadius: 0,
+			      borderDash: [10, 5],
+			      //  segment: {
+			      //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+			      //     },
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        // anchor: 'start',
+			        align: 'top',
+			        //  offset: 8,
+			        // anchor: 'start',
+			        formatter: function(value, context) {
+			          if (context.dataIndex === context.dataset.data.length - 1) {
+			            return value;
+			          }
+			          return "";
+			        }
+			      },
+			      data: [, , , , , , , ,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			      ],
+
+			    },
+
+
+			  ],
+			}
+
+			let barChartData12 = {
+			  labels: <%- JSON.stringify(theMonths) %>,
+
+			  datasets: [
+
+
+			    {
+			      type: 'line',
+			      label: 'DPU',
+			      borderColor: 'orange',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        clamp: true,
+			        align: 'top',
+			        offset: -2,
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			      ],
+
+			    },
+			    {
+			      type: 'line',
+			      label: 'DPU Target',
+			      borderColor: 'red',
+			      pointRadius: 0,
+			      borderDash: [10, 5],
+			      //  segment: {
+			      //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+			      //     },
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        // anchor: 'start',
+			        align: 'top',
+			        //  offset: 8,
+			        // anchor: 'start',
+			        formatter: function(value, context) {
+			          if (context.dataIndex === context.dataset.data.length - 1) {
+			            return value;
+			          }
+			          return "";
+			        }
+			      },
+			      data: [, , , , , , , ,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			      ],
+
+			    },
+
+
+			  ],
+			}
+
+			let barChartData13 = {
+			  labels: <%- JSON.stringify(theMonths) %>,
+
+			  datasets: [
+
+
+			    {
+			      type: 'line',
+			      label: 'DPU',
+			      borderColor: 'orange',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        clamp: true,
+			        align: 'top',
+			        offset: -2,
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			      ],
+			    },
+			    {
+			      type: 'line',
+			      label: 'DPU Target',
+			      borderColor: 'red',
+			      pointRadius: 0,
+			      borderDash: [10, 5],
+			      //  segment: {
+			      //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+			      //     },
+			      backgroundColor: 'transparent',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        // anchor: 'start',
+			        align: 'top',
+			        //  offset: 8,
+			        //  anchor: 'end',
+			        formatter: function(value, context) {
+			          if (context.dataIndex === context.dataset.data.length - 1) {
+			            return value;
+			          }
+			          return "";
+			        }
+			      },
+			      data: [, , , , , , , ,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			        0.182,
+			      ],
+
+			    },
+
+
+			  ],
+			}
+
+			let barChartData14 = {
+			  labels: <%- JSON.stringify(extraShortMonths) %>,
+
+			  datasets: [
+
+			    {
+			      type: 'line',
+			      label: 'Cumulative Total',
+			      borderColor: 'blue',
+			      backgroundColor: 'transparent',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        align: 'top',
+			        // offset: 8,
+			        // anchor: 'start',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= top10ClosuresOpsStats  %>],
+
+
+			    },
+
+			    {
+			      type: 'bar',
+			      label: '> 20 days',
+			      borderColor: 'orange',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        clamp: true,
+			        align: 'top',
+			        offset: 2,
+			        anchor: 'start',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= top10ClosuresOpsStatsLate  %>],
+
+
+			    },
+
+
+
+			  ],
+			}
+
+			let barChartData15 = {
+			  labels: <%- JSON.stringify(extraShortMonths) %>,
+
+			  datasets: [
+
+			    {
+			      type: 'line',
+			      label: 'Cumulative Total',
+			      borderColor: 'blue',
+			      backgroundColor: 'transparent',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        align: 'top',
+			        // offset: 8,
+			        // anchor: 'start',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= top10ClosuresSuppStats  %>],
+
+			    },
+
+			    {
+			      type: 'bar',
+			      label: '> 40 Days',
+			      borderColor: 'orange',
+			      pointRadius: 0,
+			      lineTension: 0,
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis1',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        rotation: -90,
+			        clamp: true,
+			        align: 'top',
+			        offset: 2,
+			        anchor: 'start',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            //  value = value.toString();
+			            //  value = value.split(/(?=(?:...)*$)/);
+			            //  value = value.join(',');
+			            return value;
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= top10ClosuresSuppStatsLate  %>],
+
+
+			    },
+
+
+			  ],
+			}
+
+
+
+
+			window.onload = function() {
+
+
+
+			  // doa dpu & rft
+			  const ctx = document.getElementById("chart1")
+			  //  majorOptionss.scales.yAxes[0].ticks.max = 0.005
+			  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart1 = new Chart(ctx, {
+			    //  type: 'bar',
+			    data: barChartData1,
+			    options: majorOptions
+			  })
+
+
+			  // to dpu & rft
+			  const ctx2 = document.getElementById("chart2")
+			  //    options.scales.yAxes[0].ticks.max =
+			  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart2 = new Chart(ctx2, {
+			    type: 'bar',
+			    data: barChartData2,
+			    options: options
+			  })
+
+			  // major escape dpu
+			  const ctx3 = document.getElementById("chart3")
+			  escapeOptions.scales.yAxes[0].ticks.max = 0.15
+			  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart3 = new Chart(ctx3, {
+			    type: 'bar',
+			    data: barChartData3,
+			    options: escapeOptions
+			  })
+
+
+			  // Total DPU
+			  const ctx6 = document.getElementById("chart6")
+			  options.scales.yAxes[0].ticks.max = 10
+			  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart6 = new Chart(ctx6, {
+			    type: 'bar',
+			    data: barChartData6,
+			    options: dpuOptions
+			  })
+
+			  // CFC RFT
+			  const ctx7 = document.getElementById("chart7")
+			  //    options.scales.yAxes[0].ticks.max =
+			  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart7 = new Chart(ctx7, {
+			    type: 'bar',
+			    data: barChartData7,
+			    options: dpuOptions
+			  })
+			  // CFC RFT
+			  const ctx8 = document.getElementById("chart8")
+			  //    options.scales.yAxes[0].ticks.max =
+			  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart8 = new Chart(ctx8, {
+			    type: 'bar',
+			    data: barChartData8,
+			    options: dpuOptions
+			  })
+			  // CFC RFT
+			  const ctx9 = document.getElementById("chart9")
+			  //    options.scales.yAxes[0].ticks.max =
+			  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart9 = new Chart(ctx9, {
+			    type: 'bar',
+			    data: barChartData9,
+			    options: t3rftOptions
+			  })
+			  // CFC RFT
+			  const ctx10 = document.getElementById("chart10")
+			  leaksOptions.scales.yAxes[0].ticks.max = 0.2
+
+			  //  dpuOptionsoptions.scales.xAxes[0].ticks.autoSkip = false
+			  //  dpuOptionsoptions.scales.xAxes[0].ticks.maxRotation = 90
+			  //  dpuOptionsoptions.scales.xAxes[0].ticks.minRotation = 90
+
+
+			  const myChart10 = new Chart(ctx10, {
+			    type: 'bar',
+			    data: barChartData10,
+			    options: leaksOptions
+			  })
+
+			  //  // Total DPU
+			  //  const ctx11 = document.getElementById("chart11")
+			  //    asdOptions.scales.yAxes[0].ticks.max = 1
+			  //  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  //  const myChart11 = new Chart(ctx11, {
+			  //      type: 'bar',
+			  //      data    : barChartData11,
+			  //      options : asdOptions
+			  //  })
+
+			  //  // CFC RFT
+			  //  const ctx12 = document.getElementById("chart12")
+			  //     // options.scales.yAxes[0].ticks.max = 3
+			  //  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  //  const myChart12 = new Chart(ctx12, {
+			  //      type: 'bar',
+			  //      data    : barChartData12,
+			  //      options : asdOptions
+			  //  })
+
+			  //  // CFC RFT
+			  //  const ctx13 = document.getElementById("chart13")
+			  //     //   options.scales.yAxes[0].ticks.max = 3
+			  //  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  //  const myChart13 = new Chart(ctx13, {
+			  //      type: 'bar',
+			  //      data    : barChartData13,
+			  //      options : asdOptions
+			  //  })
+
+			  // Top 10 dealer rft
+			  const ctx14 = document.getElementById("chart14")
+			  //    middleOptions.scales.yAxes[0].ticks.max = 20
+			  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart14 = new Chart(ctx14, {
+			    type: 'bar',
+			    data: barChartData14,
+			    options: middleOptions
+			  })
+
+			  // Top 10 customer rft
+			  const ctx15 = document.getElementById("chart15")
+			  //    options.scales.yAxes[0].ticks.max =
+			  //   options.scales.yAxes[0].ticks.stepSize = 600
+			  //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart15 = new Chart(ctx15, {
+			    type: 'bar',
+			    data: barChartData15,
+			    options: middleOptions
+			  })
+
+
+
+
+			}
+		</script>
+	</body>
+</html>

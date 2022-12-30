@@ -1,0 +1,466 @@
+<% layout('layouts/boilertCardDash')%>
+<!-- <meta http-equiv="refresh" content="100" /> -->
+<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+
+<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+
+<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+
+<link rel="stylesheet" href="/stylesheets/app.css" />
+
+<script defer src="/font-v6/js/solid.js"></script>
+<script defer src="/font-v6/js/brands.js"></script>
+
+<script defer src="/font-v6/js/fontawesome.js"></script>
+
+<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+
+<!-- <script src="/7z/content/chart-js/chart.bundle.min.js"></script> -->
+
+<script src="/7z/content/chart-js/chart.bundle.js"></script>
+
+<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+<style>
+	body {
+		background-color: black;
+	}
+	h5 {
+		color: white;
+		font-size: 1.5rem;
+		margin-bottom: -15px;
+	}
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+	h2 {
+		font-weight: bold;
+		color: black;
+	}
+	h1 {
+		font-weight: bold;
+		font-size: 4rem;
+	}
+	h6 {
+		font-size: 1rem;
+	}
+	hr {
+		background-color: #6a6d6d;
+	}
+	.fact_header {
+		color: white;
+		text-align: center;
+	}
+	.fact_stat {
+		color: white;
+		text-align: center;
+		font-size: 50px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	.fact_box {
+		width: 200px;
+		height: 120px;
+		background-color: rgb(26, 28, 30);
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+	.analtysis_header {
+		color: white;
+		text-align: center;
+		font-size: 30px;
+	}
+	.analysis_box {
+		width: 200px;
+		height: 120px;
+		background-color: rgb(26, 28, 30);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	.new5 {
+		border: 1px solid grey;
+		border-radius: 5px;
+		width: 60%;
+		margin-bottom: -1px;
+	}
+
+	.tCard {
+		background: rgb(26, 28, 30);
+		display: inline-block;
+		height: 115px;
+		margin-top: 95px;
+		position: relative;
+		width: 155px;
+	}
+	.tCard:before {
+		border-bottom: 35px solid rgb(26, 28, 30);
+		border-left: 40px solid transparent;
+		border-right: 40px solid transparent;
+		content: '';
+		height: 0;
+		margin-top: 30px;
+		position: absolute;
+		top: -65px;
+		width: 155px;
+	}
+	.insidecard {
+		color: white;
+		font-size: 28px;
+		text-align: center;
+		margin-top: 40px;
+	}
+	.analysis_header {
+		height: 50px;
+		width: 160px;
+		background-color: rgb(26, 28, 30);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	.analysis_header_text {
+		color: white;
+		text-align: center;
+		font-size: 23px;
+	}
+</style>
+
+<div style="display: flex; justify-content: center; font-size: 40px; color: white; margin-top: -20px">UK Division Overview</div>
+<div style="display: flex; justify-content: center; font-size: 25px; color: rgb(252, 176, 38); margin-top: -15px">Critical to Quality</div>
+<div style="display: flex; width: 100%; flex-wrap: wrap; justify-content: space-evenly">
+	<div style="width: 70vw; display: flex; flex-wrap: wrap; justify-content: space-evenly">
+		<div style="display: flex; justify-content: space-evenly; width: 100%; flex-wrap: wrap; margin-bottom: 10px">
+			<div style="width: 100%; height: 700px">
+				<h3>Days Since Failure</h3>
+				<hr />
+				<div
+					style="display: flex; flex-direction: column; align-content: center; margin-bottom: 10px; margin-top: -5px; flex-wrap: wrap; height: 600px"
+				>
+					<% locationsArr.map((l) => { %>
+					<div>
+						<div style="text-align: center; color: white"><%= l.longDivision %></div>
+						<table class="table table-hover table-dark" style="font-size: 13px; height: 265px; line-height: 0.5; margin: 5px 5px; width: 325px">
+							<thead>
+								<tr class="d-flex">
+									<th style="width: 160px">Check</th>
+									<th style="width: 105px">Frequency</th>
+									<th style="width: 60px">Days</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% for (let card of l.results) { %>
+								<tr class="d-flex">
+									<td style="width: 180px"><a href="/tCard/qcs-critical-to-quality-dash/<%= card._id  %>"><%= card.name %></a></td>
+									<td style="width: 100px"><a href="/tCard/qcs-critical-to-quality-dash/<%= card._id  %>"><%= card.frequency %></a></td>
+									<td style="width: 65px; text-align: center; background-color: <%= card.color %>">
+										<% if (card.days > 49000000) { %>
+										<a href="/tCard/qcs-critical-to-quality-dash/<%= card._id  %>"> -- </a>
+										<% } else { %>
+										<a href="/tCard/qcs-critical-to-quality-dash/<%= card._id  %>"> <%= card.days %> </a>
+										<% } %>
+									</td>
+								</tr>
+								<% } %>
+							</tbody>
+						</table>
+					</div>
+					<% }) %>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="width: 24vw; display: flex; flex-wrap: wrap; justify-content: space-evenly">
+		<!-- division wrapper-->
+		<div style="width: 100%; height: 302px">
+			<h3>Analysis</h3>
+			<hr />
+
+			<div style="height: 590px; display: flex; flex-direction: column; justify-content: space-between">
+				<div style="height: 130px">
+					<div style="text-align: center; color: white">Totals</div>
+					<table class="table table-hover table-dark" style="height: 130px; font-size: 13px; line-height: 0.5; margin-bottom: 8px; width: 100%">
+						<thead>
+							<tr class="d-flex">
+								<th style="width: 50%">Days</th>
+								<th style="width: 25%">Status</th>
+								<th style="width: 25%">Total Count</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="d-flex">
+								<td style="width: 50%">+10 days clear</td>
+								<td style="width: 25%">Green</td>
+								<td style="width: 25%; text-align: center; background-color: green"><%= over9DaysNumber %></td>
+							</tr>
+							<tr class="d-flex">
+								<td style="width: 50%">Last 10 Days</td>
+								<td style="width: 25%">Amber</td>
+								<td style="width: 25%; text-align: center; background-color: orange"><%= under9DaysNumber %></td>
+							</tr>
+							<tr class="d-flex">
+								<td style="width: 50%">Today</td>
+								<td style="width: 25%">Red</td>
+								<td style="width: 25%; text-align: center; background-color: red"><%= todayNumber %></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div style="height: 200px; width: 460px; background-color: rgb(26, 28, 30); margin-top: 20px">
+					<div style="color: white; text-align: center"><%= tCardName %> Last 10 Checks</div>
+					<div style="width: 465px; height: 180px">
+						<canvas id="line-chart"></canvas>
+					</div>
+				</div>
+				<div style="height: 200px; background-color: rgb(26, 28, 30)">
+					<div style="color: white; text-align: center">All Time Validation Stats</div>
+					<div style="display: flex; width: 100%">
+						<div style="width: 340px; height: 180px">
+							<canvas id="myChart2"></canvas>
+						</div>
+
+						<div style="width: 130px; height: 175px; display: flex; flex-direction: column; text-align: center; justify-content: space-between">
+							<div style="color: white; font-size: 15px">Passed - <%= passedPercent %>%</div>
+							<div style="color: white; font-size: 15px">Failed - <%= failedPercent %>%</div>
+							<div style="color: white; font-size: 15px">Contained - <%= containedPercent %>%</div>
+							<div style="color: white; font-size: 15px">Missed - <%= missedPercent %>%</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="container-fluid footer">
+				<div class="row header-top">
+					<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+						<img height="24px" src="/7z/content/images/jcb-logo.png" />
+						<img height="24px" src="/7z/content/images/df.png" />
+					</div>
+					<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+						J.C. Bamford Excavators LTD &copy; 2022
+					</div>
+				</div>
+			</div>
+
+			<script>
+				    Chart.defaults.global.defaultFontColor = '#fff'
+				    Chart.defaults.global.defaultFontSize = 14
+				    // Chart.defaults.scale.gridLines.display = false
+				    Chart.defaults.global.defaultFontFamily = 'Ubuntu'
+
+
+
+				  new Chart(document.getElementById("line-chart"), {
+				  type: 'line',
+				  data: {
+				    // labels: ['01/11','02/11', '03/11', '04/11', '05/11', '06/11', '07/11', '08/11', '09/11', '10/11', '11/11', '12/11',],
+				        labels: <%- JSON.stringify(lineLabels) %>,
+				    datasets: [
+				          {
+				                data: [<%= lineUpper %>],
+				            pointRadius: 0,
+				            datalabels: {
+				        // display labels for this specific dataset
+				        display: false,
+				        color: 'white',
+				        //  rotation: -90,
+				        anchor: 'start',
+				        align: 'bottom',
+				         offset: -4,
+				        formatter: function(value, context) {
+				          if (context.dataIndex === context.dataset.data.length - 2) {
+				            return value + 'NM';
+				          }
+				          return "";
+				        }
+				      },
+				        label: "Upper",
+				        borderColor: "green",
+				        fill: false
+				      },
+				          {
+				                data: [<%= lineTarget %>],
+				            pointRadius: 0,
+				            datalabels: {
+				        // display labels for this specific dataset
+				        display: false,
+				        color: 'white',
+				        //  rotation: -90,
+				        anchor: 'start',
+				        align: 'bottom',
+				         offset: -4,
+				        formatter: function(value, context) {
+				          if (context.dataIndex === context.dataset.data.length - 2) {
+				            return value + 'NM';
+				          }
+				          return "";
+				        }
+				      },
+				        label: "Target",
+				        borderColor: "orange",
+				        fill: false
+				      },
+				      {
+				            data: [<%= lineLower %>],
+				        pointRadius: 1,
+
+				        datalabels: {
+				        // display labels for this specific dataset
+				        display: false,
+				        color: 'white',
+				        //  rotation: -90,
+				        anchor: 'start',
+				        align: 'top',
+				          offset: -4,
+				        formatter: function(value, context) {
+				          if (context.dataIndex === context.dataset.data.length - 2) {
+				            return value + 'NM';
+				          }
+				          return "";
+				        }
+				      },
+				        label: "Lower",
+				        borderColor: "green",
+				        fill: false
+				      },
+				      {
+				        data: [<%= lineResult %>],
+				        label: "",
+				            lineTension: 0,
+				                datalabels: {
+				        // display labels for this specific dataset
+				        display: true,
+				        color: 'white',
+				        //  rotation: -90,
+				        // anchor: 'start',
+				        // align: 'top',
+				         offset: 0,
+				        formatter: function(value, context) {
+				          if (value > 0) {
+				            return value ;
+				          }
+				          return "";
+				        }
+				      },
+				        borderColor: "#3cba9f",
+				        fill: false
+				      }
+				    ]
+				  },
+				    options: {
+				    maintainAspectRatio: false,
+				  responsive: true,
+				   legend: {
+				      labels: {
+				        useLineStyle: true,
+				        // boxWidth: 25
+				      },
+				      position: 'bottom',
+				  },
+				      plugins: {
+				        datalabels: {
+				          formatter: (val) => {
+				                if (val > 0) {
+				                  return val
+				                }
+				                return null
+				          },
+				        },
+				      },
+				      legend: {
+				        display: false,
+				      },
+				      scales: {
+				        xAxes: [
+				          {
+				            display: true,
+				            gridLines: {
+				              display: false,
+				              color: '#FFFFFF',
+				            },
+				          ticks: {
+				          display: true,
+				          beginAtZero: true,
+				          fontSize: 11,
+				        },
+				      },
+
+				        ],
+				        yAxes: [
+				          {
+				            display: true,
+				            gridLines: {
+				              display: true,
+				              color: '#787878',
+				            },
+				                ticks: {
+				          display: true,
+				          beginAtZero: true,
+				          // fontSize: 11,
+				        },
+				          },
+				        ],
+				      },
+				    },
+				});
+
+				            var ctx2 = document.getElementById('myChart2').getContext('2d')
+				        var myChart2 = new Chart(ctx2, {
+				          type: 'bar',
+				          data: {
+				            labels: ['Passed', 'Failed', 'Contained', 'Missed'],
+				            datasets: [
+				              {
+				                data: [<%= theTCardPassed %>, <%= theTCardFailed %>, <%= theTCardContained %>, <%= theTCardMissed %> ],
+				                label: 'Total',
+				                borderColor: ['green', 'red', 'orange', '#2563eb'],
+				                backgroundColor: ['green', 'red', 'orange', '#2563eb'],
+				                borderWidth: 2,
+				              },
+				            ],
+				          },
+				          options: {
+				            maintainAspectRatio: false,
+				            responsive: true,
+				            plugins: {
+				              datalabels: {
+				                formatter: (val) => {
+				                      if (val > 0) {
+				                        return val
+				                      }
+				                      return null
+				                },
+				              },
+				            },
+				            legend: {
+				              display: false,
+				            },
+				            scales: {
+				              xAxes: [
+				                {
+				                  display: true,
+				                  gridLines: {
+				                    display: false,
+				                    color: '#FFFFFF',
+				                  },
+				                },
+				              ],
+				              yAxes: [
+				                {
+				                  display: true,
+				                  gridLines: {
+				                    display: true,
+				                    color: '#787878',
+				                  },
+				                },
+				              ],
+				            },
+				          },
+				        })
+			</script>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,470 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="newred-container" style="color: white;">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1>Machine into Test</h1>
+    </div>
+
+
+
+    <div class="col">
+      <form action="/throughput/newPDI/<%= division %>" method="POST">
+        <% if ( division === 'LDL' ) { %>
+        <input type="hidden" name="throughput[division]" value="<%= division %>">
+        <label for="buildNumber">Full Build Number</label>
+        <input class="form-control" type="text" id="password" name="throughput[buildNumber]" minlength="9" maxlength="9" required>
+
+        <label for="area">Model</label>
+        <select class="form-control" type="text" name="throughput[model]" autocomplete="off" required>
+          <% models.forEach(model => { %>
+          <option hidden></option>
+
+          <option label="<%= model.name %>" value="<%= model.name %>">
+
+            <% }) %>
+        </select>
+
+        <!-- <label for="inspector">Inspector</label>
+				<select class="form-control" type="text" name="throughput[inspector]" autocomplete="off" required>
+					<% inspectors.forEach(inspector => { %>
+						<option hidden ></option>
+
+						<option label="<%= inspector.name %>" value="<%= inspector.name %>">
+
+					<% }) %>
+
+				</select> -->
+
+
+        <!-- <label for="area">Building</label>
+				<select class="form-control" type="text" name="throughput[building]"  autocomplete="off" required>
+					<option></option>
+					<option>Loadall PDI</option>
+                </select> -->
+
+        <!-- <label for="area">T Card Fails</label>
+				<select class="form-control" type="text" name="throughput[tCard]"  autocomplete="off" required>
+					<option></option>
+					<option>0</option>
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+					<option>5</option>
+					<option>6</option>
+					<option>7</option>
+					<option>8</option>
+					<option>9</option>
+					<option>10</option>
+					<option>11</option>
+					<option>12</option>
+					<option>13</option>
+					<option>14</option>
+					<option>15</option>
+					<option>16</option>
+					<option>17</option>
+					<option>18</option>
+					<option>19</option>
+					<option>20</option>
+                </select> -->
+
+        <label for="area">Assembly Faults</label>
+        <select class="form-control" type="text" name="throughput[assembly]" autocomplete="off" required>
+          <option></option>
+          <option>0</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+          <option>11</option>
+          <option>12</option>
+          <option>13</option>
+          <option>14</option>
+          <option>15</option>
+          <option>16</option>
+          <option>17</option>
+          <option>18</option>
+          <option>19</option>
+          <option>20</option>
+          <option>21</option>
+          <option>22</option>
+          <option>23</option>
+          <option>24</option>
+          <option>25</option>
+          <option>26</option>
+          <option>27</option>
+          <option>28</option>
+          <option>29</option>
+          <option>30</option>
+          <option>31</option>
+          <option>32</option>
+          <option>33</option>
+          <option>34</option>
+          <option>35</option>
+          <option>36</option>
+          <option>37</option>
+          <option>38</option>
+          <option>39</option>
+          <option>40</option>
+        </select>
+
+        <label for="area">Cabs Faults</label>
+        <select class="form-control" type="text" name="throughput[cabs]" autocomplete="off" required>
+          <option></option>
+          <option>0</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+          <option>11</option>
+          <option>12</option>
+          <option>13</option>
+          <option>14</option>
+          <option>15</option>
+          <option>16</option>
+          <option>17</option>
+          <option>18</option>
+          <option>19</option>
+          <option>20</option>
+          <option>21</option>
+          <option>22</option>
+          <option>23</option>
+          <option>24</option>
+          <option>25</option>
+          <option>26</option>
+          <option>27</option>
+          <option>28</option>
+          <option>29</option>
+          <option>30</option>
+          <option>31</option>
+          <option>32</option>
+          <option>33</option>
+          <option>34</option>
+          <option>35</option>
+          <option>36</option>
+          <option>37</option>
+          <option>38</option>
+          <option>39</option>
+          <option>40</option>
+        </select>
+
+        <label for="area">Fabrication Faults</label>
+        <select class="form-control" type="text" name="throughput[fabrication]" autocomplete="off" required>
+          <option></option>
+          <option>0</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+          <option>11</option>
+          <option>12</option>
+          <option>13</option>
+          <option>14</option>
+          <option>15</option>
+          <option>16</option>
+          <option>17</option>
+          <option>18</option>
+          <option>19</option>
+          <option>20</option>
+          <option>21</option>
+          <option>22</option>
+          <option>23</option>
+          <option>24</option>
+          <option>25</option>
+          <option>26</option>
+          <option>27</option>
+          <option>28</option>
+          <option>29</option>
+          <option>30</option>
+          <option>31</option>
+          <option>32</option>
+          <option>33</option>
+          <option>34</option>
+          <option>35</option>
+          <option>36</option>
+          <option>37</option>
+          <option>38</option>
+          <option>39</option>
+          <option>40</option>
+        </select>
+        <label for="area">Quality Faults</label>
+        <select class="form-control" type="text" name="throughput[quality]" autocomplete="off" required>
+          <option></option>
+          <option>0</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+          <option>11</option>
+          <option>12</option>
+          <option>13</option>
+          <option>14</option>
+          <option>15</option>
+          <option>16</option>
+          <option>17</option>
+          <option>18</option>
+          <option>19</option>
+          <option>20</option>
+          <option>21</option>
+          <option>22</option>
+          <option>23</option>
+          <option>24</option>
+          <option>25</option>
+          <option>26</option>
+          <option>27</option>
+          <option>28</option>
+          <option>29</option>
+          <option>30</option>
+          <option>31</option>
+          <option>32</option>
+          <option>33</option>
+          <option>34</option>
+          <option>35</option>
+          <option>36</option>
+          <option>37</option>
+          <option>38</option>
+          <option>39</option>
+          <option>40</option>
+        </select>
+        <label for="area">Shortages</label>
+        <select class="form-control" type="text" style="margin-bottom: 33px;" name="throughput[shortages]" autocomplete="off" required>
+          <option></option>
+          <option>0</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+          <option>11</option>
+          <option>12</option>
+          <option>13</option>
+          <option>14</option>
+          <option>15</option>
+          <option>16</option>
+          <option>17</option>
+          <option>18</option>
+          <option>19</option>
+          <option>20</option>
+          <option>21</option>
+          <option>22</option>
+          <option>23</option>
+          <option>24</option>
+          <option>25</option>
+          <option>26</option>
+          <option>27</option>
+          <option>28</option>
+          <option>29</option>
+          <option>30</option>
+          <option>31</option>
+          <option>32</option>
+          <option>33</option>
+          <option>34</option>
+          <option>35</option>
+          <option>36</option>
+          <option>37</option>
+          <option>38</option>
+          <option>39</option>
+          <option>40</option>
+        </select>
+
+    </div>
+
+    <div class="col">
+      <!-- <label for="area">P33</label>
+				<select class="form-control" type="text" name="throughput[p33]"  autocomplete="off" required>
+					<option></option>
+					<option>Yes</option>
+					<option>No</option>
+				</select>
+
+				<label for="area">10mm Shim Fitted</label>
+				<select class="form-control" type="text" name="throughput[tenMmShim]"  autocomplete="off" required>
+					<option></option>
+					<option>Yes</option>
+					<option>No</option>
+					<option>N/A</option>
+				</select> -->
+
+      <label for="notes">Fault Detail</label>
+      <textarea style="height:395px; margin-bottom: 25px;" class="form-control" name="throughput[faults]"></textarea>
+
+      <div class="form-group text-center">
+        <button class="btn btn-md btn-success btn-block ">Submit</button>
+      </div>
+    </div>
+
+    <% } else { %>
+    <input type="hidden" name="throughput[division]" value="<%= division %>">
+    <label for="buildNumber">Full Build Number</label>
+    <input class="form-control" type="text" id="password" name="throughput[buildNumber]" minlength="9" maxlength="9" required>
+
+
+    <label for="area">Model</label>
+    <select class="form-control" type="text" name="throughput[model]" autocomplete="off" required>
+      <% models.forEach(model => { %>
+      <option hidden></option>
+
+      <option label="<%= model.name %>" value="<%= model.name %>">
+
+        <% }) %>
+    </select>
+
+    <label for="inspector">Inspector</label>
+    <select class="form-control" type="text" name="throughput[inspector]" autocomplete="off" required>
+      <% inspectors.forEach(inspector => { %>
+      <option hidden></option>
+
+      <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+
+        <% }) %>
+
+    </select>
+
+
+    <label for="area">Building</label>
+    <select class="form-control" type="text" name="throughput[building]" autocomplete="off" required>
+      <option></option>
+      <option>CFC</option>
+      <option>PDI</option>
+      <option>SIP 2</option>
+    </select>
+
+    <label for="area">T Card Fails</label>
+    <select class="form-control" type="text" name="throughput[tCard]" autocomplete="off" required>
+      <option></option>
+      <option>0</option>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+      <option>7</option>
+      <option>8</option>
+      <option>9</option>
+      <option>10</option>
+      <option>11</option>
+      <option>12</option>
+      <option>13</option>
+      <option>14</option>
+      <option>15</option>
+      <option>16</option>
+      <option>17</option>
+      <option>18</option>
+      <option>19</option>
+      <option>20</option>
+    </select>
+
+    <% if (division === 'Cabs') { %>
+    <label for="area">Build Faults</label>
+    <% } else { %>
+    <label for="area">Functional Faults</label>
+    <% } %>
+    <select class="form-control" type="text" name="throughput[functional]" autocomplete="off" required>
+      <option></option>
+      <option>0</option>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+      <option>7</option>
+      <option>8</option>
+      <option>9</option>
+      <option>10</option>
+      <option>11</option>
+      <option>12</option>
+      <option>13</option>
+      <option>14</option>
+      <option>15</option>
+      <option>16</option>
+      <option>17</option>
+      <option>18</option>
+      <option>19</option>
+      <option>20</option>
+    </select>
+
+    <% if (division === 'Cabs') { %>
+    <label for="area">Shortages</label>
+    <% } else { %>
+    <label for="area">Cosmetic Faults</label>
+    <% } %>
+    <select class="form-control" type="text" name="throughput[cosmetic]" autocomplete="off" required>
+      <option></option>
+      <option>0</option>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+      <option>7</option>
+      <option>8</option>
+      <option>9</option>
+      <option>10</option>
+      <option>11</option>
+      <option>12</option>
+      <option>13</option>
+      <option>14</option>
+      <option>15</option>
+      <option>16</option>
+      <option>17</option>
+      <option>18</option>
+      <option>19</option>
+      <option>20</option>
+    </select>
+
+  </div>
+
+  <div class="col">
+    <label for="notes">Faults Detail</label>
+    <textarea style="height:390px; margin-bottom: 25px;" class="form-control" name="throughput[faults]"></textarea>
+
+    <div class="form-group text-center">
+      <button class="btn btn-lg btn-success btn-block ">Submit</button>
+    </div>
+  </div>
+
+  <% }; %>
+
+
+
+  </form>
+</div>
+<div>
+  <a href="/throughput/pdi/<%= division %>">Go Back Test Tracker</a>
+</div>

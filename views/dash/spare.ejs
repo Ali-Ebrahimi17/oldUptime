@@ -1,0 +1,1477 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="900"> -->
+
+
+
+
+  <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+  <!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+  <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script> -->
+  <!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+  <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+
+
+
+  <link rel="icon" href="/images/jcb.png" />
+  <link rel="stylesheet" href="/stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="/stylesheets/dash.css">
+</head>
+
+<body>
+
+  <% let today = new Date() %>
+  <% let day = today.getDate() %>
+  <% let month = today.getMonth() + 1 %>
+  <% let year = today.getFullYear() %>
+  <% let hours = today.getHours() %>
+  <% let minutes = today.getMinutes() %>
+  <% if (day < 10) day = '0' + day %>
+  <% if (month < 10) month = '0' + month %>
+  <% if (hours < 10) hours = '0' + hours %>
+  <% if (minutes < 10) minutes = '0' + minutes %>
+  <% let dateTime = day + ' ' + month + ' ' + year + ' - ' + hours + ':' + minutes %>
+
+
+
+
+
+
+ 
+  <% let wc = "wc"%>
+
+
+
+
+  <!-- The dash layout -->
+
+  <section class="dash-layout">
+
+  
+
+      <div class="card card-2tall">
+
+        <!-- <h1 class="box-content-header"><a href="/dash/singledoa/<%= division %>">DOA</h1> -->
+        <h1 class="box-content-header"><a href="">DOA</h1>
+        <p class="doa-month"><%= newDOAStat.monthYear %></p>
+        <p class="stat"><%= newDOAStat.totalDPU %></p>
+        <% if ( newDOAStat.totalDPU > newDOALastStat.totalDPU) { %>
+        <h1 class="red-arrow">&#x25B2;</h1>
+        <% } else { %>
+        <h1 class="green-arrow">&#x25Bc;</h1>
+        <% }; %>
+        <div class="targets">
+          <p class="target">TARGET<br>
+            TBC</p>
+          <p class="actual">DELTA<br>
+            TBC</a></p>
+        </div>
+      </div>
+   
+
+      <div class="card card-2tall">
+
+        <!-- <h1 class="box-content-header"><a href="/dash/singledoa/<%= division %>">DOA</h1> -->
+        <h1 class="box-content-header"><a href="">T3</h1>
+        <p class="doa-month"><%= newT3LastStat.monthYear %></p>
+        <p class="stat"><%= newT3LastStat.totalDPU %></p>
+        <% if ( newT3LastStat.totalDPU > newT3PrevLastStat.totalDPU) { %>
+        <h1 class="red-arrow">&#x25B2;</h1>
+        <% } else { %>
+        <h1 class="green-arrow">&#x25Bc;</h1>
+        <% }; %>
+        <div class="targets">
+          <p class="target">TARGET<br>
+            TBC</p>
+          <p class="actual">DELTA<br>
+            TBC</a></p>
+        </div>
+      </div>
+
+
+   
+    <% if (division.length < 2) { %>
+    <div class="card card-2tall">
+      <h1 class="box-content-header"><a href="/dash/single/<%= division %>">INTERNAL DPU</h1>
+      <p class="dpu-month"><%= dpuMonth %></p>
+      <p class="<% if (figure[184].stat > figure[175].stat) { %>red-stat<% } else { %>green-stat<% } %>"><%= figure[184].stat  %></p>
+
+      <div class="targets">
+        <p class="target">TARGET<br>
+          <%= figure[175].stat  %> </p>
+        <p class="actual">DELTA<br>
+          <%= (figure[184].stat - figure[175].stat).toFixed(3)  %></a></p>
+      </div>
+    </div>
+    <% } %>
+    <% if (division.length > 1) { %>
+    <div class="card card-2tall">
+      <h1 class="box-content-header">TBC</h1>
+      <!-- <p class="dpu-month"></p>
+          <p class="<% if (figure[184].stat > figure[175].stat) { %>red-stat<% } else { %>green-stat<% } %>"><%= figure[184].stat  %></p> -->
+      <div class="targets">
+      </div>
+    </div>
+    <% } %>
+   
+
+
+    <!-- Prediction 1 -->
+   
+    <div class="card ">
+      <h1 class="box-content-header">T3 PREDICTION</h1>
+      <div class="targets-prediction">
+        <div>
+          <h1 class="box-content-header" style="margin-top: -27px; margin-left: -65px;"><%= newT3Prediction1.monthYear %></h1>
+
+          <a href="/claims/retails/<%= division %>">
+            <div class="build-stats" style="margin-top: 5px;">BUILDS <%= newT3Prediction1.totalBuiltMachines %><br>RETAILED <%= newT3Prediction1.totalRetails  %> - (<%= newT3Prediction1.inMriPercent%>%)<br>IN MRI <%= newT3Prediction1.mriMachines %><br>CLAIMS <%= newT3Prediction1.claims%></div>
+          </a>
+
+        </div>
+        <div>
+          <% if ( newT3Prediction1.totalDPU > newT3LastStat.totalDPU) { %>
+          <h1 class="red-arrow">&#x25B2;</h1>
+          <% } else { %>
+          <h1 class="green-arrow">&#x25BC;</h1>
+          <% }; %>
+        </div>
+        <div style="margin-top: -10px;">
+          <h1 class="<% if (newT3Prediction1.totalDPU > newT3Prediction1.t3DpuTarget) { %>red-prediction<% } else { %>green-prediction<% } %>"><%= newT3Prediction1.totalDPU %> </h1>
+        </div>
+
+
+        <div>
+          <h1 class="box-content-header" style="margin-top: -35%;">RFT</h1>
+          <div class="pre1-donut-holder">
+            <canvas id="doughnut-chart" width="80" height="80"></canvas>
+          </div>
+          <div class="pre1-donut-percent">
+            <h5 class="pre1-donut-percent"><%= newT3Prediction1.rft  %>%</h5>
+          </div>
+        </div>
+      </div>
+      <p class="month-target">TARGET <%= newT3Prediction1.t3DpuTarget%></p>
+    </div>
+
+ 
+
+    <div class="card card-full">
+      <h1 class="box-content-header">PRE T3 ANALYSIS</h1>
+      <div class="new-graph-holder">
+        <div>
+          <canvas id="bar-chart-horizontal-Assembly" width="400" height="250"></canvas>
+        </div>
+        <div>
+          <canvas id="bar-chart-horizontal-Stamping" width="400" height="250"></canvas>
+        </div>
+      </div>
+      <div class="new-graph-holder">
+        <div>
+          <canvas id="bar-chart-horizontal-Supplier" width="400" height="250"></canvas>
+        </div>
+        <div>
+          <canvas id="bar-chart-horizontal-Models" width="400" height="250"></canvas>
+        </div>
+      </div>
+      <div class="new-graph-holder">
+        <div>
+          <canvas id="bar-chart-horizontal-Design" width="400" height="250"></canvas>
+        </div>
+       
+        <a href="/claims/downloadt3asd/<%= division %>">
+          <div>
+            <canvas id="bar-chart-asd" width="400" height="250"></canvas>
+          </div>
+        </a>
+       
+
+      </div>
+    </div>
+
+    </div>
+
+
+
+    <!-- prediction 2 -->
+   
+
+    <div class="card ">
+      <h1 class="box-content-header">T3 PREDICTION</h1>
+      <div class="targets-prediction">
+        <div>
+          <h1 class="box-content-header" style="margin-top: -27px; margin-left: -65px;"><%= newT3Prediction2.monthYear %></h1>
+
+          <a href="/claims/retails/<%= division %>">
+            <div class="build-stats" style="margin-top: 5px;">BUILDS <%= newT3Prediction2.totalBuiltMachines %><br>RETAILED <%= newT3Prediction2.totalRetails  %> - (<%= newT3Prediction2.inMriPercent%>%)<br>IN MRI <%= newT3Prediction2.mriMachines %><br>CLAIMS <%= newT3Prediction2.claims%></div>
+          </a>
+
+        </div>
+        <div>
+          <% if ( newT3Prediction2.totalDPU > newT3Prediction1.totalDPU) { %>
+          <h1 class="red-arrow">&#x25B2;</h1>
+          <% } else { %>
+          <h1 class="green-arrow">&#x25BC;</h1>
+          <% }; %>
+        </div>
+        <div style="margin-top: -10px;">
+          <h1 class="<% if (newT3Prediction2.totalDPU > newT3Prediction2.t3DpuTarget) { %>red-prediction<% } else { %>green-prediction<% } %>"><%= newT3Prediction2.totalDPU %> </h1>
+        </div>
+
+
+        <div>
+          <h1 class="box-content-header" style="margin-top: -35%;">RFT</h1>
+          <div class="pre1-donut-holder">
+            <canvas id="doughnut-chart-2" width="80" height="80"></canvas>
+          </div>
+          <div class="pre1-donut-percent">
+            <h5 class="pre1-donut-percent"><%= newT3Prediction2.rft %>%</h5>
+          </div>
+        </div>
+      </div>
+      <p class="month-target">TARGET <%= newT3Prediction2.t3DpuTarget%></p>
+    </div>
+
+   
+
+
+    <div class="card card-2tall">
+      <h1 class="box-content-header"><a href="">POST CUT IN</h1>
+      <p class="dpu-dealer-claims" style="margin-top: 6%;">Dealer DPU<br>Last 3 Months</p>
+     
+      <p class="stat" style="margin-top: -12%;"> --</p>
+    
+
+
+      <p class="dpu-dealer-claims">Machines <br> -- </p>
+      <p class="dpu-dealer-claims" style="margin-top: -10%;">Claims <br> -- </a></p>
+
+    </div>
+    <div class="card card-2tall">
+      <h1 class="box-content-header">4C STATUS</h1>
+      <br>
+
+      <div class="fourc">
+
+        <p class="fourc-small-stat">Issued<br>Last 3 Months<br>
+          <span style="font-size: 1.8rem; font-weight: bold;"><%= totFourC %></span><br>
+        </p>
+      </div>
+
+      <div class="fourc-status">
+        <p class="">DOA<br>
+          <span class="red-4C"><%= doaOpenNum %></span><br>
+          <span class="amber-4C"><%= doaContainedNum %></span><br>
+          <span class="green-4C"><%= doaClosedNum %></span><br>
+        </p>
+        <p class="">T3<br>
+          <span class="red-4C"><%= t3OpenNum %></span><br>
+          <span class="amber-4C"><%= t3ContainedNum %></span><br>
+          <span class="green-4C"><%= t3ClosedNum %></span><br>
+        </p>
+        <p class="">INT<br>
+          <span class="red-4C"><%= intOpenNum %></span><br>
+          <span class="amber-4C"><%= intContainedNum %></span><br>
+          <span class="green-4C"><%= intClosedNum %></span><br>
+        </p>
+        <p class="">TOT<br>
+          <span class="red-4C"><%= doaOpenNum +  t3OpenNum + intOpenNum %></span><br>
+          <span class="amber-4C"><%= doaContainedNum + t3ContainedNum + intContainedNum %></span><br>
+          <span class="green-4C"><%= doaClosedNum + t3ClosedNum + intClosedNum  %></span><br>
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <% if (division.length < 2 ) { %>
+    <div class="card card-2tall">
+      <h1 class="box-content-header"><a href="/dash/inspector/<%= division %>">PRACTICAL INSPECTION<br>%</h1>
+      <div class="graph-pi">
+        <canvas id="bar-chart-pi-ldl" width="820" height="1020"></canvas>
+      </div></a>
+
+    </div>
+    <% } %>
+    <% if (division.length > 1 ) { %>
+    <div class="card card-2tall">
+      <h1 class="box-content-header"><a href="/dash/inspector/<%= division %>">TBC</h1>
+      <div class="graph-pi">
+        <canvas id="bar-chart-pi-ldl" width="0" height="0"></canvas>
+      </div></a>
+
+    </div>
+    <% } %>
+
+
+
+
+    <!-- prediction 3 -->
+
+   
+
+    <div class="card ">
+      <h1 class="box-content-header">T3 PREDICTION</h1>
+      <div class="targets-prediction">
+        <div>
+          <h1 class="box-content-header" style="margin-top: -27px; margin-left: -65px;"><%= newT3Prediction3.monthYear %></h1>
+          <a href="/claims/retails/<%= division %>">
+            <div class="build-stats" style="margin-top: 5px;">BUILDS <%= newT3Prediction3.totalBuiltMachines %><br>
+              RETAILED <%= newT3Prediction3.totalRetails  %> - (<%= newT3Prediction3.inMriPercent%>%)<br>
+              IN MRI <%= newT3Prediction3.mriMachines %><br>CLAIMS <%= newT3Prediction3.claims%>
+            </div>
+          </a>
+        </div>
+        <div>
+          <% if ( newT3Prediction3.totalDPU > newT3Prediction2.totalDPU) { %>
+          <h1 class="red-arrow">&#x25B2;</h1>
+          <% } else { %>
+          <h1 class="green-arrow">&#x25BC;</h1>
+          <% }; %>
+        </div>
+        <div style="margin-top: -10px;">
+          <h1 class="<% if (newT3Prediction3.totalDPU > newT3Prediction3.t3DpuTarget) { %>red-prediction<% } else { %>green-prediction<% } %>"><%= newT3Prediction3.totalDPU %> </h1>
+        </div>
+
+
+        <div>
+          <h1 class="box-content-header" style="margin-top: -35%;">RFT</h1>
+          <div class="pre1-donut-holder">
+            <canvas id="doughnut-chart-3" width="80" height="80"></canvas>
+          </div>
+          <div class="pre1-donut-percent">
+            <h5 class="pre1-donut-percent"><%= newT3Prediction3.rft %>%</h5>
+          </div>
+        </div>
+      </div>
+      <p class="month-target">TARGET <%= newT3Prediction3.t3DpuTarget%></p>
+    </div>
+
+
+  
+
+
+
+    <div class="card card-prediction ">
+      <div class="new-graph-holder">
+        <div>
+          <canvas id="doaDPU" width="300" height="190"></canvas>
+        </div>
+        <div>
+          <canvas id="doaRFT" width="300" height="190"></canvas>
+        </div>
+      </div>
+      <div class="new-graph-holder">
+        <div>
+          <canvas id="t3DPU" width="300" height="190"></canvas>
+        </div>
+        <div>
+          <canvas id="t3RFT" width="300" height="190"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <% if (division.length < 2) { %>
+    <div class="card card-2tall">
+      <h1 class="box-content-header"><a href="#">SERVICE TOP 10 CLOSURES</h1>
+
+      <br>
+      <div class="targets-closure">
+        <div>
+          <p class=" <% if (figure[180].stat < figure[182].stat) { %>small-red-stat<% } else { %>small-green-stat<% } %>">T3<br>
+            <%= figure[180].stat %></p>
+        </div>
+        <div>
+          <p class=" <% if (figure[181].stat < figure[183].stat) { %>small-red-stat<% } else { %>small-green-stat<% } %>">CUSTOMER<br>
+            <%= figure[181].stat  %></p>
+        </div>
+      </div>
+
+      <div class="targets-closure1">
+        <p class="target"><a href="#">T3 TARGET<br>
+            <%= figure[182].stat%></p>
+        <p class="actual">CUSTOMER<br> TARGET<br>
+          <%= figure[183].stat %></a></p>
+      </div>
+
+    </div>
+
+    <% } %>
+    <% if (division.length > 1) { %>
+    <div class="card card-2tall">
+      <h1 class="box-content-header">TBC</h1>
+
+
+
+    </div>
+
+    <% } %>
+
+    <div class="card card-2tall">
+      <h1 class="box-content-header"><a href="/dash/singledealer/<%= division %>">DEALER TOP 10</h1>
+      <p class="dpu-dealer-claims" style="margin-top: 6%;">Last 3 Months</p>
+      
+      <p class="stat"><%= dealerTop10Percent %>%</p>
+  
+
+
+      <div class="targets-dealer">
+        <p class="target">TOP 10<br>CLAIMS<br>
+          <%= top10DealersInLast90DaysCount%></p>
+        <p class="actual">TOTAL<br>CLAIMS<br>
+          <%= dealerClaimsInLast90Days %></a></p>
+      </div>
+
+    </div>
+
+
+
+
+    <div class="card card-2tall">
+      <h1 class="box-content-header"><a href="/top50/50/doa/<%= division %>">DOA REPEATS PER UNIT</h1>
+      <p class="stat"> --</p>
+   
+      <h1 class="green-arrow">&#x25BC;</h1>
+     
+      <p class="dpu-dealer-claims" style="margin-top: 6%;"><%= wc %></p>
+    </div>
+
+
+  </section>
+
+
+  <script>
+    Chart.defaults.global.defaultFontColor = "#fff";
+    Chart.defaults.global.defaultFontSize = 12;
+
+
+
+
+    new Chart(document.getElementById("bar-chart-pi-ldl"), {
+      <% if ( division.includes("LDL")) { %>
+      type: 'bar',
+      data: {
+        labels: ["PLANT", "AG", "CFC"],
+        datasets: [{
+          label: "",
+          backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f"],
+          data: [
+            <%= figure[171].stat %>,
+            <%= figure[173].stat %>,
+            <%= figure[174].stat %>,
+            0, 100
+          ],
+        }]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        legend: {
+          display: false
+        },
+        title: {
+          display: false,
+          text: '% NXG NON NXG SPLIT',
+          fontSize: 5
+        }
+      },
+
+      <% }; %>
+      <% if ( division != 'LDL' ) { %>
+      type: 'bar',
+      data: {
+        labels: ["PLANT", 'DEALER PDI', ],
+
+
+
+        datasets: [{
+          label: "",
+          backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f"],
+          data: [
+            <%= figure[171].stat %>,
+            <%= figure[172].stat %>,
+
+            0, 100
+
+          ],
+
+        }]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 8
+            },
+          }],
+          yAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+
+        },
+        legend: {
+          display: false
+        },
+        title: {
+          display: false,
+          text: '% NXG NON NXG SPLIT',
+          fontSize: 5
+        }
+      },
+
+      <% }; %>
+    });
+
+
+
+
+   
+
+    let t31 = new Chart(t3DPU, {
+      type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: <%- JSON.stringify(fullT3Labels) %>,
+        datasets: [
+          {
+            label: "Target",
+            type: "line",
+            borderColor: "red",
+            data: [ <%= newT3DPUTargetArr %> ],
+            fill: false
+          }, 
+          {
+            label: 'Closed',
+            data: [<%= newT3ClosedArr %>],
+            backgroundColor: 'green'
+          },
+          {
+            label: 'Contained',
+            data: [<%= newT3ContainedArr %>],
+            backgroundColor: 'orange',
+          },
+          {
+            label: 'Open',
+            data: [<%= newT3OpenArr %>],
+            backgroundColor: 'red',
+          },
+          {
+            label: 'WIP',
+            data: [<%= newT3UnactionedArr %>],
+            backgroundColor: <%- JSON.stringify(newT3UnactionedColorArr) %>,
+          }
+        ]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            stacked: true,
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+            stacked: true,
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        title: {
+          display: true,
+          text: 'T3 DPU',
+          fontSize: 15
+        },
+        legend: {
+          display: false,
+          position: 'right',
+          labels: {
+            fontColor: '#000'
+          }
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        tooltips: {
+          enabled: true,
+          // mode: 'label',
+          callbacks: {
+            // beforeLabel: function(tooltipItem, data){
+            //   let dataset = data.datasets[tooltipItem.datasetIndex]
+            //   // console.log(tooltipItem.datasetIndex) // data number set open/closed
+            //   // console.log(tooltipItem.index) // month number
+            //   return data.datasets[tooltipItem.datasetIndex].label // + '  '+dataset.data[tooltipItem.index]+"DPU";
+            // },
+            label: function(tooltipItem, data) {
+              let dataset = data.datasets[tooltipItem.datasetIndex]
+              let theT3Data = [
+                [<%= closedClaimsT3Arr %>],
+                [<%= containedClaimsT3Arr %> ],
+                [<%= openClaimsT3Arr %> ],
+                [<%= unActionedClaimsT3Arr %> ],
+              ]
+              let claimsNumber = theT3Data[tooltipItem.datasetIndex - 1][tooltipItem.index]
+              let dpu = "DPU: "+dataset.data[tooltipItem.index];
+              let claims = "Claims: "+claimsNumber;
+              return dpu+' - '+claims;
+            },
+            // afterLabel: function(tooltipItem, data) {
+            //   let theT3Data = [
+            //     [<%= closedClaimsT3Arr %>],
+            //     [<%= containedClaimsT3Arr %> ],
+            //     [<%= openClaimsT3Arr %> ],
+            //     [<%= unActionedClaimsT3Arr %> ],
+            //   ]
+            //   let claimsNumber = theT3Data[tooltipItem.datasetIndex - 1][tooltipItem.index]
+            //   return "Claims: "+claimsNumber;
+            // },
+          },
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          },
+        }
+
+      },
+    });
+
+
+
+
+
+
+    new Chart(document.getElementById("bar-chart-horizontal-Assembly"), {
+
+      <% let labelsv1 = [] %>
+      <% preT3PartsAssembly.forEach(part => {%>
+      <% if ( part._id  != null ) { %>
+      <% labelsv1.push(part._id.substring(0, 30)); %>
+      <% }; %>
+      <% }) %>
+
+      <% let datav1 = [] %>
+      <% preT3PartsAssembly.forEach(part => {%>
+      <% if ( part.count  != null ) { %>
+      <% datav1.push(part.count); %>
+      <% }; %>
+      <% }) %>
+
+      <% let assemblyStatus = [] %>
+      <% preT3PartsAssembly.forEach(part => { %>
+      <% if (part.status.includes ('Closed') || part.rag.includes ('Closed')  ) { %>
+      <% assemblyStatus.push('green') %>
+      <% } else { %>
+      <% if (part.status.includes  ('Contained') || part.rag.includes ('Contained')  ) { %>
+      <% assemblyStatus.push('orange') %>
+      <% } else { %>
+      <% assemblyStatus.push('red') %>
+      <% } %>
+      <% } %>
+      <% }) %>
+
+
+
+
+      type: 'horizontalBar',
+      data: {
+        labels: <%- JSON.stringify(labelsv1); %>,
+        datasets: [{
+          label: "Warranty Claims",
+          backgroundColor: <%- JSON.stringify(assemblyStatus) %>,
+          data: <%- JSON.stringify(datav1); %>,
+          borderWidth: 1,
+          borderColor: '#777',
+          hoverBorderWidth: 3,
+          hoverBorderColor: '#FFFFFF',
+        }, ]
+      },
+      options: {
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        scales: {
+          xAxes: [{
+            ticks: {
+              display: false,
+              beginAtZero: true,
+              callback: function(value) {
+                if (value % 1 === 0) {
+                  return value;
+                }
+              }
+            }
+          }]
+        },
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'TOP 10 FAILED PARTS ASSEMBLY',
+          fontSize: 20
+        }
+      }
+    });
+
+    new Chart(document.getElementById("bar-chart-horizontal-Supplier"), {
+
+      <% let labelsv2 = [] %>
+      <% preT3PartsSupplier.forEach(part => {%>
+      <% if ( part._id  != null ) { %>
+      <% labelsv2.push(part._id.substring(0, 30)); %>
+      <% }; %>
+      <% }) %>
+
+      <% let datav2 = [] %>
+      <% preT3PartsSupplier.forEach(part => {%>
+      <% if ( part.count  != null ) { %>
+      <% datav2.push(part.count); %>
+      <% }; %>
+      <% }) %>
+
+      <% let supplierStatus = [] %>
+      <% preT3PartsSupplier.forEach(part => { %>
+      <% if (part.status.includes ('Closed') || part.rag.includes ('Closed') ) { %>
+      <% supplierStatus.push('green') %>
+      <% } else { %>
+      <% if (part.status.includes  ('Contained') || part.rag.includes ('Contained') ) { %>
+      <% supplierStatus.push('orange') %>
+      <% } else { %>
+
+      <% supplierStatus.push('red') %>
+      <% } %>
+
+      <% } %>
+      <% }) %>
+
+
+
+
+      type: 'horizontalBar',
+      data: {
+        labels: <%- JSON.stringify(labelsv2); %>,
+        datasets: [{
+          label: "Warranty Claims",
+          backgroundColor: <%- JSON.stringify(supplierStatus) %>,
+          data: <%- JSON.stringify(datav2); %>,
+          borderWidth: 1,
+          borderColor: '#777',
+          hoverBorderWidth: 3,
+          hoverBorderColor: '#FFFFFF',
+          fontSize: 10,
+        }, ]
+      },
+      options: {
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        scales: {
+          xAxes: [{
+            ticks: {
+              display: false,
+              beginAtZero: true,
+              callback: function(value) {
+                if (value % 1 === 0) {
+                  return value;
+                }
+              }
+            }
+          }]
+        },
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'TOP 10 FAILED PARTS SUPPLIER',
+          fontSize: 20
+        }
+      }
+    });
+
+    new Chart(document.getElementById("bar-chart-horizontal-Design"), {
+
+      <% let labelsv3 = [] %>
+      <% preT3PartsDesign.forEach(part => {%>
+      <% if ( part._id  != null ) { %>
+      <% labelsv3.push(part._id.substring(0, 30)); %>
+      <% }; %>
+      <% }) %>
+
+      <% let datav3 = [] %>
+      <% preT3PartsDesign.forEach(part => {%>
+      <% if ( part.count  != null ) { %>
+      <% datav3.push(part.count); %>
+      <% }; %>
+      <% }) %>
+
+      <% let designStatus = [] %>
+      <% preT3PartsDesign.forEach(part => { %>
+      <% if (part.status.includes ('Closed') || part.rag.includes ('Closed') ) { %>
+      <% designStatus.push('green') %>
+      <% } else { %>
+      <% if (part.status.includes  ('Contained') || part.rag.includes ('Contained') ) { %>
+      <% designStatus.push('orange') %>
+      <% } else { %>
+
+      <% designStatus.push('red') %>
+      <% } %>
+
+      <% } %>
+      <% }) %>
+
+      type: 'horizontalBar',
+      data: {
+        labels: <%- JSON.stringify(labelsv3); %>,
+
+        datasets: [{
+          label: "Warranty Claims",
+          backgroundColor: <%- JSON.stringify(designStatus) %>,
+
+          data: <%- JSON.stringify(datav3); %>,
+          borderWidth: 1,
+          borderColor: '#777',
+          hoverBorderWidth: 3,
+          hoverBorderColor: '#FFFFFF',
+          fontSize: 10,
+
+        }, ]
+      },
+      options: {
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: false,
+              beginAtZero: true,
+              callback: function(value) {
+                if (value % 1 === 0) {
+                  return value;
+                }
+              }
+            }
+          }]
+        },
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'TOP 10 FAILED PARTS DESIGN',
+          fontSize: 20
+        }
+      }
+    });
+
+    new Chart(document.getElementById("bar-chart-horizontal-Stamping"), {
+
+      <% let labelsv4 = [] %>
+      <% preT3Stamping.forEach(stamp => {%>
+      <% if ( stamp._id  != null ) { %>
+      <% labelsv4.push(stamp._id.substring(0, 30)); %>
+      <% }; %>
+      <% }) %>
+
+      <% let datav4 = [] %>
+      <% preT3Stamping.forEach(stamp => {%>
+      <% if ( stamp.count  != null ) { %>
+      <% datav4.push(stamp.count); %>
+      <% }; %>
+      <% }) %>
+
+
+
+
+      type: 'horizontalBar',
+      data: {
+        labels: <%- JSON.stringify(labelsv4); %>,
+
+        datasets: [{
+          label: "Warranty Claims",
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+
+          data: <%- JSON.stringify(datav4); %>,
+          borderWidth: 1,
+          borderColor: '#777',
+          hoverBorderWidth: 3,
+          hoverBorderColor: '#FFFFFF',
+          fontSize: 10,
+        }, ]
+      },
+      options: {
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: false,
+              beginAtZero: true,
+              callback: function(value) {
+                if (value % 1 === 0) {
+                  return value;
+                }
+              }
+            }
+          }]
+        },
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'TOP 10 STAMPS',
+          fontSize: 20
+        }
+      }
+    });
+
+
+    new Chart(document.getElementById("bar-chart-horizontal-Models"), {
+
+      <% let labelsv5 = [] %>
+      <% preT3Model.forEach(m => {%>
+      <% if ( m._id  != null ) { %>
+      <% labelsv5.push(m._id.substring(0, 30)); %>
+      <% }; %>
+      <% }) %>
+
+      <% let datav5 = [] %>
+      <% preT3Model.forEach(m => {%>
+      <% if ( m.count  != null ) { %>
+      <% datav5.push(m.count); %>
+      <% }; %>
+      <% }) %>
+
+
+      type: 'horizontalBar',
+      data: {
+        labels: <%- JSON.stringify(labelsv5); %>,
+
+        datasets: [{
+          label: "Warranty Claims",
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+
+          data: <%- JSON.stringify(datav5); %>,
+          borderWidth: 1,
+          borderColor: '#777',
+          hoverBorderWidth: 3,
+          hoverBorderColor: '#FFFFFF',
+          fontSize: 10,
+        }, ]
+      },
+      options: {
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: false,
+              beginAtZero: true,
+              callback: function(value) {
+                if (value % 1 === 0) {
+                  return value;
+                }
+              }
+            }
+          }]
+        },
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'TOP 10 MODELS',
+          fontSize: 20
+        }
+      }
+    });
+
+
+    new Chart(document.getElementById("bar-chart-asd"), {
+
+      type: 'bar',
+      data: {
+        labels: ["ASSEMBLY", "SUPPLIER", "DESIGN"],
+        datasets: [{
+          label: "",
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          data: [
+            <%= assemblyPercent %>,
+            <%= supplierPercent %>,
+            <%= designPercent %>,
+          ],
+
+        }]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 12,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+
+            ticks: {
+              display: false,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: '% ASD SPLIT',
+          fontSize: 20
+        }
+      },
+    });
+
+
+
+    let doa1 = new Chart(t3RFT, {
+      type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: 
+          <%- JSON.stringify(fullT3Labels); %>,
+        datasets: [
+          {
+          label: "Target",
+          type: "line",
+          borderColor: "red",
+          data: [ <%= newT3RFTTargetArr %> ],
+          fill: false
+        },
+        {
+          label: 'RFT %',
+          data: [<%= newT3RFTArr %>],
+          backgroundColor: <%- JSON.stringify(newT3UnactionedColorArr) %>,
+          
+        }]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        title: {
+          display: true,
+          text: 'T3 RFT %',
+          fontSize: 15
+        },
+        legend: {
+          display: false,
+          position: 'right',
+          labels: {
+            fontColor: '#000'
+          }
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        tooltips: {
+          enabled: true, 
+          mode:'label',
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          },
+        }
+
+      },
+    });
+
+   
+
+
+    let t3 = new Chart(doaDPU, {
+      type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: 
+          <%- JSON.stringify(fullDOALabels); %>,
+        datasets: [
+        {
+          label: "Target",
+          type: "line",
+          borderColor: "red",
+          data: [<%= newDOADPUTargetArr %>],
+          fill: false
+        },
+        {
+          label: 'Closed',
+          data: [<%= newDOAClosedArr %>],
+          backgroundColor: 'green',
+        },
+        {
+          label: 'Contained',
+          data: [<%= newDOAContainedArr %>],
+          backgroundColor: 'orange',
+        },
+        {
+          label: 'Open',
+          data: [<%= newDOAOpenArr %>],
+          backgroundColor: 'red',
+        }, {
+          label: 'WIP',
+          data: [<%= newDOAUnactionedArr %>],
+          backgroundColor: <%- JSON.stringify(newDOAUnactionedColorArr); %>,  
+        },
+        ]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            stacked: true,
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+            stacked: true,
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        title: {
+          display: true,
+          text: 'DOA DPU',
+          fontSize: 15
+        },
+        legend: {
+          display: false,
+          position: 'right',
+          labels: {
+            fontColor: '#000'
+          }
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        tooltips: {
+          enabled: true,
+          mode:'label',
+        //   callbacks: {
+        //     label: function(tooltipItem, data) {
+        //       console.log(tooltipItem)
+        //         var firstTooltip = "toolTipsIdx: " + tooltipItem.index;
+        //         var otherTooltip = "Ylabel value: " + tooltipItem.yLabel;
+        //         var tooltip = [firstTooltip, otherTooltip]; //storing all the value here
+        //         return tooltip; //return Array back to function to show out
+        //     }
+        //  },
+
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          },
+        }
+
+      },
+    });
+
+
+    let doa = new Chart(doaRFT, {
+      type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: <%- JSON.stringify(fullDOALabels); %>,
+        datasets: [
+          {
+            label: "Target",
+            type: "line",
+            borderColor: "red",
+            data: [<%= newDOARFTTargetArr %>],
+            fill: false
+          },
+          {
+            label: 'RFT %',
+            data: [ <%= newDOARFTArr%> ],
+            // backgroundColor:'rgba(54, 162, 235, 0.6)',
+            backgroundColor: <%- JSON.stringify(newDOAUnactionedColorArr); %>,   
+          }
+        ]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        title: {
+          display: true,
+          text: 'DOA RFT %',
+          fontSize: 15
+        },
+        legend: {
+          display: false,
+          position: 'right',
+          labels: {
+            fontColor: '#000'
+          }
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        tooltips: {
+          enabled: true,
+          mode:'label',
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          },
+        }
+      },
+    });
+
+    /////doughnut chart for prediction 1
+
+    new Chart(document.getElementById("doughnut-chart"), {
+      type: 'doughnut',
+      data: {
+        labels: ['RFT', 'Not RFT'],
+        datasets: [{
+          label: "",
+          backgroundColor: ["green", ],
+          data: [<%= newT3Prediction1.rftNumber  %>, <%= newT3Prediction1.notRftNumber %>]
+
+        }]
+      },
+      options: {
+
+        legend: {
+          display: false,
+        },
+      }
+    });
+    /////doughnut chart for prediction 2
+
+    new Chart(document.getElementById("doughnut-chart-2"), {
+      type: 'doughnut',
+      data: {
+        labels: ['RFT', 'Not RFT'],
+        datasets: [{
+          label: "",
+          backgroundColor: ["green", ],
+          data: [<%= newT3Prediction2.rftNumber  %>, <%= newT3Prediction2.notRftNumber %>]
+        }]
+      },
+      options: {
+
+        legend: {
+          display: false,
+        },
+      }
+    });
+
+    /////doughnut chart for prediction 3
+
+    new Chart(document.getElementById("doughnut-chart-3"), {
+      type: 'doughnut',
+      data: {
+        labels: ['RFT', 'Not RFT'],
+        datasets: [{
+          label: "",
+          backgroundColor: ["green", ],
+          data: [<%= newT3Prediction3.rftNumber  %>, <%= newT3Prediction3.notRftNumber %>]
+        }]
+      },
+      options: {
+
+        legend: {
+          display: false,
+        },
+      }
+    });
+  </script>
+
+
+
+</body>

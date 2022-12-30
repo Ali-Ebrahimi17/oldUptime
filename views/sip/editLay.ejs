@@ -1,0 +1,32 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="newbuild-container">
+
+
+  <div class="row form-background" style="display: flex; justify-content: space-around;">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Edit Lay</h1>
+    </div>
+
+
+
+
+    <div class="col">
+      <form action="/dash/sip/edit/<%= sip._id %>" method="POST">
+
+        <label for="buildNumber">Track 1 lay</label>
+        <input class="form-control" type="text" name="sip[lay]" style="margin-bottom: 10px;" value="<%= sip.lay %>" required>
+        <label for="buildNumber">Track 3 lay</label>
+        <input class="form-control" type="text" name="sip[track3lay]" value="<%= sip.track3lay %>" required>
+        <div class="form-group text-center">
+          <button class="btn btn-md btn-block btn-success" style="margin-top: 20px;">Save</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+  <div>
+    <a href="/dash/sip/all/LDL">Go Back</a>
+  </div>

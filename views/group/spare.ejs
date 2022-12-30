@@ -1,0 +1,4043 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- <meta http-equiv="refresh" content="120"> -->
+  <title>JCB - Quality Uptime</title>
+  <link rel="icon" href="/home/jcb.png" />
+  <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+  <!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+  <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+  <link rel="stylesheet" href="/content/table.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+  <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+  <!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+  <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+  <link rel="stylesheet" href="/stylesheets/app.css" />
+  <link rel="stylesheet" href="/fontawesome/css/all.css" />
+</head>
+
+<style>
+  body {
+    overflow-x: hidden;
+  }
+
+  .graph-holder-top {
+    width: 902px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 170px;
+    /* background-color: grey; */
+  }
+
+  .table-holder {
+    width: 902px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 20px;
+    height: 300px;
+    /* background-color: grey; */
+  }
+
+  .graph-holder {
+    width: 442px;
+    /* background-color: rgb(70, 73, 75); */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 150px;
+    /* background-color: grey; */
+  }
+
+  .card {
+    border: 1px solid grey;
+    margin-bottom: 5px;
+    color: white;
+    font-size: 14px;
+  }
+
+  .green-top50 {
+    background-color: green;
+  }
+
+  .amber-top50 {
+    background-color: orange;
+  }
+
+  .red-top50 {
+    background-color: red;
+  }
+
+  .sub-header {
+    color: grey;
+    font-size: 17px;
+  }
+</style>
+
+<body>
+
+
+
+  <div class="container-fluid">
+
+    <div class="row header-top">
+      <div class="col-lg-5 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+      </div>
+      <!-- <div class="col-lg-7 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+            <a href="/equipment-monitoring/operations">
+                <span  style="font-size: 19px; padding-top: 2px; margin-right: 4px; color: black; font-weight: bold;" >Last Update:  DD/MM/YYYY - HH:mm:ss </span>
+            </a>
+        </div> -->
+    </div>
+
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-main">
+
+
+        <div class="row">
+
+          <div class="col-lg-12" style="margin-top: -12px;">
+            <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Delivered Quality Report</h1>
+
+          </div>
+
+
+          <div class="col-lg-6" style="margin-top: -10px; margin-bottom: 22px; padding: 8px 0px 8px 0px; ">
+            <div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Dealer Delivered Quality</h1>
+              <!-- <h1 class="sub-header">Build Month</h1> -->
+            </div>
+          </div>
+
+          <div class="col-lg-6" style="margin-top: -10px; margin-bottom: 22px; padding: 8px 0px 8px 0px; ">
+            <div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Customer Delivered Quality</h1>
+              <!-- <h1 class="sub-header">Intake Month</h1> -->
+            </div>
+          </div>
+
+
+
+          <div style="display: flex; width: 120%; margin-bottom: 20px; margin-top: -20px; ">
+            <div class="col" style=" margin: 0 10px; width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap;">
+
+              <a>
+                <div class="graph-holder-top">
+                  <div style="text-align: start; color: white;"><%= division  %> DOA RFT vs NRFT</div>
+                  <canvas id="dealer" height="45"></canvas>
+                </div>
+              </a>
+
+              <a>
+                <div class="table-holder">
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">Top 10 Dealers (by DOA claims in last 6 months)</div>
+                  <table class="table table-hover table-dark" style="font-size: 12px; width: 100%; margin: auto; height: 265px; ">
+                    <thead>
+                      <!-- <tr class="d-flex" style="font-size: 14px; text-align: center;">
+                                        <th style="width: 100%;">Top 10 Dealers (by DOA claims in last 6 months)</th>
+                                      </tr> -->
+                      <tr class="d-flex" style="font-size: 12px; text-align: center;">
+                        <th style="width: 20px;">#</th>
+                        <th style="width: 210px; text-align: left;">Dealer</th>
+                        <th style="width: 125px;">Location</th>
+                        <th style="width: 90px;">Claims</th>
+                        <th style="width: 90px;">Qty Mcs</th>
+                        <th style="width: 80px;">RFT Mcs</th>
+                        <th style="width: 90px;">NRFT Mcs</th>
+                        <th style="width: 90px;">RFT %</th>
+                        <th style="width: 90px;">% of Total</th>
+
+                      </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                      <% let x = 0 %>
+                      <% for (let d of doaClaimslast6MonthsByDealer) { %>
+                      <% x++ %>
+                      <!--  claims Modal -->
+                      <div class="modal fade" id="claim-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 1850px;">
+                          <div class="modal-content">
+                            <div style="background-color: rgb(252, 176, 38); height: 50px;">
+                              <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true" style="margin-right: 10px; margin-top: 20px;">&times;</span>
+                                                        </button> -->
+                              <h3 style="text-align: center; margin: 8px;">DOA Claims</h3>
+                            </div>
+                            <div class="modal-body">
+                              <table class="table table-hover table-dark" style="font-size: 15px; height: fit-content;">
+                                <thead>
+                                  <tr class="d-flex">
+                                    <th style="width: 15px;">#</th>
+                                    <th style="width: 130px;">Claim Number</th>
+                                    <th style="width: 100px;">Build Date</th>
+                                    <th style="width: 90px;">Model</th>
+                                    <th style="width: 370px;">Narrative</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <% let doaClaimNum = 0 %>
+                                  <% for (let c of d.claims) { %>
+                                  <% doaClaimNum++ %>
+                                  <tr class="d-flex">
+                                    <th style="width: 15px;"><%= doaClaimNum %></th>
+                                    <td style="width: 130px; height: 76px;"><%= c.claimNumber %></td>
+                                    <td style="width: 100px;"> <%= c.buildDate%></td>
+                                    <td style="width: 90px;"> <%= c.model %></td>
+                                    <td style="width: 370px;"> <%= c.description.substring(0, 180) %>...</td>
+                                  </tr>
+                                  <% } %>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="modal-footer" style="border: none;">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+                              <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- table data -->
+                      <tr class="d-flex">
+                        <td style=" width: 20px"><%= x %></td>
+                        <td style=" width: 225px; text-align: left;" data-toggle="modal" data-target="#claim-modal" style="cursor: pointer;"><a><%= d._id.toUpperCase().substring(0, 22) %></a></td>
+                        <td style=" width: 120px"><%= d.country %></td>
+                        <td style=" width: 90px"><%= d.count %></td>
+                        <td style=" width: 90px"><%= d.total_machines %></td>
+                        <td style=" width: 90px"><%= d.rft_machines %></td>
+                        <td style=" width: 90px"><%= d.nrft_count %></td>
+                        <td style=" width: 90px"><%= d.rft_percent %>%</td>
+                        <td style=" width: 90px"><%= d.bu_percent %>%</td>
+                      </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= doaClaimslast6MonthsByDealer[0]._id.toUpperCase()%></div>
+                  <canvas id="doa1" height="80" style="background-color: transparent;"></canvas>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (doaClaimslast6MonthsByDealer[1]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= doaClaimslast6MonthsByDealer[1]._id.toUpperCase() %></div>
+                  <canvas id="doa2" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="doa2" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (doaClaimslast6MonthsByDealer[2]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= doaClaimslast6MonthsByDealer[2]._id.toUpperCase() %></div>
+                  <canvas id="doa3" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="doa3" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (doaClaimslast6MonthsByDealer[3]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= doaClaimslast6MonthsByDealer[3]._id.toUpperCase() %></div>
+                  <canvas id="doa4" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="doa4" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (doaClaimslast6MonthsByDealer[4]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= doaClaimslast6MonthsByDealer[4]._id.toUpperCase() %></div>
+                  <canvas id="doa5" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="doa5" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (doaClaimslast6MonthsByDealer[5]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= doaClaimslast6MonthsByDealer[5]._id.toUpperCase() %></div>
+                  <canvas id="doa6" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="doa6" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (doaClaimslast6MonthsByDealer[6]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= doaClaimslast6MonthsByDealer[6]._id.toUpperCase() %></div>
+                  <canvas id="doa7" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="doa7" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (doaClaimslast6MonthsByDealer[7]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= doaClaimslast6MonthsByDealer[7]._id.toUpperCase() %></div>
+                  <canvas id="doa8" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="doa8" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (doaClaimslast6MonthsByDealer[8]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= doaClaimslast6MonthsByDealer[8]._id.toUpperCase() %></div>
+                  <canvas id="doa9" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="doa9" height="80"></canvas>
+                  <% } %>
+
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (doaClaimslast6MonthsByDealer[9]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= doaClaimslast6MonthsByDealer[9]._id.toUpperCase() %></div>
+                  <canvas id="doa10" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="doa10" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+
+            </div>
+
+            <hr style="width: 1px; height: 95%; display: inline-block; background-color: grey; margin-top: -1%; ">
+
+            <div class="col" style=" margin: 0 10px; width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap;">
+
+              <a>
+                <div class="graph-holder-top">
+                  <div style="text-align: start; color: white;"><%= division  %> T0 RFT vs NRFT</div>
+                  <canvas id="customer" height="45"></canvas>
+                </div>
+              </a>
+
+              <a>
+                <div class="table-holder">
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">Top 10 Customers (by T0 claims in last 6 months)</div>
+                  <table class="table table-hover table-dark" style="font-size: 12px; width: 100%; margin: auto; height: 265px; ">
+                    <thead>
+                      <!-- <tr class="d-flex" style="font-size: 14px; text-align: center;">
+                                          <th style="width: 100%;">Top 10 Dealers (by DOA claims in last 6 months)</th>
+                                        </tr> -->
+                      <tr class="d-flex" style="font-size: 12px; text-align: center;">
+                        <th style="width: 20px;">#</th>
+                        <th style="width: 210px; text-align: left;">Dealer</th>
+                        <th style="width: 125px;">Location</th>
+                        <th style="width: 90px;">Claims</th>
+                        <th style="width: 90px;">Qty Mcs</th>
+                        <th style="width: 80px;">RFT Mcs</th>
+                        <th style="width: 90px;">NRFT Mcs</th>
+                        <th style="width: 90px;">RFT %</th>
+                        <th style="width: 90px;">% of Total</th>
+
+                      </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                      <% let j = 0 %>
+                      <% for (let d of t0Claimslast6MonthsByDealer) { %>
+                      <% j ++ %>
+                      <tr class="d-flex">
+                        <td style=" width: 20px"><%= j %></td>
+                        <td style=" width: 225px; text-align: left;"><%= d._id.toUpperCase().substring(0, 22) %></td>
+                        <td style=" width: 120px"><%= d.country %></td>
+                        <td style=" width: 90px"><%= d.count %></td>
+                        <td style=" width: 90px"><%= d.total_machines %></td>
+                        <td style=" width: 90px"><%= d.rft_machines %></td>
+                        <td style=" width: 90px"><%= d.nrft_count %></td>
+                        <td style=" width: 90px"><%= d.rft_percent %>%</td>
+                        <td style=" width: 90px"><%= d.bu_percent %>%</td>
+                      </tr>
+                      <% } %>
+
+                    </tbody>
+                  </table>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <div class="graph-holder">
+                    <% if (t0Claimslast6MonthsByDealer[0]) { %>
+                    <div style="text-align: start; color: white; margin-bottom: 5px;"><%= t0Claimslast6MonthsByDealer[0]._id.toUpperCase() %></div>
+                    <canvas id="t01" height="80"></canvas>
+                    <% } else { %>
+                    <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                    <canvas id="t01" height="80"></canvas>
+                    <% } %>
+                  </div>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (t0Claimslast6MonthsByDealer[1]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= t0Claimslast6MonthsByDealer[1]._id.toUpperCase() %></div>
+                  <canvas id="t02" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="t02" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (t0Claimslast6MonthsByDealer[2]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= t0Claimslast6MonthsByDealer[2]._id.toUpperCase() %></div>
+                  <canvas id="t03" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="t03" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (t0Claimslast6MonthsByDealer[3]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= t0Claimslast6MonthsByDealer[3]._id.toUpperCase() %></div>
+                  <canvas id="t04" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="t04" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (t0Claimslast6MonthsByDealer[4]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= t0Claimslast6MonthsByDealer[4]._id.toUpperCase() %></div>
+                  <canvas id="t05" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="t05" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (t0Claimslast6MonthsByDealer[5]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= t0Claimslast6MonthsByDealer[5]._id.toUpperCase() %></div>
+                  <canvas id="t06" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="t06" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (t0Claimslast6MonthsByDealer[6]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= t0Claimslast6MonthsByDealer[6]._id.toUpperCase() %></div>
+                  <canvas id="t07" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="t07" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (t0Claimslast6MonthsByDealer[7]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= t0Claimslast6MonthsByDealer[7]._id.toUpperCase() %></div>
+                  <canvas id="t08" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="t08" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (t0Claimslast6MonthsByDealer[8]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= t0Claimslast6MonthsByDealer[8]._id.toUpperCase() %></div>
+                  <canvas id="t09" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="t09" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+              <a>
+                <div class="graph-holder">
+                  <% if (t0Claimslast6MonthsByDealer[9]) { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;"><%= t0Claimslast6MonthsByDealer[9]._id.toUpperCase() %></div>
+                  <canvas id="t010" height="80"></canvas>
+                  <% } else { %>
+                  <div style="text-align: start; color: white; margin-bottom: 5px;">N/A</div>
+                  <canvas id="t010" height="80"></canvas>
+                  <% } %>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid footer">
+
+    <div class="row header-top">
+      <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+        <img height="24px" src="/7z/content/images/df.png">
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+        J.C. Bamford Excavators LTD &copy; 2022
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <script>
+    Chart.defaults.global.defaultFontColor = "white";
+    //  Chart.defaults.global.defaultFontSize = 10;
+    Chart.defaults.scale.gridLines.display = false;
+
+
+
+
+    let dealerOptions = {
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        enabled: true,
+        mode: 'label',
+        yAlign: 'start',
+        callbacks: {
+          title: function(tooltipItem, data) {
+            return ""
+          },
+          // label: function(tooltipItem, data) {
+          //   return data['datasets'][0]['data'][tooltipItem['index']];
+          // },
+          // afterLabel: function(tooltipItem, data) {
+          //   var dataset = data['datasets'][0];
+          //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+          //   return '(' + percent + '%)';
+          // }
+        },
+
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          barPercentage: 0.8,
+          ticks: {
+            display: true,
+            beginAtZero: true,
+            fontSize: 7,
+            fontColor: '#fff'
+            // callback: function(value) {if (value % 1 === 0) {return value;}}
+          },
+          dataLabels: {
+            fontSize: 2
+          },
+          //     scaleLabel : {
+          //       display     : true,
+          //     //   labelString : 'Build Month',
+          //       fontSize: 10,
+          //       fontColor:'#fff'
+          //   },
+        }],
+        yAxes: [{
+            id: 'bar-y-axis',
+            stacked: true,
+            display: true,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 100,
+              //    stepSize: 40,
+              fontSize: 8,
+              callback: function(value) {
+                if (value % 10 === 0) {
+                  return value
+                }
+              }
+            },
+            type: 'linear',
+
+          },
+          {
+            id: 'bar-y-axis1',
+            position: 'right',
+            stacked: true,
+            //    display : true,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 108,
+              stepSize: 50,
+              fontSize: 8,
+              callback: function(value) {
+                if (value > 100) {
+                  return ''
+                } else {
+                  if (value % 1 === 0) {
+                    return value + '%'
+                  }
+                }
+
+              }
+            },
+            type: 'linear',
+
+          },
+
+        ],
+      },
+    }
+
+    let options = {
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        enabled: true,
+        mode: 'label',
+        yAlign: 'center',
+        callbacks: {
+          title: function(tooltipItem, data) {
+            return ""
+          },
+          // label: function(tooltipItem, data) {
+          //   return data['datasets'][0]['data'][tooltipItem['index']];
+          // },
+          // afterLabel: function(tooltipItem, data) {
+          //   var dataset = data['datasets'][0];
+          //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+          //   return '(' + percent + '%)';
+          // }
+        },
+
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          barPercentage: 0.8,
+          ticks: {
+            display: true,
+            beginAtZero: true,
+            fontSize: 9,
+            fontColor: '#fff'
+            // callback: function(value) {if (value % 1 === 0) {return value;}}
+          },
+          dataLabels: {
+            fontSize: 2
+          },
+          //     scaleLabel : {
+          //       display     : true,
+          //     //   labelString : 'Build Month',
+          //       fontSize: 10,
+          //       fontColor:'#fff'
+          //   },
+        }],
+        yAxes: [{
+            id: 'bar-y-axis',
+            stacked: true,
+            display: true,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: <%= dealerMax %>,
+              //    stepSize: 40,
+              fontSize: 8,
+              callback: function(value) {
+                if (value % 100 === 0) {
+                  return value
+                }
+              }
+            },
+            type: 'linear',
+
+          },
+          {
+            id: 'bar-y-axis1',
+            position: 'right',
+            stacked: true,
+            //    display : true,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 108,
+              stepSize: 50,
+              fontSize: 8,
+              callback: function(value) {
+                if (value > 100) {
+                  return ''
+                } else {
+                  if (value % 1 === 0) {
+                    return value + '%'
+                  }
+                }
+
+              }
+            },
+            type: 'linear',
+
+          },
+
+        ],
+      },
+    }
+
+
+    let barChartData1 = {
+      labels: <%- JSON.stringify(toatalDates) %>,
+
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= totalData[0].rft %>,
+            <%= totalData[1].rft %>,
+            <%= totalData[2].rft %>,
+            <%= totalData[3].rft %>,
+            <%= totalData[4].rft %>,
+            <%= totalData[5].rft %>,
+            <%= totalData[6].rft %>,
+            <%= totalData[7].rft %>,
+            <%= totalData[8].rft %>,
+            <%= totalData[9].rft %>,
+            <%= totalData[10].rft %>,
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+
+              }
+            },
+          },
+          data: [
+            <%= totalData[0].nrft %>,
+            <%= totalData[1].nrft %>,
+            <%= totalData[2].nrft %>,
+            <%= totalData[3].nrft %>,
+            <%= totalData[4].nrft %>,
+            <%= totalData[5].nrft %>,
+            <%= totalData[6].nrft %>,
+            <%= totalData[7].nrft %>,
+            <%= totalData[8].nrft %>,
+            <%= totalData[9].nrft %>,
+            <%= totalData[10].nrft %>,
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+            // offset: 6,
+
+            // clamp: true,
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= totalData[0].percent %>,
+            <%= totalData[1].percent %>,
+            <%= totalData[2].percent %>,
+            <%= totalData[3].percent %>,
+            <%= totalData[4].percent %>,
+            <%= totalData[5].percent %>,
+            <%= totalData[6].percent %>,
+            <%= totalData[7].percent %>,
+            <%= totalData[8].percent %>,
+            <%= totalData[9].percent %>,
+            <%= totalData[10].percent %>,
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData2 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph1[0].rftMonth1 %>,
+            <%= doaGraph1[1].rftMonth2 %>,
+            <%= doaGraph1[2].rftMonth3 %>,
+            <%= doaGraph1[3].rftMonth4 %>,
+            <%= doaGraph1[4].rftMonth5 %>,
+            <%= doaGraph1[5].rftMonth6 %>,
+            <%= doaGraph1[6].rftMonth7 %>,
+            <%= doaGraph1[7].rftMonth8 %>,
+            <%= doaGraph1[8].rftMonth9 %>,
+            <%= doaGraph1[9].rftMonth10 %>,
+            <%= doaGraph1[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph1[0].nrftMonth1 %>,
+            <%= doaGraph1[1].nrftMonth2 %>,
+            <%= doaGraph1[2].nrftMonth3 %>,
+            <%= doaGraph1[3].nrftMonth4 %>,
+            <%= doaGraph1[4].nrftMonth5 %>,
+            <%= doaGraph1[5].nrftMonth6 %>,
+            <%= doaGraph1[6].nrftMonth7 %>,
+            <%= doaGraph1[7].nrftMonth8 %>,
+            <%= doaGraph1[8].nrftMonth9 %>,
+            <%= doaGraph1[9].nrftMonth10 %>,
+            <%= doaGraph1[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph1[0].percentMonth1 %>,
+            <%= doaGraph1[1].percentMonth2 %>,
+            <%= doaGraph1[2].percentMonth3 %>,
+            <%= doaGraph1[3].percentMonth4 %>,
+            <%= doaGraph1[4].percentMonth5 %>,
+            <%= doaGraph1[5].percentMonth6 %>,
+            <%= doaGraph1[6].percentMonth7 %>,
+            <%= doaGraph1[7].percentMonth8 %>,
+            <%= doaGraph1[8].percentMonth9 %>,
+            <%= doaGraph1[9].percentMonth10 %>,
+            <%= doaGraph1[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData3 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph2[0].rftMonth1 %>,
+            <%= doaGraph2[1].rftMonth2 %>,
+            <%= doaGraph2[2].rftMonth3 %>,
+            <%= doaGraph2[3].rftMonth4 %>,
+            <%= doaGraph2[4].rftMonth5 %>,
+            <%= doaGraph2[5].rftMonth6 %>,
+            <%= doaGraph2[6].rftMonth7 %>,
+            <%= doaGraph2[7].rftMonth8 %>,
+            <%= doaGraph2[8].rftMonth9 %>,
+            <%= doaGraph2[9].rftMonth10 %>,
+            <%= doaGraph2[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph2[0].nrftMonth1 %>,
+            <%= doaGraph2[1].nrftMonth2 %>,
+            <%= doaGraph2[2].nrftMonth3 %>,
+            <%= doaGraph2[3].nrftMonth4 %>,
+            <%= doaGraph2[4].nrftMonth5 %>,
+            <%= doaGraph2[5].nrftMonth6 %>,
+            <%= doaGraph2[6].nrftMonth7 %>,
+            <%= doaGraph2[7].nrftMonth8 %>,
+            <%= doaGraph2[8].nrftMonth9 %>,
+            <%= doaGraph2[9].nrftMonth10 %>,
+            <%= doaGraph2[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph2[0].percentMonth1 %>,
+            <%= doaGraph2[1].percentMonth2 %>,
+            <%= doaGraph2[2].percentMonth3 %>,
+            <%= doaGraph2[3].percentMonth4 %>,
+            <%= doaGraph2[4].percentMonth5 %>,
+            <%= doaGraph2[5].percentMonth6 %>,
+            <%= doaGraph2[6].percentMonth7 %>,
+            <%= doaGraph2[7].percentMonth8 %>,
+            <%= doaGraph2[8].percentMonth9 %>,
+            <%= doaGraph2[9].percentMonth10 %>,
+            <%= doaGraph2[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData4 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph3[0].rftMonth1 %>,
+            <%= doaGraph3[1].rftMonth2 %>,
+            <%= doaGraph3[2].rftMonth3 %>,
+            <%= doaGraph3[3].rftMonth4 %>,
+            <%= doaGraph3[4].rftMonth5 %>,
+            <%= doaGraph3[5].rftMonth6 %>,
+            <%= doaGraph3[6].rftMonth7 %>,
+            <%= doaGraph3[7].rftMonth8 %>,
+            <%= doaGraph3[8].rftMonth9 %>,
+            <%= doaGraph3[9].rftMonth10 %>,
+            <%= doaGraph3[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph3[0].nrftMonth1 %>,
+            <%= doaGraph3[1].nrftMonth2 %>,
+            <%= doaGraph3[2].nrftMonth3 %>,
+            <%= doaGraph3[3].nrftMonth4 %>,
+            <%= doaGraph3[4].nrftMonth5 %>,
+            <%= doaGraph3[5].nrftMonth6 %>,
+            <%= doaGraph3[6].nrftMonth7 %>,
+            <%= doaGraph3[7].nrftMonth8 %>,
+            <%= doaGraph3[8].nrftMonth9 %>,
+            <%= doaGraph3[9].nrftMonth10 %>,
+            <%= doaGraph3[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph3[0].percentMonth1 %>,
+            <%= doaGraph3[1].percentMonth2 %>,
+            <%= doaGraph3[2].percentMonth3 %>,
+            <%= doaGraph3[3].percentMonth4 %>,
+            <%= doaGraph3[4].percentMonth5 %>,
+            <%= doaGraph3[5].percentMonth6 %>,
+            <%= doaGraph3[6].percentMonth7 %>,
+            <%= doaGraph3[7].percentMonth8 %>,
+            <%= doaGraph3[8].percentMonth9 %>,
+            <%= doaGraph3[9].percentMonth10 %>,
+            <%= doaGraph3[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData5 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph4[0].rftMonth1 %>,
+            <%= doaGraph4[1].rftMonth2 %>,
+            <%= doaGraph4[2].rftMonth3 %>,
+            <%= doaGraph4[3].rftMonth4 %>,
+            <%= doaGraph4[4].rftMonth5 %>,
+            <%= doaGraph4[5].rftMonth6 %>,
+            <%= doaGraph4[6].rftMonth7 %>,
+            <%= doaGraph4[7].rftMonth8 %>,
+            <%= doaGraph4[8].rftMonth9 %>,
+            <%= doaGraph4[9].rftMonth10 %>,
+            <%= doaGraph4[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= doaGraph4[0].nrftMonth1 %>,
+            <%= doaGraph4[1].nrftMonth2 %>,
+            <%= doaGraph4[2].nrftMonth3 %>,
+            <%= doaGraph4[3].nrftMonth4 %>,
+            <%= doaGraph4[4].nrftMonth5 %>,
+            <%= doaGraph4[5].nrftMonth6 %>,
+            <%= doaGraph4[6].nrftMonth7 %>,
+            <%= doaGraph4[7].nrftMonth8 %>,
+            <%= doaGraph4[8].nrftMonth9 %>,
+            <%= doaGraph4[9].nrftMonth10 %>,
+            <%= doaGraph4[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph4[0].percentMonth1 %>,
+            <%= doaGraph4[1].percentMonth2 %>,
+            <%= doaGraph4[2].percentMonth3 %>,
+            <%= doaGraph4[3].percentMonth4 %>,
+            <%= doaGraph4[4].percentMonth5 %>,
+            <%= doaGraph4[5].percentMonth6 %>,
+            <%= doaGraph4[6].percentMonth7 %>,
+            <%= doaGraph4[7].percentMonth8 %>,
+            <%= doaGraph4[8].percentMonth9 %>,
+            <%= doaGraph4[9].percentMonth10 %>,
+            <%= doaGraph4[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData6 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph5[0].rftMonth1 %>,
+            <%= doaGraph5[1].rftMonth2 %>,
+            <%= doaGraph5[2].rftMonth3 %>,
+            <%= doaGraph5[3].rftMonth4 %>,
+            <%= doaGraph5[4].rftMonth5 %>,
+            <%= doaGraph5[5].rftMonth6 %>,
+            <%= doaGraph5[6].rftMonth7 %>,
+            <%= doaGraph5[7].rftMonth8 %>,
+            <%= doaGraph5[8].rftMonth9 %>,
+            <%= doaGraph5[9].rftMonth10 %>,
+            <%= doaGraph5[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= doaGraph5[0].nrftMonth1 %>,
+            <%= doaGraph5[1].nrftMonth2 %>,
+            <%= doaGraph5[2].nrftMonth3 %>,
+            <%= doaGraph5[3].nrftMonth4 %>,
+            <%= doaGraph5[4].nrftMonth5 %>,
+            <%= doaGraph5[5].nrftMonth6 %>,
+            <%= doaGraph5[6].nrftMonth7 %>,
+            <%= doaGraph5[7].nrftMonth8 %>,
+            <%= doaGraph5[8].nrftMonth9 %>,
+            <%= doaGraph5[9].nrftMonth10 %>,
+            <%= doaGraph5[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph5[0].percentMonth1 %>,
+            <%= doaGraph5[1].percentMonth2 %>,
+            <%= doaGraph5[2].percentMonth3 %>,
+            <%= doaGraph5[3].percentMonth4 %>,
+            <%= doaGraph5[4].percentMonth5 %>,
+            <%= doaGraph5[5].percentMonth6 %>,
+            <%= doaGraph5[6].percentMonth7 %>,
+            <%= doaGraph5[7].percentMonth8 %>,
+            <%= doaGraph5[8].percentMonth9 %>,
+            <%= doaGraph5[9].percentMonth10 %>,
+            <%= doaGraph5[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData7 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph6[0].rftMonth1 %>,
+            <%= doaGraph6[1].rftMonth2 %>,
+            <%= doaGraph6[2].rftMonth3 %>,
+            <%= doaGraph6[3].rftMonth4 %>,
+            <%= doaGraph6[4].rftMonth5 %>,
+            <%= doaGraph6[5].rftMonth6 %>,
+            <%= doaGraph6[6].rftMonth7 %>,
+            <%= doaGraph6[7].rftMonth8 %>,
+            <%= doaGraph6[8].rftMonth9 %>,
+            <%= doaGraph6[9].rftMonth10 %>,
+            <%= doaGraph6[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= doaGraph6[0].nrftMonth1 %>,
+            <%= doaGraph6[1].nrftMonth2 %>,
+            <%= doaGraph6[2].nrftMonth3 %>,
+            <%= doaGraph6[3].nrftMonth4 %>,
+            <%= doaGraph6[4].nrftMonth5 %>,
+            <%= doaGraph6[5].nrftMonth6 %>,
+            <%= doaGraph6[6].nrftMonth7 %>,
+            <%= doaGraph6[7].nrftMonth8 %>,
+            <%= doaGraph6[8].nrftMonth9 %>,
+            <%= doaGraph6[9].nrftMonth10 %>,
+            <%= doaGraph6[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph6[0].percentMonth1 %>,
+            <%= doaGraph6[1].percentMonth2 %>,
+            <%= doaGraph6[2].percentMonth3 %>,
+            <%= doaGraph6[3].percentMonth4 %>,
+            <%= doaGraph6[4].percentMonth5 %>,
+            <%= doaGraph6[5].percentMonth6 %>,
+            <%= doaGraph6[6].percentMonth7 %>,
+            <%= doaGraph6[7].percentMonth8 %>,
+            <%= doaGraph6[8].percentMonth9 %>,
+            <%= doaGraph6[9].percentMonth10 %>,
+            <%= doaGraph6[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData8 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph7[0].rftMonth1 %>,
+            <%= doaGraph7[1].rftMonth2 %>,
+            <%= doaGraph7[2].rftMonth3 %>,
+            <%= doaGraph7[3].rftMonth4 %>,
+            <%= doaGraph7[4].rftMonth5 %>,
+            <%= doaGraph7[5].rftMonth6 %>,
+            <%= doaGraph7[6].rftMonth7 %>,
+            <%= doaGraph7[7].rftMonth8 %>,
+            <%= doaGraph7[8].rftMonth9 %>,
+            <%= doaGraph7[9].rftMonth10 %>,
+            <%= doaGraph7[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= doaGraph7[0].nrftMonth1 %>,
+            <%= doaGraph7[1].nrftMonth2 %>,
+            <%= doaGraph7[2].nrftMonth3 %>,
+            <%= doaGraph7[3].nrftMonth4 %>,
+            <%= doaGraph7[4].nrftMonth5 %>,
+            <%= doaGraph7[5].nrftMonth6 %>,
+            <%= doaGraph7[6].nrftMonth7 %>,
+            <%= doaGraph7[7].nrftMonth8 %>,
+            <%= doaGraph7[8].nrftMonth9 %>,
+            <%= doaGraph7[9].nrftMonth10 %>,
+            <%= doaGraph7[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph7[0].percentMonth1 %>,
+            <%= doaGraph7[1].percentMonth2 %>,
+            <%= doaGraph7[2].percentMonth3 %>,
+            <%= doaGraph7[3].percentMonth4 %>,
+            <%= doaGraph7[4].percentMonth5 %>,
+            <%= doaGraph7[5].percentMonth6 %>,
+            <%= doaGraph7[6].percentMonth7 %>,
+            <%= doaGraph7[7].percentMonth8 %>,
+            <%= doaGraph7[8].percentMonth9 %>,
+            <%= doaGraph7[9].percentMonth10 %>,
+            <%= doaGraph7[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData9 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph8[0].rftMonth1 %>,
+            <%= doaGraph8[1].rftMonth2 %>,
+            <%= doaGraph8[2].rftMonth3 %>,
+            <%= doaGraph8[3].rftMonth4 %>,
+            <%= doaGraph8[4].rftMonth5 %>,
+            <%= doaGraph8[5].rftMonth6 %>,
+            <%= doaGraph8[6].rftMonth7 %>,
+            <%= doaGraph8[7].rftMonth8 %>,
+            <%= doaGraph8[8].rftMonth9 %>,
+            <%= doaGraph8[9].rftMonth10 %>,
+            <%= doaGraph8[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= doaGraph8[0].nrftMonth1 %>,
+            <%= doaGraph8[1].nrftMonth2 %>,
+            <%= doaGraph8[2].nrftMonth3 %>,
+            <%= doaGraph8[3].nrftMonth4 %>,
+            <%= doaGraph8[4].nrftMonth5 %>,
+            <%= doaGraph8[5].nrftMonth6 %>,
+            <%= doaGraph8[6].nrftMonth7 %>,
+            <%= doaGraph8[7].nrftMonth8 %>,
+            <%= doaGraph8[8].nrftMonth9 %>,
+            <%= doaGraph8[9].nrftMonth10 %>,
+            <%= doaGraph8[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph8[0].percentMonth1 %>,
+            <%= doaGraph8[1].percentMonth2 %>,
+            <%= doaGraph8[2].percentMonth3 %>,
+            <%= doaGraph8[3].percentMonth4 %>,
+            <%= doaGraph8[4].percentMonth5 %>,
+            <%= doaGraph8[5].percentMonth6 %>,
+            <%= doaGraph8[6].percentMonth7 %>,
+            <%= doaGraph8[7].percentMonth8 %>,
+            <%= doaGraph8[8].percentMonth9 %>,
+            <%= doaGraph8[9].percentMonth10 %>,
+            <%= doaGraph8[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData10 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph9[0].rftMonth1 %>,
+            <%= doaGraph9[1].rftMonth2 %>,
+            <%= doaGraph9[2].rftMonth3 %>,
+            <%= doaGraph9[3].rftMonth4 %>,
+            <%= doaGraph9[4].rftMonth5 %>,
+            <%= doaGraph9[5].rftMonth6 %>,
+            <%= doaGraph9[6].rftMonth7 %>,
+            <%= doaGraph9[7].rftMonth8 %>,
+            <%= doaGraph9[8].rftMonth9 %>,
+            <%= doaGraph9[9].rftMonth10 %>,
+            <%= doaGraph9[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= doaGraph9[0].nrftMonth1 %>,
+            <%= doaGraph9[1].nrftMonth2 %>,
+            <%= doaGraph9[2].nrftMonth3 %>,
+            <%= doaGraph9[3].nrftMonth4 %>,
+            <%= doaGraph9[4].nrftMonth5 %>,
+            <%= doaGraph9[5].nrftMonth6 %>,
+            <%= doaGraph9[6].nrftMonth7 %>,
+            <%= doaGraph9[7].nrftMonth8 %>,
+            <%= doaGraph9[8].nrftMonth9 %>,
+            <%= doaGraph9[9].nrftMonth10 %>,
+            <%= doaGraph9[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph9[0].percentMonth1 %>,
+            <%= doaGraph9[1].percentMonth2 %>,
+            <%= doaGraph9[2].percentMonth3 %>,
+            <%= doaGraph9[3].percentMonth4 %>,
+            <%= doaGraph9[4].percentMonth5 %>,
+            <%= doaGraph9[5].percentMonth6 %>,
+            <%= doaGraph9[6].percentMonth7 %>,
+            <%= doaGraph9[7].percentMonth8 %>,
+            <%= doaGraph9[8].percentMonth9 %>,
+            <%= doaGraph9[9].percentMonth10 %>,
+            <%= doaGraph9[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData11 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph10[0].rftMonth1 %>,
+            <%= doaGraph10[1].rftMonth2 %>,
+            <%= doaGraph10[2].rftMonth3 %>,
+            <%= doaGraph10[3].rftMonth4 %>,
+            <%= doaGraph10[4].rftMonth5 %>,
+            <%= doaGraph10[5].rftMonth6 %>,
+            <%= doaGraph10[6].rftMonth7 %>,
+            <%= doaGraph10[7].rftMonth8 %>,
+            <%= doaGraph10[8].rftMonth9 %>,
+            <%= doaGraph10[9].rftMonth10 %>,
+            <%= doaGraph10[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= doaGraph10[0].nrftMonth1 %>,
+            <%= doaGraph10[1].nrftMonth2 %>,
+            <%= doaGraph10[2].nrftMonth3 %>,
+            <%= doaGraph10[3].nrftMonth4 %>,
+            <%= doaGraph10[4].nrftMonth5 %>,
+            <%= doaGraph10[5].nrftMonth6 %>,
+            <%= doaGraph10[6].nrftMonth7 %>,
+            <%= doaGraph10[7].nrftMonth8 %>,
+            <%= doaGraph10[8].nrftMonth9 %>,
+            <%= doaGraph10[9].nrftMonth10 %>,
+            <%= doaGraph10[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= doaGraph10[0].percentMonth1 %>,
+            <%= doaGraph10[1].percentMonth2 %>,
+            <%= doaGraph10[2].percentMonth3 %>,
+            <%= doaGraph10[3].percentMonth4 %>,
+            <%= doaGraph10[4].percentMonth5 %>,
+            <%= doaGraph10[5].percentMonth6 %>,
+            <%= doaGraph10[6].percentMonth7 %>,
+            <%= doaGraph10[7].percentMonth8 %>,
+            <%= doaGraph10[8].percentMonth9 %>,
+            <%= doaGraph10[9].percentMonth10 %>,
+            <%= doaGraph10[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData12 = {
+      labels: <%- JSON.stringify(toatalDates) %>,
+
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= totalDataT0[0].rft %>,
+            <%= totalDataT0[1].rft %>,
+            <%= totalDataT0[2].rft %>,
+            <%= totalDataT0[3].rft %>,
+            <%= totalDataT0[4].rft %>,
+            <%= totalDataT0[5].rft %>,
+            <%= totalDataT0[6].rft %>,
+            <%= totalDataT0[7].rft %>,
+            <%= totalDataT0[8].rft %>,
+            <%= totalDataT0[9].rft %>,
+            <%= totalDataT0[10].rft %>,
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+
+              }
+            },
+          },
+          data: [
+            <%= totalDataT0[0].nrft %>,
+            <%= totalDataT0[1].nrft %>,
+            <%= totalDataT0[2].nrft %>,
+            <%= totalDataT0[3].nrft %>,
+            <%= totalDataT0[4].nrft %>,
+            <%= totalDataT0[5].nrft %>,
+            <%= totalDataT0[6].nrft %>,
+            <%= totalDataT0[7].nrft %>,
+            <%= totalDataT0[8].nrft %>,
+            <%= totalDataT0[9].nrft %>,
+            <%= totalDataT0[10].nrft %>,
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+            // offset: 6,
+
+            // clamp: true,
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= totalDataT0[0].percent %>,
+            <%= totalDataT0[1].percent %>,
+            <%= totalDataT0[2].percent %>,
+            <%= totalDataT0[3].percent %>,
+            <%= totalDataT0[4].percent %>,
+            <%= totalDataT0[5].percent %>,
+            <%= totalDataT0[6].percent %>,
+            <%= totalDataT0[7].percent %>,
+            <%= totalDataT0[8].percent %>,
+            <%= totalDataT0[9].percent %>,
+            <%= totalDataT0[10].percent %>,
+          ],
+        },
+
+      ],
+    }
+
+    //here
+
+    let barChartData14 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph1[0].rftMonth1 %>,
+            <%= t0Graph1[1].rftMonth2 %>,
+            <%= t0Graph1[2].rftMonth3 %>,
+            <%= t0Graph1[3].rftMonth4 %>,
+            <%= t0Graph1[4].rftMonth5 %>,
+            <%= t0Graph1[5].rftMonth6 %>,
+            <%= t0Graph1[6].rftMonth7 %>,
+            <%= t0Graph1[7].rftMonth8 %>,
+            <%= t0Graph1[8].rftMonth9 %>,
+            <%= t0Graph1[9].rftMonth10 %>,
+            <%= t0Graph1[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph1[0].nrftMonth1 %>,
+            <%= t0Graph1[1].nrftMonth2 %>,
+            <%= t0Graph1[2].nrftMonth3 %>,
+            <%= t0Graph1[3].nrftMonth4 %>,
+            <%= t0Graph1[4].nrftMonth5 %>,
+            <%= t0Graph1[5].nrftMonth6 %>,
+            <%= t0Graph1[6].nrftMonth7 %>,
+            <%= t0Graph1[7].nrftMonth8 %>,
+            <%= t0Graph1[8].nrftMonth9 %>,
+            <%= t0Graph1[9].nrftMonth10 %>,
+            <%= t0Graph1[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph1[0].percentMonth1 %>,
+            <%= t0Graph1[1].percentMonth2 %>,
+            <%= t0Graph1[2].percentMonth3 %>,
+            <%= t0Graph1[3].percentMonth4 %>,
+            <%= t0Graph1[4].percentMonth5 %>,
+            <%= t0Graph1[5].percentMonth6 %>,
+            <%= t0Graph1[6].percentMonth7 %>,
+            <%= t0Graph1[7].percentMonth8 %>,
+            <%= t0Graph1[8].percentMonth9 %>,
+            <%= t0Graph1[9].percentMonth10 %>,
+            <%= t0Graph1[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData15 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph2[0].rftMonth1 %>,
+            <%= t0Graph2[1].rftMonth2 %>,
+            <%= t0Graph2[2].rftMonth3 %>,
+            <%= t0Graph2[3].rftMonth4 %>,
+            <%= t0Graph2[4].rftMonth5 %>,
+            <%= t0Graph2[5].rftMonth6 %>,
+            <%= t0Graph2[6].rftMonth7 %>,
+            <%= t0Graph2[7].rftMonth8 %>,
+            <%= t0Graph2[8].rftMonth9 %>,
+            <%= t0Graph2[9].rftMonth10 %>,
+            <%= t0Graph2[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph2[0].nrftMonth1 %>,
+            <%= t0Graph2[1].nrftMonth2 %>,
+            <%= t0Graph2[2].nrftMonth3 %>,
+            <%= t0Graph2[3].nrftMonth4 %>,
+            <%= t0Graph2[4].nrftMonth5 %>,
+            <%= t0Graph2[5].nrftMonth6 %>,
+            <%= t0Graph2[6].nrftMonth7 %>,
+            <%= t0Graph2[7].nrftMonth8 %>,
+            <%= t0Graph2[8].nrftMonth9 %>,
+            <%= t0Graph2[9].nrftMonth10 %>,
+            <%= t0Graph2[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph2[0].percentMonth1 %>,
+            <%= t0Graph2[1].percentMonth2 %>,
+            <%= t0Graph2[2].percentMonth3 %>,
+            <%= t0Graph2[3].percentMonth4 %>,
+            <%= t0Graph2[4].percentMonth5 %>,
+            <%= t0Graph2[5].percentMonth6 %>,
+            <%= t0Graph2[6].percentMonth7 %>,
+            <%= t0Graph2[7].percentMonth8 %>,
+            <%= t0Graph2[8].percentMonth9 %>,
+            <%= t0Graph2[9].percentMonth10 %>,
+            <%= t0Graph2[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData16 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph3[0].rftMonth1 %>,
+            <%= t0Graph3[1].rftMonth2 %>,
+            <%= t0Graph3[2].rftMonth3 %>,
+            <%= t0Graph3[3].rftMonth4 %>,
+            <%= t0Graph3[4].rftMonth5 %>,
+            <%= t0Graph3[5].rftMonth6 %>,
+            <%= t0Graph3[6].rftMonth7 %>,
+            <%= t0Graph3[7].rftMonth8 %>,
+            <%= t0Graph3[8].rftMonth9 %>,
+            <%= t0Graph3[9].rftMonth10 %>,
+            <%= t0Graph3[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph3[0].nrftMonth1 %>,
+            <%= t0Graph3[1].nrftMonth2 %>,
+            <%= t0Graph3[2].nrftMonth3 %>,
+            <%= t0Graph3[3].nrftMonth4 %>,
+            <%= t0Graph3[4].nrftMonth5 %>,
+            <%= t0Graph3[5].nrftMonth6 %>,
+            <%= t0Graph3[6].nrftMonth7 %>,
+            <%= t0Graph3[7].nrftMonth8 %>,
+            <%= t0Graph3[8].nrftMonth9 %>,
+            <%= t0Graph3[9].nrftMonth10 %>,
+            <%= t0Graph3[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph3[0].percentMonth1 %>,
+            <%= t0Graph3[1].percentMonth2 %>,
+            <%= t0Graph3[2].percentMonth3 %>,
+            <%= t0Graph3[3].percentMonth4 %>,
+            <%= t0Graph3[4].percentMonth5 %>,
+            <%= t0Graph3[5].percentMonth6 %>,
+            <%= t0Graph3[6].percentMonth7 %>,
+            <%= t0Graph3[7].percentMonth8 %>,
+            <%= t0Graph3[8].percentMonth9 %>,
+            <%= t0Graph3[9].percentMonth10 %>,
+            <%= t0Graph3[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData17 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph4[0].rftMonth1 %>,
+            <%= t0Graph4[1].rftMonth2 %>,
+            <%= t0Graph4[2].rftMonth3 %>,
+            <%= t0Graph4[3].rftMonth4 %>,
+            <%= t0Graph4[4].rftMonth5 %>,
+            <%= t0Graph4[5].rftMonth6 %>,
+            <%= t0Graph4[6].rftMonth7 %>,
+            <%= t0Graph4[7].rftMonth8 %>,
+            <%= t0Graph4[8].rftMonth9 %>,
+            <%= t0Graph4[9].rftMonth10 %>,
+            <%= t0Graph4[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= t0Graph4[0].nrftMonth1 %>,
+            <%= t0Graph4[1].nrftMonth2 %>,
+            <%= t0Graph4[2].nrftMonth3 %>,
+            <%= t0Graph4[3].nrftMonth4 %>,
+            <%= t0Graph4[4].nrftMonth5 %>,
+            <%= t0Graph4[5].nrftMonth6 %>,
+            <%= t0Graph4[6].nrftMonth7 %>,
+            <%= t0Graph4[7].nrftMonth8 %>,
+            <%= t0Graph4[8].nrftMonth9 %>,
+            <%= t0Graph4[9].nrftMonth10 %>,
+            <%= t0Graph4[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph4[0].percentMonth1 %>,
+            <%= t0Graph4[1].percentMonth2 %>,
+            <%= t0Graph4[2].percentMonth3 %>,
+            <%= t0Graph4[3].percentMonth4 %>,
+            <%= t0Graph4[4].percentMonth5 %>,
+            <%= t0Graph4[5].percentMonth6 %>,
+            <%= t0Graph4[6].percentMonth7 %>,
+            <%= t0Graph4[7].percentMonth8 %>,
+            <%= t0Graph4[8].percentMonth9 %>,
+            <%= t0Graph4[9].percentMonth10 %>,
+            <%= t0Graph4[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData18 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph5[0].rftMonth1 %>,
+            <%= t0Graph5[1].rftMonth2 %>,
+            <%= t0Graph5[2].rftMonth3 %>,
+            <%= t0Graph5[3].rftMonth4 %>,
+            <%= t0Graph5[4].rftMonth5 %>,
+            <%= t0Graph5[5].rftMonth6 %>,
+            <%= t0Graph5[6].rftMonth7 %>,
+            <%= t0Graph5[7].rftMonth8 %>,
+            <%= t0Graph5[8].rftMonth9 %>,
+            <%= t0Graph5[9].rftMonth10 %>,
+            <%= t0Graph5[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= t0Graph5[0].nrftMonth1 %>,
+            <%= t0Graph5[1].nrftMonth2 %>,
+            <%= t0Graph5[2].nrftMonth3 %>,
+            <%= t0Graph5[3].nrftMonth4 %>,
+            <%= t0Graph5[4].nrftMonth5 %>,
+            <%= t0Graph5[5].nrftMonth6 %>,
+            <%= t0Graph5[6].nrftMonth7 %>,
+            <%= t0Graph5[7].nrftMonth8 %>,
+            <%= t0Graph5[8].nrftMonth9 %>,
+            <%= t0Graph5[9].nrftMonth10 %>,
+            <%= t0Graph5[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph5[0].percentMonth1 %>,
+            <%= t0Graph5[1].percentMonth2 %>,
+            <%= t0Graph5[2].percentMonth3 %>,
+            <%= t0Graph5[3].percentMonth4 %>,
+            <%= t0Graph5[4].percentMonth5 %>,
+            <%= t0Graph5[5].percentMonth6 %>,
+            <%= t0Graph5[6].percentMonth7 %>,
+            <%= t0Graph5[7].percentMonth8 %>,
+            <%= t0Graph5[8].percentMonth9 %>,
+            <%= t0Graph5[9].percentMonth10 %>,
+            <%= t0Graph5[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData19 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph6[0].rftMonth1 %>,
+            <%= t0Graph6[1].rftMonth2 %>,
+            <%= t0Graph6[2].rftMonth3 %>,
+            <%= t0Graph6[3].rftMonth4 %>,
+            <%= t0Graph6[4].rftMonth5 %>,
+            <%= t0Graph6[5].rftMonth6 %>,
+            <%= t0Graph6[6].rftMonth7 %>,
+            <%= t0Graph6[7].rftMonth8 %>,
+            <%= t0Graph6[8].rftMonth9 %>,
+            <%= t0Graph6[9].rftMonth10 %>,
+            <%= t0Graph6[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= t0Graph6[0].nrftMonth1 %>,
+            <%= t0Graph6[1].nrftMonth2 %>,
+            <%= t0Graph6[2].nrftMonth3 %>,
+            <%= t0Graph6[3].nrftMonth4 %>,
+            <%= t0Graph6[4].nrftMonth5 %>,
+            <%= t0Graph6[5].nrftMonth6 %>,
+            <%= t0Graph6[6].nrftMonth7 %>,
+            <%= t0Graph6[7].nrftMonth8 %>,
+            <%= t0Graph6[8].nrftMonth9 %>,
+            <%= t0Graph6[9].nrftMonth10 %>,
+            <%= t0Graph6[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph6[0].percentMonth1 %>,
+            <%= t0Graph6[1].percentMonth2 %>,
+            <%= t0Graph6[2].percentMonth3 %>,
+            <%= t0Graph6[3].percentMonth4 %>,
+            <%= t0Graph6[4].percentMonth5 %>,
+            <%= t0Graph6[5].percentMonth6 %>,
+            <%= t0Graph6[6].percentMonth7 %>,
+            <%= t0Graph6[7].percentMonth8 %>,
+            <%= t0Graph6[8].percentMonth9 %>,
+            <%= t0Graph6[9].percentMonth10 %>,
+            <%= t0Graph6[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData20 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph7[0].rftMonth1 %>,
+            <%= t0Graph7[1].rftMonth2 %>,
+            <%= t0Graph7[2].rftMonth3 %>,
+            <%= t0Graph7[3].rftMonth4 %>,
+            <%= t0Graph7[4].rftMonth5 %>,
+            <%= t0Graph7[5].rftMonth6 %>,
+            <%= t0Graph7[6].rftMonth7 %>,
+            <%= t0Graph7[7].rftMonth8 %>,
+            <%= t0Graph7[8].rftMonth9 %>,
+            <%= t0Graph7[9].rftMonth10 %>,
+            <%= t0Graph7[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= t0Graph7[0].nrftMonth1 %>,
+            <%= t0Graph7[1].nrftMonth2 %>,
+            <%= t0Graph7[2].nrftMonth3 %>,
+            <%= t0Graph7[3].nrftMonth4 %>,
+            <%= t0Graph7[4].nrftMonth5 %>,
+            <%= t0Graph7[5].nrftMonth6 %>,
+            <%= t0Graph7[6].nrftMonth7 %>,
+            <%= t0Graph7[7].nrftMonth8 %>,
+            <%= t0Graph7[8].nrftMonth9 %>,
+            <%= t0Graph7[9].nrftMonth10 %>,
+            <%= t0Graph7[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph7[0].percentMonth1 %>,
+            <%= t0Graph7[1].percentMonth2 %>,
+            <%= t0Graph7[2].percentMonth3 %>,
+            <%= t0Graph7[3].percentMonth4 %>,
+            <%= t0Graph7[4].percentMonth5 %>,
+            <%= t0Graph7[5].percentMonth6 %>,
+            <%= t0Graph7[6].percentMonth7 %>,
+            <%= t0Graph7[7].percentMonth8 %>,
+            <%= t0Graph7[8].percentMonth9 %>,
+            <%= t0Graph7[9].percentMonth10 %>,
+            <%= t0Graph7[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData21 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph8[0].rftMonth1 %>,
+            <%= t0Graph8[1].rftMonth2 %>,
+            <%= t0Graph8[2].rftMonth3 %>,
+            <%= t0Graph8[3].rftMonth4 %>,
+            <%= t0Graph8[4].rftMonth5 %>,
+            <%= t0Graph8[5].rftMonth6 %>,
+            <%= t0Graph8[6].rftMonth7 %>,
+            <%= t0Graph8[7].rftMonth8 %>,
+            <%= t0Graph8[8].rftMonth9 %>,
+            <%= t0Graph8[9].rftMonth10 %>,
+            <%= t0Graph8[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= t0Graph8[0].nrftMonth1 %>,
+            <%= t0Graph8[1].nrftMonth2 %>,
+            <%= t0Graph8[2].nrftMonth3 %>,
+            <%= t0Graph8[3].nrftMonth4 %>,
+            <%= t0Graph8[4].nrftMonth5 %>,
+            <%= t0Graph8[5].nrftMonth6 %>,
+            <%= t0Graph8[6].nrftMonth7 %>,
+            <%= t0Graph8[7].nrftMonth8 %>,
+            <%= t0Graph8[8].nrftMonth9 %>,
+            <%= t0Graph8[9].nrftMonth10 %>,
+            <%= t0Graph8[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph8[0].percentMonth1 %>,
+            <%= t0Graph8[1].percentMonth2 %>,
+            <%= t0Graph8[2].percentMonth3 %>,
+            <%= t0Graph8[3].percentMonth4 %>,
+            <%= t0Graph8[4].percentMonth5 %>,
+            <%= t0Graph8[5].percentMonth6 %>,
+            <%= t0Graph8[6].percentMonth7 %>,
+            <%= t0Graph8[7].percentMonth8 %>,
+            <%= t0Graph8[8].percentMonth9 %>,
+            <%= t0Graph8[9].percentMonth10 %>,
+            <%= t0Graph8[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData22 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph9[0].rftMonth1 %>,
+            <%= t0Graph9[1].rftMonth2 %>,
+            <%= t0Graph9[2].rftMonth3 %>,
+            <%= t0Graph9[3].rftMonth4 %>,
+            <%= t0Graph9[4].rftMonth5 %>,
+            <%= t0Graph9[5].rftMonth6 %>,
+            <%= t0Graph9[6].rftMonth7 %>,
+            <%= t0Graph9[7].rftMonth8 %>,
+            <%= t0Graph9[8].rftMonth9 %>,
+            <%= t0Graph9[9].rftMonth10 %>,
+            <%= t0Graph9[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= t0Graph9[0].nrftMonth1 %>,
+            <%= t0Graph9[1].nrftMonth2 %>,
+            <%= t0Graph9[2].nrftMonth3 %>,
+            <%= t0Graph9[3].nrftMonth4 %>,
+            <%= t0Graph9[4].nrftMonth5 %>,
+            <%= t0Graph9[5].nrftMonth6 %>,
+            <%= t0Graph9[6].nrftMonth7 %>,
+            <%= t0Graph9[7].nrftMonth8 %>,
+            <%= t0Graph9[8].nrftMonth9 %>,
+            <%= t0Graph9[9].nrftMonth10 %>,
+            <%= t0Graph9[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph9[0].percentMonth1 %>,
+            <%= t0Graph9[1].percentMonth2 %>,
+            <%= t0Graph9[2].percentMonth3 %>,
+            <%= t0Graph9[3].percentMonth4 %>,
+            <%= t0Graph9[4].percentMonth5 %>,
+            <%= t0Graph9[5].percentMonth6 %>,
+            <%= t0Graph9[6].percentMonth7 %>,
+            <%= t0Graph9[7].percentMonth8 %>,
+            <%= t0Graph9[8].percentMonth9 %>,
+            <%= t0Graph9[9].percentMonth10 %>,
+            <%= t0Graph9[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+    let barChartData23 = {
+      labels: <%- JSON.stringify(shortDates) %>,
+      // newLabels1: [
+      // '10',
+      // '20',
+      // '30',
+      // '40',
+      // '50',
+      // '60',
+      // '70',
+      // '80',
+      // '90',
+      // ],
+      datasets: [{
+          type: 'bar',
+          label: 'RFT',
+          backgroundColor: 'green',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'center',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph10[0].rftMonth1 %>,
+            <%= t0Graph10[1].rftMonth2 %>,
+            <%= t0Graph10[2].rftMonth3 %>,
+            <%= t0Graph10[3].rftMonth4 %>,
+            <%= t0Graph10[4].rftMonth5 %>,
+            <%= t0Graph10[5].rftMonth6 %>,
+            <%= t0Graph10[6].rftMonth7 %>,
+            <%= t0Graph10[7].rftMonth8 %>,
+            <%= t0Graph10[8].rftMonth9 %>,
+            <%= t0Graph10[9].rftMonth10 %>,
+            <%= t0Graph10[10].rftMonth11 %>,
+
+          ],
+        },
+        {
+          label: 'NRFT',
+          backgroundColor: 'red',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+
+            // align: 'end',
+            // anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value
+              } else {
+                return ''
+              }
+            },
+          },
+          data: [
+            <%= t0Graph10[0].nrftMonth1 %>,
+            <%= t0Graph10[1].nrftMonth2 %>,
+            <%= t0Graph10[2].nrftMonth3 %>,
+            <%= t0Graph10[3].nrftMonth4 %>,
+            <%= t0Graph10[4].nrftMonth5 %>,
+            <%= t0Graph10[5].nrftMonth6 %>,
+            <%= t0Graph10[6].nrftMonth7 %>,
+            <%= t0Graph10[7].nrftMonth8 %>,
+            <%= t0Graph10[8].nrftMonth9 %>,
+            <%= t0Graph10[9].nrftMonth10 %>,
+            <%= t0Graph10[10].nrftMonth11 %>,
+
+          ],
+        },
+        {
+          type: 'line',
+          label: '%RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            backgroundColor: '#2a2a2a',
+            borderWidth: 1,
+            borderRadius: 8,
+
+            // align: 'end',
+            anchor: 'end',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value + '%';
+              } else {
+                return '' + '%';
+
+              }
+            },
+          },
+          data: [
+            <%= t0Graph10[0].percentMonth1 %>,
+            <%= t0Graph10[1].percentMonth2 %>,
+            <%= t0Graph10[2].percentMonth3 %>,
+            <%= t0Graph10[3].percentMonth4 %>,
+            <%= t0Graph10[4].percentMonth5 %>,
+            <%= t0Graph10[5].percentMonth6 %>,
+            <%= t0Graph10[6].percentMonth7 %>,
+            <%= t0Graph10[7].percentMonth8 %>,
+            <%= t0Graph10[8].percentMonth9 %>,
+            <%= t0Graph10[9].percentMonth10 %>,
+            <%= t0Graph10[10].percentMonth11 %>,
+
+          ],
+        },
+
+      ],
+    }
+
+
+
+
+    window.onload = function() {
+
+
+
+      //rft vs nrft total
+      const ctx = document.getElementById("dealer")
+      //   options.scales.yAxes[0].ticks.max = 2400
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart1 = new Chart(ctx, {
+        type: 'bar',
+        data: barChartData1,
+        options: options
+      })
+
+
+
+
+      //dealer 1
+      const ctx2 = document.getElementById("doa1")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= doaGraph1[0].graphRFTMax %>
+      //   dealerOptions.scales.yAxes[0].ticks.stepSize = 500
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: barChartData2,
+        options: dealerOptions
+      })
+
+      //dealer 2
+      const ctx3 = document.getElementById("doa2")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= doaGraph2[0].graphRFTMax %>
+      //   dealerOptions.scales.yAxes[0].ticks.stepSize = 500
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart3 = new Chart(ctx3, {
+        type: 'bar',
+        data: barChartData3,
+        options: dealerOptions
+      })
+      //dealer 3
+      const ctx4 = document.getElementById("doa3")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= doaGraph3[0].graphRFTMax %>
+      //   dealerOptions.scales.yAxes[0].ticks.stepSize = 500
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart4 = new Chart(ctx4, {
+        type: 'bar',
+        data: barChartData4,
+        options: dealerOptions
+      })
+      //dealer 4
+      const ctx5 = document.getElementById("doa4")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= doaGraph4[0].graphRFTMax %>
+      //   dealerOptions.scales.yAxes[0].ticks.stepSize = 500
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart5 = new Chart(ctx5, {
+        type: 'bar',
+        data: barChartData5,
+        options: dealerOptions
+      })
+      //dealer 5
+      const ctx6 = document.getElementById("doa5")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= doaGraph5[0].graphRFTMax %>
+      //   dealerOptions.scales.yAxes[0].ticks.stepSize = 500
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart6 = new Chart(ctx6, {
+        type: 'bar',
+        data: barChartData6,
+        options: dealerOptions
+      })
+      //dealer 6
+      const ctx7 = document.getElementById("doa6")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= doaGraph6[0].graphRFTMax %>
+      //   dealerOptions.scales.yAxes[0].ticks.stepSize = 500
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart7 = new Chart(ctx7, {
+        type: 'bar',
+        data: barChartData7,
+        options: dealerOptions
+      })
+      //dealer 7
+      const ctx8 = document.getElementById("doa7")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= doaGraph7[0].graphRFTMax %>
+      //   dealerOptions.scales.yAxes[0].ticks.stepSize = 500
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart8 = new Chart(ctx8, {
+        type: 'bar',
+        data: barChartData8,
+        options: dealerOptions
+      })
+
+      //dealer 8
+      const ctx9 = document.getElementById("doa8")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= doaGraph8[0].graphRFTMax %>
+      //   dealerOptions.scales.yAxes[0].ticks.stepSize = 500
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart9 = new Chart(ctx9, {
+        type: 'bar',
+        data: barChartData9,
+        options: dealerOptions
+      })
+      //dealer 9
+      const ctx10 = document.getElementById("doa9")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= doaGraph9[0].graphRFTMax %>
+      //   dealerOptions.scales.yAxes[0].ticks.stepSize = 500
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart10 = new Chart(ctx10, {
+        type: 'bar',
+        data: barChartData10,
+        options: dealerOptions
+      })
+      //dealer 10
+      const ctx11 = document.getElementById("doa10")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= doaGraph10[0].graphRFTMax %>
+      //   dealerOptions.scales.yAxes[0].ticks.stepSize = 500
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart11 = new Chart(ctx11, {
+        type: 'bar',
+        data: barChartData11,
+        options: dealerOptions
+      })
+
+      //rft vs nrft total
+      const ctx12 = document.getElementById("customer")
+      //   options.scales.yAxes[0].ticks.max = 2400
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart12 = new Chart(ctx12, {
+        type: 'bar',
+        data: barChartData12,
+        options: options
+      })
+      //customer 1
+      const ctx14 = document.getElementById("t01")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= t0Graph1[0].graphRFTMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart14 = new Chart(ctx14, {
+        type: 'bar',
+        data: barChartData14,
+        options: dealerOptions
+      })
+      //customer 2
+      const ctx15 = document.getElementById("t02")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= t0Graph2[0].graphRFTMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart15 = new Chart(ctx15, {
+        type: 'bar',
+        data: barChartData15,
+        options: dealerOptions
+      })
+      //customer 3
+      const ctx16 = document.getElementById("t03")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= t0Graph3[0].graphRFTMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart16 = new Chart(ctx16, {
+        type: 'bar',
+        data: barChartData16,
+        options: dealerOptions
+      })
+      //customer 4
+      const ctx17 = document.getElementById("t04")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= t0Graph4[0].graphRFTMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart17 = new Chart(ctx17, {
+        type: 'bar',
+        data: barChartData17,
+        options: dealerOptions
+      })
+      //customer 5
+      const ctx18 = document.getElementById("t05")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= t0Graph5[0].graphRFTMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart18 = new Chart(ctx18, {
+        type: 'bar',
+        data: barChartData18,
+        options: dealerOptions
+      })
+      //customer 6
+      const ctx19 = document.getElementById("t06")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= t0Graph6[0].graphRFTMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart19 = new Chart(ctx19, {
+        type: 'bar',
+        data: barChartData19,
+        options: dealerOptions
+      })
+      //customer 7
+      const ctx20 = document.getElementById("t07")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= t0Graph7[0].graphRFTMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart20 = new Chart(ctx20, {
+        type: 'bar',
+        data: barChartData20,
+        options: dealerOptions
+      })
+      //customer 8
+      const ctx21 = document.getElementById("t08")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= t0Graph8[0].graphRFTMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart21 = new Chart(ctx21, {
+        type: 'bar',
+        data: barChartData21,
+        options: dealerOptions
+      })
+      //customer 9
+      const ctx22 = document.getElementById("t09")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= t0Graph9[0].graphRFTMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart22 = new Chart(ctx22, {
+        type: 'bar',
+        data: barChartData22,
+        options: dealerOptions
+      })
+      //customer 10
+      const ctx23 = document.getElementById("t010")
+      dealerOptions.scales.yAxes[0].ticks.max = <%= t0Graph10[0].graphRFTMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart23 = new Chart(ctx23, {
+        type: 'bar',
+        data: barChartData23,
+        options: dealerOptions
+      })
+
+
+
+
+    }
+  </script>
+
+
+
+
+
+</body>
+
+</html>

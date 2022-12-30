@@ -1,0 +1,430 @@
+<% layout('layouts/boilerplateTCard')%>
+
+<!-- <meta http-equiv="refresh" content="5000"> -->
+
+
+
+
+<div class="main-tCard-container">
+
+  <h2 class="main-title" style="position: fixed;"><a href="/tCard/history/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>"><%= division.toUpperCase() %> <%= location.toUpperCase()%></a></h2>
+  <div class="row" style="width: 100%;">
+    <div class="col-lg check-row">
+      <% if ( currentUser && currentUser.isTCardAdmin ) { %>
+      <h3>Daily Checks
+        <a href="/tCard/admin/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/Daily" style="margin-left: 15px;"><i class="fas fa-tasks"></i></a>
+        <% } else { %>
+        <h3>Daily Checks
+          <% } %>
+          <hr>
+
+          <div class="cards-container">
+            <% for (let card of tCardsDaily) { %>
+            <% if (card.status === 'Failed') { %>
+            <a href="/tCard/contain/<%= card._id %>">
+              <% } %>
+              <% if (card.status === 'Open' ) { %>
+              <a href="/tCard/edit/<%= card._id %>">
+                <% } %>
+                <% if (card.status === 'Contained') { %>
+                <a href="/tCard/close/<%= card._id %>">
+                  <% } %>
+                  <% if (card.status === 'Passed') { %>
+                  <a href="/tCard/edit/<%= card._id %>">
+                    <% } %>
+                    <% if (card.status === 'Not Required') { %>
+                    <a href="/tCard/edit/<%= card._id %>">
+                      <% } %>
+
+                      <div class="<% if (card.status === 'Passed') { %>card-wrapper-green<% } else if  (card.status === 'Failed') { %>card-wrapper-red<% } else if  (card.status === 'Contained') { %>card-wrapper-amber<% } else if  (card.status === 'Not Required') { %>card-wrapper-blue<% } else { %>card-wrapper<% } %>" style="height: 230px;">
+                        <div class="card-content">
+                          <% if (card.contractor) { %>
+                          <div style="position: absolute; margin-left: 2px;"><i style="color: black; font-size: 20px;" class="fas fa-toolbox"></i></div>
+                          <div>
+                            <h6 style="font-size: 1.2rem;"><%= card.name.substring(0, 40)%></h6>
+                          </div>
+                          <% } else { %>
+                          <div>
+                            <h6 style="font-size: 1.2rem;"><%= card.name.substring(0, 40)%></h6>
+                          </div>
+                          <% } %>
+                          <div style="margin-top: -10px;">
+                            <p style="font-size: 16px;">Target</p>
+                          </div>
+                          <div style="margin-top: -15px;">
+                            <% if (card.type === 'Value') { %>
+                            <p style="font-size: 16px; <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>"><%= card.min %> - <%= card.max %> (<%= card.unit %>)</p>
+                            <% } %>
+                            <% if (card.type === 'OK/Not OK') { %>
+                            <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">OK</p>
+                            <% } %>
+                            <% if (card.type === 'Yes/No') { %>
+                            <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">Yes</p>
+                            <% } %>
+                            <% if (card.type === 'On Plan/Off Plan') { %>
+                            <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">On Plan</p>
+                            <% } %>
+                          </div>
+                          <div style="margin-top: -10px;">
+                            <p>Method</p>
+                          </div>
+                          <div style="margin-top: -15px; ">
+                            <p style="font-size: 16px; <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>"><%= card.method %></p>
+                          </div>
+                          <div style="margin-top: -15px;">
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'Value') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.value %> <%= card.unit %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'OK/Not OK') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'Yes/No') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'On Plan/Off Plan') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status ==='Open') { %>
+                              <% if (card.area === 'quality') { %>
+                                <p style="font-size: 22px; margin-top: -42px;"><br>Awaiting Check</p>
+                             <% } else { %>
+                              <p style="font-size: 22px; margin-top: -28px;"><br>Awaiting Check</p>
+                             <% } %>
+                            <p style="font-size: 15px; margin-top: -15px;"><%= card.primaryUserName %></p>
+                            <p style="font-size: 15px; margin-top: -15px;"><%= card.secondUserName %></p>
+                            <% } %>
+                            <% if (card.status ==='Not Required') { %>
+                            <p style="font-size: 22px; margin-top: -25px; color: white;"><br>Not Required Today</p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required') { %>
+                            <% if (card.status ==='Passed' ) { %>
+                            <p style="margin-top: -10px; font-size: 14px;">Updated <%= moment(card.passedAt).format(" DD/MM/YY - HH:mm:ss") %></p>
+                            <% } %>
+                            <% if (card.status ==='Contained' ) { %>
+                            <p style="margin-top: -10px; font-size: 14px;">Updated <%= moment(card.containedAt).format(" DD/MM/YY - HH:mm:ss") %></p>
+                            <% } %>
+                            <% if (card.status ==='Failed' ) { %>
+                            <p style="margin-top: -10px; font-size: 14px;">Updated <%= moment(card.failedAt).format(" DD/MM/YY - HH:mm:ss") %></p>
+                            <% } %>
+
+
+                            <p style="margin-top: -10px; color: white;"><%= card.checkedBy %></p>
+                            <% } %>
+                          </div>
+                        </div>
+                        <% if (card.area === 'quality') { %>
+                        <div style="position: absolute; bottom: 0; right: 0; margin-right: 5px;"><%= card.level %></div>
+                        <% } %>
+                      </div>
+                    </a>
+                    <% } %>
+          </div>
+    </div>
+
+    <div class="col-lg check-row">
+      <% if ( currentUser && currentUser.isTCardAdmin ) { %>
+      <h3>Weekly Checks
+        <a style="margin-left: 15px;" href="/tCard/admin/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/Weekly"><i class="fas fa-tasks"></i></a>
+        <% } else { %>
+        <h3>Weekly Checks
+          <% } %>
+          <hr>
+          <div class="cards-container">
+            <% for (let card of tCardsWeekly) { %>
+            <% if (card.status === 'Failed') { %>
+            <a href="/tCard/contain/<%= card._id %>">
+              <% } %>
+              <% if (card.status === 'Open' ) { %>
+              <a href="/tCard/edit/<%= card._id %>">
+                <% } %>
+                <% if (card.status === 'Contained') { %>
+                <a href="/tCard/close/<%= card._id %>">
+                  <% } %>
+                  <% if (card.status === 'Passed') { %>
+                  <a href="/tCard/edit/<%= card._id %>">
+                    <% } %>
+                    <% if (card.status === 'Not Required') { %>
+                    <a href="/tCard/edit/<%= card._id %>">
+                      <% } %>
+
+                      <div class="<% if (card.status === 'Passed') { %>card-wrapper-green<% } else if  (card.status === 'Failed') { %>card-wrapper-red<% } else if  (card.status === 'Contained') { %>card-wrapper-amber<% } else if  (card.status === 'Not Required') { %>card-wrapper-blue<% } else { %>card-wrapper<% } %>" style="height: 230px;">
+                        <div class="card-content">
+                          <% if (card.contractor) { %>
+                          <div style="position: absolute; margin-left: 2px;"><i style="color: black; font-size: 20px;" class="fas fa-toolbox"></i></div>
+                          <div>
+                            <h6 style="font-size: 1.2rem;"><%= card.name.substring(0, 40)%></h6>
+                          </div>
+                          <% } else { %>
+                          <div>
+                            <h6 style="font-size: 1.2rem;"><%= card.name.substring(0, 40)%></h6>
+                          </div>
+                          <% } %>
+                          <div style="margin-top: -10px;">
+                            <p style="font-size: 16px;">Target</p>
+                          </div>
+                          <div style="margin-top: -15px;">
+                            <% if (card.type === 'Value') { %>
+                            <p style="font-size: 16px; <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>"><%= card.min %> - <%= card.max %> (<%= card.unit %>)</p>
+                            <% } %>
+                            <% if (card.type === 'OK/Not OK') { %>
+                            <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">OK</p>
+                            <% } %>
+                            <% if (card.type === 'Yes/No') { %>
+                            <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">Yes</p>
+                            <% } %>
+                            <% if (card.type === 'On Plan/Off Plan') { %>
+                            <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">On Plan</p>
+                            <% } %>
+                          </div>
+                          <div style="margin-top: -10px;">
+                            <p>Method</p>
+                          </div>
+                          <div style="margin-top: -15px; ">
+                            <p style="font-size: 16px; <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>"><%= card.method %></p>
+                          </div>
+                          <div style="margin-top: -15px;">
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'Value') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.value %> <%= card.unit %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'OK/Not OK') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'Yes/No') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'On Plan/Off Plan') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status ==='Open') { %>
+                              <% if (card.area === 'quality') { %>
+                                <p style="font-size: 22px; margin-top: -42px;"><br>Awaiting Check</p>
+                             <% } else { %>
+                              <p style="font-size: 22px; margin-top: -28px;"><br>Awaiting Check</p>
+                             <% } %>
+                            <p style="font-size: 15px; margin-top: -15px;"><%= card.primaryUserName %></p>
+                            <p style="font-size: 15px; margin-top: -15px;"><%= card.secondUserName %></p>
+                            <% } %>
+                            <% if (card.status ==='Not Required') { %>
+                            <p style="font-size: 22px; margin-top: -25px; color: white;"><br>Not Required Today</p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required') { %>
+                            <p style="margin-top: -10px; font-size: 14px;">Updated <%= moment(card.updatedAt).format(" DD/MM/YY - HH:mm:ss") %></p>
+                            <p style="margin-top: -10px; color: white;"><%= card.checkedBy %></p>
+                            <% } %>
+                          </div>
+                        </div>
+                        <% if (card.area === 'quality') { %>
+                        <div style="position: absolute; bottom: 0; right: 0; margin-right: 5px;"><%= card.level %></div>
+                        <% } %>
+                      </div>
+                    </a>
+                    <% } %>
+          </div>
+    </div>
+    <div class="col-lg check-row">
+      <% if ( currentUser && currentUser.isTCardAdmin ) { %>
+      <h3>Monthly Checks
+        <a style="margin-left: 15px;" href="/tCard/admin/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/Monthly"><i class="fas fa-tasks"></i></a>
+        <% } else { %>
+        <h3>Monthly Checks
+          <% } %>
+          <hr>
+          <div class="cards-container">
+            <% for (let card of tCardsMonthly) { %>
+            <% if (card.status === 'Failed') { %>
+            <a href="/tCard/contain/<%= card._id %>">
+              <% } %>
+              <% if (card.status === 'Open' ) { %>
+              <a href="/tCard/edit/<%= card._id %>">
+                <% } %>
+                <% if (card.status === 'Contained') { %>
+                <a href="/tCard/close/<%= card._id %>">
+                  <% } %>
+                  <% if (card.status === 'Passed') { %>
+                  <a href="/tCard/edit/<%= card._id %>">
+                    <% } %>
+                    <% if (card.status === 'Not Required') { %>
+                    <a href="/tCard/edit/<%= card._id %>">
+                      <% } %>
+
+                      <div class="<% if (card.status === 'Passed') { %>card-wrapper-green<% } else if  (card.status === 'Failed') { %>card-wrapper-red<% } else if  (card.status === 'Contained') { %>card-wrapper-amber<% } else if  (card.status === 'Not Required') { %>card-wrapper-blue<% } else { %>card-wrapper<% } %>" style="height: 230px;">
+                        <div class="card-content">
+                          <% if (card.contractor) { %>
+                          <div style="position: absolute; margin-left: 2px;"><i style="color: black; font-size: 20px;" class="fas fa-toolbox"></i></div>
+                          <div>
+                            <h6 style="font-size: 1.2rem;"><%= card.name.substring(0, 40)%></h6>
+                          </div>
+                          <% } else { %>
+                          <div>
+                            <h6 style="font-size: 1.2rem;"><%= card.name.substring(0, 40)%></h6>
+                          </div>
+                          <% } %>
+                          <div style="margin-top: -10px;">
+                            <p style="font-size: 16px;">Target</p>
+                          </div>
+                          <div style="margin-top: -15px;">
+                            <div style="margin-top: -15px;">
+                              <% if (card.type === 'Value') { %>
+                              <p style="font-size: 16px; <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>"><%= card.min %> - <%= card.max %> (<%= card.unit %>)</p>
+                              <% } %>
+                              <% if (card.type === 'OK/Not OK') { %>
+                              <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">OK</p>
+                              <% } %>
+                              <% if (card.type === 'Yes/No') { %>
+                              <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">Yes</p>
+                              <% } %>
+                              <% if (card.type === 'On Plan/Off Plan') { %>
+                              <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">On Plan</p>
+                              <% } %>
+                            </div>
+                          </div>
+                          <div style="margin-top: -10px;">
+                            <p>Method</p>
+                          </div>
+                          <div style="margin-top: -15px; ">
+                            <p style="font-size: 16px; <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>"><%= card.method %></p>
+                          </div>
+                          <div style="margin-top: -15px;">
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'Value') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.value %> <%= card.unit %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'OK/Not OK') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'Yes/No') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'On Plan/Off Plan') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status ==='Open') { %>
+                              <% if (card.area === 'quality') { %>
+                                <p style="font-size: 22px; margin-top: -42px;"><br>Awaiting Check</p>
+                             <% } else { %>
+                              <p style="font-size: 22px; margin-top: -28px;"><br>Awaiting Check</p>
+                             <% } %>
+                            <p style="font-size: 15px; margin-top: -15px;"><%= card.primaryUserName %></p>
+                            <p style="font-size: 15px; margin-top: -15px;"><%= card.secondUserName %></p>
+                            <% } %>
+                            <% if (card.status ==='Not Required') { %>
+                            <p style="font-size: 22px; margin-top: -25px; color: white;"><br>Not Required Today</p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required') { %>
+                            <p style="margin-top: -10px; font-size: 14px;">Updated <%= moment(card.updatedAt).format(" DD/MM/YY - HH:mm:ss") %></p>
+                            <p style="margin-top: -10px; color: white;"><%= card.checkedBy %></p>
+                            <% } %>
+                          </div>
+                        </div>
+                        <% if (card.area === 'quality') { %>
+                        <div style="position: absolute; bottom: 0; right: 0; margin-right: 5px;"><%= card.level %></div>
+                        <% } %>
+                      </div>
+                    </a>
+                    <% } %>
+          </div>
+    </div>
+    <div class="col-lg check-row">
+      <% if ( currentUser && currentUser.isTCardAdmin ) { %>
+      <h3>Quarterly Checks
+        <a style="margin-left: 15px;" href="/tCard/admin/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/Quarterly"><i class="fas fa-tasks"></i></a>
+        <% } else { %>
+        <h3>Quarterly Checks
+          <% } %>
+          <hr>
+          <div class="cards-container">
+            <% for (let card of tCardsQuarterly) { %>
+            <% if (card.status === 'Failed') { %>
+            <a href="/tCard/contain/<%= card._id %>">
+              <% } %>
+              <% if (card.status === 'Open' ) { %>
+              <a href="/tCard/edit/<%= card._id %>">
+                <% } %>
+                <% if (card.status === 'Contained') { %>
+                <a href="/tCard/close/<%= card._id %>">
+                  <% } %>
+                  <% if (card.status === 'Passed') { %>
+                  <a href="/tCard/edit/<%= card._id %>">
+                    <% } %>
+                    <% if (card.status === 'Not Required') { %>
+                    <a href="/tCard/edit/<%= card._id %>">
+                      <% } %>
+
+                      <div class="<% if (card.status === 'Passed') { %>card-wrapper-green<% } else if  (card.status === 'Failed') { %>card-wrapper-red<% } else if  (card.status === 'Contained') { %>card-wrapper-amber<% } else if  (card.status === 'Not Required') { %>card-wrapper-blue<% } else { %>card-wrapper<% } %>" style="height: 230px;">
+                        <div class="card-content">
+                          <% if (card.contractor) { %>
+                          <div style="position: absolute; margin-left: 2px;"><i style="color: black; font-size: 20px;" class="fas fa-toolbox"></i></div>
+                          <div>
+                            <h6 style="font-size: 1.2rem;"><%= card.name.substring(0, 40)%></h6>
+                          </div>
+                          <% } else { %>
+                          <div>
+                            <h6 style="font-size: 1.2rem;"><%= card.name.substring(0, 40)%></h6>
+                          </div>
+                          <% } %>
+
+                          <div style="margin-top: -10px;">
+                            <p style="font-size: 16px;">Target</p>
+                          </div>
+                          <div style="margin-top: -15px;">
+                            <% if (card.type === 'Value') { %>
+                            <p style="font-size: 16px; <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>"><%= card.min %> - <%= card.max %> (<%= card.unit %>)</p>
+                            <% } %>
+                            <% if (card.type === 'OK/Not OK') { %>
+                            <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">OK</p>
+                            <% } %>
+                            <% if (card.type === 'Yes/No') { %>
+                            <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">Yes</p>
+                            <% } %>
+                            <% if (card.type === 'On Plan/Off Plan') { %>
+                            <p style="font-size: 16px;  <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>">On Plan</p>
+                            <% } %>
+                          </div>
+                          <div style="margin-top: -10px;">
+                            <p>Method</p>
+                          </div>
+                          <div style="margin-top: -15px; ">
+                            <p style="font-size: 16px; <% if (card.status ==='Open') { %>color: grey;<% } else { %>color: white;<% } %>"><%= card.method %></p>
+                          </div>
+                          <div style="margin-top: -15px;">
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'Value') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.value %> <%= card.unit %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'OK/Not OK') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'Yes/No') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required' && card.type === 'On Plan/Off Plan') { %>
+                            <p style="font-size: 22px; color: black; ">Value - <%= card.agreed %></p>
+                            <% } %>
+                            <% if (card.status ==='Open') { %>
+                              <% if (card.area === 'quality') { %>
+                                <p style="font-size: 22px; margin-top: -42px;"><br>Awaiting Check</p>
+                             <% } else { %>
+                              <p style="font-size: 22px; margin-top: -28px;"><br>Awaiting Check</p>
+                             <% } %>
+                            <p style="font-size: 15px; margin-top: -15px;"><%= card.primaryUserName %></p>
+                            <p style="font-size: 15px; margin-top: -15px;"><%= card.secondUserName %></p>
+                            <% } %>
+                            <% if (card.status ==='Not Required') { %>
+                            <p style="font-size: 22px; margin-top: -25px; color: white;"><br>Not Required Today</p>
+                            <% } %>
+                            <% if (card.status !='Open' && card.status !='Not Required') { %>
+                            <p style="margin-top: -10px; font-size: 14px;">Updated <%= moment(card.updatedAt).format(" DD/MM/YY - HH:mm:ss") %></p>
+                            <p style="margin-top: -10px; color: white;"><%= card.checkedBy %></p>
+                            <% } %>
+                          </div>
+                        </div>
+                        <% if (card.area === 'quality') { %>
+                        <div style="position: absolute; bottom: 0; right: 0; margin-right: 5px;"><%= card.level %></div>
+                        <% } %>
+                      </div>
+                    </a>
+                    <% } %>
+
+          </div>
+
+    </div>
+  </div>
+</div>

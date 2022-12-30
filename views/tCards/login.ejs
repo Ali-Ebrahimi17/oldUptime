@@ -1,0 +1,60 @@
+<% layout('layouts/boilerplateTCard')%>
+
+<div class="row" style="width: 100%">
+	<div id="reallocation-container">
+		<div class="modal-form">
+			<div class="modal-content" style="border-radius: 0">
+				<div style="background-color: rgb(252, 176, 38); height: 50px">
+					<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+					<h4 style="text-align: center; margin: 8px">Login</h4>
+				</div>
+				<div class="modal-body">
+					<% if (area === 'paint') { %>
+					<form action="/tCard/login" method="POST">
+						<fieldset>
+							<div class="row" style="margin-bottom: 10px">
+								<div class="col">
+									<label for="name">Username</label>
+									<input class="form-control" type="text" name="username" required />
+								</div>
+								<div class="col">
+									<label for="name">Password</label>
+									<input class="form-control" type="password" name="password" required />
+								</div>
+							</div>
+							<a class="btn btn-danger float-right" style="margin-left: 8px" href="javascript:window.history.back()">Cancel</a>
+							<button type="submit" class="btn btn-success float-right" style="margin-left: 8px">Submit</button>
+						</fieldset>
+					</form>
+					<% } %> <% if (area === 'quality') { %>
+					<form action="/tCard/loginQCS/<%= division %>" method="POST">
+						<fieldset>
+							<div class="row" style="margin-bottom: 10px">
+								<div class="col">
+									<label for="name">Username </label>
+									<input class="form-control" type="text" name="username" required />
+								</div>
+								<div class="col">
+									<label for="name">Password</label>
+									<input class="form-control" type="password" name="password" required />
+								</div>
+							</div>
+							<a class="btn btn-danger float-right" style="margin-left: 8px" href="javascript:window.history.back()">Cancel</a>
+							<button type="submit" class="btn btn-success float-right" style="margin-left: 8px">Submit</button>
+						</fieldset>
+					</form>
+					<% } %>
+				</div>
+				<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function goBack() {
+		window.history.back()
+	}
+</script>

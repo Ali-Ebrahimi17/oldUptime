@@ -1,0 +1,119 @@
+<% layout('layouts/boilerplate')%>
+
+<style>
+	.red {
+		color: red;
+		font-weight: bold;
+	}
+
+	.amber {
+		color: orange;
+		font-weight: bold;
+	}
+
+	.green {
+		color: green;
+		font-weight: bold;
+	}
+</style>
+
+<!-- <meta http-equiv="refresh" content="40"> -->
+
+<div class="vetting-body">
+	<header id="vettingJumbotron">
+		<% if ( machines.length == 1) { %>
+		<h1 id="vetting-title" style="margin-top: -1rem"><i class="fas fa-wrench"></i> <%= machines.length %> <%= division %> MACHINE ON HOLD</h1>
+		<% } else { %>
+		<h1 id="vetting-title" style="margin-top: -1rem"><i class="fas fa-wrench"></i> <%= machines.length %> <%= division %> MACHINES ON HOLD</h1>
+		<% } %>
+	</header>
+
+	<table class="table table-hover table-dark" style="font-size: 15px; height: 77vh">
+		<thead>
+			<tr class="d-flex">
+				<th style="width: 50px">#</th>
+				<th style="width: 140px">Put on Hold</th>
+				<th style="width: 150px">Build Number</th>
+				<th style="width: 120px">Serial</th>
+				<th style="width: 400px">Concen (reason machine put in hold)</th>
+				<th style="width: 200px">Reviewed By <%= division %></th>
+				<th style="width: 300px">Completd & Returned To Top Yard</th>
+				<th style="width: 500px">Comments</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% let x = 0 %> <% for (let m of machines) { %> <% if ( currentUser && currentUser.isCFC) { %> <% x++ %>
+			<tr class="d-flex <% if (!m.reviewed) { %>red<% } else if (!m.returned) { %>amber<% } else { %>green<% } %>">
+				<td style="height: 76px; width: 50px"><a href="/yard/edit/<%=m._id%>"><%= x %></a></td>
+				<td style="width: 140px">
+					<a href="/yard/edit/<%= m._id %>"
+						><%= moment(m.createdAt).format("DD/MM/YYYY") %><br />
+						<%= moment(m.createdAt).format("HH:mm") %></a
+					>
+				</td>
+				<td style="width: 150px"><a href="/yard/edit/<%= m._id %>"><%= m.buildNumber %></a></td>
+				<td style="width: 120px"><a href="/yard/edit/<%= m._id %>"><%= m.serial %></a></td>
+				<td style="width: 400px"><a href="/yard/edit/<%= m._id %>"><%= m.concern %></a></td>
+				<% if (m.reviewedAt) { %>
+				<td style="width: 200px">
+					<a href="/yard/edit/<%= m._id %>"
+						><%= moment(m.reviewedAt).format("DD/MM/YYYY") %> <br />
+						<%= moment(m.reviewedAt).format("HH:mm") %></a
+					>
+				</td>
+				<% } else { %>
+				<td style="width: 200px"><a href="/yard/edit/<%= m._id %>"></a></td>
+				<% } %> <% if (m.returned) { %>
+				<td style="width: 300px">
+					<a href="/yard/edit/<%= m._id %>"
+						><%= moment(m.returnedAt).format("DD/MM/YYYY") %><br />
+						<%= moment(m.returnedAt).format("HH:mm") %></a
+					>
+				</td>
+				<% } else { %>
+				<td style="width: 300px"><a href="/yard/edit/<%= m._id %>"></a></td>
+				<% } %>
+				<td style="width: 500px">
+					<a href="/yard/edit/<%= m._id %>/"><%= m.comments %></a>
+					<% if ( m.returned && currentUser && currentUser.isTopYard) { %>
+					<a href="/yard/dispatch/<%= m._id %>/<%= division %>"><i class="float-right far fa-check-circle" style="font-size: 40px"></i></a>
+					<% } %>
+				</td>
+			</tr>
+
+			<% } else { %> <% x++ %>
+			<tr class="d-flex <% if (!m.reviewed) { %>red<% } else if (!m.returned) { %>amber<% } else { %>green<% } %>">
+				<td style="height: 76px; width: 50px"><%= x %></td>
+				<td style="width: 140px">
+					<%= moment(m.createdAt).format("DD/MM/YYYY") %><br />
+					<%= moment(m.createdAt).format("HH:mm") %>
+				</td>
+				<td style="width: 150px"><%= m.buildNumber %></td>
+				<td style="width: 120px"><%= m.serial %></td>
+				<td style="width: 400px"><%= m.concern %></td>
+				<% if (m.reviewedAt) { %>
+				<td style="width: 200px">
+					><%= moment(m.reviewedAt).format("DD/MM/YYYY") %> <br />
+					<%= moment(m.reviewedAt).format("HH:mm") %>
+				</td>
+				<% } else { %>
+				<td style="width: 200px"></td>
+				<% } %> <% if (m.returned) { %>
+				<td style="width: 300px">
+					<%= moment(m.returnedAt).format("DD/MM/YYYY") %><br />
+					<%= moment(m.returnedAt).format("HH:mm") %>
+				</td>
+				<% } else { %>
+				<td style="width: 300px"></td>
+				<% } %>
+				<td style="width: 500px">
+					<%= m.comments %> <% if ( m.returned && currentUser && currentUser.isTopYard) { %>
+					<a href="/yard/dispatch/<%= m._id %>/<%= division %>"><i class="float-right far fa-check-circle" style="font-size: 40px"></i></a>
+					<% } %>
+				</td>
+			</tr>
+
+			<% } %> <% } %>
+		</tbody>
+	</table>
+</div>

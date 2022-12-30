@@ -1,0 +1,331 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <meta http-equiv="refresh" content="120"> -->
+    <title>JCB - Equipment Monitoring</title>
+    <link rel="icon" href="/home/jcb.png" />
+    <link rel="stylesheet" href="/7z/content/bootstrap/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/dashboards.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+    <link rel="stylesheet" href=/7z/content/chart-js/chart.min.css" type="text/css">
+    <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+    <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+    <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+        
+    <div class="row header-top">
+        <div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+            <img height="24px" src="/7z/content//images/jcb-logo.png">
+        </div>
+        <div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+            <a href="/equipment-monitoring/home">
+                <span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 5px" class="fas fa-home icon-home"></span>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-main">
+
+            <div class="row">
+
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Shift Pattern Administration</h1>
+                    <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: 0px 0px 16px 0px; text-align: center">Current Shift</h1>
+                </div>
+                <div class="col-lg-3"></div>
+
+                <div class="col-lg-12" style=" height: 90px; margin-bottom: 18px; padding: 8px 0px 8px 0px; border-top: 3px solid rgb(26, 28, 30); border-bottom: 3px solid rgb(26, 28, 30)">
+
+                    <div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+                        <h1 class="line-sub-header-top">Current Shift</h1>
+                        <h1 class="line-measure-value-top text-grey">.</h1>
+                    </div>
+
+                    
+                </div>
+
+                <div class="col-lg-12">
+                    <table class="table table-hover " style="font-size: 17px; width: 40%; margin: auto; height: auto; background-color:  rgb(104, 104, 104); color: white;" >
+                        <thead>
+                          <tr class="concern-header">
+                            <th colspan="2" style="background-color: black; border-top: 2px solid black; border-left: 2px solid black;""></th>
+                            <th colspan="3" style="border: 1px solid white;">Current Shift Pattern</th>
+                          </tr>
+                          <tr class="concern-header">
+                            <th scope="col" width="20%">Machine</th>
+                            <th scope="col" width="20%">Category</th>
+                            <th scope="col" width="20%">Days</th>
+                            <th scope="col" width="20%">Days & Nights</th>
+                            <th scope="col" width="20%" >4 On 4 Off</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="concern-row">
+                            <th scope="row">IGM K5</th>
+                            <td>Welding Robot</td>
+                            <td><i style="color: green;" class="fas fa-check"></i></td>
+                            <td></td>
+                            <td ></td>
+                          </tr>
+                          <tr class="concern-row">
+                            <th scope="row">IGM K4</th>
+                            <td>Laser Cutter</td>
+                            <td></td>
+                            <td></td>
+                            <td><i style="color: green;" class="fas fa-check"></i></td>
+                          </tr>
+                          <tr class="concern-row">
+                            <th scope="row">IGM K3</th>
+                            <td>Laser Cutter</td>
+                            <td><i style="color: green;" class="fas fa-check"></i></td>
+                            <td></td>
+                            <td ></td>
+                          </tr>
+                          <tr class="concern-row">
+                            <th scope="row">IGM K2</th>
+                            <td>Welding Robot</td>
+                            <td></td>
+                            <td><i style="color: green;" class="fas fa-check"></i></td>
+                            <td ></td>
+                          </tr>
+                          <tr class="concern-row">
+                            <th scope="row">IGM K1</th>
+                            <td>Welding Robot</td>
+                            <td></td>
+                            <td></td>
+                            <td><i style="color: green;" class="fas fa-check"></i></td>
+                          </tr>
+
+
+
+                        </tbody>
+                      </table>
+
+                
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid footer">
+        
+    <div class="row header-top">
+        <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+            <img height="24px" src="/7z/content/images/df.png">
+        </div>
+        <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+            J.C. Bamford Excavators LTD &copy; 2022
+        </div>
+    </div>
+
+</div>
+
+<script  src="/7z/content/modal/modal.js"></script>
+
+<script>
+
+
+Chart.defaults.global.defaultFontColor = '#fff';
+
+let barChartData = {
+	labels   : [
+		'Machine 1',
+		'Machine 2',
+		'Machine 3',
+		'Machine 4',
+		'Machine 5',
+		'Machine 6',
+		'Machine 7',
+	],
+	datasets : [
+		{
+			label           : 'T-Time',
+			backgroundColor : 'rgb(255, 123, 0)',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				3,
+				3,
+				3,
+				2,
+				6,
+				7,
+				2,
+			],
+		},
+		{
+			label           : 'Running Time',
+			backgroundColor : 'rgb(0, 169, 79)',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				1,
+				2,
+				2,
+				1,
+				6,
+				7,
+				2,
+			],
+		},
+		{
+			label           : 'Known Breakdown',
+			backgroundColor : 'rgb(0, 173, 238)',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				6,
+				3,
+				3,
+				2,
+				4,
+				2,
+				6,
+			],
+		},
+		{
+			label           : 'Un-known Breakdown',
+			backgroundColor : 'rgb(238, 28, 37)',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				6,
+				1,
+				2,
+				1,
+				3,
+				4,
+				6,
+			],
+		},
+		{
+			label           : 'Waiting (Parts)',
+			backgroundColor : 'purple',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				6,
+				4,
+				3,
+				1,
+				4,
+				2,
+				6,
+			],
+		},
+		{
+			label           : 'Waiting (Wire)',
+			backgroundColor : 'grey',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				2,
+				3,
+				3,
+				1,
+				1,
+				2,
+				2,
+			],
+		},
+	],
+};
+
+window.onload = function() {
+	let ctx = document.getElementById('canvas').getContext('2d');
+	window.myBar = new Chart(ctx, {
+		type    : 'bar',
+		data    : barChartData,
+		options : {
+			title      : {
+				display : false,
+				text    : 'Title Here',
+			},
+			legend     : {
+				display : true,
+			},
+			tooltips   : {
+				enabled : true,
+			},
+			responsive : true,
+            
+			scales     : {
+				xAxes : [
+					{
+						stacked       : true,
+						barPercentage : 0.4,
+						plugins       : {
+							datalabels : {
+                                
+								formatter : function(value, ctx) {
+									let sum = 0;
+									let dataArr = ctx.chart.data.datasets[0].data;
+									dataArr.map((data) => {
+										sum += data;
+									});
+									let percentage = (value * 100 / sum).toFixed(0) + '%';
+									return percentage;
+								},
+								font      : {
+									weight : 'normal',
+								},
+								color     : '#fff',
+							},
+						},
+                        
+					},
+                    
+				],
+                
+				yAxes : [
+					{
+						stacked    : false,
+						ticks      : {
+							beginAtZero : true,
+							min         : 0,
+							max         : 24,
+						},
+						scaleLabel : {
+							display     : true,
+							labelString : 'Hours',
+						},
+					},
+					{
+						id      : 'bar-y-axis',
+						stacked : true,
+						display : false,
+						ticks   : {
+							beginAtZero : true,
+							min         : 0,
+							max         : 24,
+						},
+						type    : 'linear',
+					},
+				],
+			},
+		},
+	});
+};
+
+
+     
+
+
+
+</script>
+
+</body>
+</html>

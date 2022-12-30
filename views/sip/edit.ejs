@@ -1,0 +1,245 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="newbuild-container">
+
+
+  <div class="row form-background" style="width: 70vw; margin-left: -25vw;">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Edit <%= sip.name %></h1>
+    </div>
+
+
+
+    <div class="col">
+      <form action="/dash/sip/edit/<%= sip._id %>" method="POST">
+        <input type="hidden" name="sip[division]" value="<%= division %>">
+        <label for="buildNumber">Rec 1</label>
+        <select class="form-control" type="text" name="sip[rec1]" autocomplete="off">
+          <% inspectors.forEach(inspector => { %>
+          <option hidden><%= sip.rec1 %></option>
+
+          <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+            <% }) %>
+          <option></option>
+        </select>
+        <label for="buildNumber">Rec 2</label>
+        <select class="form-control" type="text" name="sip[rec2]" autocomplete="off">
+          <% inspectors.forEach(inspector => { %>
+          <option hidden><%= sip.rec2 %></option>
+          <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+            <% }) %>
+          <option></option>
+        </select>
+        <label for="buildNumber">Rec 3</label>
+        <select class="form-control" type="text" name="sip[rec3]" autocomplete="off">
+          <% inspectors.forEach(inspector => { %>
+          <option hidden><%= sip.rec3 %></option>
+          <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+            <% }) %>
+          <option></option>
+        </select>
+        <label for="buildNumber">Rec 4</label>
+        <select class="form-control" type="text" name="sip[rec4]" autocomplete="off">
+          <% inspectors.forEach(inspector => { %>
+          <option hidden><%= sip.rec4 %></option>
+          <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+            <% }) %>
+          <option></option>
+        </select>
+        <label for="buildNumber">Rec 5</label>
+        <select class="form-control" type="text" name="sip[rec5]" style="margin-bottom: 12px;" autocomplete="off">
+          <% inspectors.forEach(inspector => { %>
+          <option hidden><%= sip.rec5 %></option>
+          <option label="<%= inspector.name %>" value="<%= inspector.name%>">
+            <% }) %>
+          <option></option>
+        </select>
+
+    </div>
+    <div class="col">
+      <label for="buildNumber">Rec 6</label>
+      <select class="form-control" type="text" name="sip[rec6]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec6 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+      <label for="buildNumber">Rec 7</label>
+      <select class="form-control" type="text" name="sip[rec7]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec7 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+      <label for="buildNumber">Rec 8</label>
+      <select class="form-control" type="text" name="sip[rec8]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec8 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+
+      <label for="buildNumber">Rec 9</label>
+      <select class="form-control" type="text" name="sip[rec9]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec9 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+
+      <label for="buildNumber">Rec 10</label>
+      <select class="form-control" type="text" name="sip[rec10]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec10 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+    </div>
+    <div class="col">
+      <label for="buildNumber">Rec 11</label>
+      <select class="form-control" type="text" name="sip[rec11]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec11 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+      <label for="buildNumber">Rec 12</label>
+      <select class="form-control" type="text" name="sip[rec12]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec12 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+      <label for="buildNumber">Rec 13</label>
+      <select class="form-control" type="text" name="sip[rec13]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec13 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+
+      <label for="buildNumber">Rec 14</label>
+      <select class="form-control" type="text" name="sip[rec14]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec14 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+
+      <label for="buildNumber">Rec 15</label>
+      <select class="form-control" type="text" name="sip[rec15]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec15 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+
+    </div>
+    <div class="col">
+      <label for="buildNumber">Rec 16</label>
+      <select class="form-control" type="text" name="sip[rec16]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec16 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+      <label for="buildNumber">Rec 17</label>
+      <select class="form-control" type="text" name="sip[rec17]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec17 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+      <label for="buildNumber">Rec 18</label>
+      <select class="form-control" type="text" name="sip[rec18]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec18 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+
+      <label for="buildNumber">Rec 19</label>
+      <select class="form-control" type="text" name="sip[rec19]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec19 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+
+      <label for="buildNumber">Rec 20</label>
+      <select class="form-control" type="text" name="sip[rec20]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec20 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+    </div>
+    <div class="col">
+      <label for="buildNumber">Rec 21</label>
+      <select class="form-control" type="text" name="sip[rec21]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec21 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+      <label for="buildNumber">Rec 22</label>
+      <select class="form-control" type="text" name="sip[rec22]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec22 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+      <label for="buildNumber">Rec 23</label>
+      <select class="form-control" type="text" name="sip[rec23]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec23 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+
+      <label for="buildNumber">Rec 24</label>
+      <select class="form-control" type="text" name="sip[rec24]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec24 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+
+      <label for="buildNumber">Rec 25</label>
+      <select class="form-control" type="text" name="sip[rec25]" autocomplete="off">
+        <% inspectors.forEach(inspector => { %>
+        <option hidden><%= sip.rec25 %></option>
+        <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+          <% }) %>
+        <option></option>
+      </select>
+      <div class="form-group text-center">
+        <button class="btn btn-md btn-success" style="margin: 12px;">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+
+  <div>
+    <a href="/dash/sip/all/LDL">Go Back</a>
+  </div>

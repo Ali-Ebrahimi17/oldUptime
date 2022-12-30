@@ -1,0 +1,996 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="150"> -->
+
+  <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+  <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+  <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+
+
+  <link rel="icon" href="/images/jcb.png" />
+  <link rel="stylesheet" href="/stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="/stylesheets/area.css">
+
+</head>
+
+<body>
+  <% let today = new Date() %>
+  <% let day = today.getDate() %>
+  <% let month = today.getMonth() + 1 %>
+  <% let year = today.getFullYear() %>
+  <% let hours = today.getHours() %>
+  <% let minutes = today.getMinutes() %>
+  <% if (day < 10) day = '0' + day %>
+  <% if (month < 10) month = '0' + month %>
+  <% if (hours < 10) hours = '0' + hours %>
+  <% if (minutes < 10) minutes = '0' + minutes %>
+  <% let dateTime = day + ' ' + month + ' ' + year + ' - ' + hours + ':' + minutes %>
+
+
+
+
+  <!-- Get the prediction months -->
+  <% let prediction1Month = moment().subtract(4, 'months').format('MMM-YY').toUpperCase()%>
+  <% let prediction2Month = moment().subtract(3, 'months').format('MMM-YY').toUpperCase()%>
+  <% let prediction3Month = moment().subtract(2, 'months').format('MMM-YY').toUpperCase()%>
+
+
+
+
+  <!-- The dash layout -->
+
+  <section class="dash-layout">
+
+    <div class="card card-2tall">
+      <h1 class="box-content-header">DOA</h1>
+      <p class="doa-month"><%= figure[16].month %></p>
+      <p class="<% if (figure[16].stat > figure[35].stat) { %>red-stat<% } else { %>green-stat<% } %>"><%= figure[16].stat %></p>
+      <% if ( figure[16].stat > figure[16].stat ) { %>
+      <h1 class="red-arrow">&#x25B2;</h1>
+      <% } else { %>
+      <h1 class="green-arrow">&#x25Bc;</h1>
+      <% }; %>
+      <div class="targets">
+        <p class="target">TARGET<br>
+          TBC</p>
+        <p class="actual">DELTA<br>
+          TBC</a></p>
+      </div>
+    </div>
+    </div>
+
+
+    <div class="card card-2tall">
+      <h1 class="box-content-header">T3 ROLLING</h1>
+      <p class="doa-month"><%= graph[2].month %> - <%= graph[7].month %></p>
+      <p class="<% if (figure[166].stat > figure[147].stat) { %>red-stat<% } else { %>green-stat<% } %>"><%= figure[166].stat %></p>
+      <% if ( figure[166].stat > figure[165].stat) { %>
+      <h1 class="red-arrow">&#x25B2;</h1>
+      <% } else { %>
+      <h1 class="green-arrow">&#x25Bc;</h1>
+      <% }; %>
+      <div class="targets">
+        <p class="target">TARGET<br>
+          <%= figure[165].stat  %> </p>
+        <p class="actual">DELTA<br>
+          <%= (figure[166].stat-figure[165].stat).toFixed(3)  %></a></p>
+      </div>
+
+    </div>
+
+    <div class="card card-2tall">
+      <h1 class="box-content-header">INTERNAL DPU</h1>
+      <p class="dpu-month"><%= dpuMonth %></p>
+      <p class="<% if (figure[184].stat > figure[175].stat) { %>red-stat<% } else { %>green-stat<% } %>"><%= figure[184].stat  %></p>
+      <p></p>
+      <p></p>
+      <p></p>
+      <p></p>
+
+      <div class="targets">
+        <p class="target">TARGET<br>
+          <%= figure[175].stat  %> </p>
+        <p class="actual">DELTA<br>
+          <%= (figure[184].stat - figure[175].stat).toFixed(3)  %></a></p>
+      </div>
+    </div>
+
+
+
+
+    <div class="card card-full">
+      <h1 class="box-content-header"><%= zones %></h1>
+      <div>
+        <div class="zone-fourC-titles">
+          <h4 style="text-align: center; font-size: 1rem;">INTERNAL TW</h4>
+          <h4 style="text-align: center; font-size: 1rem;">EXTERNAL CLAIMS</h4>
+        </div>
+        <div class="new-zone-holder">
+          <div class="zone-box1">
+            <p class="zone-time">THIS WEEK</p>
+            <p class="zone-claims" style="margin-top: -35px;"><%= intTWThisWeek  %></p>
+          </div>
+          <div class="zone-box1">
+            <p class="zone-time">THIS MONTH</p>
+            <p class="zone-claims" style="margin-top: -35px;"><%= intTWThisMonth  %></p>
+          </div>
+          <div class="zone-box1">
+            <p class="zone-time">THIS YEAR</p>
+            <p class="zone-claims" style="margin-top: -35px;"><%= intTWThisYear  %></p>
+          </div>
+          <div class="zone-box1">
+            <a href="/dash/area/<%= zones %>/<%= division%>/claimsweek">
+              <p class="zone-time">THIS WEEK</p>
+              <p class="zone-claims" style="margin-top: -35px;"><%= claimsThisWeek  %></p>
+            </a>
+          </div>
+          <div class="zone-box1">
+            <a href="/dash/area/<%= zones %>/<%= division%>/claimsmonth">
+              <p class="zone-time">THIS MONTH</p>
+              <p class="zone-claims" style="margin-top: -35px;"><%= claimsThisMonth %></p>
+            </a>
+          </div>
+          <div class="zone-box1">
+            <a href="/dash/area/<%= zones %>/<%= division%>/claimsyear">
+              <p class="zone-time">THIS YEAR</p>
+              <p class="zone-claims" style="margin-top: -35px;"><%= claimsThisYear  %></p>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="zone-fourC-titles">
+          <h4 style="text-align: center; font-size: 1rem;">INTERNAL 4C STATUS</h4>
+          <h4 style="text-align: center; font-size: 1rem;">EXTERNAL 4C STATUS</h4>
+        </div>
+        <a href="/claims/4c/LDL?area=<%= zones %>">
+          <div class="new-zone-holder">
+            <div class="zone-box1-red">
+              <p class="zone-claims"><%= intFourCOpenNum  %></p>
+            </div>
+            <div class="zone-box1-amber">
+              <p class="zone-claims"><%= intFourCContainedNum  %></p>
+            </div>
+            <div class="zone-box1-green">
+              <p class="zone-claims"><%= intFourCClosedNum  %></p>
+            </div>
+            <div class="zone-box1-red">
+              <p class="zone-claims"><%= extFourCOpenNum  %></p>
+            </div>
+            <div class="zone-box1-amber">
+              <p class="zone-claims"><%= extFourCContainedNum  %></p>
+            </div>
+            <div class="zone-box1-green">
+              <p class="zone-claims"><%= extFourCClosedNum  %></p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div>
+        <h5 style="text-align: center;">INTERNAL</h5>
+        <div class="new-zone-holder">
+          <div class="zone-box3">
+            <h5>DPU</h5>
+            <div class="dpu-internal-holder">
+              <div style="width: 30%; height: 250px; ">
+                <p style="font-size: 15px; font-weight: bold; margin-top: 12px;">LAST WEEK</p>
+                <p style="font-size: 70px; font-weight: bold; margin-top: 20px;"><%= zone[0].lastWeekDpu %></p>
+                <% if (zones != 'Zone 22') { %>
+                <a href="/dash/qsmart/<%=  area %>/<%= division %>">
+                  <% if (inspEff > 84 ) { %>
+                  <p style="font-size: 50px; font-weight: bold; margin-top: -20px; color: green;"><%= inspEff %>%</p>
+                  <% } else { %>
+                  <p style="font-size: 50px; font-weight: bold; margin-top: -20px; color: red;"><%= inspEff %>%</p>
+                  <% } %>
+
+                  <p style="font-size: 15px; font-weight: bold; margin-top: -30px;">Zone Inspector Efficiency</p>
+                </a>
+
+                <% } %>
+
+              </div>
+              <div style="width: 70%; height: 250px; ">
+                <div>
+                  <canvas id="intDPU" width="300" height="150"></canvas>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="zone-box3">
+            <div class="zone-top-10">
+              <a href="/zone/editTrack/<%= zone[0].id %>">
+                <table class="table table-hover table-dark" style="font-size: 15px; width: 100%; margin: auto; height: 300px; ">
+                  <thead>
+                    <tr class="d-flex" style="font-size: 16px;">
+                      <th style="width: 52%;">Top 5 Issues Last Week</th>
+                      <th style="width: 16%;">Count</th>
+                      <th style="width: 16%;">Cut In</th>
+                      <th style="width: 16%;">Status</th>
+
+                    </tr>
+                  </thead>
+                  <tbody style="text-align: center;">
+                    <tr class="d-flex">
+                      <td style=" width: 55%"><%= zone[0].issue1 %></td>
+                      <td style=" width: 15%"><%= zone[0].count1 %></td>
+                      <td style=" width: 15%"><%= zone[0].cutIn1 %></td>
+                      <td style=" width: 15%"><%= zone[0].status1 %></td>
+                    </tr>
+                    <tr class="d-flex">
+                      <td style=" width: 55%"><%= zone[0].issue2 %></td>
+                      <td style=" width: 15%"><%= zone[0].count2 %></td>
+                      <td style=" width: 15%"><%= zone[0].cutIn2 %></td>
+                      <td style=" width: 15%"><%= zone[0].status2 %></td>
+                    </tr>
+                    <tr class="d-flex">
+                      <td style=" width: 55%"><%= zone[0].issue3 %></td>
+                      <td style=" width: 15%"><%= zone[0].count3 %></td>
+                      <td style=" width: 15%"><%= zone[0].cutIn3 %></td>
+                      <td style=" width: 15%"><%= zone[0].status3 %></td>
+                    </tr>
+                    <tr class="d-flex">
+                      <td style=" width: 55%"><%= zone[0].issue4 %></td>
+                      <td style=" width: 15%"><%= zone[0].count4 %></td>
+                      <td style=" width: 15%"><%= zone[0].cutIn4 %></td>
+                      <td style=" width: 15%"><%= zone[0].status4 %></td>
+                    </tr>
+                    <tr class="d-flex">
+                      <td style=" width: 55%"><%= zone[0].issue5 %></td>
+                      <td style=" width: 15%"><%= zone[0].count5 %></td>
+                      <td style=" width: 15%"><%= zone[0].cutIn5 %></td>
+                      <td style=" width: 15%"><%= zone[0].status5 %></td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+
+
+
+    <div class="card card-4tall">
+      <div class="new-graph-holder">
+        <div>
+          <canvas id="doaDPU" width="300" height="250"></canvas>
+        </div>
+        <div>
+          <canvas id="doaRFT" width="300" height="250"></canvas>
+        </div>
+      </div>
+      <div class="new-graph-holder">
+        <div>
+          <canvas id="t3DPU" width="300" height="250"></canvas>
+        </div>
+        <div>
+          <canvas id="t3RFT" width="300" height="250"></canvas>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  </section>
+
+  <script>
+    Chart.defaults.global.defaultFontColor = "#fff";
+    Chart.defaults.global.defaultFontSize = 12;
+
+
+    let t3 = new Chart(doaDPU, {
+      type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: [
+          <%- JSON.stringify(graph[0].month); %>,
+          <%- JSON.stringify(graph[1].month); %>,
+          <%- JSON.stringify(graph[2].month); %>,
+          <%- JSON.stringify(graph[3].month); %>,
+          <%- JSON.stringify(graph[4].month); %>,
+          <%- JSON.stringify(graph[5].month); %>,
+          <%- JSON.stringify(graph[6].month); %>,
+          <%- JSON.stringify(graph[7].month); %>,
+          <%- JSON.stringify(graph[8].month); %>,
+          <%- JSON.stringify(graph[9].month); %>,
+          <%- JSON.stringify(graph[10].month); %>,
+          <%- JSON.stringify(graph[11].month); %>,
+
+
+
+        ],
+        datasets: [
+
+
+          {
+            label: 'DOA',
+            data: [
+              <%= graph[0].stat %>,
+              <%= graph[1].stat %>,
+              <%= graph[2].stat %>,
+              <%= graph[3].stat %>,
+              <%= graph[4].stat %>,
+              <%= graph[5].stat %>,
+              <%= graph[6].stat %>,
+              <%= graph[7].stat %>,
+              <%= graph[8].stat %>,
+              <%= graph[9].stat %>,
+
+
+
+
+            ],
+            // backgroundColor:'rgba(54, 162, 235, 0.6)',
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.6)', // Aug 19
+              'rgba(54, 162, 235, 0.6)', // Sep 19
+              'rgba(54, 162, 235, 0.6)', // Oct 19
+              'rgba(54, 162, 235, 0.6)', // Nov 19
+              'rgba(54, 162, 235, 0.6)', // Dec 19
+              'rgba(54, 162, 235, 0.6)', // Jan 20
+              'rgba(54, 162, 235, 0.6)', // Feb 20
+              'rgba(54, 162, 235, 0.6)', // Mar 20
+              'rgba(54, 162, 235, 0.6)', // Mar 20
+              'rgba(54, 162, 235, 0.6)', // Mar 20
+              'rgba(255, 255, 255, 0.6)', // Jul 20
+              'rgba(255, 255, 255, 0.6)', // Jul 20
+
+            ],
+            borderWidth: 1,
+            borderColor: '#777',
+            hoverBorderWidth: 3,
+            hoverBorderColor: '#FFFFFF'
+          }
+        ]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        title: {
+          display: true,
+          text: 'DOA DPU',
+          fontSize: 15
+        },
+        legend: {
+          display: false,
+          position: 'right',
+          labels: {
+            fontColor: '#000'
+          }
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        tooltips: {
+          enabled: true
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          },
+        }
+
+      },
+    });
+
+
+    let doa = new Chart(doaRFT, {
+      type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: [
+          <%- JSON.stringify(graph[12].month); %>,
+          <%- JSON.stringify(graph[13].month); %>,
+          <%- JSON.stringify(graph[14].month); %>,
+          <%- JSON.stringify(graph[15].month); %>,
+          <%- JSON.stringify(graph[16].month); %>,
+          <%- JSON.stringify(graph[17].month); %>,
+          <%- JSON.stringify(graph[18].month); %>,
+          <%- JSON.stringify(graph[19].month); %>,
+          <%- JSON.stringify(graph[20].month); %>,
+          <%- JSON.stringify(graph[21].month); %>,
+          <%- JSON.stringify(graph[22].month); %>,
+          <%- JSON.stringify(graph[23].month); %>,
+
+
+
+        ],
+        datasets: [{
+            label: "DOA Target",
+            type: "line",
+            borderColor: "red",
+            data: [
+
+              <%= graph[24].stat %>,
+              <%= graph[25].stat %>,
+              <%= graph[26].stat %>,
+              <%= graph[27].stat %>,
+              <%= graph[28].stat %>,
+              <%= graph[29].stat %>,
+              <%= graph[30].stat %>,
+              <%= graph[31].stat %>,
+              <%= graph[32].stat %>,
+              <%= graph[33].stat %>,
+              <%= graph[34].stat %>,
+              <%= graph[35].stat %>,
+            ],
+            fill: false
+          },
+          {
+            label: 'DOA',
+            data: [
+              <%= graph[12].stat %>,
+              <%= graph[13].stat %>,
+              <%= graph[14].stat %>,
+              <%= graph[15].stat %>,
+              <%= graph[16].stat %>,
+              <%= graph[17].stat %>,
+              <%= graph[18].stat %>,
+              <%= graph[19].stat %>,
+              <%= graph[20].stat %>,
+              <%= graph[21].stat %>,
+
+            ],
+            // backgroundColor:'rgba(54, 162, 235, 0.6)',
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.6)', // Feb 19
+              'rgba(54, 162, 235, 0.6)', // Mar 19
+              'rgba(54, 162, 235, 0.6)', // Apr 19
+              'rgba(54, 162, 235, 0.6)', // May 19
+              'rgba(54, 162, 235, 0.6)', // Jun 19
+              'rgba(54, 162, 235, 0.6)', // Jul 19
+              'rgba(54, 162, 235, 0.6)', // Aug 19
+              'rgba(54, 162, 235, 0.6)', // Sep 19
+              'rgba(54, 162, 235, 0.6)', // Oct 19
+              'rgba(54, 162, 235, 0.6)', // Nov 19
+              'rgba(54, 162, 235, 0.6)', // Dec 19
+              'rgba(54, 162, 235, 0.6)', // Jan 20
+
+            ],
+            borderWidth: 1,
+            borderColor: '#777',
+            hoverBorderWidth: 3,
+            hoverBorderColor: '#FFFFFF'
+          }
+        ]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        title: {
+          display: true,
+          text: 'DOA RFT %',
+          fontSize: 15
+        },
+        legend: {
+          display: false,
+          position: 'right',
+          labels: {
+            fontColor: '#000'
+          }
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        tooltips: {
+          enabled: true
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          },
+        }
+
+      },
+    });
+
+    let t31 = new Chart(t3DPU, {
+      type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: [
+          <%- JSON.stringify(graph[36].month); %>,
+          <%- JSON.stringify(graph[37].month); %>,
+          <%- JSON.stringify(graph[38].month); %>,
+          <%- JSON.stringify(graph[39].month); %>,
+          <%- JSON.stringify(graph[40].month); %>,
+          <%- JSON.stringify(graph[41].month); %>,
+          <%- JSON.stringify(graph[42].month); %>,
+          <%- JSON.stringify(graph[43].month); %>,
+          <%- JSON.stringify(graph[44].month); %>,
+          <%- JSON.stringify(graph[45].month); %>,
+          <%- JSON.stringify(graph[46].month); %>,
+          <%- JSON.stringify(graph[47].month); %>,
+
+
+
+        ],
+        datasets: [{
+            label: "T3 Rolling",
+            type: "line",
+            borderColor: "#FFC200",
+            data: [
+              <%= graph[60].stat %>,
+              <%= graph[61].stat %>,
+              <%= graph[62].stat %>,
+              <%= graph[63].stat %>,
+              <%= graph[64].stat %>,
+              <%= graph[65].stat %>,
+              <%= graph[66].stat %>,
+              <%= graph[67].stat %>,
+              <%= graph[68].stat %>,
+              <%= graph[69].stat %>,
+              <%= graph[70].stat %>,
+              <%= graph[71].stat %>,
+
+
+
+
+            ],
+
+            fill: false,
+          },
+
+          {
+            label: "T3 Target",
+            type: "line",
+            borderColor: "red",
+            data: [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              <%= graph[78].stat %>,
+              <%= graph[79].stat %>,
+              <%= graph[80].stat %>,
+              <%= graph[81].stat %>,
+              <%= graph[82].stat %>,
+              <%= graph[83].stat %>,
+
+
+
+            ],
+            fill: false
+          }, {
+            label: 'T3',
+            data: [
+              <%= graph[36].stat %>,
+              <%= graph[37].stat %>,
+              <%= graph[38].stat %>,
+              <%= graph[39].stat %>,
+              <%= graph[40].stat %>,
+              <%= graph[41].stat %>,
+              <%= graph[42].stat %>,
+              <%= graph[43].stat %>,
+              <%= prediction1 %>,
+              <%= prediction2 %>,
+              <%= prediction3 %>,
+
+
+
+
+            ],
+            // backgroundColor:'rgba(54, 162, 235, 0.6)',
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.6)', // Aug 19
+              'rgba(54, 162, 235, 0.6)', // Sep 19
+              'rgba(54, 162, 235, 0.6)', // Oct 19
+              'rgba(54, 162, 235, 0.6)', // Nov 19
+              'rgba(54, 162, 235, 0.6)', // Dec 19
+              'rgba(54, 162, 235, 0.6)', // Jan 20
+              'rgba(54, 162, 235, 0.6)', // Feb 20
+              'rgba(54, 162, 235, 0.6)', // Mar 20
+              'rgba(255, 255, 255, 0.6)', // Jul 20
+              'rgba(255, 255, 255, 0.6)', // Jul 20
+              'rgba(255, 255, 255, 0.6)', // Aug 20
+              'rgba(255, 255, 255, 0.6)', // Sep 20
+            ],
+            borderWidth: 1,
+            borderColor: '#777',
+            hoverBorderWidth: 3,
+            hoverBorderColor: '#FFFFFF'
+          }
+        ]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        title: {
+          display: true,
+          text: 'T3 DPU',
+          fontSize: 15
+        },
+        legend: {
+          display: false,
+          position: 'right',
+          labels: {
+            fontColor: '#000'
+          }
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        tooltips: {
+          enabled: true
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          },
+        }
+
+      },
+    });
+
+
+    let doa1 = new Chart(t3RFT, {
+      type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: [
+          <%- JSON.stringify(graph[48].month); %>,
+          <%- JSON.stringify(graph[49].month); %>,
+          <%- JSON.stringify(graph[50].month); %>,
+          <%- JSON.stringify(graph[51].month); %>,
+          <%- JSON.stringify(graph[52].month); %>,
+          <%- JSON.stringify(graph[53].month); %>,
+          <%- JSON.stringify(graph[54].month); %>,
+          <%- JSON.stringify(graph[55].month); %>,
+          <%- JSON.stringify(graph[56].month); %>,
+          <%- JSON.stringify(graph[57].month); %>,
+          <%- JSON.stringify(graph[58].month); %>,
+          <%- JSON.stringify(graph[59].month); %>,
+
+
+        ],
+        datasets: [{
+          label: "T3 Target",
+          type: "line",
+          borderColor: "red",
+          data: [
+
+            <%= graph[84].stat %>,
+            <%= graph[85].stat %>,
+            <%= graph[86].stat %>,
+            <%= graph[87].stat %>,
+            <%= graph[88].stat %>,
+            <%= graph[89].stat %>,
+            <%= graph[90].stat %>,
+            <%= graph[91].stat %>,
+            <%= graph[92].stat %>,
+            <%= graph[93].stat %>,
+            <%= graph[94].stat %>,
+            <%= graph[95].stat %>,
+
+          ],
+          fill: false
+        }, {
+          label: 'T3 RFT %',
+          data: [
+            <%= graph[48].stat %>,
+            <%= graph[49].stat %>,
+            <%= graph[50].stat %>,
+            <%= graph[51].stat %>,
+            <%= graph[52].stat %>,
+            <%= graph[53].stat %>,
+            <%= graph[54].stat %>,
+            <%= graph[55].stat %>,
+            <%= pre1RFT %>,
+            <%= pre2RFT %>,
+            <%= pre3RFT %>,
+
+
+
+
+          ],
+          // backgroundColor:'rgba(54, 162, 235, 0.6)',
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.6)', // Feb 19
+            'rgba(54, 162, 235, 0.6)', // Mar 19
+            'rgba(54, 162, 235, 0.6)', // Apr 19
+            'rgba(54, 162, 235, 0.6)', // May 19
+            'rgba(54, 162, 235, 0.6)', // Jun 19
+            'rgba(54, 162, 235, 0.6)', // Jul 19
+            'rgba(54, 162, 235, 0.6)', // Aug 19
+            'rgba(54, 162, 235, 0.6)', // Sep 19
+            'rgba(255, 255, 255, 0.6)', // Sep 20
+            'rgba(255, 255, 255, 0.6)', // Sep 20
+            'rgba(255, 255, 255, 0.6)', // Sep 20
+
+          ],
+          borderWidth: 1,
+          borderColor: '#777',
+          hoverBorderWidth: 3,
+          hoverBorderColor: '#FFFFFF'
+        }]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        title: {
+          display: true,
+          text: 'T3 RFT %',
+          fontSize: 15
+        },
+        legend: {
+          display: false,
+          position: 'right',
+          labels: {
+            fontColor: '#000'
+          }
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        tooltips: {
+          enabled: true
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          },
+        }
+
+      },
+    });
+
+
+    let intDpu = new Chart(intDPU, {
+      type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: [
+          <%- JSON.stringify(zone[0].wk1); %>,
+          <%- JSON.stringify(zone[0].wk2); %>,
+          <%- JSON.stringify(zone[0].wk3); %>,
+          <%- JSON.stringify(zone[0].wk4); %>,
+          <%- JSON.stringify(zone[0].wk5); %>,
+          <%- JSON.stringify(zone[0].wk6); %>,
+
+
+
+
+        ],
+        datasets: [{
+            label: "DOA Target",
+            type: "line",
+            borderColor: "red",
+            data: [
+
+              <%= zone[0].target %>,
+              <%= zone[0].target %>,
+              <%= zone[0].target %>,
+              <%= zone[0].target %>,
+              <%= zone[0].target %>,
+              <%= zone[0].target %>,
+
+
+            ],
+            fill: false
+          },
+          {
+            label: 'DPU',
+            data: [
+              <%= zone[0].dpuWeek1 %>,
+              <%= zone[0].dpuWeek2 %>,
+              <%= zone[0].dpuWeek3 %>,
+              <%= zone[0].dpuWeek4 %>,
+              <%= zone[0].dpuWeek5 %>,
+              <%= zone[0].lastWeekDpu %>,
+
+
+
+            ],
+            // backgroundColor:'rgba(54, 162, 235, 0.6)',
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.6)', // Feb 19
+              'rgba(54, 162, 235, 0.6)', // Mar 19
+              'rgba(54, 162, 235, 0.6)', // Apr 19
+              'rgba(54, 162, 235, 0.6)', // May 19
+              'rgba(54, 162, 235, 0.6)', // Jun 19
+              'rgba(54, 162, 235, 0.6)', // Jul 19
+
+
+            ],
+            borderWidth: 1,
+            borderColor: '#777',
+            hoverBorderWidth: 3,
+            hoverBorderColor: '#FFFFFF'
+          }
+        ]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }],
+          yAxes: [{
+
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 8,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+          }]
+        },
+        title: {
+          display: true,
+          text: 'WEEKLY DPU',
+          fontSize: 15
+        },
+        legend: {
+          display: false,
+          position: 'right',
+          labels: {
+            fontColor: '#000'
+          }
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0
+          }
+        },
+        tooltips: {
+          enabled: true
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          },
+        }
+
+      },
+    });
+  </script>
+
+</body>

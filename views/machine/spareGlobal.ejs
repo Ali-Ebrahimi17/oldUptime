@@ -1,0 +1,21 @@
+<div class="table-holder">
+  <table class="table-hover ">
+    <% for (let m of machines) { %>
+
+    <tr>
+      <th class="headcol"><%= m.machineName %></th>
+      <% for (let update of m.updates) { %>
+      <td class="check-history-pass">
+
+        <a href="#">
+          <%= moment(update.createdAt).format("DD/MM/YYYY") %><br>
+          <%= moment(update.shiftStart).format("HH:mm") %> - <%= moment(update.shiftEnd).format("HH:mm") %><br>
+          <span>Eff</span> <%= update.eff %>%<br>
+        </a>
+
+      </td>
+      <%} %>
+    </tr>
+    <% } %>
+  </table>
+</div>

@@ -1,0 +1,53 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+
+<div class="vetting-body">
+  <header id="vettingJumbotron">
+
+    <h1 id="vetting-title" style="margin-top: -1rem;"><%= doa25pts.length %> DOA MINOR ESCAPES</h1>
+
+
+
+
+  </header>
+
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 15px; height: 71vh;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 6.9vw;">TW Number</th>
+        <th style="width: 6.5vw;">Reported By</th>
+        <th style="width: 8.5vw;">Processed By</th>
+        <th style="width: 4.5vw;">Division</th>
+        <th style="width: 5.5vw;">Model</th>
+        <th style="width: 6vw;">Build Date</th>
+        <th style="width: 5vw;">Hours</th>
+        <th style="width: 10vw;">Dealer</th>
+        <th style="width: 42vw;">Narrative</th>
+      </tr>
+
+
+    </thead>
+    <tbody>
+      <% for (let doa25pt of doa25pts) { %>
+      <tr class="d-flex">
+        <td style="height: 76px; width: 7vw;"><a href="/doa25pt/gradeAgain/<%= doa25pt._id%>"><%= doa25pt.twNumber %></a></td>
+        <td style="width: 6.5vw;"> <%= doa25pt.reportedBy %></td>
+        <td style="width: 8.5vw;"> <%= doa25pt.gradedBy %> <br> <%= moment(doa25pt.gradedAt).format("DD/MM/YYYY - HH:mm") %></td>
+        <td style="width: 4vw;"> <%= doa25pt.division %></td>
+        <td style="width: 6vw;"> <%= doa25pt.model %></td>
+        <td style="width: 7vw;"> <%= moment(doa25pt.buildDate).format("DD/MM/YYYY") %></td>
+        <td style="width: 4.2vw;"> <%= doa25pt.hours %></td>
+        <td style="width: 10vw;"> <%= doa25pt.dealer %></td>
+        <td style="width: 42vw;"> <%= doa25pt.description.substring(0, 180) %>...</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+</div>

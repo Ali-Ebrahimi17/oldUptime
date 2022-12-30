@@ -1,0 +1,884 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <meta http-equiv="refresh" content="120"> -->
+    <title>JCB - Equipment Monitoring</title>
+    <link rel="icon" href="/home/jcb.png" />
+    <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+    <!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+    <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+    <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+    <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+    <!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+    <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+    <link rel="stylesheet" href="/stylesheets/app.css" />
+    <link rel="stylesheet" href="/fontawesome/css/all.css" />
+</head>
+<body>
+
+<div class="container-fluid">
+
+    <div class="row header-top">
+        <div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+            <img height="24px" src="/7z/content/images/jcb-logo.png">
+        </div>
+        <div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+            <a href="/equipment-monitoring/operations">
+                <span  style="font-size: 19px; padding-top: 2px; margin-right: 4px; color: black; font-weight: bold;" >Last Update:  <%= moment(update.lastUpdate).format("DD/MM/YYYY - HH:mm:ss") %> </span>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-main">
+            
+
+            <div class="row">
+
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Daily LiveLink Status</h1>
+                    <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: 0px 0px 16px 0px; text-align: center"><span style="margin-right: 5px;"><img src="/media/uk-small.png" alt="" width="30" height="30"></span>Program Efficiency</h1>
+
+                </div>
+                
+                
+                <div class="col-lg-3" style="display: flex; justify-content: flex-end;">
+
+                    <span style="margin-right: 10px;" >
+                        <!-- Default dropleft button -->
+                        <!-- <div class="btn-group dropleft">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Program Efficiency
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/equipment-monitoring/operations">Equipment Status</a>
+                                <a class="dropdown-item" href="/equipment-monitoring/running-time">Program Running Time</a>
+                                <a class="dropdown-item" href="/equipment-monitoring/touch-time">Program Touch Time</a>
+                                <a class="dropdown-item" href="/equipment-monitoring/down-time">Downtime</a>
+                            </div>
+                        </div> -->
+                        <div class="btn-group dropleft">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Live Status
+                            </button>
+                            <!-- <div class="dropdown-menu">
+                                 <a class="dropdown-item" href="/equipment-monitoring/operations">Live Status</a>
+                            </div> -->
+                        </div>
+                    </span>
+                </div>
+
+                
+
+                  
+                    <div class="col-lg-12" style="margin-top: -4px; margin-bottom: 22px; padding: 8px 0px 8px 0px; border-bottom: 3px solid rgb(26, 28, 30); border-top: 3px solid rgb(26, 28, 30)">
+                        <div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+                            <h1 class="line-sub-header-top">Welding Robots</h1>
+                            <% if(averageMachine.length > 0) { %>
+                              <h1 class="line-measure-value-top " style="color: grey;" ><span ><%= averageMachine[0].averageTEff %>%</span></h1>
+                            <% } else { %>
+                                <h1 class="line-measure-value-top " style="color: grey;" ><span >--</span></h1>
+                            <% } %>
+                            
+                        </div>
+                        <!-- <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+                            <h1 class="line-sub-header-top">Laser Cutters</h1>
+                            <h1 class="line-measure-value-top" style="color: grey;" ><span><%= laserPercent %>%</span>  <span >(<%= laserPercentT %>%)</span></h1>
+                        </div>
+                        <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+                            <h1 class="line-sub-header-top">Plasma Cutters</h1>
+                            <h1 class="line-measure-value-top" style="color: grey;" ><span><%= plasmaPercent %>%</span>  <span >(<%= plasmaPercentT %>%)</span></h1>
+                        </div> -->
+                    </div>
+
+                
+                    <div style="display: flex; width: 100%;">
+                        <div class="col" style=" margin: 0 10px; width: 50%; display: flex; justify-content: space-evenly; flex-wrap: wrap;">
+                            
+                            <a href="<% if (programmeEffBHL > 0) { %>/equipment-monitoring/divisionEff/BHL/All<% } else { %>#<% } %>">
+                                <div style="margin-bottom: 20px;">
+                                    <div style="text-align: center; color: white;"><h3>Backhoe Loader</h3></div>
+                                    <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Current Day</p></div>
+                                    <div class="progress" style=" height: 100px; border-radius: 0; margin-bottom: 30px; width: 400px; background-color: black;">
+                                        <% if (averageMachineBHL.length > 0) { %>
+                                            <% if (averageMachineBHL[0].averageTEff >= 75) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(0, 196, 70);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineBHL[0].averageTEff %>%"><%= averageMachineBHL[0].averageTEff %>%</div>
+                                            <% } else if (averageMachineBHL[0].averageTEff >= 50) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(255, 123, 0);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineBHL[0].averageTEff %>%"><%= averageMachineBHL[0].averageTEff %>%</div>
+                                            <% } else { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(238, 28, 37);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineBHL[0].averageTEff %>%"><%= averageMachineBHL[0].averageTEff %>%</div>
+                                            <% } %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= averageMachineBHL[0].remaining %>%"><%= averageMachineBHL[0].remaining  %>%</div>
+                                        <% } else { %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: 100%">100%</div>
+                                        <% } %>
+                                        
+                                    </div>
+                                    <div style="text-align: center; color: white; margin-top: -20px; display: flex; justify-content: space-evenly;">
+                                        <% if (bestMachineBHL.length > 0) { %>
+                                            <h5><span style="color: rgb(0, 196, 70); "><%= bestMachineBHL[0]._id %> - <%= bestMachineBHL[0].averageTEff %>%</span></h5>
+                                            <h5><span style="color: rgb(238, 28, 37);"><%= worstMachineBHL[0]._id  %> - <%= worstMachineBHL[0].averageTEff %>%</span></h5>
+                                        <%} else { %>
+                                            <h5><span style="color: grey; ">N/A</span></h5>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="<% if (programmeEffLDL > 0 ) { %>/equipment-monitoring/divisionEff/LDL/All<% } else { %>#<% } %>">
+                                <div style="margin-bottom: 20px;">
+                                    <div style="text-align: center; color: white;"><h3>Loadall</h3></div>
+                                    <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Current Day</p></div>
+                                    <div class="progress" style=" height: 100px; border-radius: 0; margin-bottom: 30px; width: 400px; background-color: black;">
+                                        <% if (averageMachineLDL.length > 0) { %>
+                                            <% if (averageMachineLDL[0].averageTEff >= 75) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(0, 196, 70);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineLDL[0].averageTEff %>%"><%= averageMachineLDL[0].averageTEff %>%</div>
+                                            <% } else if (averageMachineLDL[0].averageTEff >= 50) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(255, 123, 0);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineLDL[0].averageTEff %>%"><%= averageMachineLDL[0].averageTEff %>%</div>
+                                            <% } else { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(238, 28, 37);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineLDL[0].averageTEff %>%"><%= averageMachineLDL[0].averageTEff %>%</div>
+                                            <% } %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= averageMachineLDL[0].remaining %>%"><%= averageMachineLDL[0].remaining  %>%</div>
+                                        <% } else { %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: 100%">100%</div>
+                                        <% } %>
+                                        
+                                    </div>
+                                    <div style="text-align: center; color: white; margin-top: -20px; display: flex; justify-content: space-evenly;">
+                                        <% if (bestMachineLDL.length > 0) { %>
+                                            <h5><span style="color: rgb(0, 196, 70); "><%= bestMachineLDL[0]._id %> - <%= bestMachineLDL[0].averageTEff %>%</span></h5>
+                                            <h5><span style="color: rgb(238, 28, 37);"><%= worstMachineLDL[0]._id  %> - <%= worstMachineLDL[0].averageTEff %>%</span></h5>
+                                        <%} else { %>
+                                            <h5><span style="color: grey; ">N/A</span></h5>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="<% if (programmeEffCP > 0 ) { %>/equipment-monitoring/divisionEff/CP/All<% } else { %>#<% } %>">
+                                <div style="margin-bottom: 20px;">
+                                    <div style="text-align: center; color: white;"><h3>Compact Products</h3></div>
+                                    <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Current Day</p></div>
+                                    <div class="progress" style=" height: 100px; border-radius: 0; margin-bottom: 30px; width: 400px; background-color: black;">
+                                        <% if (averageMachineCP.length > 0) { %>
+                                            <% if (averageMachineCP[0].averageTEff >= 75) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(0, 196, 70);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineCP[0].averageTEff %>%"><%= averageMachineCP[0].averageTEff %>%</div>
+                                            <% } else if (averageMachineCP[0].averageTEff >= 50) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(255, 123, 0);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineCP[0].averageTEff %>%"><%= averageMachineCP[0].averageTEff %>%</div>
+                                            <% } else { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(238, 28, 37);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineCP[0].averageTEff %>%"><%= averageMachineCP[0].averageTEff %>%</div>
+                                            <% } %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= averageMachineCP[0].remaining %>%"><%= averageMachineCP[0].remaining  %>%</div>
+                                        <% } else { %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: 100%">100%</div>
+                                        <% } %>
+                                    </div>
+                                    <div style="text-align: center; color: white; margin-top: -20px; display: flex; justify-content: space-evenly;">
+                                        <% if (bestMachineCP.length > 0) { %>
+                                            <h5><span style="color: rgb(0, 196, 70); "><%= bestMachineCP[0]._id %> - <%= bestMachineCP[0].averageTEff %>%</span></h5>
+                                            <h5><span style="color: rgb(238, 28, 37);"><%= worstMachineCP[0]._id  %> - <%= worstMachineCP[0].averageTEff %>%</span></h5>
+                                        <%}else { %>
+                                            <h5><span style="color: grey; ">N/A</span></h5>
+                                    <% } %>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="<% if (programmeEffHP > 0 ) { %>/equipment-monitoring/divisionEff/HP/All<% } else { %>#<% } %>">
+                                <div style="margin-bottom: 20px;">
+                                    <div style="text-align: center; color: white;"><h3>Heavy Products</h3></div>
+                                    <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Current Day</p></div>
+                                    <div class="progress" style=" height: 100px; border-radius: 0; margin-bottom: 30px; width: 400px; background-color: black;">
+                                        <% if (averageMachineHP.length > 0) { %>
+                                            <% if (averageMachineHP[0].averageTEff >= 75) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(0, 196, 70);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineHP[0].averageTEff %>%"><%= averageMachineHP[0].averageTEff %>%</div>
+                                            <% } else if (averageMachineHP[0].averageTEff >= 50) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(255, 123, 0);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineHP[0].averageTEff %>%"><%= averageMachineHP[0].averageTEff %>%</div>
+                                            <% } else { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(238, 28, 37);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineHP[0].averageTEff %>%"><%= averageMachineHP[0].averageTEff %>%</div>
+                                            <% } %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= averageMachineHP[0].remaining %>%"><%= averageMachineHP[0].remaining  %>%</div>
+                                        <% } else { %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: 100%">100%</div>
+                                        <% } %>
+                                    </div>
+                                    <div style="text-align: center; color: white; margin-top: -20px; display: flex; justify-content: space-evenly;">
+                                        <% if (bestMachineHP.length > 0) { %>
+                                            <h5><span style="color: rgb(0, 196, 70); "><%= bestMachineHP[0]._id %> - <%= bestMachineHP[0].averageTEff %>%</span></h5>
+                                            <h5><span style="color: rgb(238, 28, 37);"><%= worstMachineHP[0]._id  %> - <%= worstMachineHP[0].averageTEff %>%</span></h5>
+                                        <%}else { %>
+                                            <h5><span style="color: grey; ">N/A</span></h5>
+                                    <% } %>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="<% if (programmeEffEM > 0  ) { %>/equipment-monitoring/divisionEff/EM/All<% } else { %>#<% } %>">
+                                <div style="margin-bottom: 20px;">
+                                    <div style="text-align: center; color: white;"><h3>Earthmovers</h3></div>
+                                    <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Current Day</p></div>
+                                    <div class="progress" style=" height: 100px; border-radius: 0; margin-bottom: 30px; width: 400px; background-color: black;">
+                                        <% if (averageMachineEM.length > 0) { %>
+                                            <% if (averageMachineEM[0].averageTEff >= 75) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(0, 196, 70);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineEM[0].averageTEff %>%"><%= averageMachineEM[0].averageTEff %>%</div>
+                                            <% } else if (averageMachineEM[0].averageTEff >= 50) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(255, 123, 0);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineEM[0].averageTEff %>%"><%= averageMachineEM[0].averageTEff %>%</div>
+                                            <% } else { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(238, 28, 37);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineEM[0].averageTEff %>%"><%= averageMachineEM[0].averageTEff %>%</div>
+                                            <% } %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= averageMachineEM[0].remaining %>%"><%= averageMachineEM[0].remaining  %>%</div>
+                                        <% } else { %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: 100%">100%</div>
+                                        <% } %>
+                                    </div>
+                                    <div style="text-align: center; color: white; margin-top: -20px; display: flex; justify-content: space-evenly;">
+                                        <% if (bestMachineEM.length > 0) { %>
+                                            <h5><span style="color: rgb(0, 196, 70); "><%= bestMachineEM[0]._id %> - <%= bestMachineEM[0].averageTEff %>%</span></h5>
+                                            <h5><span style="color: rgb(238, 28, 37);"><%= worstMachineEM[0]._id  %> - <%= worstMachineEM[0].averageTEff %>%</span></h5>
+                                        <%}else { %>
+                                            <h5><span style="color: grey; ">N/A</span></h5>
+                                    <% } %>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="<% if (programmeEffCABS > 0 ) { %>/equipment-monitoring/divisionEff/CABS/All<% } else { %>#<% } %>">
+                                <div style="margin-bottom: 20px;">
+                                    <div style="text-align: center; color: white;"><h3>Cab Systems</h3></div>
+                                    <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Current Day</p></div>
+                                    <div class="progress" style=" height: 100px; border-radius: 0; margin-bottom: 30px; width: 400px; background-color: black;">
+                                        <% if (averageMachineCABS.length > 0) { %>
+                                            <% if (averageMachineCABS[0].averageTEff >= 75) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(0, 196, 70);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineCABS[0].averageTEff %>%"><%= averageMachineCABS[0].averageTEff %>%</div>
+                                            <% } else if (averageMachineCABS[0].averageTEff >= 50) { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(255, 123, 0);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineCABS[0].averageTEff %>%"><%= averageMachineCABS[0].averageTEff %>%</div>
+                                            <% } else { %>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(238, 28, 37);  font-size: 20px; color: black; font-weight: bold; width: <%= averageMachineCABS[0].averageTEff %>%"><%= averageMachineCABS[0].averageTEff %>%</div>
+                                            <% } %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: <%= averageMachineCABS[0].remaining %>%"><%= averageMachineCABS[0].remaining  %>%</div>
+                                        <% } else { %>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(49, 47, 47); font-size: 20px; color: white; font-weight: bold; width: 100%">100%</div>
+                                        <% } %>
+                                    </div>
+                                    <div style="text-align: center; color: white; margin-top: -20px; display: flex; justify-content: space-evenly;">
+                                        <% if (bestMachineCABS.length > 0) { %>
+                                            <h5><span style="color: rgb(0, 196, 70); "><%= bestMachineCABS[0]._id %> - <%= bestMachineCABS[0].averageTEff %>%</span></h5>
+                                            <h5><span style="color: rgb(238, 28, 37);"><%= worstMachineCABS[0]._id  %> - <%= worstMachineCABS[0].averageTEff %>%</span></h5>
+                                        <%}else { %>
+                                            <h5><span style="color: grey; ">N/A</span></h5>
+                                    <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <hr style="width: 1px; height: 95%; display: inline-block; background-color: grey; ">
+
+                        <!-- second side -->
+                        <div class="col" style=" margin: 0 10px; width: 50%; display: flex; justify-content: space-evenly; flex-wrap: wrap;">
+                            <div style="margin-bottom: 20px;">
+                                <div style="text-align: center; color: white;"><h3>Backhoe Loader</h3></div>
+                                <div style="text-align: center;  color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Rolling 7 Days</p></div>
+                                <!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+                                <canvas  id="canvas1" height="140" width="430" ></canvas>
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <div style="text-align: center; color: white;"><h3>Loadall</h3></div>
+                                <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Rolling 7 Days</p></div>
+                                <!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+                                <canvas id="canvas2" height="140" width="430" ></canvas>
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <div style="text-align: center; color: white;"><h3>Compact Products</h3></div>
+                                <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Rolling 7 Days</p></div>
+                                <!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+                                <canvas id="canvas3" height="140" width="430" ></canvas>
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <div style="text-align: center; color: white;"><h3>Heavy Products</h3></div>
+                                <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Rolling 7 Days</p></div>
+                                <!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+                                <canvas id="canvas4" height="140" width="430" ></canvas>
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <div style="text-align: center; color: white;"><h3>Earthmovers</h3></div>
+                                <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Rolling 7 Days</p></div>
+                                <!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+                                <canvas id="canvas5" height="140" width="430" ></canvas>
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <div style="text-align: center; color: white;"><h3>Cab Systems</h3></div>
+                                <div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px;"><p>Rolling 7 Days</p></div>
+                                <!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+                                <canvas id="canvas6" height="140" width="430" ></canvas>
+                            </div>
+                        </div>
+                    </div>
+                
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid footer">
+        
+    <div class="row header-top">
+        <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+            <img height="24px" src="/7z/content/images/df.png">
+        </div>
+        <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+            J.C. Bamford Excavators LTD &copy; 2022
+        </div>
+    </div>
+
+</div>
+
+<script  src="/7z/content/modal/modal.js"></script>
+
+
+
+
+
+<script>
+
+
+    Chart.defaults.global.defaultFontColor = '#fff';
+
+    <% let labelsBHL = [] %>
+    <% let effBHL = [] %>
+    <% let teffBHL = [] %>
+    <% let ceffBHL = [] %>
+    <% let colorsBHL = [] %>
+    <% GraphBHL.forEach(l => {%>
+        <% labelsBHL.push(`${l._id.day}/${l._id.month}`); %>
+        <% if (l.averageTEff < 101 ) { %>
+            <% effBHL.push(l.averageTEff)  %>
+            <% ceffBHL.push(l.averageTEff); %>
+        <% } else { %>
+            <% effBHL.push(100)  %>
+            <% ceffBHL.push(100); %>
+        <% } %>
+
+        <% if (l.averageTEff >= 75) { %>
+          <%  colorsBHL.push('rgb(0, 196, 70)') %>
+        <% } else if (l.averageTEff >= 50) { %>
+            <%  colorsBHL.push('rgb(255, 123, 0)') %>
+        <% } else { %>
+            <%  colorsBHL.push('rgb(238, 28, 37)') %>
+       <% } %>
+    <% }) %>
+
+    <% let labelsLDL = [] %>
+    <% let effLDL = [] %>
+    <% let teffLDL = [] %>
+    <% let ceffLDL = [] %>
+    <% let colorsLDL = [] %>
+    <% GraphLDL.forEach(l => {%>
+        <% labelsLDL.push(`${l._id.day}/${l._id.month}`); %>
+        <% if (l.averageTEff < 101 ) { %>
+            <% effLDL.push(l.averageTEff)  %>
+            <% ceffLDL.push(l.averageTEff); %>
+        <% } else { %>
+            <% effLDL.push(100)  %>
+            <% ceffLDL.push(100); %>
+        <% } %>
+        <% if (l.averageTEff >= 75) { %>
+          <%  colorsLDL.push('rgb(0, 196, 70)') %>
+        <% } else if (l.averageTEff >= 50) { %>
+            <%  colorsLDL.push('rgb(255, 123, 0)') %>
+        <% } else { %>
+            <%  colorsLDL.push('rgb(238, 28, 37)') %>
+       <% } %>
+    <% }) %>
+
+    <% let labelsCP = [] %>
+    <% let effCP = [] %>
+    <% let teffCP = [] %>
+    <% let ceffCP = [] %>
+    <% let colorsCP = [] %>
+    <% GraphCP.forEach(l => {%>
+        <% labelsCP.push(`${l._id.day}/${l._id.month}`); %>
+        <% if (l.averageTEff < 101 ) { %>
+            <% effCP.push(l.averageTEff)  %>
+            <% ceffCP.push(l.averageTEff); %>
+        <% } else { %>
+            <% effCP.push(100)  %>
+            <% ceffCP.push(100); %>
+        <% } %>
+        <% if (l.averageTEff >= 75) { %>
+          <%  colorsCP.push('rgb(0, 196, 70)') %>
+        <% } else if (l.averageTEff >= 50) { %>
+            <%  colorsCP.push('rgb(255, 123, 0)') %>
+        <% } else { %>
+            <%  colorsCP.push('rgb(238, 28, 37)') %>
+       <% } %>
+    <% }) %>
+
+    <% let labelsHP = [] %>
+    <% let effHP = [] %>
+    <% let teffHP = [] %>
+    <% let ceffHP = [] %>
+    <% let colorsHP = [] %>
+    <% GraphHP.forEach(l => {%>
+        <% labelsHP.push(`${l._id.day}/${l._id.month}`); %>
+        <% if (l.averageTEff < 101 ) { %>
+            <% effHP.push(l.averageTEff)  %>
+            <% ceffHP.push(l.averageTEff); %>
+        <% } else { %>
+            <% effHP.push(100)  %>
+            <% ceffHP.push(100); %>
+        <% } %>
+        <% if (l.averageTEff >= 75) { %>
+          <%  colorsHP.push('rgb(0, 196, 70)') %>
+        <% } else if (l.averageTEff >= 50) { %>
+            <%  colorsHP.push('rgb(255, 123, 0)') %>
+        <% } else { %>
+            <%  colorsHP.push('rgb(238, 28, 37)') %>
+       <% } %>
+    <% }) %>
+
+    <% let labelsEM = [] %>
+    <% let effEM = [] %>
+    <% let teffEM = [] %>
+    <% let ceffEM = [] %>
+    <% let colorsEM = [] %>
+    <% GraphEM.forEach(l => {%>
+        <% labelsEM.push(`${l._id.day}/${l._id.month}`); %>
+        <% if (l.averageTEff < 101 ) { %>
+            <% effEM.push(l.averageTEff)  %>
+            <% ceffEM.push(l.averageTEff); %>
+        <% } else { %>
+            <% effEM.push(100)  %>
+            <% ceffEM.push(100); %>
+        <% } %>
+        <% if (l.averageTEff >= 75) { %>
+          <%  colorsEM.push('rgb(0, 196, 70)') %>
+        <% } else if (l.averageTEff >= 50) { %>
+            <%  colorsEM.push('rgb(255, 123, 0)') %>
+        <% } else { %>
+            <%  colorsEM.push('rgb(238, 28, 37)') %>
+       <% } %>
+    <% }) %>
+
+    <% let labelsCABS = [] %>
+    <% let effCABS = [] %>
+    <% let teffCABS = [] %>
+    <% let ceffCABS = [] %>
+    <% let colorsCABS = [] %>
+    <% GraphCABS.forEach(l => {%>
+        <% labelsCABS.push(`${l._id.day}/${l._id.month}`); %>
+        <% if (l.averageTEff < 101 ) { %>
+            <% effCABS.push(l.averageTEff)  %>
+            <% ceffCABS.push(l.averageTEff); %>
+        <% } else { %>
+            <% effCABS.push(100)  %>
+            <% ceffCABS.push(100); %>
+        <% } %>
+        <% if (l.averageTEff >= 75) { %>
+          <%  colorsCABS.push('rgb(0, 196, 70)') %>
+        <% } else if (l.averageTEff >= 50) { %>
+            <%  colorsCABS.push('rgb(255, 123, 0)') %>
+        <% } else { %>
+            <%  colorsCABS.push('rgb(238, 28, 37)') %>
+       <% } %>
+    <% }) %>
+
+    let barChartData1 = {
+        labels   : <%- JSON.stringify(labelsBHL); %>,
+        newLabels: <%- JSON.stringify(ceffBHL) %>,
+        datasets : [
+    
+            // {
+            //     label           : 'Touch Time',
+            //     backgroundColor : 'rgba(255, 123, 0, 0.8)',
+            //     // backgroundColor : 'rgb(255, 123, 0)',
+            //     yAxisID         : 'bar-y-axis',
+            //     datalabels: {
+            //         // display labels for this specific dataset
+            //         display: true,
+            //         color:'white',
+            //         formatter: function (value) {
+            //         return '(' + value + '%)';
+            //         },
+            //         font: {
+            //             weight: 'bold',
+            //             size: 10,
+            //             }
+            //         },
+            //         data: <%- JSON.stringify(teffBHL) %>,
+            // },
+            {
+                label           : 'Running Time',
+                backgroundColor : <%- JSON.stringify(colorsBHL); %>,
+                yAxisID         : 'bar-y-axis',
+                datalabels: {
+                    // display labels for this specific dataset
+                    display: true,
+                    color:'white',
+                    align: 'end',
+                    anchor: 'end',
+                    formatter: function (value, context ) {
+                        return  context.chart.data.newLabels[context.dataIndex] + '%' ;
+                    // return value + '%';
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12,
+                        },
+                    },
+                data: <%- JSON.stringify(effBHL); %>,
+            },
+        ],
+    };
+    let barChartData2 = {
+        labels   : <%- JSON.stringify(labelsLDL) %>,
+        newLabels: <%- JSON.stringify(ceffLDL) %>,
+        datasets : [
+
+            // {
+            //     label           : 'Touch Time',
+            //     backgroundColor : 'rgba(255, 123, 0, 0.8)',
+            //     yAxisID         : 'bar-y-axis',
+            //     datalabels: {
+            //         // display labels for this specific dataset
+            //         display: true,
+            //         color:'white',
+            //         formatter: function (value) {
+            //         return '(' + value + '%)';
+            //         },
+            //         font: {
+            //             weight: 'bold',
+            //             size: 10,
+            //             }
+            //         },
+            //         data: <%- JSON.stringify(teffLDL) %>,
+            // },
+            {
+                label           : 'Running Time',
+                backgroundColor : <%- JSON.stringify(colorsLDL); %>,
+                yAxisID         : 'bar-y-axis',
+                datalabels: {
+                    // display labels for this specific dataset
+                    display: true,
+                    color:'white',
+                    align: 'end',
+                    anchor: 'end',
+                    formatter: function (value, context ) {
+                        return  context.chart.data.newLabels[context.dataIndex] + '%' ;
+                    // return value + '%';
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12,
+                        },
+                    },
+                data: <%- JSON.stringify(effLDL) %>,
+            },
+        ],
+    };
+    let barChartData3 = {
+        labels   : <%- JSON.stringify(labelsCP) %>,
+        newLabels: <%- JSON.stringify(ceffCP) %>,
+        datasets : [
+
+            // {
+            //     label           : 'Touch Time',
+            //     backgroundColor : 'rgba(255, 123, 0, 0.8)',
+            //     yAxisID         : 'bar-y-axis',
+            //     datalabels: {
+            //         // display labels for this specific dataset
+            //         display: true,
+            //         color:'white',
+            //         formatter: function (value) {
+            //         return '(' + value + '%)';
+            //         },
+            //         font: {
+            //             weight: 'bold',
+            //             size: 10,
+            //             }
+            //         },
+            //     data: <%- JSON.stringify(teffCP) %>,
+            // },
+            {
+                label           : 'Running Time',
+                backgroundColor : <%- JSON.stringify(colorsCP); %>,
+                yAxisID         : 'bar-y-axis',
+                datalabels: {
+                    // display labels for this specific dataset
+                    display: true,
+                    color:'white',
+                    align: 'end',
+                    anchor: 'end',
+                    formatter: function (value, context ) {
+                        return  context.chart.data.newLabels[context.dataIndex] + '%' ;
+                    // return value + '%';
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12,
+                        },
+                    },
+                data: <%- JSON.stringify(effCP) %>,
+            },
+        ],
+    };
+    let barChartData4 = {
+        labels   : <%- JSON.stringify(labelsHP) %>,
+        newLabels: <%- JSON.stringify(ceffHP) %>,
+        datasets : [
+           
+            // {
+            //     label           : 'Touch Time',
+            //     backgroundColor : 'rgba(255, 123, 0, 0.8)',
+            //     yAxisID         : 'bar-y-axis',
+            //     datalabels: {
+            //         // display labels for this specific dataset
+            //         display: true,
+            //         color:'white',
+            //         formatter: function (value) {
+            //         return '(' + value + '%)';
+            //         },
+            //         font: {
+            //             weight: 'bold',
+            //             size: 10,
+            //             }
+            //         },
+            //     data: <%- JSON.stringify(teffHP) %>,
+            // },
+            {
+                label           : 'Running Time',
+                backgroundColor : <%- JSON.stringify(colorsHP); %>,
+                yAxisID         : 'bar-y-axis',
+                datalabels: {
+                    // display labels for this specific dataset
+                    display: true,
+                    color:'white',
+                    align: 'end',
+                    anchor: 'end',
+                    formatter: function (value, context ) {
+                        return  context.chart.data.newLabels[context.dataIndex] + '%' ;
+                    // return value + '%';
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12,
+                        },
+                    },
+                data: <%- JSON.stringify(effHP) %>,
+            },
+        ],
+    };
+    let barChartData5 = {
+        labels   : <%- JSON.stringify(labelsEM) %>,
+        newLabels: <%- JSON.stringify(ceffEM) %>,
+        datasets : [
+
+            // {
+            //     label           : 'Touch Time',
+            //     backgroundColor : 'rgba(255, 123, 0, 0.8)',
+            //     yAxisID         : 'bar-y-axis',
+            //     datalabels: {
+            //         // display labels for this specific dataset
+            //         display: true,
+            //         color:'white',
+            //         formatter: function (value) {
+            //         return '(' + value + '%)';
+            //         },
+            //         font: {
+            //             weight: 'bold',
+            //             size: 10,
+            //             }
+            //         },
+            //     data: <%- JSON.stringify(teffEM) %>,
+            // },
+            {
+                label           : 'Running Time',
+                backgroundColor : <%- JSON.stringify(colorsEM); %>,
+                yAxisID         : 'bar-y-axis',
+                datalabels: {
+                    // display labels for this specific dataset
+                    display: true,
+                    color:'white',
+                    align: 'end',
+                    anchor: 'end',
+                    formatter: function (value, context ) {
+                        return  context.chart.data.newLabels[context.dataIndex] + '%' ;
+                    // return value + '%';
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12,
+                        },
+                    },
+                data: <%- JSON.stringify(effEM) %>,
+            },
+        ],
+    };
+    let barChartData6 = {
+        labels   : <%- JSON.stringify(labelsCABS) %>,
+        newLabels: <%- JSON.stringify(ceffCABS) %>,
+        datasets : [
+
+            // {
+            //     label           : 'Touch Time',
+            //     backgroundColor : 'rgba(255, 123, 0, 0.8)',
+            //     yAxisID         : 'bar-y-axis',
+            //     datalabels: {
+            //         // display labels for this specific dataset
+            //         display: true,
+            //         color:'white',
+            //         formatter: function (value) {
+            //         return '(' + value + '%)';
+            //         },
+            //         font: {
+            //             weight: 'bold',
+            //             size: 10,
+            //             }
+            //         },
+            //     data: <%- JSON.stringify(teffCABS) %>,
+            // },
+            {
+                label           : 'Running Time',
+                backgroundColor : <%- JSON.stringify(colorsCABS); %>,
+                yAxisID         : 'bar-y-axis',
+                datalabels: {
+                    // display labels for this specific dataset
+                    display: true,
+                    color:'white',
+                    align: 'end',
+                    anchor: 'end',
+                    formatter: function (value, context ) {
+                        return  context.chart.data.newLabels[context.dataIndex] + '%' ;
+                    // return value + '%';
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12,
+                        },
+                    },
+                data: <%- JSON.stringify(effCABS) %>,
+            },
+        ],
+    };
+   let options = {
+                title      : {
+                    display : false,
+                    text    : 'Title Here',
+                },
+                legend     : {
+                    display : false,
+                },
+                tooltips: {
+			      mode: 'label',
+                  enabled: false,
+                  callbacks: {
+                  label: function(tooltipItems, data) {
+                    if (data.datasets[tooltipItems.datasetIndex].label != "Running Time")  {
+                    return data.datasets[tooltipItems.datasetIndex].label +': ' + tooltipItems.yLabel + ' %';
+                        }
+                    },
+                }
+			    },
+                responsive : true,
+                            scales     : {
+                    xAxes : [
+                        {
+                            stacked       : true,
+                            barPercentage : 0.8,
+                        },
+                    ],
+                    yAxes : [
+                        {
+                            stacked    : false,
+                            display:false,
+                            ticks      : {
+                                beginAtZero : true,
+                                min         : 0,
+                                max         : 120,
+                                stepSize: 20,
+                            },
+                            scaleLabel : {
+                                display     : false,
+                                labelString : 'Hours',
+                            },
+                        },
+                        {
+                            id      : 'bar-y-axis',
+                            stacked : true,
+                            display : true,
+                            ticks   : {
+                                beginAtZero : true,
+                                min         : 0,
+                                max         : 120,
+                                callback: function (value) {
+                                if (value > 100) return "";
+                                return value;
+                                }
+                            },
+                            type    : 'linear',
+                        },
+                    ],
+                },
+
+            }
+
+
+    window.onload = function() {
+        let ctx1 = document.getElementById('canvas1').getContext('2d');
+        window.myBar = new Chart(ctx1, {
+            type    : 'bar',
+            data    : barChartData1,
+            options : options
+        });
+        let ctx2 = document.getElementById('canvas2').getContext('2d');
+        window.myBar = new Chart(ctx2, {
+            type    : 'bar',
+            data    : barChartData2,
+            options : options
+        });
+        let ctx3 = document.getElementById('canvas3').getContext('2d');
+        window.myBar = new Chart(ctx3, {
+            type    : 'bar',
+            data    : barChartData3,
+            options : options
+        });
+        let ctx4 = document.getElementById('canvas4').getContext('2d');
+        window.myBar = new Chart(ctx4, {
+            type    : 'bar',
+            data    : barChartData4,
+            options : options
+        });
+        let ctx5 = document.getElementById('canvas5').getContext('2d');
+        window.myBar = new Chart(ctx5, {
+            type    : 'bar',
+            data    : barChartData5,
+            options : options
+        });
+        let ctx6 = document.getElementById('canvas6').getContext('2d');
+        window.myBar = new Chart(ctx6, {
+            type    : 'bar',
+            data    : barChartData6,
+            options : options
+        });
+    };
+
+
+    </script>
+
+
+
+
+
+</body>
+</html>

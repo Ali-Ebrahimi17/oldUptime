@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-size=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JCB - Equipment Monitoring</title>
+    <link rel="icon" href="/home/jcb.png" />
+   <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+    <!-- <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" /> -->
+     <!-- <link rel="stylesheet" href="/content/bootswatch/united.css" type="text/css"> -->
+    <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+    <link rel="stylesheet" href="/content/font-awesome/css/all.css" type="text/css">
+    <link rel="stylesheet" href="/content/ui/jquery-ui.min.css" type="text/css">
+    <script src="/content/jquery/jquery-3.3.1.min.js"></script>
+    <script src="/content/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/content/ui/jquery-ui.min.js"></script>
+    <script src="/content/marquee/jquery.marquee.min.js"></script>
+    <script src="/content/timer/moment.js"></script>
+    <script src="/content/timer/dist/ez.countimer.min.js"></script>
+
+    <!-- <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" /> -->
+    <link rel="stylesheet" href="/stylesheets/app.css" />
+    <link rel="stylesheet" href="/fontawesome/css/all.css" />
+</head>
+<body style="overflow-x: hidden; background-color: black; margin-top: 35px;">
+
+    <div class="row header-top" style="top: 0; position: fixed; width: 102vw; z-index: 100; background-color: rgb(252, 176, 38)">
+        <div class="col  text-left" style="padding: 4px 4px 5px 4px; ">
+            <img style="margin-left: 20px;" height="24px" src="/media/jcb-logo.png">
+        </div>
+        <div class="col text-right" style="padding: 5px 8px 0px 0px; ">
+            <!-- <a href="/equipment-monitoring/business-unit/<%= shortBu %>">
+                <span style="font-size: 21px; padding-top: 2px; color: black; margin-left: 5px;;" class="fas fa-cog icon-home"></span>
+            </a> -->
+            <a href="/equipment-monitoring/operations">
+                <span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 3%" class="fas fa-home icon-home"></span>
+            </a>
+        </div>
+    </div>
+
+
+        <div class="col-main">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Admin Login</h1>
+                    <h1 style="font-size: 22px; color: rgb(252, 176, 38);  text-align: center"><%= shortBu %></h1>
+                </div>
+                <div class="col-lg-12" style="margin-top: 8px;  border-top: 3px solid rgb(26, 28, 30);"></div>
+            </div>
+        </div>
+        <section style="margin:0 35%;">
+            <div class="modal-form" >
+              <div class="modal-content" style="border-radius: 0; ">
+                <div style="background-color: rgb(252, 176, 38); height: 50px;">
+                    <!-- <button  style="color: black; margin: 5px;" class="close"  aria-label="Close"></button> -->
+                   <h4 style="text-align: center; margin: 8px; font-weight: bold;">Log In</h4>
+                </div>
+                <div class="modal-body" >
+                    <form action="/equipment-monitoring/login/<%= shortBu  %>" method="POST">
+                        <fieldset>
+                            <div class="row" style=" color: black; margin-bottom: 10px;">
+                                <div class="col">
+                                  <label for="name">Email</label>
+                                  <input class="form-control" type="text" name="username"  required>
+                                </div>
+                                <div class="col" style="margin-bottom: 4px;">
+                                  <label for="name">Password</label>
+                                  <input class="form-control" type="password" name="password" required>
+                                </div>
+                              </div>
+                            <a class=" float-left" style="margin-left: 8px; margin-bottom: 8px; border-radius: 4px; color: black; margin-top: 5px; font-weight: bold;" href="/machinePassword/password_reset">Forgot Password?</a>
+                            <a class="btn btn-danger float-right" style="margin-left: 8px; margin-bottom: 8px; border-radius: 4px; color: white;" href="/equipment-monitoring/business-unit/<%= shortBu %>">Cancel</a>
+                          <button type="submit" class="btn btn-success float-right" style="margin-left: 8px; ">Submit</button>
+                        </fieldset>
+                      </form>
+                </div>
+                <div  style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+                    <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+                </div>
+              </div>
+            </div>
+             
+          </section>
+        
+            
+
+        
+
+
+
+<div class="container-fluid footer" style="bottom: 0; position: fixed; width: 100vw; z-index: 100;background-color: transparent; margin-top: 5px; z-index: 2;">
+   
+    <div class="row header-top">
+        <div class="col-lg-6  d-lg-block text-left" style="padding: 4px 4px 5px 4px; background-color: rgb(252, 176, 38)">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+            <img height="24px" src="/7z/content/images/df.png">
+        </div>
+        <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold; background-color: rgb(252, 176, 38)">
+            J.C. Bamford Excavators LTD &copy; 2022
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,1041 @@
+<% layout('layouts/heatmap')%>
+<!-- <meta http-equiv="refresh" content="900"> -->
+<link rel="stylesheet" href="/8z/content/bootstrap/css/bootstrap.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css">
+<link rel="stylesheet" href="/content/table2.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/ldlHeatmap.css" type="text/css">
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+<style>
+  body {
+    background-color: black;
+  }
+
+  h5 {
+    color: white;
+    font-size: 1rem;
+  }
+
+  h3 {
+    color: white;
+    font-size: 2rem;
+  }
+
+  h2 {
+    color: white;
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 4rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  hr {
+    background-color: #6a6d6d;
+  }
+
+  .zone-stat {
+    font-size: 60px;
+    margin-top: -10px;
+  }
+
+  .zone-span {
+    font-size: 60px;
+    padding-top: 6px;
+  }
+
+  a {
+    text-decoration: none;
+
+  }
+
+  a:hover {
+    color: white;
+
+  }
+
+  small {
+    font-weight: bold;
+  }
+
+  .graph-holder1 {
+    background-color: rgb(36, 42, 49);
+    width: 90px;
+    height: 305px;
+    margin: 0px 10px 10px 10px;
+    /* border: 1px solid white; */
+    padding-top: 8px;
+    border-radius: 4px;
+  }
+
+  .graph-holder2 {
+    background-color: rgb(36, 42, 49);
+    width: 1700px;
+    height: 250px;
+    margin-bottom: 50px;
+    /* border: 1px solid white; */
+    padding-right: 8px;
+    border-radius: 4px;
+  }
+
+  .main-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+  }
+
+  .date-holder {
+    color: white;
+    margin-top: -30px;
+    padding-left: 20px;
+  }
+
+  .top-row {
+    display: flex;
+  }
+
+  .bottom-row {
+    display: flex;
+    padding-left: 482px;
+  }
+
+  .found {
+    color: white;
+    font-size: 15px;
+    padding-top: 6px;
+  }
+
+  .found-bottom {
+    color: white;
+    font-size: 15px;
+    padding-top: 40px;
+  }
+
+  .sent-forward {
+    color: white;
+    font-size: 15px;
+    /* padding-top: 35px; */
+  }
+
+  .fixed {
+    color: white;
+    font-size: 15px;
+    /* padding-top: 35px; */
+  }
+
+  .escaped {
+    color: white;
+    font-size: 15px;
+    /* padding-top: 35px; */
+  }
+
+  .pof-dpu-title {
+    color: white;
+    font-size: 20px;
+    margin-top: -10px;
+    /* padding-top: 35px; */
+  }
+
+  .shortage-dpu-title {
+    color: white;
+    font-size: 20px;
+    /* padding-top: 35px; */
+    margin-bottom: -8px;
+  }
+
+  .total-dpu-title {
+    color: white;
+    font-size: 20px;
+    /* padding-top: 35px; */
+  }
+
+  .forward {
+    color: red;
+    font-size: 20px;
+    padding-top: 120px;
+    width: 50px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .area-name {
+    color: white;
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .found-dpu {
+    color: white;
+    text-align: center;
+    font-size: 15px;
+    padding-top: 2px;
+  }
+
+  .forward-dpu {
+    color: white;
+    text-align: center;
+    font-size: 15px;
+  }
+
+  .fixed-faults {
+    color: white;
+    text-align: center;
+    font-size: 15px;
+  }
+
+  .not-fixed-faults {
+    color: red;
+    text-align: center;
+    font-size: 15px;
+  }
+
+  .not-fixed-faults-red {
+    color: red;
+    text-align: center;
+    font-size: 15px;
+    /* font-weight: bold; */
+  }
+
+  .not-fixed-faults-green {
+    color: green;
+    text-align: center;
+    font-size: 15px;
+    /* font-weight: bold; */
+  }
+
+  .pof-dpu-stat {
+    color: white;
+    text-align: center;
+    font-size: 20px;
+    margin-top: -10px;
+  }
+
+  .shortage-dpu-stat {
+    color: white;
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: -8px;
+  }
+
+  .total-dpu-stat {
+    color: white;
+    text-align: center;
+    font-size: 20px;
+  }
+</style>
+
+<div class='main-header-holder'>
+  <h1>Loadall Heat Map NFF to Hot Test</h1>
+
+
+  <small>(<%= moment(startTime).format("DD/MM/YYYY  HH:mm") %> - <%= moment(endTime).format("DD/MM/YYYY  HH:mm") %>) <br>lay - T1 (<%= lay %>) T3 (<%= track3lay %>)</small>
+</div>
+
+
+
+
+
+<div class="main-wrapper" style="margin-top: 10px;">
+  <div class="top-row">
+    <div>
+
+      <a href="/dash/sip/all/LDL"><i class="fas fa-user-cog"></i></a>
+
+
+
+      <!-- <hr style="position:absolute; width: 1792px; margin-top: 50px; border-top: 1px dashed grey; background-color: transparent;"> -->
+      <div class="found">
+        Found
+      </div>
+      <div class="fixed">
+        Fixed
+      </div>
+      <div class="sent-forward">
+        Sent Forward
+      </div>
+      <div class="escaped">
+        Escaped
+      </div>
+      <div class="escaped">
+        Rectifiers
+      </div>
+      <hr>
+      <div class="pof-dpu-title">
+        Assy
+      </div>
+      <div class="shortage-dpu-title">
+        Shortage
+      </div>
+      <hr>
+      <div class="total-dpu-title">
+        DPU
+      </div>
+    </div>
+    <div class="graph-holder1">
+      <div class="area-name">
+        Booms
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/Boom Sub Assembly LDL/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= boomsFoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/Boom Sub Assembly LDL/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= boomsFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/Boom Sub Assembly LDL/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (boomsNotFixedInAreaDPU >= (boomsFoundInAreaDPU / 2 )) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= boomsNotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/Boom Sub Assembly LDL/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= boomsNotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= boomsRecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assBooms %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/Boom Sub Assembly LDL/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= boomsShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuBooms %>
+      </div>
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/Boom Sub Assembly LDL/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        <%= totSentForwardFromBooms %>
+        <span style="font-size: 20px;" class="<% if (Math.round(boomsNotFixedInAreaDPU / boomsFoundInAreaDPU * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(boomsNotFixedInAreaDPU / boomsFoundInAreaDPU * 100 ) || 0 %>%
+        </span>
+
+      </div>
+    </a>
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        SIP 1
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= zone1FoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= zone1FixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (zone1NotFixedInAreaDPU >= (zone1FoundInAreaDPU / 2 )) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= zone1NotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= zone1NotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= sip1RecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assZone1 %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= zone1ShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuZone1 %>
+      </div>
+
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        <%= totSentForwardFromZone1 %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(zone1NotFixedInAreaDPU / zone1FoundInAreaDPU * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(zone1NotFixedInAreaDPU / zone1FoundInAreaDPU* 100 ) || 0 %>%
+        </span>
+
+      </div>
+    </a>
+    <!-- extra sip -->
+
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        SIP 2
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/SIP 2 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= zone2FoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/SIP 2 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= zone2FixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/SIP 2 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (zone2NotFixedInAreaDPU >= (zone2FoundInAreaDPU / 2 )) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= zone2NotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/SIP 2 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= zone2NotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= sip2RecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assZone2 %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/SIP 2 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= zone2ShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuZone2 %>
+      </div>
+
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/SIP 2 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        <%= totSentForwardFromZone2 %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(zone2NotFixedInAreaDPU / zone2FoundInAreaDPU * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(zone2NotFixedInAreaDPU / zone2FoundInAreaDPU* 100 ) || 0 %>%
+        </span>
+      </div>
+    </a>
+    <!-- extra sip -->
+
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        SIP 3
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/SIP 3 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= zone3FoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/SIP 3 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= zone3FixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/SIP 3 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (zone3NotFixedInAreaDPU >= (zone3FoundInAreaDPU / 2 )) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= zone3NotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/SIP 3 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= zone3NotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= sip3RecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assZone3 %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/SIP 3 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= zone3ShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuZone3 %>
+      </div>
+
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/SIP 3 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        <%= totSentForwardFromZone3 %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(zone3NotFixedInAreaDPU / zone3FoundInAreaDPU * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(zone3NotFixedInAreaDPU / zone3FoundInAreaDPU* 100 ) || 0 %>%
+        </span>
+      </div>
+    </a>
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        Cab Insp
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/NEW Cab Inspection/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= cabsFoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/NEW Cab Inspection/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= cabsFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/NEW Cab Inspection/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (cabsNotFixedInAreaDPU >= (cabsFoundInAreaDPU / 2 )) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= cabsNotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/NEW Cab Inspection/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= cabsNotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= cabsRecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assCabs %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/NEW Cab Inspection/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= cabsShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuCabs %>
+      </div>
+
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/NEW Cab Inspection/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        <%= totSentForwardFromCabs %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(cabsNotFixedInAreaDPU / cabsFoundInAreaDPU * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(cabsNotFixedInAreaDPU / cabsFoundInAreaDPU * 100 ) || 0 %>%
+        </span>
+      </div>
+    </a>
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        SIP 4
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/SIP 4 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= zone4FoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/SIP 4 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>"></a>
+      <div class="fixed-faults">
+        <%= zone4FixedInAreaDPU %>
+      </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/SIP 4 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (zone4NotFixedInAreaDPU >= (zone4FoundInAreaDPU / 2 )) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= zone4NotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/SIP 4 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= zone4NotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= sip4RecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assZone4 %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/SIP 4 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= zone4ShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuZone4 %>
+      </div>
+
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/SIP 4 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        <%= totSentForwardFromZone4 %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(zone4NotFixedInAreaDPU / zone4FoundInAreaDPU * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(zone4NotFixedInAreaDPU / zone4FoundInAreaDPU* 100 ) || 0 %>%
+        </span>
+      </div>
+    </a>
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        SIP 5
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/SIP 5 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= zone5FoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/SIP 5 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= zone5FixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/SIP 5 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (zone5NotFixedInAreaDPU >= (zone5FoundInAreaDPU / 2 )) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= zone5NotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/SIP 5 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= zone5NotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= sip5RecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assZone5 %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/SIP 5 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= zone5ShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuZone5 %>
+      </div>
+
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/SIP 5 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        <%= totSentForwardFromZone5 %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(zone5NotFixedInAreaDPU / zone5FoundInAreaDPU * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(zone5NotFixedInAreaDPU / zone5FoundInAreaDPU* 100 ) || 0 %>%
+        </span>
+      </div>
+    </a>
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        SIP 6
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/SIP 6 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= zone6FoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/SIP 6 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= zone6FixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/SIP 6 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (zone6NotFixedInAreaDPU >= (zone6FoundInAreaDPU / 2 )) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= zone6NotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/SIP 6 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= zone6NotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= sip6RecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assZone6 %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/SIP 6 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= zone6ShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuZone6 %>
+      </div>
+
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/SIP 6 NEW/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        <%= totSentForwardFromZone6 %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(zone6NotFixedInAreaDPU / zone6FoundInAreaDPU * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(zone6NotFixedInAreaDPU / zone6FoundInAreaDPU* 100 ) || 0 %>%
+        </span>
+      </div>
+    </a>
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        UV 1
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/UV 1 Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= UV1FoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/UV 1 Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= UV1FixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/UV 1 Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (UV1NotFixedInAreaDPU >= (UV1FoundInAreaDPU/ 2 )) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= UV1NotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/UV 1 Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= UV1NotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= UV1RecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assUV1 %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/UV 1 Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= UV1ShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuUV1 %>
+      </div>
+
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/UV 1 Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        <%= totSentForwardFromUV1 %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(UV1NotFixedInAreaDPU / UV1FoundInAreaDPU * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(UV1NotFixedInAreaDPU / UV1FoundInAreaDPU * 100 ) || 0 %>%
+        </span>
+      </div>
+    </a>
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        Spec
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/SIP SPEC Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= SpecFoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/SIP SPEC Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= SpecFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/SIP SPEC Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (SpecNotFixedInAreaDPU >= (SpecFoundInAreaDPU  /2 )) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= SpecNotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/SIP SPEC Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= SpecNotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= SpecRecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assSpec %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/SIP SPEC Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= SpecShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuSpec %>
+      </div>
+
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/SIP SPEC Ldl/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        <%= totSentForwardFromSpec %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(SpecNotFixedInAreaDPU/ SpecFoundInAreaDPU * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(SpecNotFixedInAreaDPU / SpecFoundInAreaDPU  * 100 ) || 0 %>%
+        </span>
+
+      </div>
+    </a>
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        Z7 Elec
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/Z7 Electrical Test/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= Z7FoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/Z7 Electrical Test/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= Z7FixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/Z7 Electrical Test/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (Z7NotFixedInAreaDPU  >= (Z7FoundInAreaDPU  /2 )) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Z7NotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/Z7 Electrical Test/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= Z7NotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= Z7RecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assZ7 %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/Z7 Electrical Test/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= Z7ShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuZ7 %>
+      </div>
+
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/Z7 Electrical Test/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        To Test <br><%= totSentForwardFromZ7 %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(Z7NotFixedInAreaDPU/ Z7FoundInAreaDPU * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(Z7NotFixedInAreaDPU / Z7FoundInAreaDPU  * 100 ) || 0 %>%
+        </span>
+      </div>
+    </a>
+  </div>
+  <div class="bottom-row">
+    <div>
+      <div class="found-bottom">
+        Found
+      </div>
+      <div class="fixed">
+        Fixed
+      </div>
+      <div class="sent-forward">
+        Sent Forward
+      </div>
+      <div class="escaped">
+        Escaped
+      </div>
+      <div class="escaped">
+        Rectifiers
+      </div>
+      <hr>
+      <div class="pof-dpu-title">
+        Ass
+      </div>
+      <div class="shortage-dpu-title">
+        Shortage
+      </div>
+      <hr>
+      <div class="total-dpu-title">
+        DPU
+      </div>
+    </div>
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        T3 SIP 1
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/Track 3 SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= T3Z1FoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/Track 3 SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= T3Z1FixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/Track 3 SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (T3Z1NotFixedInAreaDPU  >= (T3Z1FoundInAreaDPU / 2)) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= T3Z1NotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/Track 3 SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= T3Z1NotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= T3Z1RecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assT3Z1 %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/Track 3 SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= T3Z1ShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuT3Z1 %>
+      </div>
+
+    </div>
+
+    <a href="/dash/trackFaultsForward/LDL/Track 3 SIP 1/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-arrow-right"></i>
+        <%= totSentForwardFromT3Z1 %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(T3Z1NotFixedInAreaDPU/ T3Z1FoundInAreaDPU  * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(T3Z1NotFixedInAreaDPU / T3Z1FoundInAreaDPU  * 100 ) || 0 %>%
+        </span>
+      </div>
+    </a>
+
+    <div class="graph-holder1">
+      <div class="area-name">
+        T3 SIP 2
+      </div>
+      <a href="/dash/trackFaultsInArea/LDL/Track 3 SIP 2/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="found-dpu">
+          <%= T3Z2FoundInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsFixedInArea/LDL/Track 3 SIP 2/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= T3Z2FixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsForward/LDL/Track 3 SIP 2/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="<% if (T3Z2NotFixedInAreaDPU  >= (T3Z2FoundInAreaDPU / 2)) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= T3Z2NotFixedInAreaDPU %>
+        </div>
+      </a>
+      <a href="/dash/trackFaultsEscapedArea/LDL/Track 3 SIP 2/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="fixed-faults">
+          <%= T3Z2NotFoundInAreaDPU %>
+        </div>
+      </a>
+      <div class="fixed-faults">
+        <%= T3Z2RecNumber %>
+      </div>
+      <hr>
+      <div class="pof-dpu-stat">
+        <%= assT3Z2 %>
+      </div>
+      <a href="/dash/trackFaultsShortage/LDL/Track 3 SIP 2/<%= startTimeFormat %>/<%= endTimeFormat %>">
+        <div class="shortage-dpu-stat">
+          <%= T3Z2ShortageDPU %>
+        </div>
+      </a>
+      <hr>
+      <div class="total-dpu-stat">
+        <%= totDpuT3Z2 %>
+      </div>
+    </div>
+    </a>
+    <a href="/dash/trackFaultsForward/LDL/Track 3 SIP 2/<%= startTimeFormat %>/<%= endTimeFormat %>">
+      <div class="forward">
+        <i class="fas fa-level-up-alt"></i>
+        <%= totSentForwardFromT3Z2 %>
+        <span style="font-size: 20px;" class="<% if ( Math.round(T3Z2NotFixedInAreaDPU/ T3Z2FoundInAreaDPU  * 100 ) >= 50) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+          <%= Math.round(T3Z2NotFixedInAreaDPU / T3Z2FoundInAreaDPU  * 100 ) || 0 %>%
+        </span>
+      </div>
+    </a>
+
+    <!--  -->
+  </div>
+
+
+
+
+  <div class="top-row">
+
+  </div>
+</div>
+
+
+
+
+
+<div class="container-fluid footer">
+
+  <div class="row header-top">
+    <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+      <img height="24px" src="/7z/content/images/jcb-logo.png">
+      <img height="24px" src="/7z/content/images/df.png">
+    </div>
+    <div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+      J.C. Bamford Excavators LTD &copy; 2022
+    </div>
+  </div>
+</div>

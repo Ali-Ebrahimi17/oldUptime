@@ -1,0 +1,33 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="newbuild-container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Add Date</h1>
+    </div>
+
+
+
+    <div class="col">
+      <form action="/day/new/<%= division %>" method="POST">
+        <input type="hidden" name="day[division]" value="<%= division %>">
+        <label for="buildNumber">Name</label>
+        <input class="form-control" type="date" name="day[date]" required>
+        <label for="buildNumber">Build</label>
+        <input class="form-control" type="number" name="day[build]" required>
+        <label for="buildNumber">Faults</label>
+        <input class="form-control" type="number" name="day[faults]" required>
+        <label for="buildNumber">DPU Target</label>
+        <input class="form-control" type="number" name="day[target]" required>
+        <div class="form-group text-center">
+          <button class="btn bln-block btn-md btn-success" style="margin: 5px;">Save</button>
+        </div>
+    </div>
+    </form>
+  </div>
+  <div>
+    <a href="/day/all/<%= division %>">Go Back</a>
+  </div>

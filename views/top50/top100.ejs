@@ -1,0 +1,68 @@
+<% layout('layouts/boilerplate')%>
+
+<% let totalCount = 0 %>
+<% parts.forEach(part => {%>
+<% totalCount = totalCount + part.count %>
+<% }) %>
+
+
+
+
+
+<table class="table table-hover table-dark top50" style="font-size: 12px; text-align: center; height: 83vh;">
+  <thead>
+    <tr class="d-flex">
+      <th style="width: 17vw; ">Part Number</th>
+      <th style="width: 3.5vw;"><%= tenMonthsAgo %></th>
+      <th style="width: 3.5vw;"><%= nineMonthsAgo %></th>
+      <th style="width: 3.5vw;"><%= eightMonthsAgo %></th>
+      <th style="width: 3.5vw;"><%= sevenMonthsAgo %></th>
+      <th style="width: 3.5vw;"><%= sixMonthsAgo %></th>
+      <th style="width: 3.5vw;"><%= fiveMonthsAgo %></th>
+      <th style="width: 3.5vw;"><%= fourMonthsAgo %></th>
+      <th style="width: 3.5vw;"><%= threeMonthsAgo %></th>
+      <th style="width: 3.5vw;"><%= twoMonthsAgo %></th>
+      <th style="width: 3.5vw;"><%= oneMonthAgo %></th>
+      <th style="width: 3.5vw;"><%= thisMonth %></th>
+      <th style="width: 3.5vw;">Count</th>
+      <th style="width: 9vw;">Concern</th>
+      <th style="width: 3.5vw;">RAG</th>
+      <th style="width: 5vw;">Closure Date</th>
+      <th style="width: 3.5vw;">ASD</th>
+      <th style="width: 9vw;">Action</th>
+      <th style="width: 3.5vw;">T3%</th>
+      <th style="width: 6.5vw;">Champion</th>
+
+
+    </tr>
+  </thead>
+  <tbody>
+    <% parts.forEach(part => {%>
+    <tr class="d-flex">
+      <td style=" width: 17vw; text-align: start;"> <%= part._id %></td>
+      <td style=" width: 3.5vw;">0</td>
+      <td style=" width: 3.5vw;">0</td>
+      <td style=" width: 3.5vw;">0</td>
+      <td style=" width: 3.5vw;">0</td>
+      <td style=" width: 3.5vw;">0</td>
+      <td style=" width: 3.5vw;">0</td>
+      <td style=" width: 3.5vw;">0</td>
+      <td style=" width: 3.5vw;">0</td>
+      <td style=" width: 3.5vw;">0</td>
+      <td style=" width: 3.5vw;">0</td>
+      <td style=" width: 3.5vw;">0</td>
+      <td style=" width: 3.5vw;"><%= part.count %></td>
+      <td style=" width: 9vw;"><%= part.concern %></td>
+      <td style=" width: 3.5vw;"><%= part.reg %></td>
+      <td style=" width: 5vw;"><%= part.closureDate %></td>
+      <td style=" width: 3.5vw;"><%= part.asdJosh %></td>
+      <td style=" width: 9vw;"><%= part.action %></td>
+      <td style=" width: 3.5vw;"><%= ((part.count/totalCount)* 100).toFixed(1) %>%</td>
+      <td style=" width: 6.5vw;"></td>
+
+
+
+    </tr>
+    <% }) %>
+  </tbody>
+</table>

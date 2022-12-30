@@ -1,0 +1,2295 @@
+<% layout('layouts/heatmap')%>
+<!-- <meta http-equiv="refresh" content="900" /> -->
+
+<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css" />
+<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css" />
+<link rel="stylesheet" href="/content/table2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/ldlHeatmap.css" type="text/css" />
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<style>
+	body {
+		background-color: black;
+		overflow: hidden;
+	}
+
+	h5 {
+		color: white;
+		font-size: 1rem;
+	}
+
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+
+	h2 {
+		color: white;
+		font-size: 18px;
+	}
+
+	h1 {
+		font-size: 4rem;
+	}
+
+	h6 {
+		font-size: 1rem;
+	}
+
+	hr {
+		background-color: #6a6d6d;
+	}
+
+	.zone-stat {
+		font-size: 60px;
+		margin-top: -10px;
+	}
+
+	.zone-span {
+		font-size: 60px;
+		padding-top: 6px;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: white;
+	}
+
+	small {
+		font-weight: bold;
+	}
+
+	.main-wrapper {
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+		flex-direction: column;
+	}
+
+	.date-holder {
+		color: white;
+		margin-top: -30px;
+		padding-left: 20px;
+	}
+
+	.top-row {
+		display: flex;
+	}
+
+	.bottom-row {
+		display: flex;
+		padding-left: 482px;
+	}
+
+	.found {
+		color: white;
+		font-size: 15px;
+		padding-top: 6px;
+	}
+
+	.found-bottom {
+		color: white;
+		font-size: 15px;
+		padding-top: 40px;
+	}
+
+	.sent-forward {
+		color: white;
+		font-size: 15px;
+		/* padding-top: 35px; */
+	}
+
+	.fixed {
+		color: white;
+		font-size: 15px;
+		/* padding-top: 35px; */
+	}
+
+	.escaped {
+		color: white;
+		font-size: 15px;
+		/* padding-top: 35px; */
+	}
+
+	.pof-dpu-title {
+		color: white;
+		font-size: 20px;
+		margin-top: -10px;
+		/* padding-top: 35px; */
+	}
+
+	.shortage-dpu-title {
+		color: white;
+		font-size: 20px;
+		/* padding-top: 35px; */
+		margin-bottom: -8px;
+	}
+
+	.total-dpu-title {
+		color: white;
+		font-size: 20px;
+		margin-top: -8px;
+	}
+
+	.forward {
+		color: red;
+		font-size: 20px;
+		padding-top: 90px;
+		width: 50px;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.area-name {
+		color: white;
+		text-align: center;
+		font-size: 20px;
+	}
+
+	.found-dpu {
+		color: white;
+		text-align: center;
+		font-size: 17px;
+		padding-top: 2px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.forward-dpu {
+		color: white;
+		text-align: center;
+		font-size: 15px;
+	}
+
+	.fixed-faults {
+		color: white;
+		text-align: center;
+		font-size: 17px;
+		margin-top: -3px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.not-fixed-faults {
+		color: red;
+		text-align: center;
+		font-size: 18px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.not-fixed-faults-red {
+		color: red;
+		text-align: center;
+		font-size: 18px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.not-fixed-faults-green {
+		color: green;
+		text-align: center;
+		font-size: 18px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.pof-dpu-stat {
+		color: white;
+		text-align: center;
+		font-size: 20px;
+		margin-top: -10px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.shortage-dpu-stat {
+		color: white;
+		text-align: center;
+		font-size: 20px;
+		margin-bottom: -8px;
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.total-dpu-stat {
+		color: white;
+		text-align: center;
+		font-size: 22px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.area-holder {
+		background-color: rgb(36, 42, 49);
+		border-radius: 4px;
+		width: 100px;
+		height: 288px;
+	}
+
+	.area-holder-bottom {
+		background-color: rgb(36, 42, 49);
+		border-radius: 4px;
+		width: 100px;
+		height: 288px;
+		margin-top: 35px;
+	}
+
+	.graph-holder3 {
+		background-color: rgb(36, 42, 49);
+		width: 300px;
+		height: 288px;
+		margin-top: 35px;
+		border-radius: 4px;
+		margin-right: 65px;
+	}
+
+	.graph-holder4 {
+		background-color: rgb(36, 42, 49);
+		width: 290px;
+		height: 288px;
+		margin-top: 35px;
+		border-radius: 4px;
+	}
+
+	.modal-fullscreen .modal-dialog {
+		max-width: 100%;
+		margin: 0;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 100vh;
+		display: flex;
+		position: fixed;
+		z-index: 100000;
+	}
+
+	thead,
+	tbody,
+	tr,
+	td,
+	th {
+		display: block;
+	}
+
+	tr:after {
+		content: ' ';
+		display: block;
+		visibility: hidden;
+		clear: both;
+	}
+
+	thead th {
+		height: 50px;
+
+		/*text-align: left;*/
+	}
+
+	tbody {
+		height: 650px;
+		overflow-y: auto;
+	}
+
+	tbody td,
+	thead th {
+		width: 19.2%;
+		float: left;
+	}
+
+	.modal-dialog-1 {
+		max-width: 100%;
+		margin: 0;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 100vh;
+		display: flex;
+	}
+</style>
+
+<!-- general modals -->
+
+<!--  change date & times -->
+<div class="modal fade" id="change-times" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px">
+				<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+				<h3 style="text-align: center; margin: 8px; color: black">Select Date Range</h3>
+			</div>
+			<div class="modal-body">
+				<fieldset>
+					<form id="theForm" action="/dash/dpuTrack/LDL" method="POST" onsubmit="myButton.disabled = true; return true;">
+						<div class="row" style="color: black">
+							<div class="col">
+								<label for="buildNumber">Start Date</label>
+								<input class="form-control" type="date" name="startDate" style="margin-bottom: 10px" value="" required />
+								<input class="form-control" type="time" name="startTime" value="" required />
+								<!-- <label for="buildNumber" style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; ">Maximum of 48 hours</label> -->
+							</div>
+							<div class="col">
+								<label for="buildNumber">End Date</label>
+								<input class="form-control" type="date" name="endDate" style="margin-bottom: 10px" value="" required />
+								<input class="form-control" type="time" name="endTime" value="" required style="margin-bottom: 10px" />
+
+								<button
+									type="button"
+									id="modalClose"
+									data-dismiss="modal"
+									class="btn btn-danger float-right"
+									style="margin-left: 8px; color: white; border-radius: 4px"
+								>
+									Cancel
+								</button>
+								<button
+									id="btnSave"
+									name="myButton"
+									class="btn btn-success float-right"
+									type="submit"
+									style="margin-bottom: 10px; color: white; border-radius: 4px"
+								>
+									Confirm
+								</button>
+							</div>
+						</div>
+					</form>
+				</fieldset>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+<!-- faults sent forward to stage 16 just shortages -->
+<div
+	class="modal fade"
+	id="faultsTo16"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black"><%= sentTo16Number %> Faults Forward To Stage 16 (No Shortages)</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 200px">Booked on to Stage</th>
+							<th style="width: 130px">Build Number</th>
+							<th style="width: 150px">Model</th>
+							<th style="width: 150px">Failed At</th>
+							<th style="width: 170px">Failed By</th>
+							<th style="width: 170px">Fixed By</th>
+							<th style="width: 170px">Fault Area</th>
+							<th style="width: 170px">Fault Type</th>
+							<th style="width: 250px">Fault Detail</th>
+							<th style="width: 250px">Comments</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let faultsTo16x = 0 %> <% for (let j of newFaultsOutOfOBay) { %> <% faultsTo16x++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= faultsTo16x %></td>
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+							<td style="width: 150px"><%= j.Model %></td>
+							<td style="width: 150px"><%= j.Zone %></td>
+							<td style="width: 170px">
+								<%= j['Created By'] %> <br />
+								<%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% if(j['Fixed By'] === '') { %>
+							<td style="width: 170px"><%= j['Fixed By'] %></td>
+							<% } else { %>
+							<td style="width: 170px">
+								<%= j['Fixed By'] %> <br />
+								<%= moment(j['Fixed Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% } %>
+							<td style="width: 170px"><%= j['Fault Area'] %></td>
+							<td style="width: 170px"><%= j['Fault Code'] %></td>
+							<td style="width: 250px"><%= j['User Defined Test'] %></td>
+							<td style="width: 250px"><%= j.Comments %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- faults sent forward to stage 16 no shortages -->
+<div
+	class="modal fade"
+	id="faultsTo16Sh"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black"><%= sentTo16NumberSh %> Shortages Sent Forward To Stage 16</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 200px">Booked on to Stage</th>
+							<th style="width: 130px">Build Number</th>
+							<th style="width: 150px">Model</th>
+							<th style="width: 150px">Failed At</th>
+							<th style="width: 170px">Failed By</th>
+							<th style="width: 170px">Fixed By</th>
+							<th style="width: 170px">Fault Area</th>
+							<th style="width: 170px">Fault Type</th>
+							<th style="width: 250px">Fault Detail</th>
+							<th style="width: 250px">Comments</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let faultsTo16Shx = 0 %> <% for (let j of newShortageOutOfOBay) { %> <% faultsTo16Shx++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= faultsTo16Shx %></td>
+							<
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+							<td style="width: 150px"><%= j.Model %></td>
+							<td style="width: 150px"><%= j.Zone %></td>
+							<td style="width: 170px">
+								<%= j['Created By'] %> <br />
+								<%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% if(j['Fixed By'] === '') { %>
+							<td style="width: 170px"><%= j['Fixed By'] %></td>
+							<% } else { %>
+							<td style="width: 170px">
+								<%= j['Fixed By'] %> <br />
+								<%= moment(j['Fixed Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% } %>
+							<td style="width: 170px"><%= j['Fault Area'] %></td>
+							<td style="width: 170px"><%= j['Fault Code'] %></td>
+							<td style="width: 250px"><%= j['User Defined Test'] %></td>
+							<td style="width: 250px"><%= j.Comments %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- machines on 16-->
+<div
+	class="modal fade"
+	id="machinesOn16"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black; font-size: 28px"><%= stage16Number %> machines booked onto stage 16</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: 70vh; width: fit-content; margin-left: 45px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 180px">Date/Time</th>
+							<th style="width: 130px">Build Number</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let stage16Datax = 0 %> <% for (let j of stage16MacinesData) { %> <% stage16Datax++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= stage16Datax %></td>
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j.buildNo %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- faults sent forward to stage cfc no shortages -->
+<div
+	class="modal fade"
+	id="faultsTocfc"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black"><%= sentTo20Number %> Faults Forward To Stage 20 (No Shortages)</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 200px">Booked on to Stage</th>
+							<th style="width: 130px">Build Number</th>
+							<th style="width: 150px">Model</th>
+							<th style="width: 150px">Failed At</th>
+							<th style="width: 170px">Failed By</th>
+							<th style="width: 170px">Fixed By</th>
+							<th style="width: 170px">Fault Area</th>
+							<th style="width: 170px">Fault Type</th>
+							<th style="width: 250px">Fault Detail</th>
+							<th style="width: 250px">Comments</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let faultsTcfcx = 0 %> <% for (let j of faultsToCFC) { %> <% faultsTcfcx++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= faultsTcfcx %></td>
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+							<td style="width: 150px"><%= j.Model %></td>
+							<td style="width: 150px"><%= j.Zone %></td>
+							<td style="width: 170px">
+								<%= j['Created By'] %> <br />
+								<%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% if(j['Fixed By'] === '') { %>
+							<td style="width: 170px"><%= j['Fixed By'] %></td>
+							<% } else { %>
+							<td style="width: 170px">
+								<%= j['Fixed By'] %> <br />
+								<%= moment(j['Fixed Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% } %>
+							<td style="width: 170px"><%= j['Fault Area'] %></td>
+							<td style="width: 170px"><%= j['Fault Code'] %></td>
+							<td style="width: 250px"><%= j['User Defined Test'] %></td>
+							<td style="width: 250px"><%= j.Comments %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- machines on 20 -->
+<div
+	class="modal fade"
+	id="faultsTocfcSh"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black"><%= sentTo20NumberSh %> Shortages Sent Forward To Stage 20</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 200px">Booked on to Stage</th>
+							<th style="width: 130px">Build Number</th>
+							<th style="width: 150px">Model</th>
+							<th style="width: 150px">Failed At</th>
+							<th style="width: 170px">Failed By</th>
+							<th style="width: 170px">Fixed By</th>
+							<th style="width: 170px">Fault Area</th>
+							<th style="width: 170px">Fault Type</th>
+							<th style="width: 250px">Fault Detail</th>
+							<th style="width: 250px">Comments</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let faultsTcfcxSh = 0 %> <% for (let j of faultsToCFCSh) { %> <% faultsTcfcxSh++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= faultsTcfcxSh %></td>
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+							<td style="width: 150px"><%= j.Model %></td>
+							<td style="width: 150px"><%= j.Zone %></td>
+							<td style="width: 170px">
+								<%= j['Created By'] %> <br />
+								<%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% if(j['Fixed By'] === '') { %>
+							<td style="width: 170px"><%= j['Fixed By'] %></td>
+							<% } else { %>
+							<td style="width: 170px">
+								<%= j['Fixed By'] %> <br />
+								<%= moment(j['Fixed Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% } %>
+							<td style="width: 170px"><%= j['Fault Area'] %></td>
+							<td style="width: 170px"><%= j['Fault Code'] %></td>
+							<td style="width: 250px"><%= j['User Defined Test'] %></td>
+							<td style="width: 250px"><%= j.Comments %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- machines on 18 -->
+<div
+	class="modal fade"
+	id="faultsTo18"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black"><%= sentTo18Number %> Faults Forward To Stage 18 (No Shortages)</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 200px">Booked on to Stage</th>
+							<th style="width: 130px">Build Number</th>
+							<th style="width: 150px">Model</th>
+							<th style="width: 150px">Failed At</th>
+							<th style="width: 170px">Failed By</th>
+							<th style="width: 170px">Fixed By</th>
+							<th style="width: 170px">Fault Area</th>
+							<th style="width: 170px">Fault Type</th>
+							<th style="width: 250px">Fault Detail</th>
+							<th style="width: 250px">Comments</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let faultsTo18x = 0 %> <% for (let j of faultsTo18) { %> <% faultsTo18x++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= faultsTo18x %></td>
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+							<td style="width: 150px"><%= j.Model %></td>
+							<td style="width: 150px"><%= j.Zone %></td>
+							<td style="width: 170px">
+								<%= j['Created By'] %> <br />
+								<%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% if(j['Fixed By'] === '') { %>
+							<td style="width: 170px"><%= j['Fixed By'] %></td>
+							<% } else { %>
+							<td style="width: 170px">
+								<%= j['Fixed By'] %> <br />
+								<%= moment(j['Fixed Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% } %>
+							<td style="width: 170px"><%= j['Fault Area'] %></td>
+							<td style="width: 170px"><%= j['Fault Code'] %></td>
+							<td style="width: 250px"><%= j['User Defined Test'] %></td>
+							<td style="width: 250px"><%= j.Comments %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- machines on 18 -->
+<div
+	class="modal fade"
+	id="faultsTo18Sh"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black"><%= sentTo18NumberSh %> Shortages Sent Forward To Stage 18</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 200px">Booked on to Stage</th>
+							<th style="width: 130px">Build Number</th>
+							<th style="width: 150px">Model</th>
+							<th style="width: 150px">Failed At</th>
+							<th style="width: 170px">Failed By</th>
+							<th style="width: 170px">Fixed By</th>
+							<th style="width: 170px">Fault Area</th>
+							<th style="width: 170px">Fault Type</th>
+							<th style="width: 250px">Fault Detail</th>
+							<th style="width: 250px">Comments</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let faultsT018xSh = 0 %> <% for (let j of faultsTo18Sh) { %> <% faultsT018xSh++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= faultsT018xSh %></td>
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+							<td style="width: 150px"><%= j.Model %></td>
+							<td style="width: 150px"><%= j.Zone %></td>
+							<td style="width: 170px">
+								<%= j['Created By'] %> <br />
+								<%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% if(j['Fixed By'] === '') { %>
+							<td style="width: 170px"><%= j['Fixed By'] %></td>
+							<% } else { %>
+							<td style="width: 170px">
+								<%= j['Fixed By'] %> <br />
+								<%= moment(j['Fixed Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% } %>
+							<td style="width: 170px"><%= j['Fault Area'] %></td>
+							<td style="width: 170px"><%= j['Fault Code'] %></td>
+							<td style="width: 250px"><%= j['User Defined Test'] %></td>
+							<td style="width: 250px"><%= j.Comments %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- machines on 18 -->
+<div
+	class="modal fade"
+	id="machinesOn18"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black; font-size: 28px"><%= stage18Number %> machines booked onto stage 18</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: 70vh; width: fit-content; margin-left: 45px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 180px">Date/Time</th>
+							<th style="width: 130px">Build Number</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let stage18Datax = 0 %> <% for (let j of stage18MacinesData) { %> <% stage18Datax++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= stage18Datax %></td>
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j.buildNo %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- machines on 19 -->
+<div
+	class="modal fade"
+	id="faultsTo19"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black"><%= sentTo19Number %> Faults Forward To Stage 19 (No Shortages)</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 200px">Booked on to Stage</th>
+							<th style="width: 130px">Build Number</th>
+							<th style="width: 150px">Model</th>
+							<th style="width: 150px">Failed At</th>
+							<th style="width: 170px">Failed By</th>
+							<th style="width: 170px">Fixed By</th>
+							<th style="width: 170px">Fault Area</th>
+							<th style="width: 170px">Fault Type</th>
+							<th style="width: 250px">Fault Detail</th>
+							<th style="width: 250px">Comments</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let faultsTo19x = 0 %> <% for (let j of faultsTo19) { %> <% faultsTo19x++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= faultsTo19x %></td>
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+							<td style="width: 150px"><%= j.Model %></td>
+							<td style="width: 150px"><%= j.Zone %></td>
+							<td style="width: 170px">
+								<%= j['Created By'] %> <br />
+								<%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% if(j['Fixed By'] === '') { %>
+							<td style="width: 170px"><%= j['Fixed By'] %></td>
+							<% } else { %>
+							<td style="width: 170px">
+								<%= j['Fixed By'] %> <br />
+								<%= moment(j['Fixed Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% } %>
+							<td style="width: 170px"><%= j['Fault Area'] %></td>
+							<td style="width: 170px"><%= j['Fault Code'] %></td>
+							<td style="width: 250px"><%= j['User Defined Test'] %></td>
+							<td style="width: 250px"><%= j.Comments %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- machines on 19 -->
+<div
+	class="modal fade"
+	id="faultsTo19Sh"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black"><%= sentTo19NumberSh %> Shortages Sent Forward To Stage 19</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 200px">Booked on to Stage</th>
+							<th style="width: 130px">Build Number</th>
+							<th style="width: 150px">Model</th>
+							<th style="width: 150px">Failed At</th>
+							<th style="width: 170px">Failed By</th>
+							<th style="width: 170px">Fixed By</th>
+							<th style="width: 170px">Fault Area</th>
+							<th style="width: 170px">Fault Type</th>
+							<th style="width: 250px">Fault Detail</th>
+							<th style="width: 250px">Comments</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let faultsT019xSh = 0 %> <% for (let j of faultsTo19Sh) { %> <% faultsT019xSh++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= faultsT019xSh %></td>
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+							<td style="width: 150px"><%= j.Model %></td>
+							<td style="width: 150px"><%= j.Zone %></td>
+							<td style="width: 170px">
+								<%= j['Created By'] %> <br />
+								<%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% if(j['Fixed By'] === '') { %>
+							<td style="width: 170px"><%= j['Fixed By'] %></td>
+							<% } else { %>
+							<td style="width: 170px">
+								<%= j['Fixed By'] %> <br />
+								<%= moment(j['Fixed Date']).format("DD/MM/YYYY - HH:mm")%>
+							</td>
+							<% } %>
+							<td style="width: 170px"><%= j['Fault Area'] %></td>
+							<td style="width: 170px"><%= j['Fault Code'] %></td>
+							<td style="width: 250px"><%= j['User Defined Test'] %></td>
+							<td style="width: 250px"><%= j.Comments %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- machines on 19 -->
+<div
+	class="modal fade"
+	id="machinesOn19"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black; font-size: 28px"><%= stage19Number %> machines booked onto stage 19</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: 70vh; width: fit-content; margin-left: 45px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 180px">Date/Time</th>
+							<th style="width: 130px">Build Number</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let stage19Datax = 0 %> <% for (let j of stage19MacinesData) { %> <% stage19Datax++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= stage19Datax %></td>
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j.buildNo %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- machines on 20 -->
+<div
+	class="modal fade"
+	id="machinesOn20"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black; font-size: 28px"><%= stage20Number %> machines booked onto stage 20</h3>
+			</div>
+			<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: 70vh; width: fit-content; margin-left: 45px">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 50px">#</th>
+							<th style="width: 180px">Date/Time</th>
+							<th style="width: 130px">Build Number</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let stage20Datax = 0 %> <% for (let j of stage20MacinesData) { %> <% stage20Datax++ %>
+						<tr class="d-flex">
+							<td style="width: 50px"><%= stage20Datax %></td>
+							<td style="width: 200px"><%= moment(j.dateToStage).format("DD/MM/YYYY - HH:mm")%></td>
+							<td style="height: 55px; width: 130px"><%= j.buildNo %></td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> -->
+			<div
+				style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between"
+			>
+				<div>
+					<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div style="margin-right: 20px; margin-bottom: 11px"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- end of general modals -->
+
+<div class="main-header-holder" data-toggle="modal" data-target="#change-times" style="cursor: pointer">
+	<h1>Loadall Heat Map NFF to CFC (No Paint)</h1>
+	<small
+		>(<%= moment(startTime).format("DD/MM/YYYY HH:mm") %> - <%= moment(endTime).format("DD/MM/YYYY HH:mm") %>) <br />build - T1 (<%= lay %>) T3 (<%=
+		track3lay %>)</small
+	>
+</div>
+
+<section style="display: flex; flex-direction: column">
+	<div style="display: flex; justify-content: space-evenly; margin-top: 25px">
+		<div>
+			<a href="/dash/sip/all/LDL"><i class="fas fa-user-cog"></i></a>
+			<!-- <hr style="position:absolute; width: 1792px; margin-top: 50px; border-top: 1px dashed grey; background-color: transparent;"> -->
+			<div class="found">Found</div>
+			<div class="fixed">Fixed</div>
+			<div class="sent-forward">Sent Forward</div>
+			<div class="escaped">Escaped</div>
+			<div class="escaped">Rectifiers</div>
+			<hr />
+			<div class="pof-dpu-title">Assy</div>
+			<div class="shortage-dpu-title">Shortage</div>
+			<hr />
+			<div class="total-dpu-title">DPU</div>
+		</div>
+		<% for (let a of theArrayOfDataT1) { %>
+		<!-- modals -->
+		<!-- found faults -->
+		<div
+			class="modal fade"
+			id="found<%= a.id  %>"
+			data-backdrop="static"
+			data-keyboard="false"
+			tabindex="-1"
+			aria-labelledby="staticBackdropLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+						<h3 style="text-align: center; margin: 8px; color: black"><%= a.foundInAreaNumber %> Faults found in <%= a.areaName %> (No Shortages)</h3>
+					</div>
+					<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+						<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+							<thead>
+								<tr class="d-flex">
+									<th style="width: 50px">#</th>
+									<th style="width: 200px">Date/Time</th>
+									<th style="width: 130px">Build Number</th>
+									<th style="width: 150px">Model</th>
+									<th style="width: 150px">Failed At</th>
+									<th style="width: 170px">Failed By</th>
+									<th style="width: 170px">Fixed By</th>
+									<th style="width: 170px">Fault Area</th>
+									<th style="width: 170px">Fault Type</th>
+									<th style="width: 250px">Fault Detail</th>
+									<th style="width: 250px">Comments</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% let foundx = 0 %> <% for (let j of a.foundInAreaFaults) { %> <% foundx++ %>
+								<tr class="d-flex">
+									<td style="width: 50px"><%= foundx %></td>
+									<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+									<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+									<td style="width: 150px"><%= j.Model %></td>
+									<td style="width: 150px"><%= j.Zone %></td>
+									<td style="width: 170px"><%= j['Created By'] %></td>
+									<td style="width: 170px"><%= j['Fixed By'] %></td>
+									<td style="width: 170px"><%= j['Fault Area'] %></td>
+									<td style="width: 170px"><%= j['Fault Code'] %></td>
+									<td style="width: 250px"><%= j['User Defined Test'] %></td>
+									<td style="width: 250px"><%= j.Comments %></td>
+								</tr>
+								<% } %>
+							</tbody>
+						</table>
+					</div>
+					<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div> -->
+					<div
+						style="
+							background-color: rgb(252, 176, 38);
+							display: flex;
+							align-items: center;
+							height: 50px;
+							display: flex;
+							justify-content: space-between;
+						"
+					>
+						<div>
+							<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+						</div>
+						<div style="margin-right: 20px; margin-bottom: 11px">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- fixed faults -->
+		<div
+			class="modal fade"
+			id="fixed<%= a.id  %>"
+			data-backdrop="static"
+			data-keyboard="false"
+			tabindex="-1"
+			aria-labelledby="staticBackdropLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+						<h3 style="text-align: center; margin: 8px; color: black"><%= a.fixedInAreaNumber %> fixed in <%= a.areaName %> (No Shortages)</h3>
+					</div>
+					<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+						<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+							<thead>
+								<tr class="d-flex">
+									<th style="width: 50px">#</th>
+									<th style="width: 200px">Date/Time</th>
+									<th style="width: 130px">Build Number</th>
+									<th style="width: 150px">Model</th>
+									<th style="width: 150px">Failed At</th>
+									<th style="width: 170px">Failed By</th>
+									<th style="width: 170px">Fixed By</th>
+									<th style="width: 170px">Fault Area</th>
+									<th style="width: 170px">Fault Type</th>
+									<th style="width: 250px">Fault Detail</th>
+									<th style="width: 250px">Comments</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% let fixedx = 0 %> <% for (let j of a.fixedInAreaFaults) { %> <% fixedx++ %>
+								<tr class="d-flex">
+									<td style="width: 50px"><%= fixedx %></td>
+									<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+									<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+									<td style="width: 150px"><%= j.Model %></td>
+									<td style="width: 150px"><%= j.Zone %></td>
+									<td style="width: 170px"><%= j['Created By'] %></td>
+									<td style="width: 170px"><%= j['Fixed By'] %></td>
+									<td style="width: 170px"><%= j['Fault Area'] %></td>
+									<td style="width: 170px"><%= j['Fault Code'] %></td>
+									<td style="width: 250px"><%= j['User Defined Test'] %></td>
+									<td style="width: 250px"><%= j.Comments %></td>
+								</tr>
+								<% } %>
+							</tbody>
+						</table>
+					</div>
+					<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div> -->
+					<div
+						style="
+							background-color: rgb(252, 176, 38);
+							display: flex;
+							align-items: center;
+							height: 50px;
+							display: flex;
+							justify-content: space-between;
+						"
+					>
+						<div>
+							<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+						</div>
+						<div style="margin-right: 20px; margin-bottom: 11px">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- not fixed faults -->
+		<div
+			class="modal fade"
+			id="notFixed<%= a.id  %>"
+			data-backdrop="static"
+			data-keyboard="false"
+			tabindex="-1"
+			aria-labelledby="staticBackdropLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+						<h3 style="text-align: center; margin: 8px; color: black">
+							<%= a.notFixedInAreaNumber %> Sent forward from <%= a.areaName %> (No Shortages)
+						</h3>
+					</div>
+					<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+						<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+							<thead>
+								<tr class="d-flex">
+									<th style="width: 50px">#</th>
+									<th style="width: 200px">Date/Time</th>
+									<th style="width: 130px">Build Number</th>
+									<th style="width: 150px">Model</th>
+									<th style="width: 150px">Failed At</th>
+									<th style="width: 170px">Failed By</th>
+									<th style="width: 170px">Fixed By</th>
+									<th style="width: 170px">Fault Area</th>
+									<th style="width: 170px">Fault Type</th>
+									<th style="width: 250px">Fault Detail</th>
+									<th style="width: 250px">Comments</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% let notFixedx = 0 %> <% for (let j of a.notFixedInAreaFaults) { %> <% notFixedx++ %>
+								<tr class="d-flex">
+									<td style="width: 50px"><%= notFixedx %></td>
+									<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+									<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+									<td style="width: 150px"><%= j.Model %></td>
+									<td style="width: 150px"><%= j.Zone %></td>
+									<td style="width: 170px"><%= j['Created By'] %></td>
+									<td style="width: 170px"><%= j['Fixed By'] %></td>
+									<td style="width: 170px"><%= j['Fault Area'] %></td>
+									<td style="width: 170px"><%= j['Fault Code'] %></td>
+									<td style="width: 250px"><%= j['User Defined Test'] %></td>
+									<td style="width: 250px"><%= j.Comments %></td>
+								</tr>
+								<% } %>
+							</tbody>
+						</table>
+					</div>
+					<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div> -->
+					<div
+						style="
+							background-color: rgb(252, 176, 38);
+							display: flex;
+							align-items: center;
+							height: 50px;
+							display: flex;
+							justify-content: space-between;
+						"
+					>
+						<div>
+							<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+						</div>
+						<div style="margin-right: 20px; margin-bottom: 11px">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- escaped area -->
+		<div
+			class="modal fade"
+			id="escaped<%= a.id  %>"
+			data-backdrop="static"
+			data-keyboard="false"
+			tabindex="-1"
+			aria-labelledby="staticBackdropLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+						<h3 style="text-align: center; margin: 8px; color: black"><%= a.escapedAreaNumber %> Escaped from <%= a.areaName %> (No Shortages)</h3>
+					</div>
+					<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+						<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+							<thead>
+								<tr class="d-flex">
+									<th style="width: 50px">#</th>
+									<th style="width: 200px">Date/Time</th>
+									<th style="width: 130px">Build Number</th>
+									<th style="width: 150px">Model</th>
+									<th style="width: 150px">Failed At</th>
+									<th style="width: 170px">Failed By</th>
+									<th style="width: 170px">Fixed By</th>
+									<th style="width: 170px">Fault Area</th>
+									<th style="width: 170px">Fault Type</th>
+									<th style="width: 250px">Fault Detail</th>
+									<th style="width: 250px">Comments</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% let escapedx = 0 %> <% for (let j of a.escapedAreaFaults) { %> <% escapedx++ %>
+								<tr class="d-flex">
+									<td style="width: 50px"><%= escapedx %></td>
+									<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+									<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+									<td style="width: 150px"><%= j.Model %></td>
+									<td style="width: 150px"><%= j.Zone %></td>
+									<td style="width: 170px"><%= j['Created By'] %></td>
+									<td style="width: 170px"><%= j['Fixed By'] %></td>
+									<td style="width: 170px"><%= j['Fault Area'] %></td>
+									<td style="width: 170px"><%= j['Fault Code'] %></td>
+									<td style="width: 250px"><%= j['User Defined Test'] %></td>
+									<td style="width: 250px"><%= j.Comments %></td>
+								</tr>
+								<% } %>
+							</tbody>
+						</table>
+					</div>
+					<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div> -->
+					<div
+						style="
+							background-color: rgb(252, 176, 38);
+							display: flex;
+							align-items: center;
+							height: 50px;
+							display: flex;
+							justify-content: space-between;
+						"
+					>
+						<div>
+							<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+						</div>
+						<div style="margin-right: 20px; margin-bottom: 11px">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- found faults Shortage -->
+		<div
+			class="modal fade"
+			id="foundSh<%= a.id  %>"
+			data-backdrop="static"
+			data-keyboard="false"
+			tabindex="-1"
+			aria-labelledby="staticBackdropLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+						<h3 style="text-align: center; margin: 8px; color: black">
+							<%= a.foundInAreaNumberSh %> Faults found in <%= a.areaName %> (Just Shortages)
+						</h3>
+					</div>
+					<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+						<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+							<thead>
+								<tr class="d-flex">
+									<th style="width: 50px">#</th>
+									<th style="width: 200px">Date/Time</th>
+									<th style="width: 130px">Build Number</th>
+									<th style="width: 150px">Model</th>
+									<th style="width: 150px">Failed At</th>
+									<th style="width: 170px">Failed By</th>
+									<th style="width: 170px">Fixed By</th>
+									<th style="width: 170px">Fault Area</th>
+									<th style="width: 170px">Fault Type</th>
+									<th style="width: 250px">Fault Detail</th>
+									<th style="width: 250px">Comments</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% let foundShx = 0 %> <% for (let j of a.foundInAreaFaultsSh) { %> <% foundShx++ %>
+								<tr class="d-flex">
+									<td style="width: 50px"><%= foundShx %></td>
+									<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+									<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+									<td style="width: 150px"><%= j.Model %></td>
+									<td style="width: 150px"><%= j.Zone %></td>
+									<td style="width: 170px"><%= j['Created By'] %></td>
+									<td style="width: 170px"><%= j['Fixed By'] %></td>
+									<td style="width: 170px"><%= j['Fault Area'] %></td>
+									<td style="width: 170px"><%= j['Fault Code'] %></td>
+									<td style="width: 250px"><%= j['User Defined Test'] %></td>
+									<td style="width: 250px"><%= j.Comments %></td>
+								</tr>
+								<% } %>
+							</tbody>
+						</table>
+					</div>
+					<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div> -->
+					<div
+						style="
+							background-color: rgb(252, 176, 38);
+							display: flex;
+							align-items: center;
+							height: 50px;
+							display: flex;
+							justify-content: space-between;
+						"
+					>
+						<div>
+							<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+						</div>
+						<div style="margin-right: 20px; margin-bottom: 11px">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- end of modals -->
+		<div class="area-holder">
+			<div class="area-name"><%= a.areaName %></div>
+			<div class="found-dpu" data-toggle="modal" data-target="#found<%= a.id  %>" style="cursor: pointer">
+				<div>(<%= a.foundInAreaNumber %>)</div>
+				<div><%= a.foundInAreaDPU %></div>
+			</div>
+			<div class="fixed-faults" data-toggle="modal" data-target="#fixed<%= a.id  %>" style="cursor: pointer">
+				<div>(<%= a.fixedInAreaNumber %>)</div>
+				<div><%= a.fixedInAreaDPU %></div>
+			</div>
+			<div
+				class="<% if (Math.round(a.notFixedInAreaDPU / a.fixedInAreaDPU * 100 ) >= 30) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>"
+				data-toggle="modal"
+				data-target="#notFixed<%= a.id  %>"
+				style="cursor: pointer"
+			>
+				<div>(<%= a.notFixedInAreaNumber %>)</div>
+				<div><%= a.notFixedInAreaDPU %></div>
+			</div>
+			<div class="fixed-faults" data-toggle="modal" data-target="#escaped<%= a.id  %>" style="cursor: pointer">
+				<div>(<%= a.escapedAreaNumber%>)</div>
+				<div><%= a.escapedAreaDPU %></div>
+			</div>
+			<div class="fixed-faults" style="padding-bottom: 1px"><%= a.recNumber %></div>
+			<hr />
+			<div class="pof-dpu-stat" data-toggle="modal" data-target="#found<%= a.id  %>" style="cursor: pointer">
+				<div>(<%= a.foundInAreaNumber %>)</div>
+				<div><%= a.foundInAreaDPU %></div>
+			</div>
+			<div class="shortage-dpu-stat" data-toggle="modal" data-target="#foundSh<%= a.id  %>" style="cursor: pointer">
+				<div>(<%= a.foundInAreaNumberSh %>)</div>
+				<div><%= a.foundInAreaDPUSh %></div>
+			</div>
+			<hr />
+			<div class="total-dpu-stat" style="margin-top: -12px"><%= a.areaDPU.toFixed(2) %></div>
+		</div>
+
+		<div class="forward" data-toggle="modal" data-target="#notFixed<%= a.id  %>" style="cursor: pointer">
+			<%= a.notFixedInAreaDPU %>
+			<span style="font-size: 20px" class="<% if (a.forwardPercentage >= 30) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+				<%= a.forwardPercentage %>%
+			</span>
+			<% if (a.areaName === 'Zone 7') { %>
+			<p style="color: white"><%= a.dupForwardTotalAll.toFixed(2) %></p>
+			<% } else { %>
+			<p style="color: white"><%= a.dupForwardTotal.toFixed(2) %></p>
+			<% } %> <% if (a.areaName === 'Zone 7') { %>
+			<i class="fas fa-level-down-alt"></i>
+			<% } else { %>
+			<i class="fas fa-arrow-right"></i>
+			<% } %>
+
+			<div class="total-dpu-stat" style="padding-top: 25px"><%= a.totalDPU.toFixed(2) %></div>
+		</div>
+
+		<% } %>
+	</div>
+
+	<div style="display: flex; justify-content: space-between">
+		<div>
+			<div style="display: flex; justify-content: space-evenly; margin-top: 35px; width: 440px">
+				<div>
+					<!-- <hr style="position:absolute; width: 1792px; margin-top: 50px; border-top: 1px dashed grey; background-color: transparent;"> -->
+					<div class="found-bottom">Found</div>
+					<div class="fixed">Fixed</div>
+					<div class="sent-forward">Sent Forward</div>
+					<div class="escaped">Escaped</div>
+					<div class="escaped">Rectifiers</div>
+					<hr />
+					<div class="pof-dpu-title">Assy</div>
+					<div class="shortage-dpu-title">Shortage</div>
+					<hr />
+					<div class="total-dpu-title">DPU</div>
+				</div>
+				<% for (let a of theArrayOfDataT3) { %>
+
+				<!-- found faults -->
+				<div
+					class="modal fade"
+					id="found<%= a.id  %>"
+					data-backdrop="static"
+					data-keyboard="false"
+					tabindex="-1"
+					aria-labelledby="staticBackdropLabel"
+					aria-hidden="true"
+				>
+					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+						<div class="modal-content">
+							<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+								<h3 style="text-align: center; margin: 8px; color: black">
+									<%= a.foundInAreaNumber %> Faults found in <%= a.areaName %> (No Shortages)
+								</h3>
+							</div>
+							<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+								<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+									<thead>
+										<tr class="d-flex">
+											<th style="width: 50px">#</th>
+											<th style="width: 200px">Date/Time</th>
+											<th style="width: 130px">Build Number</th>
+											<th style="width: 150px">Model</th>
+											<th style="width: 150px">Failed At</th>
+											<th style="width: 170px">Failed By</th>
+											<th style="width: 170px">Fixed By</th>
+											<th style="width: 170px">Fault Area</th>
+											<th style="width: 170px">Fault Type</th>
+											<th style="width: 250px">Fault Detail</th>
+											<th style="width: 250px">Comments</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% let foundx = 0 %> <% for (let j of a.foundInAreaFaults) { %> <% foundx++ %>
+										<tr class="d-flex">
+											<td style="width: 50px"><%= foundx %></td>
+											<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+											<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+											<td style="width: 150px"><%= j.Model %></td>
+											<td style="width: 150px"><%= j.Zone %></td>
+											<td style="width: 170px"><%= j['Created By'] %></td>
+											<td style="width: 170px"><%= j['Fixed By'] %></td>
+											<td style="width: 170px"><%= j['Fault Area'] %></td>
+											<td style="width: 170px"><%= j['Fault Code'] %></td>
+											<td style="width: 250px"><%= j['User Defined Test'] %></td>
+											<td style="width: 250px"><%= j.Comments %></td>
+										</tr>
+										<% } %>
+									</tbody>
+								</table>
+							</div>
+							<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div> -->
+							<div
+								style="
+									background-color: rgb(252, 176, 38);
+									display: flex;
+									align-items: center;
+									height: 50px;
+									display: flex;
+									justify-content: space-between;
+								"
+							>
+								<div>
+									<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+									<img height="24px" src="/7z/content/images/df.png" />
+								</div>
+								<div style="margin-right: 20px; margin-bottom: 11px">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- fixed faults -->
+				<div
+					class="modal fade"
+					id="fixed<%= a.id  %>"
+					data-backdrop="static"
+					data-keyboard="false"
+					tabindex="-1"
+					aria-labelledby="staticBackdropLabel"
+					aria-hidden="true"
+				>
+					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+						<div class="modal-content">
+							<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+								<h3 style="text-align: center; margin: 8px; color: black"><%= a.fixedInAreaNumber %> fixed in <%= a.areaName %> (No Shortages)</h3>
+							</div>
+							<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+								<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+									<thead>
+										<tr class="d-flex">
+											<th style="width: 50px">#</th>
+											<th style="width: 200px">Date/Time</th>
+											<th style="width: 130px">Build Number</th>
+											<th style="width: 150px">Model</th>
+											<th style="width: 150px">Failed At</th>
+											<th style="width: 170px">Failed By</th>
+											<th style="width: 170px">Fixed By</th>
+											<th style="width: 170px">Fault Area</th>
+											<th style="width: 170px">Fault Type</th>
+											<th style="width: 250px">Fault Detail</th>
+											<th style="width: 250px">Comments</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% let fixedx = 0 %> <% for (let j of a.fixedInAreaFaults) { %> <% fixedx++ %>
+										<tr class="d-flex">
+											<td style="width: 50px"><%= fixedx %></td>
+											<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+											<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+											<td style="width: 150px"><%= j.Model %></td>
+											<td style="width: 150px"><%= j.Zone %></td>
+											<td style="width: 170px"><%= j['Created By'] %></td>
+											<td style="width: 170px"><%= j['Fixed By'] %></td>
+											<td style="width: 170px"><%= j['Fault Area'] %></td>
+											<td style="width: 170px"><%= j['Fault Code'] %></td>
+											<td style="width: 250px"><%= j['User Defined Test'] %></td>
+											<td style="width: 250px"><%= j.Comments %></td>
+										</tr>
+										<% } %>
+									</tbody>
+								</table>
+							</div>
+							<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div> -->
+							<div
+								style="
+									background-color: rgb(252, 176, 38);
+									display: flex;
+									align-items: center;
+									height: 50px;
+									display: flex;
+									justify-content: space-between;
+								"
+							>
+								<div>
+									<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+									<img height="24px" src="/7z/content/images/df.png" />
+								</div>
+								<div style="margin-right: 20px; margin-bottom: 11px">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- not fixed faults -->
+				<div
+					class="modal fade"
+					id="notFixed<%= a.id  %>"
+					data-backdrop="static"
+					data-keyboard="false"
+					tabindex="-1"
+					aria-labelledby="staticBackdropLabel"
+					aria-hidden="true"
+				>
+					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+						<div class="modal-content">
+							<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+								<h3 style="text-align: center; margin: 8px; color: black">
+									<%= a.notFixedInAreaNumber %> Sent forward from <%= a.areaName %> (No Shortages)
+								</h3>
+							</div>
+							<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+								<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+									<thead>
+										<tr class="d-flex">
+											<th style="width: 50px">#</th>
+											<th style="width: 200px">Date/Time</th>
+											<th style="width: 130px">Build Number</th>
+											<th style="width: 150px">Model</th>
+											<th style="width: 150px">Failed At</th>
+											<th style="width: 170px">Failed By</th>
+											<th style="width: 170px">Fixed By</th>
+											<th style="width: 170px">Fault Area</th>
+											<th style="width: 170px">Fault Type</th>
+											<th style="width: 250px">Fault Detail</th>
+											<th style="width: 250px">Comments</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% let notFixedx = 0 %> <% for (let j of a.notFixedInAreaFaults) { %> <% notFixedx++ %>
+										<tr class="d-flex">
+											<td style="width: 50px"><%= notFixedx %></td>
+											<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+											<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+											<td style="width: 150px"><%= j.Model %></td>
+											<td style="width: 150px"><%= j.Zone %></td>
+											<td style="width: 170px"><%= j['Created By'] %></td>
+											<td style="width: 170px"><%= j['Fixed By'] %></td>
+											<td style="width: 170px"><%= j['Fault Area'] %></td>
+											<td style="width: 170px"><%= j['Fault Code'] %></td>
+											<td style="width: 250px"><%= j['User Defined Test'] %></td>
+											<td style="width: 250px"><%= j.Comments %></td>
+										</tr>
+										<% } %>
+									</tbody>
+								</table>
+							</div>
+							<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div> -->
+							<div
+								style="
+									background-color: rgb(252, 176, 38);
+									display: flex;
+									align-items: center;
+									height: 50px;
+									display: flex;
+									justify-content: space-between;
+								"
+							>
+								<div>
+									<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+									<img height="24px" src="/7z/content/images/df.png" />
+								</div>
+								<div style="margin-right: 20px; margin-bottom: 11px">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- escaped area -->
+				<div
+					class="modal fade"
+					id="escaped<%= a.id  %>"
+					data-backdrop="static"
+					data-keyboard="false"
+					tabindex="-1"
+					aria-labelledby="staticBackdropLabel"
+					aria-hidden="true"
+				>
+					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+						<div class="modal-content">
+							<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+								<h3 style="text-align: center; margin: 8px; color: black"><%= a.escapedAreaNumber %> Esaped from <%= a.areaName %> (No Shortages)</h3>
+							</div>
+							<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+								<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+									<thead>
+										<tr class="d-flex">
+											<th style="width: 50px">#</th>
+											<th style="width: 200px">Date/Time</th>
+											<th style="width: 130px">Build Number</th>
+											<th style="width: 150px">Model</th>
+											<th style="width: 150px">Failed At</th>
+											<th style="width: 170px">Failed By</th>
+											<th style="width: 170px">Fixed By</th>
+											<th style="width: 170px">Fault Area</th>
+											<th style="width: 170px">Fault Type</th>
+											<th style="width: 250px">Fault Detail</th>
+											<th style="width: 250px">Comments</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% let escapedx = 0 %> <% for (let j of a.escapedAreaFaults) { %> <% escapedx++ %>
+										<tr class="d-flex">
+											<td style="width: 50px"><%= escapedx %></td>
+											<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+											<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+											<td style="width: 150px"><%= j.Model %></td>
+											<td style="width: 150px"><%= j.Zone %></td>
+											<td style="width: 170px"><%= j['Created By'] %></td>
+											<td style="width: 170px"><%= j['Fixed By'] %></td>
+											<td style="width: 170px"><%= j['Fault Area'] %></td>
+											<td style="width: 170px"><%= j['Fault Code'] %></td>
+											<td style="width: 250px"><%= j['User Defined Test'] %></td>
+											<td style="width: 250px"><%= j.Comments %></td>
+										</tr>
+										<% } %>
+									</tbody>
+								</table>
+							</div>
+							<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div> -->
+							<div
+								style="
+									background-color: rgb(252, 176, 38);
+									display: flex;
+									align-items: center;
+									height: 50px;
+									display: flex;
+									justify-content: space-between;
+								"
+							>
+								<div>
+									<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+									<img height="24px" src="/7z/content/images/df.png" />
+								</div>
+								<div style="margin-right: 20px; margin-bottom: 11px">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- found faults Shortage -->
+				<div
+					class="modal fade"
+					id="foundSh<%= a.id  %>"
+					data-backdrop="static"
+					data-keyboard="false"
+					tabindex="-1"
+					aria-labelledby="staticBackdropLabel"
+					aria-hidden="true"
+				>
+					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+						<div class="modal-content">
+							<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+								<h3 style="text-align: center; margin: 8px; color: black">
+									<%= a.foundInAreaNumberSh %> Faults found in <%= a.areaName %> (Just Shortages)
+								</h3>
+							</div>
+							<div class="modal-body" style="background-color: rgb(252, 176, 38)">
+								<table class="table table-hover table-dark" style="font-size: 15px; max-height: 300px">
+									<thead>
+										<tr class="d-flex">
+											<th style="width: 50px">#</th>
+											<th style="width: 200px">Date/Time</th>
+											<th style="width: 130px">Build Number</th>
+											<th style="width: 150px">Model</th>
+											<th style="width: 150px">Failed At</th>
+											<th style="width: 170px">Failed By</th>
+											<th style="width: 170px">Fixed By</th>
+											<th style="width: 170px">Fault Area</th>
+											<th style="width: 170px">Fault Type</th>
+											<th style="width: 250px">Fault Detail</th>
+											<th style="width: 250px">Comments</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% let foundShx = 0 %> <% for (let j of a.foundInAreaFaultsSh) { %> <% foundShx++ %>
+										<tr class="d-flex">
+											<td style="width: 50px"><%= foundShx %></td>
+											<td style="width: 200px"><%= moment(j['Created Date']).format("DD/MM/YYYY - HH:mm")%></td>
+											<td style="height: 55px; width: 130px"><%= j['Build Number'] %></td>
+											<td style="width: 150px"><%= j.Model %></td>
+											<td style="width: 150px"><%= j.Zone %></td>
+											<td style="width: 170px"><%= j['Created By'] %></td>
+											<td style="width: 170px"><%= j['Fixed By'] %></td>
+											<td style="width: 170px"><%= j['Fault Area'] %></td>
+											<td style="width: 170px"><%= j['Fault Code'] %></td>
+											<td style="width: 250px"><%= j['User Defined Test'] %></td>
+											<td style="width: 250px"><%= j.Comments %></td>
+										</tr>
+										<% } %>
+									</tbody>
+								</table>
+							</div>
+							<!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div> -->
+							<div
+								style="
+									background-color: rgb(252, 176, 38);
+									display: flex;
+									align-items: center;
+									height: 50px;
+									display: flex;
+									justify-content: space-between;
+								"
+							>
+								<div>
+									<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+									<img height="24px" src="/7z/content/images/df.png" />
+								</div>
+								<div style="margin-right: 20px; margin-bottom: 11px">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- end of modals -->
+
+				<div class="area-holder">
+					<div class="area-name"><%= a.areaName %></div>
+					<a data-toggle="modal" data-target="#bhlOpen" style="cursor: pointer"> </a>
+					<div class="found-dpu" data-toggle="modal" data-target="#found<%= a.id  %>" style="cursor: pointer">
+						<div>(<%= a.foundInAreaNumber %>)</div>
+						<div><%= a.foundInAreaDPU %></div>
+					</div>
+					<div class="fixed-faults" data-toggle="modal" data-target="#fixed<%= a.id  %>" style="cursor: pointer">
+						<div>(<%= a.fixedInAreaNumber %>)</div>
+						<div><%= a.fixedInAreaDPU %></div>
+					</div>
+					<div
+						class="<% if (Math.round(a.notFixedInAreaDPU / a.fixedInAreaDPU * 100 ) >= 30) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>"
+						data-toggle="modal"
+						data-target="#notFixed<%= a.id  %>"
+						style="cursor: pointer"
+					>
+						<div>(<%= a.notFixedInAreaNumber %>)</div>
+						<div><%= a.notFixedInAreaDPU %></div>
+					</div>
+					<div class="fixed-faults" data-toggle="modal" data-target="#escaped<%= a.id  %>" style="cursor: pointer">
+						<div>(<%= a.escapedAreaNumber%>)</div>
+						<div><%= a.escapedAreaDPU %></div>
+					</div>
+					<div class="fixed-faults" style="padding-bottom: 1px"><%= a.recNumber %></div>
+					<hr />
+					<div class="pof-dpu-stat" data-toggle="modal" data-target="#found<%= a.id  %>" style="cursor: pointer">
+						<div>(<%= a.foundInAreaNumber %>)</div>
+						<div><%= a.foundInAreaDPU %></div>
+					</div>
+					<div class="shortage-dpu-stat" data-toggle="modal" data-target="#foundSh<%= a.id  %>" style="cursor: pointer">
+						<div>(<%= a.foundInAreaNumberSh %>)</div>
+						<div><%= a.foundInAreaDPUSh %></div>
+					</div>
+					<hr />
+					<div class="total-dpu-stat" style="margin-top: -12px"><%= a.areaDPU.toFixed(2) %></div>
+				</div>
+
+				<div class="forward" data-toggle="modal" data-target="#notFixed<%= a.id  %>" style="cursor: pointer">
+					<%= a.notFixedInAreaDPU %>
+					<span style="font-size: 20px" class="<% if (a.forwardPercentage >= 30) { %>not-fixed-faults-red<% } else { %>not-fixed-faults-green<% } %>">
+						<%= a.forwardPercentage %>%
+					</span>
+					<p style="color: white"><%= a.dupForwardTotal3.toFixed(2) %></p>
+
+					<% if (a.areaName === 'QCS 9') { %>
+					<i class="fas fa-level-up-alt"></i>
+					<% } else { %>
+					<i class="fas fa-arrow-right"></i>
+					<% } %>
+
+					<div class="total-dpu-stat" style="padding-top: 25px"><%= a.totalDPU3.toFixed(2) %></div>
+				</div>
+
+				<% } %>
+			</div>
+		</div>
+
+		<div style="display: flex; flex-direction: row-reverse; gap: 2">
+			<!-- booked onto 16 zone 7 rec -->
+			<div class="graph-holder3">
+				<div class="area-name">Zone 7 Rectification</div>
+				<div style="text-align: center; color: white; margin-top: 5px; cursor: pointer" data-toggle="modal" data-target="#machinesOn16">
+					Booked on to Stage 16
+				</div>
+				<div class="found-dpu" style="font-size: 28px; margin-top: -5px; cursor: pointer" data-toggle="modal" data-target="#machinesOn16">
+					<%= stage16Number %>
+				</div>
+
+				<div style="display: flex; justify-content: space-evenly; margin-top: 10px">
+					<div data-toggle="modal" data-target="#faultsTo16" style="cursor: pointer">
+						<div style="text-align: center; color: white; margin-top: -5px">Faults Forward</div>
+						<div class="found-dpu" style="font-size: 28px"><%= sentTo16Number %></div>
+						<div class="found-dpu" style="font-size: 28px">
+							<span style="font-size: 10px">DPU</span>
+						</div>
+						<div class="found-dpu" style="font-size: 28px; margin-top: -10px"><%= sentTo16Dpu %></div>
+					</div>
+
+					<div data-toggle="modal" data-target="#faultsTo16Sh" style="cursor: pointer">
+						<div style="text-align: center; color: white; margin-top: -5px">Shortages Forward</div>
+						<div class="found-dpu" style="font-size: 28px"><%= sentTo16NumberSh %></div>
+						<div class="found-dpu" style="font-size: 28px">
+							<span style="font-size: 10px">DPU</span>
+						</div>
+						<div class="found-dpu" style="font-size: 28px; margin-top: -10px"><%= sentTo16DpuSh %></div>
+					</div>
+				</div>
+
+				<div style="text-align: center; color: white; margin-top: 10px">
+					Total DPU to Stage 16
+					<div class="found-dpu" style="font-size: 28px; margin-top: -8px"><%= sentTo16DpuAll %></div>
+				</div>
+			</div>
+
+			<!-- end of modal -->
+			<div class="forward">
+				<div style="margin-top: 55px">
+					<i class="fas fa-arrow-left"></i>
+				</div>
+			</div>
+
+			<!-- new stage 18 -->
+			<div class="graph-holder4">
+				<div class="area-name">Stage 18</div>
+				<div style="text-align: center; color: white; margin-top: 5px; cursor: pointer" data-toggle="modal" data-target="#machinesOn18">
+					Booked on to Stage
+				</div>
+				<div class="found-dpu" style="font-size: 28px; margin-top: -5px; cursor: pointer" data-toggle="modal" data-target="#machinesOn18">
+					<%= stage18Number %>
+				</div>
+
+				<div style="display: flex; justify-content: space-evenly; margin-top: 10px">
+					<div style="cursor: pointer" data-toggle="modal" data-target="#faultsTo18">
+						<div style="text-align: center; color: white; margin-top: -5px">Faults Forward</div>
+						<div class="found-dpu" style="font-size: 28px"><%= sentTo18Number %></div>
+						<div class="found-dpu" style="font-size: 28px">
+							<span style="font-size: 10px">DPU</span>
+						</div>
+						<div class="found-dpu" style="font-size: 28px; margin-top: -10px"><%= sentTo18Dpu %></div>
+					</div>
+
+					<div style="cursor: pointer" data-toggle="modal" data-target="#faultsTo18Sh">
+						<div style="text-align: center; color: white; margin-top: -5px">Shortages Forward</div>
+						<div class="found-dpu" style="font-size: 28px; cursor: pointer" data-toggle="modal" data-target="#faultsTo18Sh">
+							<%= sentTo18NumberSh %>
+						</div>
+						<div class="found-dpu" style="font-size: 28px">
+							<span style="font-size: 10px">DPU</span>
+						</div>
+						<div class="found-dpu" style="font-size: 28px; margin-top: -10px"><%= sentTo18DpuSh %></div>
+					</div>
+				</div>
+
+				<div style="text-align: center; color: white; margin-top: 10px">
+					Total DPU to Stage 18
+					<div class="found-dpu" style="font-size: 28px; margin-top: -8px"><%= sentTo18DpuAll %></div>
+				</div>
+			</div>
+
+			<!-- end of modal -->
+			<div class="forward">
+				<div style="margin-top: 55px">
+					<i class="fas fa-arrow-left"></i>
+				</div>
+			</div>
+
+			<!--stage 19 -->
+			<div class="graph-holder4">
+				<div class="area-name">Stage 19</div>
+				<div style="text-align: center; color: white; margin-top: 5px; cursor: pointer" data-toggle="modal" data-target="#machinesOn19">
+					Booked on to Stage
+				</div>
+				<div class="found-dpu" style="font-size: 28px; margin-top: -5px; cursor: pointer" data-toggle="modal" data-target="#machinesOn19">
+					<%= stage19Number %>
+				</div>
+
+				<div style="display: flex; justify-content: space-evenly; margin-top: 10px">
+					<div style="cursor: pointer" data-toggle="modal" data-target="#faultsTo19">
+						<div style="text-align: center; color: white; margin-top: -5px">Faults Forward</div>
+						<div class="found-dpu" style="font-size: 28px"><%= sentTo19Number %></div>
+						<div class="found-dpu" style="font-size: 28px">
+							<span style="font-size: 10px">DPU</span>
+						</div>
+						<div class="found-dpu" style="font-size: 28px; margin-top: -10px"><%= sentTo19Dpu %></div>
+					</div>
+
+					<div style="cursor: pointer" data-toggle="modal" data-target="#faultsTo19Sh">
+						<div style="text-align: center; color: white; margin-top: -5px">Shortages Forward</div>
+						<div class="found-dpu" style="font-size: 28px; cursor: pointer" data-toggle="modal" data-target="#faultsTo19Sh">
+							<%= sentTo19NumberSh %>
+						</div>
+						<div class="found-dpu" style="font-size: 28px">
+							<span style="font-size: 10px">DPU</span>
+						</div>
+						<div class="found-dpu" style="font-size: 28px; margin-top: -10px"><%= sentTo19DpuSh %></div>
+					</div>
+				</div>
+
+				<div style="text-align: center; color: white; margin-top: 10px">
+					Total DPU to Stage 19
+					<div class="found-dpu" style="font-size: 28px; margin-top: -8px"><%= sentTo19DpuAll %></div>
+				</div>
+			</div>
+
+			<!-- end of modal -->
+			<div class="forward">
+				<div style="margin-top: 55px">
+					<i class="fas fa-arrow-left"></i>
+				</div>
+			</div>
+
+			<!-- stage 20 -->
+			<div class="graph-holder4">
+				<div class="area-name">Sent to CFC</div>
+				<div style="text-align: center; color: white; margin-top: 5px; cursor: pointer" data-toggle="modal" data-target="#machinesOn20">
+					Booked on to Stage 20
+				</div>
+				<div class="found-dpu" style="font-size: 28px; margin-top: -5px; cursor: pointer" data-toggle="modal" data-target="#machinesOn20">
+					<%= stage20Number %>
+				</div>
+
+				<div style="display: flex; justify-content: space-evenly; margin-top: 10px">
+					<div style="cursor: pointer" data-toggle="modal" data-target="#faultsTocfc">
+						<div style="text-align: center; color: white; margin-top: -5px">Faults Forward</div>
+						<div class="found-dpu" style="font-size: 28px"><%= sentTo20Number %></div>
+						<div class="found-dpu" style="font-size: 28px">
+							<span style="font-size: 10px">DPU</span>
+						</div>
+						<div class="found-dpu" style="font-size: 28px; margin-top: -10px"><%= sentTo20Dpu %></div>
+					</div>
+
+					<div style="cursor: pointer" data-toggle="modal" data-target="#faultsTocfcSh">
+						<div style="text-align: center; color: white; margin-top: -5px">Shortages Forward</div>
+						<div class="found-dpu" style="font-size: 28px; cursor: pointer" data-toggle="modal" data-target="#faultsTocfcSh">
+							<%= sentTo20NumberSh %>
+						</div>
+						<div class="found-dpu" style="font-size: 28px">
+							<span style="font-size: 10px">DPU</span>
+						</div>
+						<div class="found-dpu" style="font-size: 28px; margin-top: -10px"><%= sentTo20DpuSh %></div>
+					</div>
+				</div>
+
+				<div style="text-align: center; color: white; margin-top: 10px">
+					Total DPU to Stage 20
+					<div class="found-dpu" style="font-size: 28px; margin-top: -8px"><%= sentTo20DpuAll %></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="container-fluid footer">
+	<div class="row header-top">
+		<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+			<img height="24px" src="/7z/content/images/jcb-logo.png" />
+			<img height="24px" src="/7z/content/images/df.png" />
+		</div>
+		<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+	</div>
+</div>

@@ -1,0 +1,19 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container">
+  <table class="table table-hover table-dark" style="font-size: 15px; width: 300px; margin: auto; ">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 300px;">Champion<a class="float-right" href="/champion/new/<%= division %>"> <i class="fas fa-plus"></i></a></th>
+
+
+      </tr>
+    </thead>
+    <tbody>
+      <% champions.forEach(champion => { %>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/champion/edit/<%= champion._id %>"><%= champion.name %></a></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>

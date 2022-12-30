@@ -1,0 +1,89 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+
+<div class="doa2021-body">
+
+
+
+  <table class="table table-hover table-dark " style="font-size: 15px; height: fit-content; width: fit-content;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 195px">Build Month</th>
+        <th style="width: 100px;"><%= threeMonthsAgoTable %></th>
+        <th style="width: 100px;"><%= twoMonthsAgoTable%></th>
+        <th style="width: 100px;"><%= oneMonthAgoTable %></th>
+        <th style="width: 100px;"><%= thisMonthTable %></th>
+
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr class="d-flex">
+        <td style=" width: 200px; font-weight: bold;">Qty</td>
+        <td style="width: 100px;"><%= janClaims.length %></td>
+        <td style="width: 100px;"><%= febClaims.length %></td>
+        <td style="width: 100px;"><%= marClaims.length %></td>
+        <td style="width: 100px;"><%= aprClaims.length %></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 200px;">Should</td>
+        <td style="width: 100px;"><%= janShould %></td>
+        <td style="width: 100px;"><%= febShould %></td>
+        <td style="width: 100px;"><%= marShould %></td>
+        <td style="width: 100px;"><%= aprShould %></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 200px;">Could</td>
+        <td style="width: 100px;"><%= janCould %></td>
+        <td style="width: 100px;"><%= febCould %></td>
+        <td style="width: 100px;"><%= marCould %></td>
+        <td style="width: 100px;"><%= aprCould %></td>
+      <tr class="d-flex">
+        <td style="width: 200px;">Cannot</td>
+        <td style="width: 100px;"><%= janCannot %></td>
+        <td style="width: 100px;"><%= febCannot %></td>
+        <td style="width: 100px;"><%= marCannot %></td>
+        <td style="width: 100px;"><%= aprCannot %></td>
+      </tr>
+      <tr class="d-flex">
+        <td style="width: 200px; font-weight: bold;">Avg Days to Close</td>
+        <td style="width: 100px;"></td>
+        <td style="width: 100px;"></td>
+        <td style="width: 100px;"></td>
+        <td style="width: 100px;"></td>
+      </tr>
+      <tr class="d-flex">
+        <td style="width: 200px; font-weight: bold;">Total Avg</td>
+        <td style="width: 100px;"><%= avgJanDays %> </td>
+        <td style="width: 100px;"><%= avgFebDays %> </td>
+        <td style="width: 100px;"><%= avgMarDays %> </td>
+        <td style="width: 100px;"><%= avgAprDays %> </td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 200px;">Should</td>
+        <td style="width: 100px;"><%= janShouldDays %> </td>
+        <td style="width: 100px;"><%= febShouldDays %> </td>
+        <td style="width: 100px;"><%= marShouldDays %> </td>
+        <td style="width: 100px;"><%= aprShouldDays %> </td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 200px;">Could</td>
+        <td style="width: 100px;"><%= janCouldDays %></td>
+        <td style="width: 100px;"><%= febCouldDays %></td>
+        <td style="width: 100px;"><%= marCouldDays %></td>
+        <td style="width: 100px;"><%= aprCouldDays %></td>
+      </tr>
+      <tr class="d-flex">
+        <td style="width: 200px;">Cannot</td>
+        <td style="width: 100px;"><%= janCannotDays %></td>
+        <td style="width: 100px;"><%= febCannotDays %></td>
+        <td style="width: 100px;"><%= marCannotDays %></td>
+        <td style="width: 100px;"><%= aprCannotDays %></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+</div>

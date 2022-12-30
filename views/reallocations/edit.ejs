@@ -1,0 +1,59 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="reallocation-container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1>Action Reallocation</h1>
+    </div>
+
+
+
+    <div class="col">
+      <form action="/reallocation/<%= reallocation._id %>?_method=PUT" method="POST">
+        <label for="name">Build Number</label>
+        <input class="form-control" type="text" name="reallocation[buildNumber]" value="<%= reallocation.buildNumber %>" disabled>
+
+        <label for="name">Sip Inspector</label>
+        <input class="form-control" type="text" name="name" value="<%= reallocation.sipInspector %>" disabled>
+
+        <label for="name">Area From</label>
+        <input class="form-control" type="text" name="name" value="<%= reallocation.areaFrom %>" disabled>
+
+        <label for="name">Area To</label>
+        <input class="form-control" type="text" name="name" value="<%= reallocation.areaTo %>" disabled>
+
+        <label for="claimNumber">Fault</label>
+        <textarea style="height: 100px;" class="form-control" type="text" name="claimNumber" disabled><%= reallocation.fault %></textarea>
+
+    </div>
+    <div class="col">
+      <label for="notes">Reason for reallocation</label>
+      <textarea style="height: 109px;" class="form-control" name="name" disabled><%= reallocation.reason %></textarea>
+
+      <label for="notes">Comments</label>
+      <textarea style="height: 109px;" class="form-control" name="reallocation[notes]" required><%= reallocation.notes %></textarea>
+
+      <label for="area">Reallocated</label>
+      <select class="form-control" type="text" style="margin-bottom: 20px;" name="reallocation[actioned]" autocomplete="off" required>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+      <div class="form-group text-center">
+        <button class="btn btn-md btn-success btn-block" style="margin-bottom: 20px;">Submit</button>
+      </div>
+    </div>
+    </form>
+  </div>
+
+
+  <div>
+    <a href="/reallocation/todo/<%= division %>">Go Back</a>
+    <!-- <% if (currentUser && currentUser.isAdmin)   { %>
+		<form class="delete-form" action="/reallocation/<%= reallocation._id %>?_method=DELETE" method="POST">
+			<button class="btn btn-danger" style="margin-left: .5rem;"><i class="far fa-trash-alt"></i> Delete</button>
+		</form>
+	<% } %>	 -->
+  </div>

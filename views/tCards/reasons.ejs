@@ -1,0 +1,57 @@
+<% layout('layouts/boilerplateTCard')%>
+
+<div class="main-tCard-container">
+    <h2 class="main-title"> ADMIN </h2>
+    <div class="row" style="width: 100%; margin: 0 350px;">
+
+        <div class="col-lg check-row" style="width: 200px;">
+            
+            <table class="table" style="font-size: 1.1rem;">
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th style="font-size: 2rem;" scope="col">Reasons <a class="float-right" style="margin-right: 8px;" href="/tCard/<%= tCard._id %>/reason/new"> <i style="color: green;" class="fas fa-plus"></i></a></th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <% tCard.reasons.forEach(function(reason){ %>
+                        <tr>
+                            <th scope="row"><form class="d-inline" action="/tCard/<%= tCard._id %>/reason/delete/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/<%= frequency %>/<%= tCard._id %>/<%= reason._id %>?_method=DELETE" method="POST">
+                                <button style="background-color: whitesmoke; margin-top: -5px; color: red; font-weight: bold; border: none; font-size: 1.2rem;"  class="btn btn-danger btn-sm">X</button>
+                                </form>
+                            </th>
+                            <td style="font-weight: bold;"><%= reason.name %> </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg check-row">
+            <table class="table" style="font-size: 1.1rem;">
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th style="font-size: 2rem;" scope="col">Actions <a class="float-right" style="margin-right: 8px;" href="/tCard/<%= tCard._id %>/action/new"> <i style="color: green;" class="fas fa-plus"></i></a></th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <% tCard.actions.forEach(function(action){ %>
+                        <tr>
+                            <th scope="row"><form class="d-inline" action="/tCard/<%= tCard._id %>/action/delete/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/<%= frequency %>/<%= tCard._id %>/<%= action._id %>?_method=DELETE" method="POST">
+                                <button style="background-color: whitesmoke; margin-top: -5px; color: red; font-weight: bold; border: none; font-size: 1.2rem;"  class="btn btn-danger btn-sm">X</button>
+                                </form>
+                            </th>
+                            <td style="font-weight: bold;"><%= action.name %> </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <form class="d-inline" action="/tCard/adminedit/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/<%= frequency %>/<%= tCard._id %>">
+        <button class="btn btn-success">Done</button>
+    </form>
+</div>
+
+

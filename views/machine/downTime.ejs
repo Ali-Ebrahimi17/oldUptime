@@ -1,0 +1,1016 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="160"> -->
+		<title>JCB - Equipment Monitoring</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<link rel="stylesheet" href="/content/table.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+		<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+		<!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+		<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+		<link rel="stylesheet" href="/stylesheets/app.css" />
+		<link rel="stylesheet" href="/fontawesome/css/all.css" />
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row header-top">
+				<div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+				</div>
+				<div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+					<a href="/equipment-monitoring/operations">
+						<span style="font-size: 19px; padding-top: 2px; margin-right: 4px; color: black; font-weight: bold"
+							>Last Update: <%= moment(update.lastUpdate).format("DD/MM/YYYY - HH:mm:ss") %>
+						</span>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-main">
+					<div class="row">
+						<div class="col-lg-3"></div>
+						<div class="col-lg-6">
+							<h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Daily LiveLink Status</h1>
+							<h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: 0px 0px 16px 0px; text-align: center">
+								<span style="margin-right: 5px"><img src="/media/uk-small.png" alt="" width="30" height="30" /></span>Downtime
+							</h1>
+						</div>
+
+						<div class="col-lg-3" style="display: flex; justify-content: flex-end">
+							<span style="margin-right: 10px">
+								<!-- Default dropleft button -->
+								<div class="btn-group dropleft">
+									<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										Downtime
+									</button>
+									<div class="dropdown-menu">
+										<a class="dropdown-item" href="/equipment-monitoring/operations">Equipment Status</a>
+										<a class="dropdown-item" href="/equipment-monitoring/program-efficiency">Program Efficiency</a>
+										<a class="dropdown-item" href="/equipment-monitoring/running-time">Program Running Time</a>
+										<a class="dropdown-item" href="/equipment-monitoring/touch-time">Program Touch Time</a>
+									</div>
+								</div>
+								<div class="btn-group dropleft">
+									<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										Live Status
+									</button>
+									<div class="dropdown-menu">
+										<a class="dropdown-item" href="">Yesterday</a>
+										<a class="dropdown-item" href="">Weekly</a>
+										<a class="dropdown-item" href="">Monthly</a>
+										<a class="dropdown-item" href="">Year-to-Date</a>
+									</div>
+								</div>
+							</span>
+						</div>
+
+						<div
+							class="col-lg-12"
+							style="
+								margin-top: -4px;
+								margin-bottom: 22px;
+								padding: 8px 0px 8px 0px;
+								border-bottom: 3px solid rgb(26, 28, 30);
+								border-top: 3px solid rgb(26, 28, 30);
+							"
+						>
+							<div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">Planned Stoppage</h1>
+								<h1 class="line-measure-value-top text-grey"><%= sumOfBdTime %> (<%= numOfKnown %>)</h1>
+							</div>
+							<div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">Unplanned Stoppage</h1>
+								<h1 class="line-measure-value-top text-info"><%= sumOfUnknownBdTime %> (<%= numOfUnKnown %>)</h1>
+							</div>
+							<div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">Breakdown</h1>
+								<h1 class="line-measure-value-top text-danger"><%= sumOfWireTime %> (<%= numOfConsumables %>)</h1>
+							</div>
+						</div>
+
+						<div style="display: flex; width: 100%">
+							<div class="col" style="margin: 0 10px; width: 50%; display: flex; justify-content: space-evenly; flex-wrap: wrap">
+								<div style="height: 400px">
+									<table class="table" id="table-requests" style="height: 620px; margin-top: 6px">
+										<thead>
+											<tr>
+												<th class="th-top" colspan="2" style="height: 60px; font-size: 20px; font-weight: 100">Business Unit League Table</th>
+											</tr>
+											<tr style="height: 60px; font-size: 18px">
+												<th class="th-centre fw-normal" style="width: 70px; border-right: 1px solid rgb(42, 44, 46); font-weight: 100">
+													Business<br />Unit
+												</th>
+												<th class="th-centre" style="width: 95px; border-right: 1px solid rgb(42, 44, 46); font-weight: 100">
+													Stoppages<br />and Breakdowns
+												</th>
+												<th class="th-centre" style="width: 95px; border-right: 1px solid rgb(42, 44, 46); font-weight: 100">
+													Cumulative<br />Downtime
+												</th>
+												<th class="th-centre" style="width: 95px; border-right: 1px solid rgb(42, 44, 46); font-weight: 100">
+													Downtime of<br />Current Day (%)
+												</th>
+											</tr>
+										</thead>
+										<tbody style="color: white; font-size: 14px">
+											<tr style="height: 80px">
+												<td class="td-centre" style="width: 70px; font-size: 18px">Backhoe</td>
+												<td class="td-centre" style="width: 95px">
+													<% if (totBDBHL === 0) { %>
+													<span>--</span><br />
+													<% } else { %>
+													<span>Total Stoppages - <%= totBDBHL %></span><br />
+													<% } %> <% if (numOfKnownBHL > 0) { %>
+													<span class="text-grey">Planned Stoppages - <%= numOfKnownBHL %></span><br />
+													<% } %> <% if (numOfUnKnownBHL > 0) { %>
+													<span class="text-info">Unplanned Stoppages - <%= numOfUnKnownBHL %></span><br />
+													<% } %> <% if (numOfConsumablesBHL > 0) { %>
+													<span class="text-danger">Breakdowns - <%= numOfConsumablesBHL %></span><br />
+													<% } %>
+												</td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= sumOfBDBHL %></td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= downtimePercTodayBHL %>%</td>
+											</tr>
+											<tr style="height: 80px">
+												<td class="td-centre" style="width: 70px; font-size: 18px">Compact Products</td>
+												<td class="td-centre" style="width: 95px">
+													<% if (totBDCP === 0) { %>
+													<span>--</span><br />
+													<% } else { %>
+													<span>Total Stoppages - <%= totBDCP %></span><br />
+													<% } %> <% if (numOfKnownCP > 0) { %>
+													<span class="text-grey">Planned Stoppages - <%= numOfKnownCP %></span><br />
+													<% } %> <% if (numOfUnKnownCP > 0) { %>
+													<span class="text-info">Unplanned Stoppges - <%= numOfUnKnownCP %></span><br />
+													<% } %> <% if (numOfConsumablesCP > 0) { %>
+													<span class="text-danger">Breakdowns - <%= numOfConsumablesCP %></span><br />
+													<% } %>
+												</td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= sumOfBDCP %></td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= downtimePercTodayCP %>%</td>
+											</tr>
+											<tr style="height: 80px">
+												<td class="td-centre" style="width: 70px; font-size: 18px">Earthmovers</td>
+												<td class="td-centre" style="width: 95px">
+													<% if (totBDEM === 0) { %>
+													<span>--</span><br />
+													<% } else { %>
+													<span>Total Stoppages - <%= totBDEM %></span><br />
+													<% } %> <% if (numOfKnownEM > 0) { %>
+													<span class="text-grey">Planned Stoppages - <%= numOfKnownEM %></span><br />
+													<% } %> <% if (numOfUnKnownEM > 0) { %>
+													<span class="text-info">Unplanned Stoppages - <%= numOfUnKnownEM %></span><br />
+													<% } %> <% if (numOfConsumablesEM > 0) { %>
+													<span class="text-danger">Breakdowns - <%= numOfConsumablesEM %></span><br />
+													<% } %>
+												</td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= sumOfBDEM %></td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= downtimePercTodayEM %>%</td>
+											</tr>
+											<tr style="height: 80px">
+												<td class="td-centre" style="width: 70px; font-size: 18px">Loadall</td>
+												<td class="td-centre" style="width: 95px">
+													<% if (totBDLDL === 0) { %>
+													<span>--</span><br />
+													<% } else { %>
+													<span>Total Stoppages - <%= totBDLDL %></span><br />
+													<% } %> <% if (numOfKnownLDL > 0) { %>
+													<span class="text-grey">Planned Stoppages - <%= numOfKnownLDL %></span><br />
+													<% } %> <% if (numOfUnKnownLDL > 0) { %>
+													<span class="text-info">Unplanned Stoppages - <%= numOfUnKnownLDL %></span><br />
+													<% } %> <% if (numOfConsumablesLDL > 0) { %>
+													<span class="text-danger">Breakdowns - <%= numOfConsumablesLDL %></span><br />
+													<% } %>
+												</td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= sumOfBDLDL %></td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= downtimePercTodayLDL %>%</td>
+											</tr>
+											<tr style="height: 80px">
+												<td class="td-centre" style="width: 70px; font-size: 18px">Heavy Products</td>
+												<td class="td-centre" style="width: 95px">
+													<% if (totBDHP === 0) { %>
+													<span>--</span><br />
+													<% } else { %>
+													<span>Total Stoppages - <%= totBDHP %></span><br />
+													<% } %> <% if (numOfKnownHP > 0) { %>
+													<span class="text-grey">Planned Stoppages - <%= numOfKnownHP %></span><br />
+													<% } %> <% if (numOfUnKnownHP > 0) { %>
+													<span class="text-info">Unplanned Stoppages - <%= numOfUnKnownHP %></span><br />
+													<% } %> <% if (numOfConsumablesHP > 0) { %>
+													<span class="text-danger">Breakdowns - <%= numOfConsumablesHP %></span><br />
+													<% } %>
+												</td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= sumOfBDHP %></td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= downtimePercTodayHP %>%</td>
+											</tr>
+											<tr style="height: 80px">
+												<td class="td-centre" style="width: 70px; font-size: 18px">Cab Systems</td>
+												<td class="td-centre" style="width: 95px">
+													<% if (totBDCabs === 0) { %>
+													<span>--</span><br />
+													<% } else { %>
+													<span>Total Stoppages - <%= totBDCabs %></span><br />
+													<% } %> <% if (numOfKnownCabs > 0) { %>
+													<span class="text-grey">Planned Stoppages - <%= numOfKnownCabs %></span><br />
+													<% } %> <% if (numOfUnKnownCabs > 0) { %>
+													<span class="text-info">Unplanned Stoppages - <%= numOfUnKnownCabs %></span><br />
+													<% } %> <% if (numOfConsumablesCabs > 0) { %>
+													<span class="text-danger">Breakdowns - <%= numOfConsumablesCabs %></span><br />
+													<% } %>
+												</td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= sumOfBDCabs %></td>
+												<td class="td-centre" style="width: 95px; font-size: 22px"><%= downtimePercTodayCabs %>%</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							<hr style="width: 1px; height: 96%; display: inline-block; background-color: grey" />
+
+							<!-- second side -->
+							<div class="col" style="margin: 0 10px; width: 50%; display: flex; justify-content: space-evenly; flex-wrap: wrap">
+								<div style="margin-bottom: 20px">
+									<div style="text-align: center; color: white">
+										<h3>Backhoe Loader</h3>
+									</div>
+									<div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px">
+										<p>Rolling 7 Days</p>
+									</div>
+									<!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+									<canvas id="canvas1" height="140" width="430"></canvas>
+								</div>
+								<div style="margin-bottom: 20px">
+									<div style="text-align: center; color: white">
+										<h3>Loadall</h3>
+									</div>
+									<div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px">
+										<p>Rolling 7 Days</p>
+									</div>
+									<!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+									<canvas id="canvas2" height="140" width="430"></canvas>
+								</div>
+								<div style="margin-bottom: 20px">
+									<div style="text-align: center; color: white">
+										<h3>Compact Products</h3>
+									</div>
+									<div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px">
+										<p>Rolling 7 Days</p>
+									</div>
+									<!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+									<canvas id="canvas3" height="140" width="430"></canvas>
+								</div>
+								<div style="margin-bottom: 20px">
+									<div style="text-align: center; color: white">
+										<h3>Heavy Products</h3>
+									</div>
+									<div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px">
+										<p>Rolling 7 Days</p>
+									</div>
+									<!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+									<canvas id="canvas4" height="140" width="430"></canvas>
+								</div>
+								<div style="margin-bottom: 20px">
+									<div style="text-align: center; color: white">
+										<h3>Earthmovers</h3>
+									</div>
+									<div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px">
+										<p>Rolling 7 Days</p>
+									</div>
+									<!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+									<canvas id="canvas5" height="140" width="430"></canvas>
+								</div>
+								<div style="margin-bottom: 20px">
+									<div style="text-align: center; color: white">
+										<h3>Cab Systems</h3>
+									</div>
+									<div style="text-align: center; color: grey; margin-top: -10px; font-size: 13px; margin-bottom: -10px">
+										<p>Rolling 7 Days</p>
+									</div>
+									<!-- <hr style="margin-bottom: -6px; margin-left: 30px; margin-right: 10px; border-color: grey;"> -->
+									<canvas id="canvas6" height="140" width="430"></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid footer">
+			<div class="row header-top">
+				<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+					J.C. Bamford Excavators LTD &copy; 2022
+				</div>
+			</div>
+		</div>
+
+		<script src="/7z/content/modal/modal.js"></script>
+
+		<script>
+
+
+			 Chart.defaults.global.defaultFontColor = '#fff';
+
+			 let theLabels = [
+			     <%- JSON.stringify(sevenDaysAgoForGraph) %>,
+			     <%- JSON.stringify(sixDaysAgoForGraph) %>,
+			     <%- JSON.stringify(fiveDaysAgoForGraph) %>,
+			     <%- JSON.stringify(fourDaysAgoForGraph) %>,
+			     <%- JSON.stringify(threeDaysAgoForGraph) %>,
+			     <%- JSON.stringify(twoDaysAgoForGraph) %>,
+			     <%- JSON.stringify(oneDayAgoForGraph) %>,
+			 ]
+			 let theLabels2 = [
+			     0,
+			     0,
+			     0,
+			     0,
+			     0,
+			     0,
+			     0,
+			 ]
+
+
+			 let barChartData1 = {
+			     labels   : theLabels,
+			     newLabels1: theLabels2,
+			     datasets : [
+			         {
+			             label           : 'Planned Stoppage',
+			             backgroundColor : 'grey',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels1[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= knownPercentSevenDaysAgoBHL %>,
+			                     <%= knownPercentSixDaysAgoBHL %>,
+			                     <%= knownPercentFiveDaysAgoBHL %>,
+			                     <%= knownPercentFourDaysAgoBHL %>,
+			                     <%= knownPercentThreeDaysAgoBHL %>,
+			                     <%= knownPercentTwoDaysAgoBHL %>,
+			                     <%= knownPercentOneDayAgoBHL %>,
+			                 ]
+			         },
+			         {
+			             label           : 'Unplanned Stoppage',
+			             backgroundColor : 'rgb(0, 173, 238)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels1[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= UnknownPercentSevenDaysAgoBHL %>,
+			                     <%= UnknownPercentSixDaysAgoBHL %>,
+			                     <%= UnknownPercentFiveDaysAgoBHL %>,
+			                     <%= UnknownPercentFourDaysAgoBHL %>,
+			                     <%= UnknownPercentThreeDaysAgoBHL %>,
+			                     <%= UnknownPercentTwoDaysAgoBHL %>,
+			                     <%= UnknownPercentOneDayAgoBHL %>,
+			                 ]
+			         },
+			         {
+			             label           : 'Breakdown',
+			             backgroundColor : 'rgb(255, 10, 10)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: true,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels1[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= wirePercentSevenDaysAgoBHL %>,
+			                     <%= wirePercentSixDaysAgoBHL %>,
+			                     <%= wirePercentFiveDaysAgoBHL %>,
+			                     <%= wirePercentFourDaysAgoBHL %>,
+			                     <%= wirePercentThreeDaysAgoBHL %>,
+			                     <%= wirePercentTwoDaysAgoBHL %>,
+			                     <%= wirePercentOneDayAgoBHL %>,
+			                 ]
+			         },
+			     ],
+			 };
+			 let barChartData2 = {
+			     labels   : theLabels,
+			     newLabels2: theLabels2,
+			     datasets : [
+			         {
+			             label           : 'Planned Stoppage',
+			             backgroundColor : 'grey',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels2[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= knownPercentSevenDaysAgoLDL %>,
+			                     <%= knownPercentSixDaysAgoLDL %>,
+			                     <%= knownPercentFiveDaysAgoLDL %>,
+			                     <%= knownPercentFourDaysAgoLDL %>,
+			                     <%= knownPercentThreeDaysAgoLDL %>,
+			                     <%= knownPercentTwoDaysAgoLDL %>,
+			                     <%= knownPercentOneDayAgoLDL %>,
+			                 ]
+			         },
+			         {
+			             label           : 'Unplanned Stoppage',
+			             backgroundColor : 'rgb(0, 173, 238)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels2[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= UnknownPercentSevenDaysAgoLDL %>,
+			                     <%= UnknownPercentSixDaysAgoLDL %>,
+			                     <%= UnknownPercentFiveDaysAgoLDL %>,
+			                     <%= UnknownPercentFourDaysAgoLDL %>,
+			                     <%= UnknownPercentThreeDaysAgoLDL %>,
+			                     <%= UnknownPercentTwoDaysAgoLDL %>,
+			                     <%= UnknownPercentOneDayAgoLDL %>,
+			                 ]
+			         },
+			         {
+			             label           : 'Breakdown',
+			             backgroundColor : 'rgb(255, 10, 10)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: true,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels2[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= wirePercentSevenDaysAgoLDL %>,
+			                     <%= wirePercentSixDaysAgoLDL %>,
+			                     <%= wirePercentFiveDaysAgoLDL %>,
+			                     <%= wirePercentFourDaysAgoLDL %>,
+			                     <%= wirePercentThreeDaysAgoLDL %>,
+			                     <%= wirePercentTwoDaysAgoLDL %>,
+			                     <%= wirePercentOneDayAgoLDL %>,
+			                 ]
+			         },
+			     ],
+			 };
+			 let barChartData3 = {
+			     labels   : theLabels,
+			     newLabels3: theLabels2,
+			     datasets : [
+			         {
+			             label           : 'Planned Stoppage',
+			             backgroundColor : 'grey',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels3[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= knownPercentSevenDaysAgoCP %>,
+			                     <%= knownPercentSixDaysAgoCP %>,
+			                     <%= knownPercentFiveDaysAgoCP %>,
+			                     <%= knownPercentFourDaysAgoCP %>,
+			                     <%= knownPercentThreeDaysAgoCP %>,
+			                     <%= knownPercentTwoDaysAgoCP %>,
+			                     <%= knownPercentOneDayAgoCP %>,
+			                 ]
+			         },
+			         {
+			             label           : 'Unplanned Stoppage',
+			             backgroundColor : 'rgb(0, 173, 238)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels3[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= UnknownPercentSevenDaysAgoCP %>,
+			                     <%= UnknownPercentSixDaysAgoCP %>,
+			                     <%= UnknownPercentFiveDaysAgoCP %>,
+			                     <%= UnknownPercentFourDaysAgoCP %>,
+			                     <%= UnknownPercentThreeDaysAgoCP %>,
+			                     <%= UnknownPercentTwoDaysAgoCP %>,
+			                     <%= UnknownPercentOneDayAgoCP %>,
+			                 ]
+			         },
+			         {
+			             label           : 'Breakdown',
+			             backgroundColor : 'rgb(255, 10, 10)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: true,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels3[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= wirePercentSevenDaysAgoCP %>,
+			                     <%= wirePercentSixDaysAgoCP %>,
+			                     <%= wirePercentFiveDaysAgoLDL %>,
+			                     <%= wirePercentFourDaysAgoLDL %>,
+			                     <%= wirePercentThreeDaysAgoLDL %>,
+			                     <%= wirePercentTwoDaysAgoLDL %>,
+			                     <%= wirePercentOneDayAgoLDL %>,
+			                 ]
+			         },
+			     ],
+			 };
+			 let barChartData4 = {
+			     labels   : theLabels,
+			     newLabels4: theLabels2,
+			     datasets : [
+			         {
+			             label           : 'Planned Stoppage',
+			             backgroundColor : 'grey',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels4[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= knownPercentSevenDaysAgoHP %>,
+			                     <%= knownPercentSixDaysAgoHP %>,
+			                     <%= knownPercentFiveDaysAgoHP %>,
+			                     <%= knownPercentFourDaysAgoHP %>,
+			                     <%= knownPercentThreeDaysAgoHP %>,
+			                     <%= knownPercentTwoDaysAgoHP %>,
+			                     <%= knownPercentOneDayAgoHP %>,
+			                 ]
+			         },
+			         {
+			             label           : 'Unplanned Stoppage',
+			             backgroundColor : 'rgb(0, 173, 238)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels4[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= UnknownPercentSevenDaysAgoHP %>,
+			                     <%= UnknownPercentSixDaysAgoHP %>,
+			                     <%= UnknownPercentFiveDaysAgoHP %>,
+			                     <%= UnknownPercentFourDaysAgoHP %>,
+			                     <%= UnknownPercentThreeDaysAgoHP %>,
+			                     <%= UnknownPercentTwoDaysAgoHP %>,
+			                     <%= UnknownPercentOneDayAgoHP %>,
+			                 ]
+			         },
+			         {
+			             label           : 'Breakdown',
+			             backgroundColor : 'rgb(255, 10, 10)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: true,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels4[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= wirePercentSevenDaysAgoHP %>,
+			                     <%= wirePercentSixDaysAgoHP %>,
+			                     <%= wirePercentFiveDaysAgoHP %>,
+			                     <%= wirePercentFourDaysAgoHP %>,
+			                     <%= wirePercentThreeDaysAgoHP %>,
+			                     <%= wirePercentTwoDaysAgoHP %>,
+			                     <%= wirePercentOneDayAgoHP %>,
+			                 ]
+			         },
+			     ],
+			 };
+			 let barChartData5 = {
+			     labels   : theLabels,
+			     newLabels5: theLabels2,
+			     datasets : [
+			         {
+			             label           : 'Planned Stoppage',
+			             backgroundColor : 'grey',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels5[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= knownPercentSevenDaysAgoEM %>,
+			                     <%= knownPercentSixDaysAgoEM %>,
+			                     <%= knownPercentFiveDaysAgoEM %>,
+			                     <%= knownPercentFourDaysAgoEM %>,
+			                     <%= knownPercentThreeDaysAgoEM %>,
+			                     <%= knownPercentTwoDaysAgoEM %>,
+			                     <%= knownPercentOneDayAgoEM %>,
+			                 ]
+			         },
+			         {
+			             label           : 'Unplanned Stoppage',
+			             backgroundColor : 'rgb(0, 173, 238)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels5[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= UnknownPercentSevenDaysAgoEM %>,
+			                     <%= UnknownPercentSixDaysAgoEM %>,
+			                     <%= UnknownPercentFiveDaysAgoEM %>,
+			                     <%= UnknownPercentFourDaysAgoEM %>,
+			                     <%= UnknownPercentThreeDaysAgoEM %>,
+			                     <%= UnknownPercentTwoDaysAgoEM %>,
+			                     <%= UnknownPercentOneDayAgoEM %>,
+			                 ]
+			         },
+			         {
+			             label           : 'Breakdown',
+			             backgroundColor : 'rgb(255, 10, 10)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: true,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels5[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= wirePercentSevenDaysAgoEM %>,
+			                     <%= wirePercentSixDaysAgoEM %>,
+			                     <%= wirePercentFiveDaysAgoEM %>,
+			                     <%= wirePercentFourDaysAgoEM %>,
+			                     <%= wirePercentThreeDaysAgoEM %>,
+			                     <%= wirePercentTwoDaysAgoEM %>,
+			                     <%= wirePercentOneDayAgoEM %>,
+			                 ]
+			         },
+			     ],
+			 };
+			 let barChartData6 = {
+			     labels   : theLabels,
+			     newLabels6: theLabels2,
+			     datasets : [
+			         {
+			             label           : 'Planned Stoppage',
+			             backgroundColor : 'grey',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels6[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= knownPercentSevenDaysAgoCABS %>,
+			                     <%= knownPercentSixDaysAgoCABS %>,
+			                     <%= knownPercentFiveDaysAgoCABS %>,
+			                     <%= knownPercentFourDaysAgoCABS %>,
+			                     <%= knownPercentThreeDaysAgoCABS %>,
+			                     <%= knownPercentTwoDaysAgoCABS %>,
+			                     <%= knownPercentOneDayAgoCABS %>,
+			                 ]
+			         },
+			         {
+			             label           : 'Unplanned Stoppage',
+			             backgroundColor : 'rgb(0, 173, 238)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: false,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels6[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= UnknownPercentSevenDaysAgoCABS %>,
+			                     <%= UnknownPercentSixDaysAgoCABS %>,
+			                     <%= UnknownPercentFiveDaysAgoCABS %>,
+			                     <%= UnknownPercentFourDaysAgoCABS %>,
+			                     <%= UnknownPercentThreeDaysAgoCABS %>,
+			                     <%= UnknownPercentTwoDaysAgoCABS %>,
+			                     <%= UnknownPercentOneDayAgoCABS %>,
+			                 ]
+			         },
+
+			         {
+			             label           : 'Breakdown',
+			             backgroundColor : 'rgb(255, 10, 10)',
+			             yAxisID         : 'bar-y-axis',
+			             datalabels: {
+			                 // display labels for this specific dataset
+			                 display: true,
+			                 color:'white',
+			                 align: 'end',
+			                 anchor: 'end',
+			                 formatter: function (value, context ) {
+			                     return  context.chart.data.newLabels6[context.dataIndex] + '%' ;
+			                 // return value + '%';
+			                 },
+			                 font: {
+			                     weight: 'bold',
+			                     size: 12,
+			                     },
+			                 },
+			                 data: [
+			                     <%= wirePercentSevenDaysAgoCABS %>,
+			                     <%= wirePercentSixDaysAgoCABS %>,
+			                     <%= wirePercentFiveDaysAgoCABS %>,
+			                     <%= wirePercentFourDaysAgoCABS %>,
+			                     <%= wirePercentThreeDaysAgoCABS %>,
+			                     <%= wirePercentTwoDaysAgoCABS %>,
+			                     <%= wirePercentOneDayAgoCABS %>,
+			                 ]
+			         },
+			     ],
+			 };
+			let options = {
+			             title      : {
+			                 display : false,
+			                 text    : 'Title Here',
+			             },
+			             legend     : {
+			                 display : false,
+			             },
+			             tooltips: {
+			      mode: 'label',
+			               enabled: false,
+			               callbacks: {
+			               label: function(tooltipItems, data) {
+			                 if (data.datasets[tooltipItems.datasetIndex].label != "Running Time")  {
+			                 return data.datasets[tooltipItems.datasetIndex].label +': ' + tooltipItems.yLabel + ' %';
+			                     }
+			                 },
+			             }
+			    },
+			             responsive : true,
+			                         scales     : {
+			                 xAxes : [
+			                     {
+			                         stacked       : true,
+			                         barPercentage : 0.8,
+			                     },
+			                 ],
+			                 yAxes : [
+			                     {
+			                         stacked    : true,
+			                         display:false,
+			                         ticks      : {
+			                             beginAtZero : true,
+			                             min         : 0,
+			                             max         : 120,
+			                             stepSize: 20,
+			                         },
+			                         scaleLabel : {
+			                             display     : false,
+			                             labelString : 'Hours',
+			                         },
+			                     },
+			                     {
+			                         id      : 'bar-y-axis',
+			                         stacked : true,
+			                         display : true,
+			                         ticks   : {
+			                             beginAtZero : true,
+			                             min         : 0,
+			                             max         : 120,
+			                             callback: function (value) {
+			                             if (value > 100) return "";
+			                             return value;
+			                             }
+			                         },
+			                         type    : 'linear',
+			                     },
+			                 ],
+			             },
+
+			         }
+
+
+			 window.onload = function() {
+			     let ctx1 = document.getElementById('canvas1').getContext('2d');
+			     window.myBar = new Chart(ctx1, {
+			         type    : 'bar',
+			         data    : barChartData1,
+			         options : options
+			     });
+			     let ctx2 = document.getElementById('canvas2').getContext('2d');
+			     window.myBar = new Chart(ctx2, {
+			         type    : 'bar',
+			         data    : barChartData2,
+			         options : options
+			     });
+			     let ctx3 = document.getElementById('canvas3').getContext('2d');
+			     window.myBar = new Chart(ctx3, {
+			         type    : 'bar',
+			         data    : barChartData3,
+			         options : options
+			     });
+			     let ctx4 = document.getElementById('canvas4').getContext('2d');
+			     window.myBar = new Chart(ctx4, {
+			         type    : 'bar',
+			         data    : barChartData4,
+			         options : options
+			     });
+			     let ctx5 = document.getElementById('canvas5').getContext('2d');
+			     window.myBar = new Chart(ctx5, {
+			         type    : 'bar',
+			         data    : barChartData5,
+			         options : options
+			     });
+			     let ctx6 = document.getElementById('canvas6').getContext('2d');
+			     window.myBar = new Chart(ctx6, {
+			         type    : 'bar',
+			         data    : barChartData6,
+			         options : options
+			     });
+			 };
+		</script>
+	</body>
+</html>

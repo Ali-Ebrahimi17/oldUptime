@@ -1,0 +1,587 @@
+<% layout('layouts/heatmap')%>
+<!-- <meta http-equiv="refresh" content="900"> -->
+
+<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css">
+<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css">
+<link rel="stylesheet" href="/content/table2.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/ldlHeatmap.css" type="text/css">
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<script src="/7z/content/chart-js/chart.bundle.js"></script>
+<!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+<script src="/7z/content/chart-js/trendLine.js"></script>
+
+
+<style>
+  .graph_holder {
+    /* background-color: grey; */
+    height: 300px;
+    width: 550px;
+    margin: 30px;
+  }
+
+  .stat_holder {
+    /* background-color: grey; */
+    height: 480px;
+    width: 550px;
+    margin: 30px;
+    display: flex;
+    margin-top: -5px;
+  }
+</style>
+<% const redOrGreen = (num1, num2) => { %>
+<%  let color = 'red' %>
+<% if (num1 <= num2) { %>
+<% color = 'green' %>
+<% } %>
+<% return color %>
+<% } %>
+
+
+
+<div class='main-header-holder' data-toggle="modal" data-target="#change-times" style="cursor: pointer;">
+  <h1>Cabs Systems Live MRI Predictions</h1>
+
+</div>
+
+<section style="display: flex; flex-wrap: wrap; margin: 10px; justify-content: center;">
+
+
+  <!-- doa -->
+  <div style="display: flex; flex-direction: column;">
+    <div class="graph_holder">
+      <h4 style="color: white;">DOA</h4>
+      <div style="height: 280px;">
+        <canvas id="doaChart"></canvas>
+      </div>
+    </div>
+    <h4 style="color: white;">DOA Numbers</h4>
+    <div class="stat_holder">
+
+      <table class="table table-sm " style="margin-bottom: 20px; height: 270px; padding: 0px; color: white; text-align: center;">
+        <thead>
+          <tr>
+            <th style="text-align: left; width: 55px;">Date</th>
+            <th style="border-left: 1px solid white; ">Machines</th>
+            <th style="border-left: 1px solid white;">Claims</th>
+            <th style="border-left: 1px solid white; width: 75px;">MRI DPU</th>
+            <th style="border-left: 1px solid white;">Predicted DPU</th>
+          </tr>
+
+        </thead>
+        <tbody style="color: white; font-size: 15px;">
+          <% for (let d of doaNumbers) { %>
+          <tr>
+            <td class='td-centre' style="width: 55px; max-height: 15px; text-align: left;"><%= d.date %></td>
+            <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= d.machines %></td>
+            <td class='td-centre' style="width: 75px; border-left: 1px solid white;"><%= d.claims %></td>
+            <td class='td-centre' style=" width: 25px; border-left: 1px solid white; "><%= d.doa %></td>
+            <% if (d.doa > 0) { %>
+            <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( d.prediction, d.doa) %>;"><%= d.prediction %></td>
+            <% } else { %>
+            <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:white;"><%= d.prediction %></td>
+            <% } %>
+            <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- t3 -->
+  <div style="display: flex; flex-direction: column;">
+    <div class="graph_holder">
+      <h4 style="color: white;">T3</h4>
+      <div style="height: 280px;">
+        <canvas id="t3Chart"></canvas>
+      </div>
+    </div>
+    <h4 style="color: white;">T3 Numbers</h4>
+    <div class="stat_holder">
+
+      <table class="table table-sm " style="margin-bottom: 20px; height: 270px; padding: 0px; color: white; text-align: center;">
+        <thead>
+          <tr>
+            <th style="text-align: left; width: 55px;">Date</th>
+            <th style="border-left: 1px solid white; ">Machines</th>
+            <th style="border-left: 1px solid white;">Claims</th>
+            <th style="border-left: 1px solid white; width: 75px;">MRI DPU</th>
+            <th style="border-left: 1px solid white;">Predicted DPU</th>
+          </tr>
+
+        </thead>
+        <tbody style="color: white; font-size: 15px;">
+          <% for (let d of t3Numbers) { %>
+          <tr>
+            <td class='td-centre' style="width: 55px; max-height: 15px; text-align: left;"><%= d.date %></td>
+            <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= d.machines %></td>
+            <td class='td-centre' style="width: 75px; border-left: 1px solid white;"><%= d.claims %></td>
+            <td class='td-centre' style=" width: 25px; border-left: 1px solid white; "><%= d.doa %></td>
+            <% if (d.doa > 0) { %>
+            <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( d.prediction, d.doa) %>;"><%= d.prediction %></td>
+            <% } else { %>
+            <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:white;"><%= d.prediction %></td>
+            <% } %>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- t6 -->
+  <div style="display: flex; flex-direction: column;">
+    <div class="graph_holder">
+      <h4 style="color: white;">T6</h4>
+      <div style="height: 280px;">
+        <canvas id="t6Chart"></canvas>
+      </div>
+    </div>
+    <h4 style="color: white;">T6 Numbers</h4>
+    <div class="stat_holder">
+
+      <table class="table table-sm " style="margin-bottom: 20px; height: 270px; padding: 0px; color: white; text-align: center;">
+        <thead>
+          <tr>
+            <th style="text-align: left; width: 55px;">Date</th>
+            <th style="border-left: 1px solid white; ">Machines</th>
+            <th style="border-left: 1px solid white;">Claims</th>
+            <th style="border-left: 1px solid white; width: 75px;">MRI DPU</th>
+            <th style="border-left: 1px solid white;">Predicted DPU</th>
+          </tr>
+
+        </thead>
+        <tbody style="color: white; font-size: 15px;">
+          <% for (let d of t6Numbers) { %>
+          <tr>
+            <td class='td-centre' style="width: 55px; max-height: 15px; text-align: left;"><%= d.date %></td>
+            <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= d.machines %></td>
+            <td class='td-centre' style="width: 75px; border-left: 1px solid white;"><%= d.claims %></td>
+            <td class='td-centre' style=" width: 25px; border-left: 1px solid white; "><%= d.doa %></td>
+            <% if (d.doa > 0) { %>
+            <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( d.prediction, d.doa) %>;"><%= d.prediction %></td>
+            <% } else { %>
+            <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:white;"><%= d.prediction %></td>
+            <% } %>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+
+</section>
+
+
+
+
+
+<div class="container-fluid footer">
+
+  <div class="row header-top">
+    <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+      <img height="24px" src="/7z/content/images/jcb-logo.png">
+      <img height="24px" src="/7z/content/images/df.png">
+    </div>
+    <div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+      J.C. Bamford Excavators LTD &copy; 2022
+    </div>
+  </div>
+</div>
+
+
+<script>
+  Chart.defaults.global.defaultFontColor = "white";
+  //  Chart.defaults.global.defaultFontSize = 10;
+  Chart.defaults.scale.gridLines.display = false;
+  Chart.defaults.global.defaultFontFamily = "Ubuntu";
+
+  let labelArray = <%- JSON.stringify(doaLabelArr) %>;
+
+
+
+  const ctx = document.getElementById('doaChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: <%- JSON.stringify(doaLabelArr) %>,
+      datasets: [{
+          label: 'MRI Data',
+          data: [<%= doaArr %>],
+          backgroundColor: 'rgb(37 99 235)',
+          hoverBackgroundColor: 'rgb(37 99 235)',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'top',
+            offset: -5,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+        },
+        {
+          label: 'Prediction',
+          data: [<%= doaPredictionArr %>],
+          backgroundColor: 'rgb(82 82 82)',
+          hoverBackgroundColor: 'rgb(82 82 82)',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'top',
+            offset: -5,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+        },
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      legend: {
+        display: true,
+        position: 'bottom',
+        // labels: {
+        //   useLineStyle: true,
+        //   // boxWidth: 25
+        // },
+      },
+
+
+      scales: {
+        xAxes: [{
+          // stacked: true,
+          barPercentage: 0.75,
+          ticks: {
+            display: true,
+            beginAtZero: true,
+            fontSize: 12,
+            fontColor: '#fff',
+            autoSkip: false,
+            maxRotation: 90,
+            minRotation: 90,
+            // callback: function(value) {if (value % 1 === 0) {return value;}}
+          },
+
+        }],
+        yAxes: [{
+          // stacked: true,
+          position: 'left',
+          //  stacked : true,
+          display: false,
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            // max: 100,
+            // stepSize: 0.3,
+            fontSize: 9,
+            //  formatter:: function(value, context, values) {
+            //              if(context.dataIndex === context.dataset.data.length - 1){
+            //                       return value
+            //      }
+            //  }
+
+            callback: function(value) {
+              if (value % 0.2 === 0) {
+                return value
+              }
+            }
+          },
+        }]
+      },
+      plugins: {
+        datalabels: {
+          color: 'white',
+          // font: {
+          //   weight: 'bold'
+          // },
+          // formatter: function(value, context) {
+          //   return Math.round(value);
+          // }
+        }
+      }
+    }
+  })
+
+  const ctx2 = document.getElementById('t3Chart').getContext('2d');
+  const chart2 = new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: <%- JSON.stringify(t3LabelArr) %>,
+      datasets: [{
+          label: 'MRI Data',
+          data: [<%= t3Arr %>],
+          backgroundColor: 'rgb(37 99 235)',
+          hoverBackgroundColor: 'rgb(37 99 235)',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'top',
+            offset: -5,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+        },
+        {
+          label: 'Prediction',
+          data: [<%= t3PredictionArr %>],
+          backgroundColor: 'rgb(82 82 82)',
+          hoverBackgroundColor: 'rgb(82 82 82',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'top',
+            offset: -5,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+        },
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      legend: {
+        display: true,
+        position: 'bottom',
+        // labels: {
+        //   useLineStyle: true,
+        //   // boxWidth: 25
+        // },
+      },
+
+
+      scales: {
+        xAxes: [{
+          // stacked: true,
+          barPercentage: 0.75,
+          ticks: {
+            display: true,
+            beginAtZero: true,
+            fontSize: 12,
+            fontColor: '#fff',
+            autoSkip: false,
+            maxRotation: 90,
+            minRotation: 90,
+            // callback: function(value) {if (value % 1 === 0) {return value;}}
+          },
+
+        }],
+        yAxes: [{
+          // stacked: true,
+          position: 'left',
+          //  stacked : true,
+          display: false,
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            // max: 100,
+            // stepSize: 0.3,
+            fontSize: 9,
+            //  formatter:: function(value, context, values) {
+            //              if(context.dataIndex === context.dataset.data.length - 1){
+            //                       return value
+            //      }
+            //  }
+
+            callback: function(value) {
+              if (value % 0.2 === 0) {
+                return value
+              }
+            }
+          },
+        }]
+      },
+      plugins: {
+        datalabels: {
+          color: 'white',
+          // font: {
+          //   weight: 'bold'
+          // },
+          // formatter: function(value, context) {
+          //   return Math.round(value);
+          // }
+        }
+      }
+    }
+  })
+
+  const ctx3 = document.getElementById('t6Chart').getContext('2d');
+  const chart3 = new Chart(ctx3, {
+    type: 'bar',
+    data: {
+      labels: <%- JSON.stringify(t6LabelArr) %>,
+      datasets: [{
+          label: 'MRI Data',
+          data: [<%= t6Arr %>],
+          backgroundColor: 'rgb(37 99 235)',
+          hoverBackgroundColor: 'rgb(37 99 235)',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'top',
+            offset: -5,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+        },
+        {
+          label: 'Prediction',
+          data: [<%= t6PredictionArr %>],
+          backgroundColor: 'rgb(82 82 82)',
+          hoverBackgroundColor: 'rgb(82 82 82',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'top',
+            offset: -5,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+        },
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      legend: {
+        display: true,
+        position: 'bottom',
+        // labels: {
+        //   useLineStyle: true,
+        //   // boxWidth: 25
+        // },
+      },
+
+
+      scales: {
+        xAxes: [{
+          // stacked: true,
+          barPercentage: 0.75,
+          ticks: {
+            display: true,
+            beginAtZero: true,
+            fontSize: 12,
+            fontColor: '#fff',
+            autoSkip: false,
+            maxRotation: 90,
+            minRotation: 90,
+            // callback: function(value) {if (value % 1 === 0) {return value;}}
+          },
+
+        }],
+        yAxes: [{
+          // stacked: true,
+          position: 'left',
+          //  stacked : true,
+          display: false,
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            // max: 100,
+            // stepSize: 0.3,
+            fontSize: 9,
+            //  formatter:: function(value, context, values) {
+            //              if(context.dataIndex === context.dataset.data.length - 1){
+            //                       return value
+            //      }
+            //  }
+
+            callback: function(value) {
+              if (value % 0.2 === 0) {
+                return value
+              }
+            }
+          },
+        }]
+      },
+      plugins: {
+        datalabels: {
+          color: 'white',
+          // font: {
+          //   weight: 'bold'
+          // },
+          // formatter: function(value, context) {
+          //   return Math.round(value);
+          // }
+        }
+      }
+    }
+  })
+</script>

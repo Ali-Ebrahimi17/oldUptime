@@ -1,0 +1,40 @@
+<% layout('layouts/boilerplate')%>
+<!-- <meta http-equiv="refresh" content="10"> -->
+
+
+
+
+
+<h2 style="margin-top: -1rem; text-align: center; font-weight: bold;">Top 5 Escapes from <%= area %></h2>
+
+
+<div style="display: flex; align-items: center; justify-content: center; margin-top: 50px;">
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 15px; height: fit-content; width: fit-content; margin-top: -2rem;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 50px;">#</th>
+        <th style="width: 200px;">Name</th>
+        <th style="width: 130px;">Count</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <% let x = 0 %>
+      <% for (let j of top5escapes) { %>
+      <% x++ %>
+      <tr class="d-flex">
+        <td style="width: 50px;"><%= x %></td>
+        <td style="width: 200px;"><a href="/dash/top5escapesDetail/Loadall/<%= area %>/<%= x -1 %>"><%= j._id %></a></td>
+        <td style="height: 55px; width: 130px;"><%= j.count %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+
+
+</div>

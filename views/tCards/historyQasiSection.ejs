@@ -1,0 +1,185 @@
+<% layout('layouts/boilerplateTCard')%>
+
+<div class="main-tCard-container">
+	<h2 class="main-title"><%= division.toUpperCase() %> <%= category.toUpperCase()%> <%= section.toUpperCase()%> HISTORY</h2>
+
+	<div class="row" style="width: 100%">
+		<h3 style="margin-bottom: 5px; text-align: center; width: 100vw">Daily Checks</h3>
+
+		<div class="table-holder">
+			<table class="table-hover">
+				<% for (let card of dailyCards) { %> <% card.checks.sort((a, b) => b.createdAt - a.createdAt) %>
+				<tr>
+					<th class="headcol"><%= card.name %></th>
+					<% for (let check of card.checks) { %>
+					<td
+						class="<% if (check.result === 'Passed') { %>check-history-pass<% } else if (check.result === 'Contained') { %>check-history-contain<% } else if (check.result === 'Not Required') { %>check-history-not-required<% } else { %>check-history-fail<% } %>"
+					>
+						<% if (check.result === 'Failed') { %>
+						<a href="/tCard/<%= check._id %>/check/history/fail">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Contained') { %>
+						<a href="/tCard/<%= check._id %>/check/history/contain">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Passed') { %>
+						<a href="/tCard/<%= check._id %>/check/history/pass">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Missed') { %> <%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+						<%= moment(check.createdAt).format("HH:mm") %><br />
+						<%= check.result %><br />
+
+						<% } %> <% if (check.result === 'Not Required') { %> <%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+						<%= moment(check.createdAt).format("HH:mm") %><br />
+						<span style="font-size: 13px"><%= check.result %></span><br />
+
+						<% } %>
+					</td>
+					<%} %>
+				</tr>
+				<% } %>
+			</table>
+		</div>
+
+		<h3 style="margin-bottom: 5px; text-align: center; width: 100vw">Weekly Checks</h3>
+		<div class="table-holder">
+			<table class="table-hover">
+				<% for (let card of weeklyCards) { %> <% card.checks.sort((a, b) => b.createdAt - a.createdAt) %>
+				<tr>
+					<th class="headcol"><%= card.name %></th>
+					<% for (let check of card.checks) { %>
+					<td
+						class="<% if (check.result === 'Passed') { %>check-history-pass<% } else if (check.result === 'Contained') { %>check-history-contain<% } else if (check.result === 'Not Required') { %>check-history-not-required<% } else { %>check-history-fail<% } %>"
+					>
+						<% if (check.result === 'Failed') { %>
+						<a href="/tCard/<%= check._id %>/check/history/fail">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Contained') { %>
+						<a href="/tCard/<%= check._id %>/check/history/contain">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Passed') { %>
+						<a href="/tCard/<%= check._id %>/check/history/pass">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Missed') { %> <%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+						<%= moment(check.createdAt).format("HH:mm") %><br />
+						<%= check.result %><br />
+
+						<% } %> <% if (check.result === 'Not Required') { %> <%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+						<%= moment(check.createdAt).format("HH:mm") %><br />
+						<span style="font-size: 13px"><%= check.result %></span><br />
+
+						<% } %>
+					</td>
+					<%} %>
+				</tr>
+				<% } %>
+			</table>
+		</div>
+
+		<h3 style="margin-bottom: 5px; text-align: center; width: 100vw">Monthly Checks</h3>
+		<div class="table-holder">
+			<table class="table-hover">
+				<% for (let card of monthlyCards) { %> <% card.checks.sort((a, b) => b.createdAt - a.createdAt) %>
+				<tr>
+					<th class="headcol"><%= card.name %></th>
+					<% for (let check of card.checks) { %>
+					<td
+						class="<% if (check.result === 'Passed') { %>check-history-pass<% } else if (check.result === 'Contained') { %>check-history-contain<% } else if (check.result === 'Not Required') { %>check-history-not-required<% } else { %>check-history-fail<% } %>"
+					>
+						<% if (check.result === 'Failed') { %>
+						<a href="/tCard/<%= check._id %>/check/history/fail">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Contained') { %>
+						<a href="/tCard/<%= check._id %>/check/history/contain">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Passed') { %>
+						<a href="/tCard/<%= check._id %>/check/history/pass">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Missed') { %> <%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+						<%= moment(check.createdAt).format("HH:mm") %><br />
+						<%= check.result %><br />
+
+						<% } %> <% if (check.result === 'Not Required') { %> <%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+						<%= moment(check.createdAt).format("HH:mm") %><br />
+						<span style="font-size: 13px"><%= check.result %></span><br />
+
+						<% } %>
+					</td>
+					<%} %>
+				</tr>
+				<% } %>
+			</table>
+		</div>
+
+		<h3 style="margin-bottom: 5px; text-align: center; width: 100vw">Quarterly Checks</h3>
+		<div class="table-holder">
+			<table class="table-hover">
+				<% for (let card of quarterlyCards) { %> <% card.checks.sort((a, b) => b.createdAt - a.createdAt) %>
+				<tr>
+					<th class="headcol"><%= card.name %></th>
+					<% for (let check of card.checks) { %>
+					<td
+						class="<% if (check.result === 'Passed') { %>check-history-pass<% } else if (check.result === 'Contained') { %>check-history-contain<% } else if (check.result === 'Not Required') { %>check-history-not-required<% } else { %>check-history-fail<% } %>"
+					>
+						<% if (check.result === 'Failed') { %>
+						<a href="/tCard/<%= check._id %>/check/history/fail">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Contained') { %>
+						<a href="/tCard/<%= check._id %>/check/history/contain">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Passed') { %>
+						<a href="/tCard/<%= check._id %>/check/history/pass">
+							<%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+							<%= moment(check.createdAt).format("HH:mm") %><br />
+							<%= check.result %><br />
+						</a>
+						<% } %> <% if (check.result === 'Missed') { %> <%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+						<%= moment(check.createdAt).format("HH:mm") %><br />
+						<%= check.result %><br />
+
+						<% } %> <% if (check.result === 'Not Required') { %> <%= moment(check.createdAt).format("DD/MM/YYYY") %><br />
+						<%= moment(check.createdAt).format("HH:mm") %><br />
+						<span style="font-size: 13px"><%= check.result %></span><br />
+
+						<% } %>
+					</td>
+					<%} %>
+				</tr>
+				<% } %>
+			</table>
+		</div>
+	</div>
+	<a class="btn btn-success" onclick="history.back()">Go Back</a>
+</div>

@@ -1,0 +1,63 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container">
+	<div class="row form-background">
+		<div class="col-md-12 text-center">
+			<h1 style="color: white">Sign Up</h1>
+		</div>
+
+		<div class="container form">
+			<form action="/register" method="POST" class="validated-form" novalidate>
+				<div class="form-group">
+					<label for="firstName">First Name</label>
+					<input class="form-control" type="text" name="firstName" autocomplete="off" required />
+				</div>
+				<div class="valid-feedback">Looks good</div>
+				<div class="form-group">
+					<label for="lastName">Last Name</label>
+					<input class="form-control" type="text" name="lastName" autocomplete="off" required />
+				</div>
+				<div class="valid-feedback">Looks good</div>
+				<div class="form-group">
+					<label for="username">Username</label>
+					<input class="form-control" type="text" name="username" autocomplete="off" required />
+				</div>
+				<div class="valid-feedback">Looks good</div>
+				<div class="form-group">
+					<label for="password">Password</label>
+					<input class="form-control" type="password" name="password" autocomplete="off" required />
+				</div>
+				<div class="valid-feedback">Looks good</div>
+				<div class="form-group">
+					<label for="email">Email (must be a JCB email)</label>
+					<input class="form-control" type="email" name="email" autocomplete="off" required />
+				</div>
+				<div class="valid-feedback">Looks good</div>
+				<label for="area">Business Unit</label>
+				<select class="form-control" type="text" name="businessUnit" autocomplete="off" required>
+					<option>Attachments</option>
+					<option>Backhoe</option>
+					<option>Cab Systems</option>
+					<option>Compact Products</option>
+					<option>Earth Movers</option>
+					<option>HBU</option>
+					<option>Heavy Products</option>
+					<option>Loadall</option>
+					<option>Savannah</option>
+					<option>Service</option>
+					<option>Site Dumper</option>
+				</select>
+				<div class="valid-feedback">Looks good</div>
+				<div class="form-group">
+					<label for="adminCode">Administrator Code</label>
+					<input class="form-control" type="password" name="adminCode" placeholder="If unsure, leave blank" />
+				</div>
+
+				<div class="form-group text-center">
+					<button class="btn btn-lg btn-success">Sign Up</button>
+				</div>
+			</form>
+			<a href="/">Go Back</a>
+		</div>
+	</div>
+</div>

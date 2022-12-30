@@ -1,0 +1,236 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="620"> -->
+		<title>JCB - Quality Uptime</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<link rel="stylesheet" href="/content/table.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+		<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+		<script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+		<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+		<link rel="stylesheet" href="/stylesheets/app.css" />
+		<link rel="stylesheet" href="/fontawesome/css/all.css" />
+	</head>
+
+	<style>
+		.graph-holder {
+			width: 442px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 175px;
+		}
+		.card {
+			border: 1px solid grey;
+			margin-bottom: 5px;
+			color: white;
+			font-size: 14px;
+		}
+		.green-top50 {
+			background-color: green;
+		}
+		.amber-top50 {
+			background-color: orange;
+		}
+		.red-top50 {
+			background-color: red;
+		}
+	</style>
+	<body>
+		<div class="container-fluid">
+			<div class="row header-top">
+				<div class="col-lg-5 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+				</div>
+				<!-- <div class="col-lg-7 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+            <a href="/equipment-monitoring/operations">
+                <span  style="font-size: 19px; padding-top: 2px; margin-right: 4px; color: black; font-weight: bold;" >Last Update:  DD/MM/YYYY - HH:mm:ss </span>
+            </a>
+        </div> -->
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-main">
+					<div class="row" style="display: flex; justify-content: center">
+						<div class="col-lg-12" style="margin-top: -12px">
+							<h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Group Operations Uptime</h1>
+						</div>
+
+						<div class="col-lg-6" style="margin-bottom: 22px; padding: 8px 0px 8px 0px">
+							<div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">DOA TOP 50 STATUS</h1>
+							</div>
+						</div>
+
+						<div class="col-lg-6" style="margin-bottom: 22px; padding: 8px 0px 8px 0px">
+							<div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">T3 TOP 50 STATUS</h1>
+							</div>
+						</div>
+
+						<div style="display: flex; width: 120%; margin-bottom: 20px; margin-top: -20px">
+							<div class="col" style="margin: 0 10px; width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap">
+								<div class="row" style="display: flex; justify-content: space-around">
+									<% for (let d of dataArrDoa) { %>
+									<div>
+										<div class="graph-holder">
+											<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+												<div style="text-align: center; color: white"><h5><%= d.longName %></h5></div>
+												<div style="text-align: center; color: white; margin-top: -5px">
+													<h5 style="font-size: 15px; color: grey"><%= d.top50Percent %>% of All DOA Claims In Top 50</h5>
+												</div>
+											</div>
+											<div class="progress" style="height: 90px; border-radius: 0px; margin-bottom: 30px; width: auto; background-color: black">
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= d.closedPercent %>%"
+												>
+													<%= d.closedPercent %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: orange; font-size: 20px; color: black; font-weight: bold; width: <%= d.containedPercent %>%"
+												>
+													<%= d.containedPercent %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: red; font-size: 20px; color: black; font-weight: bold; width: <%= d.openPercent %>%"
+												>
+													<%= d.openPercent %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: grey; font-size: 20px; color: black; font-weight: bold; width: <%= d.noActionPercent %>%"
+												>
+													<%= d.noActionPercent %>%
+												</div>
+											</div>
+											<div style="display: flex; justify-content: space-between; margin-top: -25px; color: white">
+												<p>Open - <%= d.openCount %></p>
+												<p>Contained - <%= d.containedCount %></p>
+												<p>Closed - <%= d.closedCount %></p>
+												<p>TBC - <%= d.noActionCount %></p>
+											</div>
+										</div>
+									</div>
+									<% } %>
+								</div>
+							</div>
+
+							<hr style="width: 1px; height: 100%; display: inline-block; background-color: grey; margin-top: -1%" />
+
+							<div class="col" style="margin: 0 10px; width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap">
+								<div class="row" style="display: flex; justify-content: space-around">
+									<% for (let d of dataArrT3) { %>
+									<div>
+										<div class="graph-holder">
+											<div data-toggle="modal" data-target="#doa-modal" style="cursor: pointer">
+												<div style="text-align: center; color: white"><h5><%= d.longName %></h5></div>
+												<div style="text-align: center; color: white; margin-top: -5px">
+													<h5 style="font-size: 15px; color: grey"><%= d.top50Percent %>% of All DOA Claims In Top 50</h5>
+												</div>
+											</div>
+											<div class="progress" style="height: 90px; border-radius: 0px; margin-bottom: 30px; width: auto; background-color: black">
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= d.closedPercent %>%"
+												>
+													<%= d.closedPercent %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: orange; font-size: 20px; color: black; font-weight: bold; width: <%= d.containedPercent %>%"
+												>
+													<%= d.containedPercent %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: red; font-size: 20px; color: black; font-weight: bold; width: <%= d.openPercent %>%"
+												>
+													<%= d.openPercent %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: grey; font-size: 20px; color: black; font-weight: bold; width: <%= d.noActionPercent %>%"
+												>
+													<%= d.noActionPercent %>%
+												</div>
+											</div>
+											<div style="display: flex; justify-content: space-between; margin-top: -25px; color: white">
+												<p>Open - <%= d.openCount %></p>
+												<p>Contained - <%= d.containedCount %></p>
+												<p>Closed - <%= d.closedCount %></p>
+												<p>TBC - <%= d.noActionCount %></p>
+											</div>
+										</div>
+									</div>
+									<% } %>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid footer">
+			<div class="row header-top">
+				<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+					J.C. Bamford Excavators LTD &copy; 2022
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

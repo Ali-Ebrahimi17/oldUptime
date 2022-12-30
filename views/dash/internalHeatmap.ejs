@@ -1,0 +1,276 @@
+<% layout('layouts/heatmap')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/8z/content/bootstrap/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css" />
+<link rel="stylesheet" href="/content/table2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/ldlHeatmap.css" type="text/css" />
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<style>
+	body {
+		background-color: black;
+	}
+
+	h5 {
+		color: white;
+		font-size: 1.5rem;
+		margin-bottom: -15px;
+	}
+
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+
+	h2 {
+		font-weight: bold;
+		color: black;
+	}
+
+	h1 {
+		font-size: 4rem;
+	}
+
+	h6 {
+		font-size: 1rem;
+	}
+
+	hr {
+		background-color: #6a6d6d;
+	}
+
+	.zone-stat {
+		font-size: 60px;
+		margin-top: -10px;
+	}
+
+	.zone-span {
+		font-size: 60px;
+		padding-top: 6px;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: white;
+	}
+</style>
+
+<div class="main-header-holder">
+	<h1>Loadall O Bay Fault Heatmap</h1>
+	<small style="margin-bottom: -10px"
+		>(<%= moment(startTime).format("DD/MM/YYYY HH:mm") %> - <%= moment(endTime).format("DD/MM/YYYY HH:mm") %>)
+	</small>
+</div>
+
+<div class="loadall-main-wrapper-interal">
+	<div class="top-row">
+		<a href="/dash/internalHeatmapFaults/LDL/Rolling Road">
+			<div class="track-area">
+				<p>UV1</p>
+				<p class="zone-stat"><%= uv1 %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Zone 7 Ldl">
+			<div class="track-area">
+				<p>Zone 7</p>
+				<p class="zone-stat"><%= Zone7 %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Kitting">
+			<div class="track-area">
+				<p>Kitting</p>
+				<p class="zone-stat"><%= kitting %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Boom Sub Assembly">
+			<div class="track-area booms">
+				<p>Booms Sub Assembly</p>
+				<p class="zone-stat"><%= booms %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Engine Sub Assembly">
+			<div class="track-area">
+				<p>Engine Subs</p>
+				<p class="zone-stat"><%= engineSubs %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Axle Sub Assembly">
+			<div class="track-area">
+				<p>Axle Subs</p>
+				<p class="zone-stat"><%= axleSubs %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Cab Systems">
+			<div class="track-area">
+				<p>Cabs</p>
+				<p class="zone-stat"><%= cabs %></p>
+			</div>
+		</a>
+	</div>
+	<div class="middle-row">
+		<a href="/dash/internalHeatmapFaults/LDL/Rolling Road">
+			<div class="track-area">
+				<p>Rolling Road</p>
+				<p class="zone-stat"><%= RollingRoad %></p>
+			</div>
+		</a>
+		<div class="track-area track-3">
+			<div class="booms-zone-2">
+				<a href="/dash/internalHeatmapFaults/LDL/Track 3 Zone 2"
+					>Track 3 Zone 2<br />
+					<div class="zone-span"><%= track3Zone2 %></div>
+				</a>
+			</div>
+			<div class="booms-zone-1">
+				<a href="/dash/internalHeatmapFaults/LDL/Track 3 Zone 1"
+					>Track 3 Zone 1<br />
+					<div class="zone-span"><%= track3Zone1 %></div>
+				</a>
+			</div>
+		</div>
+		<a href="/dash/internalHeatmapFaults/LDL/Zone 1 Ldl">
+			<div class="track-area">
+				<p>Overheads</p>
+				<p class="zone-stat"><%= overHeads %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Shot & Paint">
+			<div class="track-area">
+				<p>Paint Plant</p>
+				<p class="zone-stat"><%= paintPlant %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Transmissions">
+			<div class="track-area">
+				<p>Transmissions</p>
+				<p class="zone-stat"><%= transmissions %></p>
+			</div>
+		</a>
+	</div>
+	<div class="middle-row">
+		<div class="track-area track-1-internal">
+			<div class="track1-zone-6">
+				<a href="/dash/internalHeatmapFaults/LDL/Zone 6 Ldl"
+					>Track 1 Zone 6<br />
+					<div class="zone-span"><%= track1Zone6 %></div>
+				</a>
+			</div>
+			<div class="track1-zone-5">
+				<a href="/dash/internalHeatmapFaults/LDL/Zone 5 Ldl"
+					>Track 1 Zone 5<br />
+					<div class="zone-span"><%= track1Zone5 %></div>
+				</a>
+			</div>
+			<div class="track1-zone-4">
+				<a href="/dash/internalHeatmapFaults/LDL/Zone 4 Ldl"
+					>Track 1 Zone 4<br />
+					<div class="zone-span"><%= track1Zone4 %></div>
+				</a>
+			</div>
+			<div class="track1-zone-3">
+				<a href="/dash/internalHeatmapFaults/LDL/Zone 3 Ldl"
+					>Track 1 Zone 3<br />
+					<div class="zone-span"><%= track1Zone3 %></div>
+				</a>
+			</div>
+			<div class="track1-zone-2">
+				<a href="/dash/internalHeatmapFaults/LDL/Zone 2 Ldl"
+					>Track 1 Zone 2<br />
+					<div class="zone-span"><%= track1Zone2 %></div>
+				</a>
+			</div>
+		</div>
+		<a href="/dash/internalHeatmapFaults/LDL/T4F Sub Assembly">
+			<div class="track-area">
+				<p>T4 Exhaust Sub</p>
+				<p class="zone-stat"><%= t4Exhaust %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Hydraulic Business Unit">
+			<div class="track-area">
+				<p>HBU</p>
+				<p class="zone-stat"><%= hbu %></p>
+			</div>
+		</a>
+	</div>
+	<div class="bottom-row">
+		<a href="/dash/internalHeatmapFaults/LDL/Machining Manufacturing">
+			<div class="track-area">
+				<p>Machining Man</p>
+				<p class="zone-stat"><%= zone7Rec %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Inner Boom Manufacturing">
+			<div class="track-area">
+				<p>Inners</p>
+				<p class="zone-stat"><%= inners %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Outer Boom Manufacturing">
+			<div class="track-area">
+				<p>Outers</p>
+				<p class="zone-stat"><%= outers %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Chassis Manufacturing">
+			<div class="track-area">
+				<p>Manufacturing</p>
+				<p class="zone-stat"><%= manufacturing %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Cooling Pack Sub Assembly">
+			<div class="track-area">
+				<p>Rad Subs</p>
+				<p class="zone-stat"><%= radSubs %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Leg Sub Assembly">
+			<div class="track-area">
+				<p>Leg Subs</p>
+				<p class="zone-stat"><%= legSubs %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Ram Sub Assembly">
+			<div class="track-area">
+				<p>Ram Subs</p>
+				<p class="zone-stat"><%= ramSubs %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Fabrication Manufacturing">
+			<div class="track-area">
+				<p>Fabrication Man</p>
+				<p class="zone-stat"><%= fabrication %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Supplier Quality">
+			<div class="track-area">
+				<p>Supplier Quality</p>
+				<p class="zone-stat"><%= supplierQuality %></p>
+			</div>
+		</a>
+		<a href="/dash/internalHeatmapFaults/LDL/Power Systems">
+			<div class="track-area">
+				<p>Power Systems</p>
+				<p class="zone-stat"><%= powerSystems %></p>
+			</div>
+		</a>
+	</div>
+</div>
+
+<div class="container-fluid footer">
+	<div class="row header-top">
+		<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+			<img height="24px" src="/7z/content/images/jcb-logo.png" />
+			<img height="24px" src="/7z/content/images/df.png" />
+		</div>
+		<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+	</div>
+</div>

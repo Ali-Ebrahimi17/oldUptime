@@ -1,0 +1,29 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="newbuild-container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Edit Stat</h1>
+    </div>
+
+
+
+    <div class="col">
+      <form action="/figure/edit/<%= figure._id %>" method="POST">
+        <input type="hidden" name="figure[division]" value="<%= division %>">
+        <label for="buildNumber">Name</label>
+        <input class="form-control" type="text" name="figure[stat]" value="<%= figure.stat %>" required>
+
+        <div class="form-group text-center">
+          <button class="btn btn-md btn-success" style="margin: 5px;">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div>
+    <a href="/figure/all/<%= division %>">Go Back</a>
+  </div>

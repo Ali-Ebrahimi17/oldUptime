@@ -1,0 +1,153 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="150"> -->
+
+  <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+  <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+  <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+
+
+  <link rel="icon" href="/images/jcb.png" />
+  <link rel="stylesheet" href="/stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="/stylesheets/component.css">
+
+</head>
+
+<body>
+  <% let today = new Date() %>
+  <% let day = today.getDate() %>
+  <% let month = today.getMonth() + 1 %>
+  <% let year = today.getFullYear() %>
+  <% let hours = today.getHours() %>
+  <% let minutes = today.getMinutes() %>
+  <% if (day < 10) day = '0' + day %>
+  <% if (month < 10) month = '0' + month %>
+  <% if (hours < 10) hours = '0' + hours %>
+  <% if (minutes < 10) minutes = '0' + minutes %>
+  <% let dateTime = day + ' ' + month + ' ' + year + ' - ' + hours + ':' + minutes %>
+
+
+
+
+  <!-- Get the prediction months -->
+  <% let prediction1Month = moment().subtract(4, 'months').format('MMM-YY').toUpperCase()%>
+  <% let prediction2Month = moment().subtract(3, 'months').format('MMM-YY').toUpperCase()%>
+  <% let prediction3Month = moment().subtract(2, 'months').format('MMM-YY').toUpperCase()%>
+
+
+
+
+  <!-- The dash layout -->
+
+  <section class="dash-layout">
+
+    <div class="card card-header">
+      <div>
+        <h2 style="font-size: 15px;" class="float-right">Updated <%= timeNowStamp %></h2>
+      </div>
+
+      <h3 style="margin-top: -25px;">Division Q Smart Failures wc <%= startDateStamp  %></h3>
+
+    </div>
+
+
+
+    <div style="display: flex; justify-content: space-evenly;">
+
+      <div class="div-holder">
+        <div>
+          <% if (bhl.length > 0) { %>
+          <h3 style="margin-left: 20px;"><a href="/dash/downloadComponent/<%= division %>/18"><i style="font-size: 22px; " class="fas fa-download text-info"></i> Backhoe</h3></a>
+          <% } else { %>
+          <h3 style="margin-left: 20px;">Backhoe</h3>
+          <% } %>
+        </div>
+        <ol>
+          <% for (let f of bhl) { %>
+          <li><%= f %></li>
+          <% } %>
+        </ol>
+      </div>
+      <div class="div-holder">
+        <div>
+          <% if (cp.length > 0) { %>
+          <h3 style="margin-left: 20px;"><a href="/dash/downloadComponent/<%= division %>/5"><i style="font-size: 22px;" class="fas fa-download text-info"></i> Compact</a></h3>
+          <% } else { %>
+          <h3 style="margin-left: 20px;">Compact</h3>
+          <% } %>
+        </div>
+        <ol>
+          <% for (let f of cp) { %>
+          <li><%= f %></li>
+          <% } %>
+        </ol>
+      </div>
+      <div class="div-holder">
+        <div>
+          <% if (hp.length > 0) { %>
+          <h3 style="margin-left: 20px;"><a href="/dash/downloadComponent/<%= division %>/38"><i style="font-size: 22px;" class="fas fa-download text-info"></i> Heavy</a></h3>
+          <% } else { %>
+          <h3 style="margin-left: 20px;">Heavy</h3>
+          <% } %>
+        </div>
+        <ol>
+          <% for (let f of hp) { %>
+          <li><%= f %></li>
+          <% } %>
+        </ol>
+      </div>
+      <div class="div-holder">
+        <div>
+          <% if (ldl.length > 0) { %>
+          <h3 style="margin-left: 20px;"><a href="/dash/downloadComponent/<%= division %>/19"><i style="font-size: 22px;;" class="fas fa-download text-info"></i> Loadall</a></h3>
+          <% } else { %>
+          <h3 style="margin-left: 20px;">Loadall</h3>
+          <% } %>
+        </div>
+        <ol>
+          <% for (let f of ldl) { %>
+          <li><%= f %></li>
+          <% } %>
+        </ol>
+      </div>
+      <div class="div-holder">
+        <div>
+          <% if (sd.length > 0) { %>
+          <h3 style="margin-left: 20px;"><a href="/dash/downloadComponent/<%= division %>/64"><i style="font-size: 22px; ;" class="fas fa-download text-info"></i> Dumper</a></h3>
+          <% } else { %>
+          <h3 style="margin-left: 20px;">Dumper</h3>
+          <% } %>
+        </div>
+        <ol>
+          <% for (let f of sd) { %>
+          <li><%= f %></li>
+          <% } %>
+        </ol>
+      </div>
+
+
+    </div>
+
+
+
+
+
+  </section>
+
+  <script>
+
+
+  </script>
+
+</body>

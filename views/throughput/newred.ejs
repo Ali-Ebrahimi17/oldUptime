@@ -1,0 +1,270 @@
+<% layout('layouts/boilerplate')%>
+
+<div  id="newred-container" style="color: white;">
+
+
+	<div class="row form-background">
+
+		<div class="col-md-12 text-center">
+            <h1>Machine on Red</h1>
+		</div>
+
+		
+		<% if ( division === 'LDL' ) { %>  
+			<div class="col">
+				<form action="/throughput/newredLdl/<%= division %>" method="POST">
+					<!-- <form action="/throughput/newred/<%= division %>" method="POST"> -->
+					<% if ( division === 'LDL' ) { %>
+						<input type="hidden"  name="throughput[division]" value="<%= division %>">
+						<label for="buildNumber">Full Build Number</label>
+                          <input class="form-control" type="text" id="password" name="throughput[buildNumber]" minlength="9" maxlength="9" required>
+							<label for="area">Model</label>
+							<select class="form-control" type="text" name="throughput[model]"  autocomplete="off" required>
+								<% models.forEach(model => { %>
+									<option hidden ></option>
+
+									<option label="<%= model.name %>" value="<%= model.name %>">
+
+								<% }) %>
+							</select>
+
+							<label for="inspector">Inspector</label>
+							<select class="form-control" type="text" name="throughput[inspector]" autocomplete="off" required>
+								<% inspectors.forEach(inspector => { %>
+									<option hidden ></option>
+
+									<option label="<%= inspector.name %>" value="<%= inspector.name %>">
+
+								<% }) %>
+
+							</select>
+
+
+							<label for="area">Building</label>
+							<select class="form-control" type="text" name="throughput[building]"  autocomplete="off" required>
+								<option></option>
+								<option>AG PDI</option>
+								<option>CFC</option>
+								<option>Loadall PDI</option>
+							</select>
+
+							<label for="area">T Card Fails</label>
+							<select class="form-control" type="text" name="throughput[tCard]"  autocomplete="off" required>
+								<option></option>
+								<% let tCardx = 0 %>
+								<% while (tCardx < 41) { %>
+									<option><%= tCardx %></option>
+									<% tCardx++ %>
+								<% } %>
+								
+							</select>
+
+							<label for="area">Functional Faults</label>
+							<select class="form-control" type="text" name="throughput[functional]"  autocomplete="off" required>
+								<option></option>
+								<% let ffx = 0 %>
+								<% while (ffx < 41) { %>
+									<option><%= ffx %></option>
+									<% ffx++ %>
+								<% } %>
+								
+							</select>
+
+							<label for="area">Cosmetic Faults</label>
+							<select class="form-control" type="text" name="throughput[cosmetic]"  autocomplete="off" required>
+								<option></option>
+								<% let ccx = 0 %>
+								<% while (ccx < 41) { %>
+									<option><%= ccx %></option>
+									<% ccx++ %>
+								<% } %>
+							</select>
+				
+							<label for="area">Open faults Into Building</label>
+							<select class="form-control" type="text" style="margin-bottom: 33px;" name="throughput[openFaults]"  autocomplete="off" required>
+								<option></option>
+								<% let ofibx = 0 %>
+								<% while (ofibx < 41) { %>
+									<option><%= ofibx %></option>
+									<% ofibx++ %>
+								<% } %>
+								
+							</select>
+                
+            </div>
+				<!-- new col -->
+          
+
+
+			<!-- new col -->
+            <div class="col">
+            <label for="notes">Fault Detail</label>
+                <textarea style="height:460px; margin-bottom: 25px;" class="form-control" name="throughput[faults]"  ></textarea>
+                <div class="form-group text-center">
+                    <button class="btn btn-lg btn-success btn-block ">Create Throughput</button>
+                </div>
+            </div>
+						
+						
+				</form>
+			</div>
+
+			<% } %>
+
+		<% } else { %>
+			<div class="col">
+				<form action="/throughput/newred/<%= division %>" method="POST">
+					
+					<input type="hidden"  name="throughput[division]" value="<%= division %>">
+					<label for="buildNumber">Full Build Number</label>
+				    <input class="form-control" type="text" id="password" name="throughput[buildNumber]" minlength="9" maxlength="9" required>
+				
+
+					<label for="area">Model</label>
+					<select class="form-control" type="text" name="throughput[model]"  autocomplete="off" required>
+						<% models.forEach(model => { %>
+							<option hidden ></option>
+
+							<option label="<%= model.name %>" value="<%= model.name %>">
+
+						<% }) %>
+					</select>
+
+					<label for="inspector">Inspector</label>
+					<select class="form-control" type="text" name="throughput[inspector]" autocomplete="off" required>
+						<% inspectors.forEach(inspector => { %>
+							<option hidden ></option>
+
+							<option label="<%= inspector.name %>" value="<%= inspector.name %>">
+
+						<% }) %>
+
+					</select>
+
+
+					<label for="area">Building</label>
+					<select class="form-control" type="text" name="throughput[building]"  autocomplete="off" required>
+						<option></option>
+						<option>CFC</option>
+						<option>PDI</option>
+						<option>SIP 2</option>
+					</select>
+
+						<label for="area">T Card Fails</label>
+						<select class="form-control" type="text" name="throughput[tCard]"  autocomplete="off" required>
+							<option></option>
+							<option>0</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+							<option>6</option>
+							<option>7</option>
+							<option>8</option>
+							<option>9</option>
+							<option>10</option>
+							<option>11</option>
+							<option>12</option>
+							<option>13</option>
+							<option>14</option>
+							<option>15</option>
+							<option>16</option>
+							<option>17</option>
+							<option>18</option>
+							<option>19</option>
+							<option>20</option>
+						</select>
+
+						<% if (division === 'Cabs') { %>
+							<label for="area">Build Faults</label>
+						<% } else { %>
+							<label for="area">Functional Faults</label>
+						<% } %>
+						<select class="form-control" type="text" name="throughput[functional]"  autocomplete="off" required>
+							<option></option>
+							<option>0</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+							<option>6</option>
+							<option>7</option>
+							<option>8</option>
+							<option>9</option>
+							<option>10</option>
+							<option>11</option>
+							<option>12</option>
+							<option>13</option>
+							<option>14</option>
+							<option>15</option>
+							<option>16</option>
+							<option>17</option>
+							<option>18</option>
+							<option>19</option>
+							<option>20</option>
+						</select>
+
+						<% if (division === 'Cabs') { %>
+							<label for="area">Shortages</label>
+						<% } else { %>
+							<label for="area">Cosmetic Faults</label>
+						<% } %>
+						<select class="form-control" type="text" name="throughput[cosmetic]"  autocomplete="off" required>
+							<option></option>
+							<option>0</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+							<option>6</option>
+							<option>7</option>
+							<option>8</option>
+							<option>9</option>
+							<option>10</option>
+							<option>11</option>
+							<option>12</option>
+							<option>13</option>
+							<option>14</option>
+							<option>15</option>
+							<option>16</option>
+							<option>17</option>
+							<option>18</option>
+							<option>19</option>
+							<option>20</option>
+						</select>
+						
+					</div>
+
+					<div class="col">
+						<label for="notes">Faults Detail</label>
+							<textarea style="height:390px; margin-bottom: 25px;" class="form-control" name="throughput[faults]"></textarea>
+
+							<div class="form-group text-center">
+								<button class="btn btn-lg btn-success btn-block ">Submit</button>
+							</div>
+						</div>
+					</form>
+				</div>
+	
+				
+        <% } %>
+						
+
+			
+	
+
+	
+
+
+			
+<div>
+	<a href="/throughput/all/<%= division %>">Go Back to Throughput Page</a>
+</div>
+
+        
+
+
+        

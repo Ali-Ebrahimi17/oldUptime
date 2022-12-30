@@ -1,0 +1,50 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container">
+  <table class="table table-hover table-dark" style="font-size: 15px; width: 300px; margin: auto; ">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 300px;">Dash Stats</th>
+
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[171]._id %>">Plant Practical Inspection - <%= figures[171].stat %>%</a></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[172]._id %>">Dealer PDI Practical Inspection - <%= figures[172].stat %>%</a></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[180]._id %>">T3 Closures - <%= figures[180].stat %></a></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[182]._id %>">T3 Target - <%= figures[182].stat %></a></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[181]._id %>">Customer Closures - <%= figures[181].stat %></a></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[183]._id %>">Customer Target - <%= figures[183].stat %></a></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[176]._id %>">PPM - <%= figures[176].stat %></a></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[177]._id %>">ISIR - <%= figures[177].stat %>%</a></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[178]._id %>">Supplier Approval - <%= figures[178].stat %>%</a></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[179]._id %>">Supplier Recovery - <%= figures[179].stat %>%</a></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[184]._id %>">Internal DPU - <%= figures[184].stat %></a></td>
+      </tr>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/figure/edit/<%= figures[175]._id %>">Internal DPU Target - <%= figures[175].stat %></a></td>
+      </tr>
+    </tbody>
+  </table>

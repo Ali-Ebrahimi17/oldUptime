@@ -1,0 +1,311 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- <meta http-equiv="refresh" content="120"> -->
+  <title>Equipment Monitoring</title>
+  <link rel="icon" href="/home/jcb.png" />
+  <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+  <!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+  <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+  <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+  <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+  <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script> -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css"> -->
+
+
+
+  <!-- Include the plugin's CSS and JS: -->
+  <script type="text/javascript" src="/bootstrap-multiselect-master/dist/js/bootstrap-multiselect.js"></script>
+  <link rel="stylesheet" href="/bootstrap-multiselect-master/dist/css/bootstrap-multiselect.css" type="text/css" />
+
+
+
+  <link rel="stylesheet" href="/stylesheets/app.css" />
+  <link rel="stylesheet" href="/fontawesome/css/all.css" />
+
+  <style>
+    /* QuickReset */
+    * {
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    .dropdown-container {
+      position: relative;
+    }
+
+    .dropdown-label {
+      padding: 4px 10px 4px 0;
+    }
+
+    .dropdown-label:before {
+      content: "\25BC";
+    }
+
+    .dropdown-container.is-active .dropdown-label:before {
+      content: "\25B2";
+    }
+
+    .dropdown-button {
+      cursor: pointer;
+      padding: 10px;
+      border: 1px solid #d5d5d5;
+      background: white;
+      display: flex;
+      flex-flow: row wrap;
+      margin-left: -15px;
+      width: 466px;
+    }
+
+    .dropdown-quantity {
+      flex: 1;
+      display: flex;
+      flex-flow: row wrap;
+    }
+
+    .dropdown-sel {
+      display: inline-block;
+      background: #eee;
+      border-radius: 3em;
+      padding: 2px 10px;
+      margin: 0 3px 3px 0;
+    }
+
+    .dropdown-list {
+      position: absolute;
+      overflow-y: auto;
+      z-index: 9999999;
+      top: calc(100% - 2px);
+      width: 100%;
+      max-height: 40vh;
+      padding: 10px;
+      padding-top: 0;
+      border: 1px solid #d5d5d5;
+      border-top: 0;
+      background: white;
+      display: none;
+    }
+
+    .dropdown-container.is-active .dropdown-list {
+      display: block;
+    }
+
+    .dropdown-list input[type="search"] {
+      padding: 5px;
+      display: block;
+      width: 100%;
+    }
+
+    .dropdown-list ul {
+      padding: 0;
+      padding-top: 10px;
+      list-style: none;
+    }
+
+    .dropdown-list li {
+      padding: 0.24em 0;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    /* HELPER CLASSES */
+    .noselect {
+      user-select: none;
+    }
+
+    .is-hidden {
+      display: none;
+    }
+  </style>
+
+<body>
+  <%- include('../../views/partials/flash.ejs')%>
+
+
+
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+          <h3 style="text-align: center; margin: 8px;">Options</h3>
+        </div>
+        <div class="modal-body">
+
+
+          <div>
+            <fieldset>
+              <form action="/equipment-monitoring/machineAnalysis/<%= shortBu %>/all" method="POST">
+
+                <div class="col">
+
+                  <div class="form-group" style="color:black;">
+                    <span style="margin-left: -15px;">Select Assets</span>
+                    <select class="form-group" required type='text' id="example-form-group" multiple="multiple" name="ids">
+                      <optgroup label="Welding Robots">
+                        <% robots.forEach(r => { %>
+                        <option value="<%= r._id %>" data-name="<%= r.machineName %>"><%= r.machineName %></option>
+                        <% }) %>
+                      </optgroup>
+                      <optgroup label="Laser Cutters">
+                        <% lasers.forEach(l => { %>
+                        <option value="<%= l._id %>" data-name="<%= l.machineName %>"><%= l.machineName %></option>
+                        <% }) %>
+                      </optgroup>
+                      <optgroup label="Plasma Cutters">
+                        <% plasmas.forEach(p => { %>
+                        <option value="<%= p._id %>" data-name="<%= p.machineName %>"><%= p.machineName %></option>
+                        <% }) %>
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="row" style="color:black">
+                  <div class="col">
+
+
+                    <label for="buildNumber">Start Date</label>
+                    <input class="form-control" type="date" name="startDate" style="margin-bottom: 10px;" value="" required>
+                    <input class="form-control" type="time" name="startTime" value="" required>
+
+
+                  </div>
+                  <div class="col">
+                    <label for="buildNumber">End Date</label>
+                    <input class="form-control" type="date" name="endDate" style="margin-bottom: 10px;" value="" required>
+                    <input class="form-control" type="time" name="endTime" value="" required style="margin-bottom: 10px;">
+
+
+                    <button type="button" data-dismiss="modal" class="btn btn-danger float-right" style="margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                    <button class="btn btn-success float-right" style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                  </div>
+
+                </div>
+
+              </form>
+
+              <!-- <button type="close" class="btn btn-danger float-right">Cancel</button> -->
+            </fieldset>
+          </div>
+
+
+
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div class="container-fluid">
+
+
+    <div class="row header-top">
+
+      <div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+      </div>
+      <div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+        <span style="font-size: 19px; padding-top: 2px; margin-right: 4px; color: black; font-weight: bold; ">Last Update: Now </span>
+        <!-- <a href="/equipment-monitoring/home">
+                <span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 5px" class="fas fa-home icon-home"></span>
+            </a> -->
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-main">
+
+        <div class="row">
+
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+            Launch modal
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid footer">
+
+    <div class="row header-top">
+      <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+        <img height="24px" src="/7z/content/images/df.png">
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+        J.C. Bamford Excavators LTD &copy; 2022
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#example-form-group').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        buttonContainer: '<div class="btn-group" style="width: 470px; margin-left: -18px" />',
+        enableClickableOptGroups: true,
+        //    enableCollapsibleOptGroups: true,
+        maxHeight: 500,
+        width: 500,
+      });
+      $('.multiselect-container .multiselect-filter', $('#example-fix-filter').parent()).css({
+        'position': 'sticky',
+        'top': '0px',
+        'z-index': 1,
+      })
+    });
+  </script>
+
+
+
+
+  <script src="/7z/content/modal/modal3.js"></script>
+  <script src="/multi/script.js"></script>
+
+
+
+
+</body </html>

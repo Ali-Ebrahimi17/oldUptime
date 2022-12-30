@@ -1,0 +1,133 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+<% let twelveMonthsTime = moment().add(12, 'months').format('MMM-YY') %>
+<% let elevenMonthsTime = moment().add(11, 'months').format('MMM-YY') %>
+<% let tenMonthsTime = moment().add(10, 'months').format('MMM-YY') %>
+<% let nineMonthsTime = moment().add(9, 'months').format('MMM-YY') %>
+<% let eightMonthsTime = moment().add(8, 'months').format('MMM-YY') %>
+<% let sevenMonthsTime = moment().add(7, 'months').format('MMM-YY') %>
+<% let sixMonthsTime = moment().add(6, 'months').format('MMM-YY') %>
+<% let fiveMonthsTime = moment().add(5, 'months').format('MMM-YY') %>
+<% let fourMonthsTime = moment().add(4, 'months').format('MMM-YY') %>
+<% let threeMonthsTime = moment().add(3, 'months').format('MMM-YY') %>
+<% let twoMonthsTime = moment().add(2, 'months').format('MMM-YY') %>
+<% let nextMonth = moment().add(1, 'months').format('MMM-YY') %>
+
+<% let thisMonth = moment().subtract(0, 'months').format('MMM-YY') %>
+
+<% let oneMonthAgo = moment().subtract(1, 'months').format('MMM-YY') %>
+<% let twoMonthsAgo = moment().subtract(2, 'months').format('MMM-YY') %>
+<% let threeMonthsAgo = moment().subtract(3, 'months').format('MMM-YY') %>
+<% let fourMonthsAgo = moment().subtract(4, 'months').format('MMM-YY') %>
+<% let fiveMonthsAgo = moment().subtract(5, 'months').format('MMM-YY') %>
+<% let sixMonthsAgo = moment().subtract(6, 'months').format('MMM-YY') %>
+<% let sevenMonthsAgo = moment().subtract(7, 'months').format('MMM-YY') %>
+<% let eightMonthsAgo = moment().subtract(8, 'months').format('MMM-YY') %>
+<% let nineMonthsAgo = moment().subtract(9, 'months').format('MMM-YY') %>
+<% let tenMonthsAgo = moment().subtract(10, 'months').format('MMM-YY') %>
+<% let elevenMonthsAgo = moment().subtract(11, 'months').format('MMM-YY') %>
+<% let twelveMonthsAgo = moment().subtract(12, 'months').format('MMM-YY') %>
+
+
+
+<div id="top50edit-container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1>Top 50 Update</h1>
+    </div>
+
+
+
+
+    <div class="col">
+
+
+      <form action="/top50/editcabs/<%= failedPart %>?_method=PUT" method="POST">
+
+        <label for="name">Part Number</label>
+        <input class="form-control" type="text" name="name" value="<%= failedPart %>" disabled>
+        <div class="valid-feedback">Looks good</div>
+
+        <label for="name">Champion</label>
+        <input class="form-control" type="text" name="claim[championCabs]" value="<%= claim.championCabs  %>">
+
+
+        <label for="notes">Concern</label>
+        <textarea style="height: 112px;" class="form-control" name="claim[concernCabs]"><%= claim.concernCabs %></textarea>
+
+        <label for="notes">Containment Details</label>
+        <textarea style="height: 112px; margin-bottom: 5px;" class="form-control" name="claim[containCabs]"><%= claim.containCabs %></textarea>
+
+    </div>
+
+    <div class="col">
+
+
+      <label for="area">RAG</label>
+      <select class="form-control" type="text" name="claim[cabsRag]" value="<%= claim.cabsRag %>" autocomplete="off" required>
+        <option hidden><%= claim.cabsRag  %></option>
+        <option>Open</option>
+        <option>Contained</option>
+        <option>Closed</option>
+      </select>
+      <label for="area">ASD</label>
+      <select class="form-control" type="text" name="claim[asdCabs]" value="<%= claim.asdCabs %>" autocomplete="off" required>
+        <option hidden><%= claim.asdCabs%></option>
+        <option>Assembly</option>
+        <option>Supplier</option>
+        <option>Design</option>
+      </select>
+      <label for="notes">Action</label>
+      <textarea style="height: 128px;" class="form-control" name="claim[actionCabs]"><%= claim.actionCabs %></textarea>
+      <label for="area">Cut in Date</label>
+      <select class="form-control" style="margin-bottom: 20px;" type="text" name="claim[closureDateCabs]" value="<%= claim.closureDateCabs %>" autocomplete="off">
+        <option hidden><%= claim.closureDateCabs %></option>
+        <option></option>
+        <option><%= twelveMonthsAgo %></option>
+        <option><%= elevenMonthsAgo %></option>
+        <option><%= tenMonthsAgo %></option>
+        <option><%= nineMonthsAgo %></option>
+        <option><%= eightMonthsAgo %></option>
+        <option><%= sevenMonthsAgo %></option>
+        <option><%= sixMonthsAgo %></option>
+        <option><%= fiveMonthsAgo %></option>
+        <option><%= fourMonthsAgo %></option>
+        <option><%= threeMonthsAgo %></option>
+        <option><%= twoMonthsAgo %></option>
+        <option><%= oneMonthAgo %></option>
+        <option><%= thisMonth %></option>
+        <option><%= nextMonth %></option>
+        <option><%= twoMonthsTime %></option>
+        <option><%= threeMonthsTime %></option>
+        <option><%= fourMonthsTime %></option>
+        <option><%= fiveMonthsTime %></option>
+        <option><%= sixMonthsTime %></option>
+        <option><%= sevenMonthsTime %></option>
+        <option><%= eightMonthsTime %></option>
+        <option><%= nineMonthsTime %></option>
+        <option><%= tenMonthsTime %></option>
+        <option><%= elevenMonthsTime %></option>
+        <option><%= twelveMonthsTime %></option>
+
+      </select>
+      <% if (division != 'GROUP') { %>
+      <div class="form-group text-center">
+        <button class="btn btn-md btn-success btn-block">Submit</button>
+      </div>
+      <% }%>
+
+    </div>
+
+
+
+    </form>
+  </div>
+  <div>
+    <a href="/top50/50cabs">Go Back</a>
+
+  </div>

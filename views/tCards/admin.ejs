@@ -1,0 +1,38 @@
+<% layout('layouts/boilerplateTCard')%>
+
+<div class="main-tCard-container">
+    <h2 class="main-title"><%= division.toUpperCase() %> <%= location.toUpperCase()%> ADMIN </h2>
+    <div class="row" style="width: 100%; margin: 0 20%;">
+
+        <div class="col-lg check-row">
+            <table class="table" style="font-size: 1.1rem;">
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th style="font-size: 2rem;" scope="col">All <%= frequency %> Checks <a class="float-right" style="margin-right: 8px;" href="/tCard/new/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/<%= frequency %>"> <i style="color: green;" class="fas fa-plus"></i></a></th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <% for (let card of cards) { %>
+                        <tr>
+                            <th scope="row"><form class="d-inline" action="/tCard/delete/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/<%= frequency %>/<%= card._id %>?_method=DELETE" method="POST">
+                                <button style="background-color: whitesmoke; margin-top: -5px; color: red; font-weight: bold; border: none; font-size: 1.2rem;"  class="btn btn-danger btn-sm">X</button>
+                                </form>
+                            </th>
+                            <td style="font-weight: bold;"><a href="/tCard/adminedit/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/<%= frequency %>/<%= card._id %>"><%= card.name %></a></td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+
+        
+
+    </div>
+    <a  class="btn btn-success" href="/tCard/show/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>">Done</a>
+
+</div>
+
+
+

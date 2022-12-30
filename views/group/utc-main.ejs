@@ -1,0 +1,1562 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="120" /> -->
+		<title>JCB - Quality Uptime</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<link rel="stylesheet" href="/content/table.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+		<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+		<script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+		<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+		<link rel="stylesheet" href="/stylesheets/app.css" />
+		<link rel="stylesheet" href="/fontawesome/css/all.css" />
+	</head>
+
+	<style>
+		.graph-holder {
+			width: 442px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 150px;
+		}
+
+		.card {
+			border: 1px solid grey;
+			margin-bottom: 5px;
+			color: white;
+			font-size: 14px;
+		}
+
+		.green-top50 {
+			background-color: green;
+		}
+
+		.amber-top50 {
+			background-color: orange;
+		}
+
+		.red-top50 {
+			background-color: red;
+		}
+	</style>
+
+	<body>
+		<div class="container-fluid">
+			<div class="row header-top">
+				<div class="col-lg-5 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+				</div>
+				<!-- <div class="col-lg-7 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+            <a href="/equipment-monitoring/operations">
+                <span  style="font-size: 19px; padding-top: 2px; margin-right: 4px; color: black; font-weight: bold;" >Last Update:  DD/MM/YYYY - HH:mm:ss </span>
+            </a>
+        </div> -->
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-main">
+					<div class="row">
+						<div class="col-lg-12" style="margin-top: -12px">
+							<h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Group Operations Uptime</h1>
+						</div>
+
+						<div class="col-lg-6" style="margin-top: -10px; margin-bottom: 22px; padding: 8px 0px 8px 0px">
+							<div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">Delivered Quality</h1>
+							</div>
+						</div>
+
+						<div class="col-lg-6" style="margin-top: -10px; margin-bottom: 22px; padding: 8px 0px 8px 0px">
+							<div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">Customer Quality</h1>
+							</div>
+						</div>
+
+						<div style="display: flex; width: 120%; margin-bottom: 20px; margin-top: -20px">
+							<div class="col" style="margin: 0 10px; width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap">
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>UK DOA RFT</h5>
+										</div>
+										<div style="height: 130px">
+											<canvas id="doaRFT"></canvas>
+										</div>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>UK DOA DPU</h5>
+										</div>
+										<div style="height: 130px">
+											<canvas id="doaDPU"></canvas>
+										</div>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>Major Escapes Build Month</h5>
+										</div>
+										<div style="height: 130px">
+											<canvas id="canvas7"></canvas>
+										</div>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>Major Escapes Report Month</h5>
+										</div>
+										<div style="height: 130px">
+											<canvas id="canvas14"></canvas>
+										</div>
+									</div>
+								</a>
+
+								<a href="/dash/group-fourc">
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>DOA 4C Status</h5>
+										</div>
+										<div style="height: 130px">
+											<canvas id="doaFourC"></canvas>
+										</div>
+									</div>
+								</a>
+
+								<div>
+									<div class="graph-holder">
+										<div>
+											<div style="text-align: center; color: white">
+												<h5>DOA Top 50 Status</h5>
+											</div>
+											<div style="text-align: center; color: white; margin-top: -5px">
+												<h5 style="font-size: 15px; color: grey"><%= dataArr[0].top50Percent %>% of All DOA Claims</h5>
+											</div>
+										</div>
+										<a href="/dash/group-top50">
+											<div class="progress" style="height: 100px; border-radius: 0px; margin-bottom: 30px; width: auto; background-color: black">
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= dataArr[0].closedPercent %>%"
+												>
+													<%= dataArr[0].closedPercent%>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="
+														background-color: orange;
+														font-size: 20px;
+														color: black;
+														font-weight: bold;
+														width: <%= dataArr[0].containedPercent %>%;
+													"
+												>
+													<%= dataArr[0].containedPercent %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: red; font-size: 20px; color: black; font-weight: bold; width: <%= dataArr[0].openPercent %>%"
+												>
+													<%= dataArr[0].openPercent %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: grey; font-size: 20px; color: black; font-weight: bold; width: <%= dataArr[0].noActionPercent %>%"
+												>
+													<%= dataArr[0].noActionPercent %>%
+												</div>
+											</div>
+										</a>
+									</div>
+								</div>
+								<a>
+									<div class="graph-holder" style="width: 900px; height: 650px; margin-top: -20px">
+										<table class="table" id="table-requests" style="margin-bottom: 20px; height: 650px">
+											<thead>
+												<tr>
+													<th class="th-top" colspan="2"></th>
+													<th class="th-top" colspan="3">DOA RFT %</th>
+													<th class="th-top" colspan="2">DOA DPU</th>
+												</tr>
+												<tr>
+													<th class="th-centre" style="width: 48px; border-right: 1px solid rgb(42, 44, 46)"></th>
+													<th class="th-centre" style="width: 4px; border-right: 1px solid rgb(42, 44, 46)">Target</th>
+													<!-- <th class="th-centre" style="width: 5px; border-right: 1px solid transparent;"></th> -->
+													<th class="th-centre" style="width: 4px; border-right: 1px solid rgb(42, 44, 46)">Actual</th>
+													<th class="th-centre" style="width: 4px; border-right: 1px solid rgb(42, 44, 46)">YTD +/-</th>
+													<th class="th-centre" style="width: 4px; border-right: 1px solid rgb(42, 44, 46)">Actual</th>
+													<th class="th-centre" style="width: 4px; border-right: 1px solid rgb(42, 44, 46)">YTD +/-</th>
+												</tr>
+											</thead>
+											<tbody style="color: white; font-size: 20px">
+												<% for (let s of sortedDoaArrayForTable) { %>
+												<tr style="margin-bottom: -5px; margin-top: -5px">
+													<td class="td-centre" style="width: 47px; max-height: 15px"><%= s.businessUnit %></td>
+													<td class="td-centre" style="width: 25px"><%= s.targetRft %></td>
+													<td class="td-centre" style="width: 25px"><%= s.actualRft %></td>
+													<td class="td-centre" style="width: 25px; color: <%= s.rftColor %>"><%= s.rftYtd %>%</td>
+													<td class="td-centre" style="width: 25px"><%= s.actualDpu %></td>
+													<td class="td-centre" style="width: 25px; color: <%= s.dpuColor %>"><%= s.dpuYtd %>%</td>
+												</tr>
+
+												<% } %>
+											</tbody>
+										</table>
+									</div>
+								</a>
+							</div>
+
+							<hr style="width: 1px; height: 110%; display: inline-block; background-color: grey; margin-top: -1%" />
+
+							<div class="col" style="margin: 0 10px; width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap">
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>UK T3 RFT</h5>
+										</div>
+										<div style="height: 130px">
+											<canvas id="t3RFT"></canvas>
+										</div>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>UK T3 DPU</h5>
+										</div>
+										<div style="height: 130px">
+											<canvas id="t3DPU"></canvas>
+										</div>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>Top 10 Late Closure SQ > 40</h5>
+										</div>
+										<div style="height: 130px">
+											<canvas id="canvas15"></canvas>
+										</div>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>Top 10 Late Closure Ops > 20</h5>
+										</div>
+										<div style="height: 130px">
+											<canvas id="canvas16"></canvas>
+										</div>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>T3 4C Status</h5>
+										</div>
+										<div style="height: 130px">
+											<canvas id="t3FourC"></canvas>
+										</div>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div data-toggle="modal" data-target="#t3-modal" style="cursor: pointer">
+											<div style="text-align: center; color: white">
+												<h5>T3 Top 50 Status</h5>
+											</div>
+											<div style="text-align: center; color: white; margin-top: -5px">
+												<h5 style="font-size: 15px; color: grey"><%= dataArr[1].top50Percent %>% of All T3 Claims</h5>
+											</div>
+										</div>
+
+										<a href="/dash/group-top50">
+											<div class="progress" style="height: 100px; border-radius: 0px; margin-bottom: 30px; width: auto; background-color: black">
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= dataArr[1].closedPercent %>%"
+												>
+													<%= dataArr[1].closedPercent%>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="
+														background-color: orange;
+														font-size: 20px;
+														color: black;
+														font-weight: bold;
+														width: <%= dataArr[1].containedPercent %>%;
+													"
+												>
+													<%= dataArr[1].containedPercent %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: red; font-size: 20px; color: black; font-weight: bold; width: <%= dataArr[1].openPercent %>%"
+												>
+													<%= dataArr[1].openPercent %>%
+												</div>
+												<div
+													class="progress-bar progress-bar-striped progress-bar-animated"
+													role="progressbar"
+													aria-valuenow="75"
+													aria-valuemin="0"
+													aria-valuemax="100"
+													style="background-color: grey; font-size: 20px; color: black; font-weight: bold; width: <%= dataArr[1].noActionPercent %>%"
+												>
+													<%= dataArr[1].noActionPercent %>%
+												</div>
+											</div>
+										</a>
+									</div>
+								</a>
+								<a>
+									<div class="graph-holder" style="width: 900px; height: 650px; margin-top: -20px">
+										<table class="table" id="table-requests" style="margin-bottom: 20px; height: 650px; padding: 0px">
+											<thead>
+												<tr>
+													<th class="th-top" colspan="2"></th>
+													<th class="th-top" colspan="3">T3 RFT %</th>
+													<th class="th-top" colspan="2">T3 DPU</th>
+												</tr>
+												<tr>
+													<th class="th-centre" style="width: 48px; border-right: 1px solid rgb(42, 44, 46)"></th>
+													<th class="th-centre" style="width: 4px; border-right: 1px solid rgb(42, 44, 46)">Target</th>
+													<!-- <th class="th-centre" style="width: 5px; border-right: 1px solid transparent;"></th> -->
+													<th class="th-centre" style="width: 4px; border-right: 1px solid rgb(42, 44, 46)">Actual</th>
+													<th class="th-centre" style="width: 4px; border-right: 1px solid rgb(42, 44, 46)">YTD +/-</th>
+													<th class="th-centre" style="width: 4px; border-right: 1px solid rgb(42, 44, 46)">Actual</th>
+													<th class="th-centre" style="width: 4px; border-right: 1px solid rgb(42, 44, 46)">YTD +/-</th>
+												</tr>
+											</thead>
+											<tbody style="color: white; font-size: 20px">
+												<% for (let s of sortedT3ArrayForTable) { %>
+												<tr style="margin-bottom: -5px; margin-top: -5px">
+													<td class="td-centre" style="width: 47px; max-height: 15px"><%= s.businessUnit %></td>
+													<td class="td-centre" style="width: 25px"><%= s.targetRft %></td>
+													<td class="td-centre" style="width: 25px"><%= s.actualRft %></td>
+													<td class="td-centre" style="width: 25px; color: <%= s.rftColor %>"><%= s.rftYtd %>%</td>
+													<td class="td-centre" style="width: 25px"><%= s.actualDpu %></td>
+													<td class="td-centre" style="width: 25px; color: <%= s.dpuColor %>"><%= s.dpuYtd %>%</td>
+												</tr>
+
+												<% } %>
+											</tbody>
+										</table>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid footer">
+			<div class="row header-top">
+				<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+					J.C. Bamford Excavators LTD &copy; 2022
+				</div>
+			</div>
+		</div>
+
+		<script>
+			Chart.defaults.global.defaultFontColor = "transparent";
+			Chart.defaults.global.defaultFontSize = 12;
+			Chart.defaults.scale.gridLines.display = false;
+
+			let defaultLabels = [
+			  <%- JSON.stringify(sevenMonthsAgoText) %>,
+			  <%- JSON.stringify(sixMonthsAgoText) %>,
+			  <%- JSON.stringify(fiveMonthsAgoText) %>,
+			  <%- JSON.stringify(fourMonthsAgoText) %>,
+			  <%- JSON.stringify(threeMonthsAgoText) %>,
+			  <%- JSON.stringify(twoMonthsAgoText) %>,
+			  <%- JSON.stringify(oneMonthAgoText) %>,
+			  <%- JSON.stringify(thisMonthText) %>,
+			]
+
+
+
+			let doa = new Chart(doaRFT, {
+			  type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+			     data: {
+			     labels: <%- JSON.stringify(fullDOALabels) %>,
+			     datasets: [
+			       {
+			         label: "DOA Target",
+			         type: "line",
+			         borderColor: "red",
+			         data: [<%= newDOARFTTargetArr %>],
+			         fill: false
+			       },
+			       {
+			         label: 'DOA',
+			         data: [ <%= newDOARFTArr%> ],
+			         // backgroundColor:'rgba(54, 162, 235, 0.6)',
+			         backgroundColor: <%- JSON.stringify(newDOAUnactionedColorArr); %>,
+			       }
+			     ]
+			   },
+			  options: {
+			       maintainAspectRatio: false,
+			         responsive: true,
+			    plugins: {
+			      datalabels: {
+			        display: false,
+			      },
+			    },
+
+			    scales: {
+			      xAxes: [{
+
+			        ticks: {
+			          display: true,
+			          beginAtZero: true,
+			          fontSize: 8,
+			          fontColor: '#fff'
+			          // callback: function(value) {if (value % 1 === 0) {return value;}}
+			        },
+			        dataLabels: {
+			          fontSize: 2
+			        },
+			      }],
+			      yAxes: [{
+
+			        ticks: {
+			          display: true,
+			          beginAtZero: true,
+			          fontSize: 8,
+			          fontColor: '#fff'
+			          // callback: function(value) {if (value % 1 === 0) {return value;}}
+			        },
+			        dataLabels: {
+			          fontSize: 2
+			        },
+			      }]
+			    },
+			    title: {
+			      display: false,
+			      text: 'UK DOA RFT %',
+			      fontSize: 15
+			    },
+			    legend: {
+			      display: false,
+			      position: 'right',
+			      labels: {
+			        fontColor: '#000'
+			      }
+			    },
+			    layout: {
+			      padding: {
+			        left: 0,
+			        right: 0,
+			        bottom: 0,
+			        top: 0
+			      }
+			    },
+			    tooltips: {
+			      enabled: true,
+			      mode: 'label',
+			         position: 'nearest',
+			    },
+			    plugins: {
+			      datalabels: {
+			        display: false,
+			      },
+			    }
+
+			  },
+			});
+
+			let doaDPUOptions = {
+			     maintainAspectRatio: false,
+			         responsive: true,
+			  plugins: {
+			    datalabels: {
+			      display: false,
+			    },
+			  },
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 8,
+			        fontColor: '#fff'
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			    }],
+			    yAxes: [{
+			      stacked: true,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 8,
+			        fontColor: '#fff'
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			    }]
+			  },
+			  title: {
+			    display: false,
+			    text: 'UK DOA DPU',
+			    fontSize: 15
+			  },
+			  legend: {
+			    display: false,
+			    position: 'right',
+			    labels: {
+			      fontColor: '#000'
+			    }
+			  },
+			  layout: {
+			    padding: {
+			      left: 0,
+			      right: 0,
+			      bottom: 0,
+			      top: 0
+			    }
+			  },
+			  tooltips: {
+			       enabled: true,
+			       mode:'label',
+			          // yAlign: 'end',
+			             position: "nearest",
+			       callbacks: {
+			         label: function(tooltipItem, data) {
+
+			           let dataset = data.datasets[tooltipItem.datasetIndex]
+			           let datasetLabel = data.datasets[tooltipItem.datasetIndex].label
+
+			           if (datasetLabel === "Target" || dataset.data[tooltipItem.index] === 0) {
+			             return false
+			           } else {
+			               let theDoaData = [
+			               [<%= closedClaimsDoaArr %>],
+			               [<%= containedClaimsDoaArr %> ],
+			               [<%= openClaimsDoaArr %> ],
+			               [<%= unActionedClaimsDoaArr %> ],
+			             ]
+			             let claimsNumber = theDoaData[tooltipItem.datasetIndex - 1][tooltipItem.index]
+			             let dpu = "DPU: "+dataset.data[tooltipItem.index];
+			             let claims = "Claims: "+claimsNumber;
+
+			             return dpu+' - '+claims
+			           }
+			         }
+			      },
+			     },
+			  plugins: {
+			    datalabels: {
+			      display: false,
+			    },
+			  }
+
+			}
+
+
+
+
+			var ctx = document.getElementById("doaDPU");
+			var myChart1 = new Chart(ctx, {
+			  type: 'bar',
+			     data: {
+			     labels:
+			       <%- JSON.stringify(fullDOALabels); %>,
+			     datasets: [
+			     {
+			       label: "Target",
+			       type: "line",
+			       borderColor: "red",
+			       data: [<%= newDOADPUTargetArr %>],
+			       fill: false
+			     },
+			     {
+			       label: 'DOA',
+			       data: [<%= newDOAClosedArr %>],
+			       backgroundColor: 'green',
+			     },
+			     {
+			       label: 'DOA',
+			       data: [<%= newDOAContainedArr %>],
+			       backgroundColor: 'orange',
+			     },
+			     {
+			       label: 'DOA',
+			       data: [<%= newDOAOpenArr %>],
+			       backgroundColor: 'red',
+			     }, {
+			       label: 'DOA',
+			       data: [<%= newDOAUnactionedArr %>],
+			       backgroundColor: <%- JSON.stringify(newDOAUnactionedColorArr); %>,
+			     },
+			     ]
+			   },
+			  options: doaDPUOptions,
+			})
+
+
+
+
+
+
+			let doa1 = new Chart(t3RFT, {
+			  type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+			  data: {
+			     labels:
+			       <%- JSON.stringify(fullT3Labels); %>,
+			     datasets: [
+			       {
+			       label: "T3 Target",
+			       type: "line",
+			       borderColor: "red",
+			       data: [ <%= newT3RFTTargetArr %> ],
+			       fill: false
+			     },
+			     {
+			       label: 'T3 RFT %',
+			       data: [<%= newT3RFTArr %>],
+			       backgroundColor: <%- JSON.stringify(newT3UnactionedColorArr) %>,
+			     }]
+			   },
+			  options: {
+			       maintainAspectRatio: false,
+			         responsive: true,
+			    scales: {
+			      xAxes: [{
+
+			        ticks: {
+			          display: true,
+			          beginAtZero: true,
+			          fontSize: 8,
+			          fontColor: '#fff'
+			          // callback: function(value) {if (value % 1 === 0) {return value;}}
+			        },
+			        dataLabels: {
+			          fontSize: 2
+			        },
+			      }],
+			      yAxes: [{
+
+			        ticks: {
+			          display: true,
+			          beginAtZero: true,
+			          fontSize: 8,
+			          fontColor: '#fff'
+			          // callback: function(value) {if (value % 1 === 0) {return value;}}
+			        },
+			        dataLabels: {
+			          fontSize: 2
+			        },
+			      }]
+			    },
+			    title: {
+			      display: false,
+			      text: 'T3 RFT %',
+			      fontSize: 15
+			    },
+			    legend: {
+			      display: false,
+			      position: 'right',
+			      labels: {
+			        fontColor: '#000'
+			      }
+			    },
+			    layout: {
+			      padding: {
+			        left: 0,
+			        right: 0,
+			        bottom: 0,
+			        top: 0
+			      }
+			    },
+			    tooltips: {
+			      enabled: true,
+			         mode:'label',
+			            position: 'nearest',
+			    },
+			    plugins: {
+			      datalabels: {
+			        display: false,
+			      },
+			    }
+
+			  },
+			});
+
+
+
+
+			let t31 = new Chart(t3DPU, {
+			  type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+			     data: {
+			     labels: <%- JSON.stringify(fullT3Labels) %>,
+			     datasets: [
+			       {
+			         label: "Target",
+			         type: "line",
+			         borderColor: "red",
+			         data: [ <%= newT3DPUTargetArr %> ],
+			         fill: false 
+			       },
+			       {
+			         label: 'T3',
+			         data: [<%= newT3ClosedArr %>],
+			         backgroundColor: 'green'
+			       },
+			       {
+			         label: 'T3',
+			         data: [<%= newT3ContainedArr %>],
+			         backgroundColor: 'orange',
+			       },
+			       {
+			         label: 'T3',
+			         data: [<%= newT3OpenArr %>],
+			         backgroundColor: 'red',
+			       },
+			       {
+			         label: 'T3',
+			         data: [<%= newT3UnactionedArr %>],
+			         backgroundColor: <%- JSON.stringify(newT3UnactionedColorArr) %>,
+			       }
+			     ]
+			   },
+			  options: {
+			       maintainAspectRatio: false,
+			         responsive: true,
+			    scales: {
+			      xAxes: [{
+			        stacked: true,
+			        ticks: {
+			          display: true,
+			          beginAtZero: true,
+			          fontSize: 8,
+			          fontColor: '#fff'
+			          // callback: function(value) {if (value % 1 === 0) {return value;}}
+			        },
+			        dataLabels: {
+			          fontSize: 2
+			        },
+			      }],
+			      yAxes: [{
+			        stacked: true,
+			        ticks: {
+			          display: true,
+			          beginAtZero: true,
+			          fontSize: 8,
+			          fontColor: '#fff'
+
+			          // callback: function(value) {if (value % 1 === 0) {return value;}}
+			        },
+			        dataLabels: {
+			          fontSize: 2
+			        },
+			      }]
+			    },
+			    title: {
+			      display: false,
+			      text: 'T3 DPU',
+			      fontSize: 15
+			    },
+			    legend: {
+			      display: false,
+			      position: 'right',
+			      labels: {
+			        fontColor: '#000'
+			      }
+			    },
+			    layout: {
+			      padding: {
+			        left: 0,
+			        right: 0,
+			        bottom: 0,
+			        top: 0
+			      }
+			    },
+			    tooltips: {
+			       enabled: true,
+			       mode:'label',
+			          position: "nearest",
+			       callbacks: {
+			         label: function(tooltipItem, data) {
+
+			           let dataset = data.datasets[tooltipItem.datasetIndex]
+			           let datasetLabel = data.datasets[tooltipItem.datasetIndex].label
+
+			           if (datasetLabel === "Target" || dataset.data[tooltipItem.index] === 0) {
+			             return false
+			           } else {
+			               let theT3Data = [
+			               [<%= closedClaimsT3Arr %>],
+			               [<%= containedClaimsT3Arr %> ],
+			               [<%= openClaimsT3Arr %> ],
+			               [<%= unActionedClaimsT3Arr %> ],
+			             ]
+			             let claimsNumber = theT3Data[tooltipItem.datasetIndex - 1][tooltipItem.index]
+			             let dpu = "DPU: "+dataset.data[tooltipItem.index];
+			             let claims = "Claims: "+claimsNumber;
+
+			             return dpu+' - '+claims
+			           }
+			         }
+			      },
+			     },
+			    plugins: {
+			      datalabels: {
+			        display: false,
+			      },
+			    }
+
+			  },
+			});
+
+
+
+			let buLabels = [
+			  'BHL',
+			  'CP',
+			  'EM',
+			  'HP',
+			  'LDL',
+			  'LP',
+			  'SD',
+			]
+
+
+			let barChartData7 = {
+			  labels: defaultLabels,
+
+			  newLabels1: [<%= dataArrBuild[0].totalsArr%>],
+			  datasets: [
+			    {
+			      label: '250 pts',
+			      // backgroundColor: 'rgb(255, 10, 10)',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+
+			            return context.chart.data.newLabels1[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= dataArrBuild[0].divisionArr[0].countArr %>],
+			    },
+			    {
+			      label: '25 pts',
+			      // backgroundColor: 'rgb(255, 10, 10)',
+			      backgroundColor: 'rgba(54, 162, 235, 0.6)',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+
+			            return context.chart.data.newLabels1[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= dataArrBuild[0].divisionArr[1].countArr %>],
+			    },
+			    {
+			      label: '5 pts',
+			      // backgroundColor: 'rgb(255, 10, 10)',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+
+			            return context.chart.data.newLabels1[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= dataArrBuild[0].divisionArr[2].countArr %>],
+			    },
+			    {
+			      label: 'Not Graded',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > -1) {
+			            return context.chart.data.newLabels1[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			         data: [<%= dataArrBuild[0].divisionArr[3].countArr %>],
+			    },
+			  ],
+			}
+
+			let barChartData14 = {
+			  labels: defaultLabels,
+			  newLabels1: [<%= dataArrBuild[1].totalsArr%>],
+
+			  datasets: [
+			    {
+			      label: '250 pts',
+			      // backgroundColor: 'rgb(255, 10, 10)',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+
+			            return context.chart.data.newLabels1[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= dataArrBuild[1].divisionArr[0].countArr %>],
+			    },
+			    {
+			      label: '25 pts',
+			      // backgroundColor: 'rgb(255, 10, 10)',
+			      backgroundColor: 'rgba(54, 162, 235, 0.6)',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+
+			            return context.chart.data.newLabels1[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= dataArrBuild[1].divisionArr[1].countArr %>],
+			    },
+			    {
+			      label: '5 pts',
+			      // backgroundColor: 'rgb(255, 10, 10)',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+
+			            return context.chart.data.newLabels1[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [<%= dataArrBuild[1].divisionArr[2].countArr %>],
+			    },
+			    {
+			      label: 'Not Graded',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > -1) {
+			            return context.chart.data.newLabels1[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			         data: [<%= dataArrBuild[1].divisionArr[3].countArr %>],
+			    },
+			  ],
+			}
+
+
+
+			let groupOptions = {
+			     maintainAspectRatio: false,
+			         responsive: true,
+
+			  legend: {
+			    display: false,
+			  },
+			  tooltips: {
+			    enabled: true,
+			       mode:'label',
+			          position: 'nearest'
+			  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        fontSize: 12,
+			        fontColor: '#fff'
+			      },
+			    }, ],
+			    yAxes: [{
+			        stacked: true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 180,
+			          stepSize: 40,
+			        },
+
+			      },
+			      {
+			        id: 'bar-y-axis',
+			        stacked: true,
+			        display: true,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 200,
+			          fontSize: 8,
+			          fontColor: '#fff',
+			          callback: function(value) {
+			            if (value > 200) return "";
+			            return value;
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			    ],
+			  },
+			}
+
+			let top10Options = {
+			     maintainAspectRatio: false,
+			    responsive: true,
+			  legend: {
+			    display: false,
+			  },
+			  tooltips: {
+			    enabled: false,
+			       mode:'label',
+			  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        fontSize: 12,
+			        fontColor: '#fff'
+			      },
+			    }, ],
+			    yAxes: [{
+			        stacked: true,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 10,
+			          //    stepSize: 40,
+			        },
+
+			      },
+			      {
+			        id: 'bar-y-axis',
+			        stacked: true,
+			        display: true,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 10,
+			          fontSize: 8,
+			          fontColor: '#fff',
+			          callback: function(value) {
+			            if (value > 200) return "";
+			            return value;
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			    ],
+			  },
+			}
+
+			let barChartData15 = {
+			  labels: buLabels,
+			  newLabels7: buLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, context, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return context.chart.data[context.dataIndex];
+			        } else {
+			          return '';
+
+			        }
+			      },
+			    },
+			    data: [
+			      //supplier
+			      0, // BHL
+			      0, //CP
+			      0, // EM
+			      0, // HP
+			      0, //LDL
+			      0, //LP
+			      0, // SD
+			    ],
+			  }, ],
+			}
+
+			let barChartData16 = {
+			  labels: buLabels,
+			  newLabels7: buLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, context, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return context.chart.data[context.dataIndex];
+			        } else {
+			          return '';
+
+			        }
+			      },
+			    },
+			    data: [
+			      // assembly
+			      0, // BHL
+			      0, //CP
+			      0, // EM
+			      0, // HP
+			      0, //LDL
+			      0, //LP
+			      0, // SD
+			    ],
+			  }, ],
+			}
+
+			let ctx7 = document.getElementById("canvas7");
+			let myChart7 = new Chart(ctx7, {
+			  type: 'bar',
+			  data: barChartData7,
+			  options: groupOptions
+			})
+
+			let ctx14 = document.getElementById("canvas14");
+			let myChart14 = new Chart(ctx14, {
+			  type: 'bar',
+			  data: barChartData14,
+			  options: groupOptions
+			})
+
+			let ctx15 = document.getElementById("canvas15");
+			let myChart15 = new Chart(ctx15, {
+			  type: 'bar',
+			  data: barChartData15,
+			  options: top10Options
+			})
+
+			let ctx16 = document.getElementById("canvas16");
+			let myChart16 = new Chart(ctx16, {
+			  type: 'bar',
+			  data: barChartData16,
+			  options: top10Options
+			})
+
+			let doaFourCData = [{
+			    label: 'Closed',
+			    data: [<%= doaClosedArr%>],
+			    backgroundColor: 'green',
+			  }, {
+			    label: 'Contained',
+			    data: [<%= doaContainedArr%>],
+			    backgroundColor: 'orange',
+			  }, {
+			    label: 'Open',
+			    data: [<%= doaOpenArr%>],
+			    backgroundColor: 'red',
+			  },
+			]
+			let doaFourCOptions = {
+			     maintainAspectRatio: false,
+			         responsive: true,
+			  plugins: {
+			    datalabels: {
+			      display: false,
+			    },
+			  },
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 12,
+			        fontColor: '#fff'
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			    }],
+			    yAxes: [{
+			      stacked: true,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 8,
+			        fontColor: '#fff'
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			    }]
+			  },
+			  title: {
+			    display: false,
+			    text: 'UK DOA DPU',
+			    fontSize: 15
+			  },
+			  legend: {
+			    display: false,
+			    position: 'right',
+			    labels: {
+			      fontColor: '#000'
+			    }
+			  },
+			  layout: {
+			    padding: {
+			      left: 0,
+			      right: 0,
+			      bottom: 0,
+			      top: 0
+			    }
+			  },
+			  tooltips: {
+			    enabled: true,
+			       mode:'label',
+			          position: 'nearest'
+			  },
+			  plugins: {
+			    datalabels: {
+			      display: false,
+			    },
+			  }
+
+			}
+
+			var ctx = document.getElementById("doaFourC");
+			var myChart = new Chart(ctx, {
+			  type: 'bar',
+			  data: {
+			    labels: <%- JSON.stringify(doaLabelArr) %>,
+			    datasets: doaFourCData
+			  },
+			  options: doaFourCOptions,
+			})
+
+
+			//   document.getElementById("doaFourC").onclick = function(evt){
+			//   var activePoints = myChart.getElementsAtEvent(evt);
+			//   var firstPoint = activePoints[0];
+			//         // var bu = shortBu
+			//   var label = myChart.data.labels[firstPoint._index];
+			//   var value = myChart.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			//   if (firstPoint !== undefined)
+			//     alert('Hello');
+			//             // window.location.href=`/equipment-monitoring/divisionEff/${bu}/${label}`
+			// };
+
+
+			let t3doa = new Chart(t3FourC, {
+			  type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+			  data: {
+			    labels: <%- JSON.stringify(t3LabelArr) %>,
+			    //    labels   :  buLabels,
+			    datasets: [{
+			        label: 'Closed',
+			        data: [<%= t3ClosedArr%>],
+			        // data: [
+			        //     1, // BHL
+			        //     0, //CP
+			        //     0, // EM
+			        //     0, // HP
+			        //     0, //LDL
+			        //     0, //LP
+			        //     0, // SD
+			        //     ],
+			        backgroundColor: [
+			          'green', // Aug 19
+			          'green',
+			          'green',
+			          'green', // Nov 19
+			          'green', // Dec 19
+			          'green', // Jan 20
+			          'green', // Feb 20
+			          'green', // Mar 20
+			          'green', // Mar 20
+			          'green', // Mar 20
+			          'green', // Jul 20
+			          'green', // Jul 20
+
+			        ],
+
+			      }, {
+			        label: 'Contained',
+			        data: [<%= t3ContainedArr%>],
+
+			        backgroundColor: [
+			          'orange', // Aug 19
+			          'orange',
+			          'orange',
+			          'orange', // Nov 19
+			          'orange', // Dec 19
+			          'orange', // Jan 20
+			          'orange', // Feb 20
+			          'orange', // Mar 20
+			          'orange', // Mar 20
+			          'orange', // Mar 20
+			          'orange', // Jul 20
+			          'orange', // Jul 20
+
+			        ],
+
+
+
+			      }, {
+			        label: 'Open',
+			        data: [<%= t3OpenArr%>],
+			        // data: [
+			        //     0, // BHL
+			        //     0, //CP
+			        //     0, // EM
+			        //     0, // HP
+			        //     0, //LDL
+			        //     0, //LP
+			        //     0, // SD
+			        //     ],
+
+			        backgroundColor: 'red',
+			      },
+
+			    ]
+			  },
+			  options: {
+			       maintainAspectRatio: false,
+			         responsive: true,
+
+			    plugins: {
+			      datalabels: {
+			        display: false,
+			      },
+			    },
+			    scales: {
+			      xAxes: [{
+			        stacked: true,
+			        barPercentage: 0.8,
+			        ticks: {
+			          display: true,
+			          beginAtZero: true,
+			          fontSize: 12,
+			          fontColor: '#fff'
+			          // callback: function(value) {if (value % 1 === 0) {return value;}}
+			        },
+			        dataLabels: {
+			          fontSize: 2
+			        },
+			      }],
+			      yAxes: [{
+			        stacked: true,
+			        ticks: {
+			          display: true,
+			          beginAtZero: true,
+			          fontSize: 8,
+			          fontColor: '#fff'
+			          // callback: function(value) {if (value % 1 === 0) {return value;}}
+			        },
+			        dataLabels: {
+			          fontSize: 2
+			        },
+			      }]
+			    },
+			    title: {
+			      display: false,
+			      text: 'UK DOA DPU',
+			      fontSize: 15
+			    },
+			    legend: {
+			      display: false,
+			      position: 'right',
+			      labels: {
+			        fontColor: '#000'
+			      }
+			    },
+			    layout: {
+			      padding: {
+			        left: 0,
+			        right: 0,
+			        bottom: 0,
+			        top: 0
+			      }
+			    },
+			    tooltips: {
+			      enabled: true,
+			         mode:'label',
+			            position: 'nearest',
+			    },
+			    plugins: {
+			      datalabels: {
+			        display: false,
+			      },
+			    }
+
+			  },
+			});
+		</script>
+	</body>
+</html>

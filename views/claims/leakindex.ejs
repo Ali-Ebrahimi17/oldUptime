@@ -1,0 +1,288 @@
+<% layout('layouts/boilerplate')%>
+
+<body style="background-color: rgba(17, 29, 36, 0.952);"></body>
+<div class="fourC-title">
+  <h1 style="color: white;"><%= division %> Leaks 4C's YTD</h1>
+</div>
+
+
+<header class="fourc-search" style="background-color: transparent;">
+  <form class="form-inline float-right" action="/claims/leak4c/<%= division %>" method="GET">
+    <div class="form-group">
+      <label for="search"></label>
+      <input class="form-control" type="text" name="claimNumber" placeholder="Search by Claim Number" autocomplete="off" />
+    </div>
+  </form>
+  <form class="form-inline float-right" action="/claims/leak4c/<%= division %>" method="GET">
+    <div class="form-group">
+      <label for="search"></label>
+      <input class="form-control" type="text" name="failedPart" placeholder="Search by Part Number" autocomplete="off" />
+    </div>
+  </form>
+  <form class="form-inline mt-3" action="/claims/leak4c/<%= division %>" method="GET">
+    <div class="form-group">
+      <select class="form-control" type="text" name="area" autocomplete="off">
+
+        <% areas.forEach(area => { %>
+        <option hidden>Search by Area</option>
+
+
+        <option label="<%= area.name %>" value="<%= area.name %>">
+
+          <% }) %>
+      </select>
+    </div>
+    <button class="btn btn-md btn-success"><i class="fas fa-search"></i></button>
+  </form>
+  </form>
+  <div>
+    <form class="form-inline" name="area" action="/claims/leak4c/<%= division %>" value="" method="GET">
+
+
+      <button class="btn btn-md btn-primary py-0">Reset</button>
+  </div>
+
+</header>
+
+
+
+<% let openNum = 0 %>
+<% claims.forEach(claim => {%>
+<% if ( claim.fourC === 'Yes' && claim.status === 'Open') { %>
+<% openNum = openNum +1 %>
+<% }; %>
+<% }) %>
+<% let containNum = 0 %>
+<% claims.forEach(claim=> {%>
+<% if ( claim.fourC === 'Yes' && claim.status === 'Contained') { %>
+<% containNum = containNum +1 %>
+<% }; %>
+<% }) %>
+<% let closedNum = 0 %>
+<% claims.forEach(claim => {%>
+<% if ( claim.fourC === 'Yes' && claim.status === 'Closed') { %>
+<% closedNum = closedNum +1 %>
+<% }; %>
+<% }) %>
+<% let auditedNum = 0 %>
+<% claims.forEach(claim => {%>
+<% if ( claim.fourC === 'Yes' &&  claim.audited === "Yes") { %>
+<% auditedNum = auditedNum +1 %>
+<% }; %>
+<% }) %>
+
+
+<% const totalNum = openNum + containNum + closedNum %>
+<div class="float-left open-list">
+  <div class="card text-white bg-secondary mb-3" style="width: 300px;">
+    <div class="card-header" style="font-weight: bold;">Open 4C's by Area</div>
+    <div class="card-body">
+      <div class="card-title">
+        <% count.forEach(count => { %>
+        <div>
+          <%= count._id %> - <%= count.count %>
+          <hr>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="float-right status-list">
+  <div class="card text-white  mb-3" style="width: 300px; background-color: red;">
+    <div class="card-header" style="text-align: center;">OPEN</div>
+    <div class="card-body">
+      <div class="card-title" style="text-align: center;">
+        <div class="status-num">
+          <%= openNum %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card text-white  mb-3" style="width: 300px; background-color: orange;">
+    <div class="card-header" style="text-align: center;">CONTAINED</div>
+    <div class="card-body">
+      <div class="card-title" style="text-align: center;">
+        <div class="status-num">
+          <%= containNum %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card text-white  mb-3" style="width: 300px; background-color: green;">
+    <div class="card-header" style="text-align: center;">CLOSED</div>
+    <div class="card-body">
+      <div class="card-title" style="text-align: center;">
+        <div class="status-num">
+          <%= closedNum %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% if (division.includes('LDL')) { %>
+  <div></div>
+  <% } else { %>
+  <div class="card text-white  mb-3" style="width: 300px; background-color: rgb(43, 43, 146);">
+    <div class="card-header" style="text-align: center;">AUDITED</div>
+    <div class="card-body">
+      <div class="card-title" style="text-align: center;">
+        <div class="status-num">
+          <%= auditedNum %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+</div>
+
+
+
+
+<div class="row text-center" style="display: flex; flex-wrap: wrap;">
+
+  <% claims.forEach(claim => {%>
+  <% if ( claim.fourC === 'Yes') { %>
+  <div class="col-lg-4 col-md-4 col-sm-6" style="margin-bottom: 1.7rem;">
+    <% if ( claim.status === 'Open' && claim.audited != 'Yes' ) { %>
+    <div class="card open">
+      <img class="campground__image" height="180px" src="<%= claim.imagePath1 %>" alt="<%= claim.name %>" />
+      <div class="caption">
+        <% if (claim.claimNumber === 'Leak Techweb') { %>
+        <p class="caption"><%= claim.buildNumber %> - <%= claim.model %></p>
+        <% } else { %>
+        <p class="caption"><%= claim.tPeriod %> - <%= claim.claimNumber %> - <%= claim.model %></p>
+        <% } %>
+        <!-- <hr> -->
+        <!-- <p>Issued by <a href="/users/<%= claim.author.id %>"><%= claim.author.firstName %> <%= claim.author.lastName %></a>,  <%= moment(claim.createdAt).format("DD/MM/YYYY - HH:mm") %></p> -->
+        <p>Issued by <%= claim.vettedBy %> <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm") %></p>
+        <% if ( claim.reOpenedBy != null) { %>
+        <p><em>Re-Opened by <%= claim.reOpenedBy %> <%= moment(claim.reOpenedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+        <% }; %>
+        <% if ( claim.reallocatedBy != null) { %>
+        <p><em>Reallocated to <%= claim.area %> by <%= claim.reallocatedBy %> <%= moment(claim.reallocatedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+        <% }; %>
+      </div>
+      <p>
+        <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/leak4cshow/<%= claim._id %>">
+          <%= claim.area %>
+        </a>
+      </p>
+    </div>
+    <% }; %>
+    <% if ( claim.status === 'Contained' && claim.audited != 'Yes' ) { %>
+    <div class="card contained">
+      <img class="campground__image" height="180px" src="<%= claim.imagePath1 %>" alt="<%= claim.name %>" />
+      <div class="caption">
+        <% if (claim.claimNumber === 'Leak Techweb') { %>
+        <p class="caption"><%= claim.buildNumber %> - <%= claim.model %></p>
+        <% } else { %>
+        <p class="caption"><%= claim.tPeriod %> - <%= claim.claimNumber %> - <%= claim.model %></p>
+        <% } %>
+        <!-- <hr> -->
+        <p>Issued by <%= claim.vettedBy %> <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm") %></p>
+        <% if ( claim.reOpenedBy != null) { %>
+        <p><em>Re-Opened by <%= claim.reOpenedBy %> <%= moment(claim.reOpenedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+        <% }; %>
+        <% if ( claim.reallocatedBy != null) { %>
+        <p><em>Reallocated to <%= claim.area %> by <%= claim.reallocatedBy %> <%= moment(claim.reallocatedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+        <% }; %>
+        <p>
+          <% if ( claim.containedBy != null ) { %>
+          <em>
+            <p class="card-text">Contained by <%= claim.containedBy %> <%= moment(claim.containedAt).format("DD/MM/YYYY - HH:mm") %></p>
+          </em>
+          <% }; %>
+      </div>
+      <p>
+        <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/leak4cshow/<%= claim._id %>">
+          <%= claim.area %>
+        </a>
+      </p>
+    </div>
+    <% }; %>
+    <% if ( claim.status === 'Closed' && claim.audited != 'Yes' ) { %>
+    <div class="card closed">
+      <img class="campground__image" height="180px" src="<%= claim.imagePath1 %>" alt="<%= claim.name %>" />
+      <div class="caption">
+        <% if (claim.claimNumber === 'Leak Techweb') { %>
+        <p class="caption"><%= claim.buildNumber %> - <%= claim.model %></p>
+        <% } else { %>
+        <p class="caption"><%= claim.tPeriod %> - <%= claim.claimNumber %> - <%= claim.model %></p>
+        <% } %>
+        <!-- <hr> -->
+        <p>Issued by <%= claim.vettedBy %> <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm")%></p>
+        <% if ( claim.reOpenedBy != null) { %>
+        <p><em>Re-Opened by <%= claim.reOpenedBy %> <%= moment(claim.reOpenedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+        <% }; %>
+        <% if ( claim.reallocatedBy != null) { %>
+        <p><em>Reallocated to <%= claim.area %> by <%= claim.reallocatedBy %> <%= moment(claim.reallocatedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+        <% }; %>
+        <p>
+          <% if ( claim.containedBy != null ) { %>
+          <em>
+            <p class="card-text">Contained by <%= claim.containedBy %> <%= moment(claim.containedAt).format("DD/MM/YYYY - HH:mm") %></p>
+          </em>
+          <% }; %>
+          <% if ( claim.status === 'Closed') { %>
+          <em>
+            <p class="card-text"><%= claim.status %> by <%= claim.closedBy %> <%= moment(claim.closedAt).format("DD/MM/YYYY - HH:mm") %></p>
+          </em>
+          <% }; %>
+        </p>
+      </div>
+      <p>
+        <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/leak4cshow/<%= claim._id %>">
+          <%= claim.area %>
+        </a>
+      </p>
+    </div>
+    <% }; %>
+    <% if ( claim.audited === 'Yes' ) { %>
+    <div class="card audited">
+      <img class="campground__image" height="180px" src="<%= claim.imagePath1 %>" alt="<%= claim.name %>" />
+      <div class="caption">
+        <% if (claim.claimNumber === 'Leak Techweb') { %>
+        <p class="caption"><%= claim.buildNumber %> - <%= claim.model %></p>
+        <% } else { %>
+        <p class="caption"><%= claim.tPeriod %> - <%= claim.claimNumber %> - <%= claim.model %></p>
+        <% } %>
+        <!-- <p class="caption"><%= claim.name %></p> -->
+        <!-- <hr> -->
+        <p>Issued by <%= claim.vettedBy %> <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm")%></p>
+        <% if ( claim.reOpenedBy != null) { %>
+        <p><em>Re-Opened by <%= claim.reOpenedBy %> <%= moment(claim.reOpenedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+        <% }; %>
+        <% if ( claim.reallocatedBy != null) { %>
+        <p><em>Reallocated to <%= claim.area %> by <%= claim.reallocatedBy %> <%= moment(claim.reallocatedAt).format("DD/MM/YYYY - HH:mm") %></em></p>
+        <% }; %>
+        <p>
+          <% if ( claim.containedBy != null ) { %>
+          <em>
+            <p class="card-text">Contained by <%= claim.containedBy %> <%= moment(claim.containedAt).format("DD/MM/YYYY - HH:mm") %></p>
+          </em>
+          <% }; %>
+          <% if ( claim.status === 'Closed') { %>
+          <em>
+            <p class="card-text"><%= claim.status %> by <%= claim.closedBy %> <%= moment(claim.closedAt).format("DD/MM/YYYY - HH:mm") %></p>
+          </em>
+          <% }; %>
+          <br>
+          <% if ( claim.audited === 'Yes') { %>
+          <em>
+            <p class="card-text">Audited by <%= claim.auditedBy %> <%= moment(claim.auditedAt).format("DD/MM/YYYY - HH:mm") %></p>
+          </em>
+          <% }; %>
+        </p>
+      </div>
+      <p>
+        <a class="btn btn-primary btn-sm btn-b-mg" href="/claims/leak4cshow/<%= claim._id %>">
+          <%= claim.area %>
+        </a>
+      </p>
+    </div>
+    <% }; %>
+  </div>
+  <% }%>
+  <% }) %>
+</div>

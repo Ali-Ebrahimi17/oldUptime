@@ -1,0 +1,1088 @@
+<% layout('layouts/boilerplateTCard')%>
+<meta http-equiv="refresh" content="100">
+<link rel="stylesheet" href="/7z/content/bootstrap/css/bootstrap.css" type="text/css">
+<link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css">
+<link rel="stylesheet" href="/7z/content/dashboards.css" type="text/css">
+<link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
+<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+<style>
+  body {background-color: black; }
+  h5 {color: white; font-size: 1.5rem; margin-bottom: -15px;}
+  h3 {color: white; font-size: 2rem;}
+  h2 {font-weight: bold; color: black;}
+  h1 {font-weight: bold; font-size: 4rem;}
+  h6{font-size: 1rem;}
+  hr {background-color: white;}
+  .last-checked-holder {
+    padding-top: 12px;
+  }
+  
+ 
+</style>
+
+<div class='main-header-holder'>
+  <h1>PAINT PLANT HEALTH STATUS</h1>
+</div>
+
+
+
+<div class='row dashboard-cards'>
+
+  <!-- Cabs -->
+  <div class='card col-12'>
+    <div class='card-title grey-card'>
+      <div class="division-header">
+        Cab Systems
+      </div>
+      
+
+      <div class="plant-wrapper">
+         <!-- change color here -->
+        <div class='plant-check-total  <% if (totalCabsFailed > 0 ) { %>red-card<% } else if  (totalCabsContained > 0 ) { %>amber-card<% } else if  (doneCabs <  totalCabs) { %>grey-card-inner<% } else { %>green-card<% } %>'>
+          <div class='plant-detail'>
+              <p class='plant-detail-holder'>
+                Paint Plant
+              </p>
+              <p class='progress-holder'>
+                <div>
+                 <p class='progress-data'>
+                  <%=  doneCabs %>/<%= totalCabs %>
+                 </p>
+                </div>
+              </p>
+          </div>
+        </div>
+      </div>
+      
+      
+      <!-- location : { $ne: 'Validation' }, -->
+      <div class="last-checked-holder">
+        <small>Last checked by <br><%= cabsUpdate.checkedBy %> - <%= moment(cabsUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+      </div>
+    </div>
+    <div class='card-flap flap1'>
+      <div id="accordian" class="menu-parent">
+				<ul class="menu">
+					<li class="menu-child">
+						<a href="#" class="<% if (totalFailedPreTCabs > 0 ) { %>red-li<% } else if  (totalContainedPreTCabs > 0 ) { %>amber-li<% } else if  (totalDonePreTCabs <  totalPreTCabs) { %>grey-li<% } else { %>green-li<% } %>">
+              Pre Treatment
+            <span><%= totalDonePreTCabs%> / <%= totalPreTCabs%></span>
+            <hr>
+            </a>
+						<ul>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 1  Alkali cleaner/Days">
+                <li class="<% if (failedT1 > 0 ) { %>red-li<% } else if  (ContainedT1 > 0 ) { %>amber-li<% } else if  (doneT1 <  totalT1) { %>grey-li<% } else { %>green-li<% } %>">
+                  Tank 1 - Alkali Cleaner
+                  <span>
+                    <%= doneT1 %> / <%= totalT1 %>
+                  </span>
+                </li>
+              </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 2  Alkali cleaner/Days">
+                  <li class="<% if (failedT2 > 0 ) { %>red-li<% } else if  (ContainedT2 > 0 ) { %>amber-li<% } else if  (doneT2 <  totalT2) { %>grey-li<% } else { %>green-li<% } %>">
+                    Tank 2 - Alkali Cleaner
+                    <span>
+                      <%= doneT2 %> / <%= totalT2 %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 3  Town’s water rinse/Days">
+                  <li class="<% if (failedT3 > 0 ) { %>red-li<% } else if  (ContainedT3 > 0 ) { %>amber-li<% } else if  (doneT3 <  totalT3) { %>grey-li<% } else { %>green-li<% } %>">
+                    Tank 3 - Town’s Water Rinse
+                    <span>
+                      <%= doneT3 %> / <%= totalT3 %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 5  Acid descale/Days">
+                  <li class="<% if (failedT5 > 0 ) { %>red-li<% } else if  (ContainedT5 > 0 ) { %>amber-li<% } else if  (doneT5 <  totalT5) { %>grey-li<% } else { %>green-li<% } %>">
+                    Tank 5 - Acid Descale
+                    <span>
+                      <%= doneT5 %> / <%= totalT5 %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 6  Ultrasonic descale/Days">
+                  <li class="<% if (failedT6 > 0 ) { %>red-li<% } else if  (ContainedT6 > 0 ) { %>amber-li<% } else if  (doneT6 <  totalT6) { %>grey-li<% } else { %>green-li<% } %>">
+                    Tank 6 - Ultrasonic Descale
+                    <span>
+                      <%= doneT6 %> / <%= totalT6 %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 7  Alkali rinse/Days">
+                  <li class="<% if (failedT7 > 0 ) { %>red-li<% } else if  (ContainedT7 > 0 ) { %>amber-li<% } else if  (doneT7 <  totalT7) { %>grey-li<% } else { %>green-li<% } %>">
+                    Tank 7 - Alkali Rinse
+                    <span>
+                      <%= doneT7 %> / <%= totalT7 %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 10 RO Water rinse/Days">
+                  <li class="<% if (failedT10 > 0 ) { %>red-li<% } else if  (ContainedT10 > 0 ) { %>amber-li<% } else if  (doneT10 <  totalT10) { %>grey-li<% } else { %>green-li<% } %>">
+                    Tank 10 - RO Water Rinse
+                    <span>
+                      <%= doneT10 %> / <%= totalT10 %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 11 Oxsilan conversion/Days">
+                  <li class="<% if (failedT11 > 0 ) { %>red-li<% } else if  (ContainedT11 > 0 ) { %>amber-li<% } else if  (doneT11 <  totalT11) { %>grey-li<% } else { %>green-li<% } %>">
+                    Tank 11 - Oxsilan Conversion
+                    <span>
+                      <%= doneT11 %> / <%= totalT11 %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 12 RO Water rinse/Days">
+                  <li class="<% if (failedT12 > 0 ) { %>red-li<% } else if  (ContainedT12 > 0 ) { %>amber-li<% } else if  (doneT12 <  totalT12) { %>grey-li<% } else { %>green-li<% } %>">
+                    Tank 12 - Water Rinse
+                    <span>
+                      <%= doneT12 %> / <%= totalT12 %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 13 RO Water rinse/Days">
+                  <li class="<% if (failedT13 > 0 ) { %>red-li<% } else if  (ContainedT13 > 0 ) { %>amber-li<% } else if  (doneT13 <  totalT13) { %>grey-li<% } else { %>green-li<% } %>">
+                    Tank 13 - Water Rinse
+                    <span>
+                      <%= doneT13 %> / <%= totalT13 %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 14 RO Water rinse/Days">
+                  <li class="<% if (failedT14 > 0 ) { %>red-li<% } else if  (ContainedT14 > 0 ) { %>amber-li<% } else if  (doneT14 <  totalT14) { %>grey-li<% } else { %>green-li<% } %>">
+                    Tank 14 - Water Rinse
+                    <span>
+                      <%= doneT14 %> / <%= totalT14 %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 15 E-Coat/Days">
+                  <li class="<% if (failedT15 > 0 ) { %>red-li<% } else if  (ContainedT15 > 0 ) { %>amber-li<% } else if  (doneT15 <  totalT15) { %>grey-li<% } else { %>green-li<% } %>">
+                    Tank 15 - E-Coat
+                    <span>
+                      <%= doneT15 %> / <%= totalT15 %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment RO Tank/Days">
+                  <li class="<% if (failedTRO > 0 ) { %>red-li<% } else if  (ContainedTRO > 0 ) { %>amber-li<% } else if  (doneTRO <  totalTRO) { %>grey-li<% } else { %>green-li<% } %>">
+                    RO Tank
+                    <span>
+                      <%= doneTRO %> / <%= totalTRO %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Boiler/Days">
+                  <li class="<% if (failedBoiler > 0 ) { %>red-li<% } else if  (ContainedBoiler > 0 ) { %>amber-li<% } else if  (doneBoiler <  totalBoiler) { %>grey-li<% } else { %>green-li<% } %>">
+                    Boiler
+                    <span>
+                      <%= doneBoiler %> / <%= totalBoiler %>
+                    </span>
+                  </li>
+                </a>
+            </li>
+							<li>
+                <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Other/Days">
+                  <li class="<% if (failedOther > 0 ) { %>red-li<% } else if  (ContainedOther > 0 ) { %>amber-li<% } else if  (doneOther <  totalOther) { %>grey-li<% } else { %>green-li<% } %>">
+                    Other
+                    <span>
+                      <%= doneOther %> / <%= totalOther %>
+                    </span>
+                    <hr>
+                </a>
+            </li>
+							
+						</ul>
+					</li>
+					<li class="menu-child">
+            <a href="/tCard/show/CABS/Paint Shop/Ovens/Days">
+              <li class="<% if (failedOvens > 0 ) { %>red-li<% } else if  (ContainedOvens > 0 ) { %>amber-li<% } else if  (doneOvens <  totalOvens) { %>grey-li<% } else { %>green-li<% } %>">
+                Ovens
+                <span>
+                  <%= doneOvens %> / <%= totalOvens %>
+                </span>
+                <hr>
+              </li>
+            </a>
+					</li>
+					<li class="menu-child">
+            <a href="/tCard/show/CABS/Paint Shop/Paint Kitchen/Days">
+              <li class="<% if (failedPaintKitchen > 0 ) { %>red-li<% } else if  (ContainedPaintKitchen > 0 ) { %>amber-li<% } else if  (donePaintKitchen <  totalPaintKitchen) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint Kitchen
+                <span>
+                  <%= donePaintKitchen %> / <%= totalPaintKitchen %>
+                </span>
+                <hr>
+              </li>
+            </a>
+					</li>
+					<li class="menu-child">
+            <a href="/tCard/show/CABS/Paint Shop/Validation/Days">
+              <li class="<% if (failedCabsValidation > 0 ) { %>red-li<% } else if  (ContainedCabsValidation > 0 ) { %>amber-li<% } else if  (doneCabsValidation <  totalCabsValidation) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span>
+                  <%= doneCabsValidation %> / <%= totalCabsValidation %>
+                </span>
+              
+              </li>
+            </a>
+					</li>
+				
+				</ul>
+			</div>
+      
+      <div class='card-flap flap2'>
+        <div class='card-actions'>
+          <a style="margin-bottom: -12px;" class='btn btn-danger' href='#'>X</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <!-- Compact -->
+  <div class='card col-12'>
+    <div class='card-title grey-card'>
+      <div class="division-header">
+        Compact Products
+      </div>
+      <div class="plant-wrapper">
+        <!-- change color here -->
+       <div class='plant-check-total  <% if (totalFailsCompact> 0 ) { %>red-card<% } else if  (totalContainedCompact > 0 ) { %>amber-card<% } else if  (doneCompact <  totalCompact) { %>grey-card-inner<% } else { %>green-card<% } %>'>
+         <div class='plant-detail'>
+             <p class='plant-detail-holder'>
+               Paint Plant
+             </p>
+             <p class='progress-holder'>
+               <div>
+                <p class='progress-data'>
+                  <%=  doneCompact%>/<%= totalCompact %>
+                </p>
+               </div>
+             </p>
+         </div>
+       </div>
+     </div>
+      <div class="last-checked-holder">
+        <small>Last checked by <br><%= compactUpdate.checkedBy %> - <%= moment(compactUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+      </div>
+    </div>
+    <div class='card-flap flap1'>
+      <div id="" class="menu-parent">
+				<ul class="menu">
+			
+					
+					<li>
+            <a href="/tCard/show/CP/Paint Shop/Shot Blast/Days" class=" <% if (failsSBCompact > 0 ) { %>red-li<% } else if  (contSBCompact > 0 ) { %>amber-li<% } else if  (doneSBCompact <  totalSBCompact) { %>grey-li<% } else { %>green-li<% } %>" >
+              <li>
+                Shot Blast
+                <span>
+                  <%= doneSBCompact %> / <%= totalSBCompact%>
+                </span>
+                <hr>
+              </li>
+            </a>
+					</li>
+					<li class="menu-child">
+            <a href="/tCard/show/CP/Paint Shop/Pre Treatment/Days">
+              <li  class="<% if (failsPTCompact > 0 ) { %>red-li<% } else if  (contPTCompact > 0 ) { %>amber-li<% } else if  (donePTCompact <  totalPTCompact) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment
+                <span >
+                  <%= donePTCompact %> / <%= totalPTCompact %>
+                </span>
+                <hr>
+              </li>
+            </a>
+					</li>
+					<li class="menu-child">
+            <a href="/tCard/show/CP/Paint Shop/Oven Cure/Days">
+              <li class="<% if (failsOCCompact > 0 ) { %>red-li<% } else if  (contOCCompact > 0 ) { %>amber-li<% } else if  (doneOCCompact <  totalOCCompact) { %>grey-li<% } else { %>green-li<% } %>">
+                Oven Cure
+                <span>
+                  <%= doneOCCompact %> / <%= totalOCCompact%>
+                </span>
+                <hr>
+              </li>
+            </a>
+					</li>
+					<li class="menu-child">
+            <a href="/tCard/show/CP/Paint Shop/Validation/Days">
+              <li class="<% if (failsVCompact> 0 ) { %>red-li<% } else if  (contVCompact > 0 ) { %>amber-li<% } else if  (doneVCompact <  totalVCompact) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span>
+                  <%= doneVCompact %> / <%= totalVCompact %>
+                </span>
+              </li>
+            </a>
+					</li>
+				
+				</ul>
+			</div>
+      <div class='card-flap flap2'>
+        <div class='card-actions'>
+          <a style="margin-bottom: -12px;" class='btn btn-danger' href='#'>X</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HBU -->
+  <div class='card col-12'>
+    <div class='card-title grey-card'>
+      <div class="division-header">
+        HBU
+      </div>
+      <div class="plant-wrapper">
+        <!-- change color here -->
+       <div class='plant-check-total  <% if (totalHBUFailedAuto > 0 ) { %>red-card<% } else if  (totalHBUContainedAuto > 0 ) { %>amber-card<% } else if  (doneHBUAuto <  totalHBUAuto) { %>grey-card-inner<% } else { %>green-card<% } %>'>
+         <div class='plant-detail'>
+             <p class='plant-detail-holder'>
+              Auto
+             </p>
+             <p class='progress-holder'>
+               <div>
+                <p class='progress-data'>
+                  <%=  doneHBUAuto %>/<%= totalHBUAuto %>
+                </p>
+               </div>
+             </p>
+         </div>
+       </div>
+       <!-- change color here -->
+       <div class='plant-check-total  <% if (totalHBUFailedOffline > 0 ) { %>red-card<% } else if  (totalHBUContainedOffline > 0 ) { %>amber-card<% } else if  (doneHBUOffline <  totalHBUOffline) { %>grey-car-inner<% } else { %>green-card<% } %>'>
+        <div class='plant-detail'>
+            <p class='plant-detail-holder'>
+             Offline
+            </p>
+            <p class='progress-holder'>
+              <div>
+               <p class='progress-data'>
+                 <%=  doneHBUOffline %>/<%= totalHBUOffline %>
+               </p>
+              </div>
+            </p>
+        </div>
+      </div>
+       <!-- change color here -->
+       <div class='plant-check-total  <% if (totalHBUFailedPaintPlant > 0 ) { %>red-card<% } else if  (totalHBUContainedPaintPlant > 0 ) { %>amber-card<% } else if  (doneHBUPaintPlant <  totalHBUPaintPlant) { %>grey-card-inner<% } else { %>green-card<% } %>'>
+        <div class='plant-detail'>
+            <p class='plant-detail-holder'>
+             Paint Plant
+            </p>
+            <p class='progress-holder'>
+              <div>
+               <p class='progress-data'>
+                 <%=  doneHBUPaintPlant %>/<%= totalHBUPaintPlant %>
+               </p>
+              </div>
+            </p>
+        </div>
+      </div>
+
+
+     </div>
+
+      <div class="last-checked-holder">
+        <small>Last checked by <br><%= HBUUpdate.checkedBy %> - <%= moment(HBUUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+      </div>
+    </div>
+    <div class='card-flap flap1'>
+      <div id="" class="menu-parent">
+				<ul class="menu">
+			
+					
+					<li class=" menu-child">
+            <a href="#" class="<% if (totalHBUFailedAuto > 0 ) { %>red-li<% } else if  (totalHBUContainedAuto > 0 ) { %>amber-li<% } else if  (doneHBUAuto <  totalHBUAuto) { %>grey-li<% } else { %>green-li<% } %>">
+              Auto Paint Line
+            <span><%=  doneHBUAuto %> / <%= totalHBUAuto %></span>
+            <hr>
+            </a>
+						<ul>
+							<li class="">
+								<a href="#" class="class="<% if (failedHBUPreTreatmentTech > 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentTech > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentTech <  totalHBUPreTreatmentTech) { %>grey-li<% } else { %>green-li<% } %>"">
+                  Pre Treatment
+                </a>
+								<ul>
+									<li>
+                    <a href="/tCard/show/HBU/Auto Paint Line/Pre Treatment/Days">
+                      <li class="<% if (failedHBUPreTreatmentTech> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentTech > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentTech <  totalHBUPreTreatmentTech) { %>grey-li<% } else { %>green-li<% } %>">
+                        Technician
+                        <span>
+                          <%= doneHBUPreTreatmentTech %> / <%= totalHBUPreTreatmentTech %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+                    <a href="/tCard/show/HBU/Auto Paint Line/Pre Treatment Operator/Days">
+                      <li class="<% if (failedHBUPreTreatmentOperator> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentOperator > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentOperator <  totalHBUPreTreatmentOperator) { %>grey-li<% } else { %>green-li<% } %>">
+                        Operator
+                        <span>
+                          <%= doneHBUPreTreatmentOperator %> / <%= totalHBUPreTreatmentOperator %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+								</ul>
+							</li>
+							<li class="">
+								<a href="#">Ovens</a>
+								<ul>
+									<li>
+                    <a href="/tCard/show/HBU/Auto Paint Line/Ovens Drying Oven/Days">
+                      <li class="<% if (failedHBUPreTreatmentOvenDryingOven > 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentOvenDryingOven > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentOvenDryingOven <  totalHBUPreTreatmentOvenDryingOven) { %>grey-li<% } else { %>green-li<% } %>">
+                        Drying Oven
+                        <span>
+                          <%= doneHBUPreTreatmentOvenDryingOven %> / <%= totalHBUPreTreatmentOvenDryingOven %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+                    <a href="/tCard/show/HBU/Auto Paint Line/Ovens Curing Oven/Days">
+                      <li class="<% if (failedHBUPreTreatmentOvenCuringOven> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentOvenCuringOven > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentOvenCuringOven <  totalHBUPreTreatmentOvenCuringOven) { %>grey-li<% } else { %>green-li<% } %>">
+                        Curing Oven
+                        <span>
+                          <%= doneHBUPreTreatmentOvenCuringOven %> / <%= totalHBUPreTreatmentOvenCuringOven %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+								</ul>
+							</li>
+							<li class="">
+								<a href="#">Paint Booth</a>
+								<ul>
+									<li>
+                    <a href="/tCard/show/HBU/Auto Paint Line/Paint Booth/Days">
+                      <li class="<% if (failedHBUPreTreatmentPaintBoothTech> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentPaintBoothTech > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentPaintBoothTech <  totalHBUPreTreatmentPaintBoothTech) { %>grey-li<% } else { %>green-li<% } %>">
+                        Technician
+                        <span>
+                          <%= doneHBUPreTreatmentPaintBoothTech %> / <%= totalHBUPreTreatmentPaintBoothTech %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+                    <a href="/tCard/show/HBU/Auto Paint Line/Paint Booth Operator/Days">
+                      <li class="<% if (failedHBUPreTreatmentPaintBoothOp> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentPaintBoothOp > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentPaintBoothOp <  totalHBUPreTreatmentPaintBoothOp) { %>grey-li<% } else { %>green-li<% } %>">
+                        Auto - Paint Booth Operator
+                        <span>
+                          <%= doneHBUPreTreatmentPaintBoothOp %> / <%= totalHBUPreTreatmentPaintBoothOp %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+								</ul>
+							</li>
+							<li class="">
+								<a href="#">Ram Manipulator</a>
+								<ul>
+									<li>
+                    <a href="/tCard/show/HBU/Auto Paint Line/Manipulator/Days">
+                      <li class="<% if (failedHBUPreTreatmentManipulatorTech> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentManipulatorTech > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentManipulatorTech <  totalHBUPreTreatmentManipulatorTech) { %>grey-li<% } else { %>green-li<% } %>">
+                        Technician
+                        <span>
+                          <%= doneHBUPreTreatmentManipulatorTech %> / <%= totalHBUPreTreatmentManipulatorTech %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+                    <a href="/tCard/show/HBU/Auto Paint Line/Manipulator Operator/Days">
+                      <li class="<% if (failedHBUPreTreatmentManipulatorOp > 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentManipulatorOp > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentManipulatorOp <  totalHBUPreTreatmentManipulatorOp) { %>grey-li<% } else { %>green-li<% } %>">
+                        Operator
+                        <span>
+                          <%= doneHBUPreTreatmentManipulatorOp %> / <%= totalHBUPreTreatmentManipulatorOp %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+								</ul>
+							</li>
+							<li>
+                <a href="/tCard/show/HBU/Auto Paint Line/Track/Days">
+                  <li class="<% if (failedHBUPreTreatmentTrack> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentTrack > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentTrack <  totalHBUPreTreatmentTrack) { %>grey-li<% } else { %>green-li<% } %>">
+                    Track
+                    <span>
+                      <%= doneHBUPreTreatmentTrack %> / <%= totalHBUPreTreatmentTrack %>
+                    </span>
+                  </li>
+                </a>
+              </li>
+							<li>
+                <a href="/tCard/show/HBU/Auto Paint Line/Validation/Days">
+                  <li class="<% if (failedHBUPreTreatmentValidation> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentValidation > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentValidation <  totalHBUPreTreatmentValidation) { %>grey-li<% } else { %>green-li<% } %>">
+                    Validation
+                    <span>
+                      <%= doneHBUPreTreatmentValidation %> / <%= totalHBUPreTreatmentValidation %>
+                    </span>
+                  </li>
+                </a>
+              </li>
+						</ul>
+					</li>
+
+          <li class=" menu-child">
+            <a href="#" class="<% if (totalHBUFailedAuto > 0 ) { %>red-li<% } else if  (totalHBUContainedAuto > 0 ) { %>amber-li<% } else if  (doneHBUAuto <  totalHBUAuto) { %>grey-li<% } else { %>green-li<% } %>">
+              Offline Paint Line
+            <span><%=  doneHBUOffline %> / <%= totalHBUOffline %></span>
+            <hr>
+            </a>
+						<ul>
+							<li class="">
+								<a href="#">Pre Treatment</a>
+								<ul>
+									<li>
+                    <a href="/tCard/show/HBU/Offline Paint/Pre Treatment/Days">
+                      <li class="<% if (failedHBUOfflineOTech> 0 ) { %>red-li<% } else if  (ContainedHBUOfflineOTech > 0 ) { %>amber-li<% } else if  (doneHBUOfflineOTech <  totalHBUOfflineOTech) { %>grey-li<% } else { %>green-li<% } %>">
+                        Technician
+                        <span>
+                          <%= doneHBUOfflineOTech %> / <%= totalHBUOfflineOTech %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+                    <a href="/tCard/show/HBU/Offline Paint/Pre Treatment Operator/Days">
+                      <li class="<% if (failedHBUOfflineOOp> 0 ) { %>red-li<% } else if  (ContainedHBUOfflineOOp > 0 ) { %>amber-li<% } else if  (doneHBUOfflineOOp <  totalHBUOfflineOOp) { %>grey-li<% } else { %>green-li<% } %>">
+                        Operator
+                        <span>
+                          <%= doneHBUOfflineOOp %> / <%= totalHBUOfflineOOp %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+								</ul>
+							</li>
+							<li class="">
+								<a href="#">Ovens</a>
+								<ul>
+									<li>
+                    <a href="/tCard/show/HBU/Offline Paint/Ovens Curing Oven/Days">
+                      <li class="<% if (failedHBUOfflineOvenCuringOven > 0 ) { %>red-li<% } else if  (ContainedHBUOfflineOvenCuringOven > 0 ) { %>amber-li<% } else if  (doneHBUOfflineOvenCuringOven <  totalHBUOfflineOvenCuringOven) { %>grey-li<% } else { %>green-li<% } %>">
+                        Curing Oven
+                        <span>
+                          <%= doneHBUOfflineOvenCuringOven %> / <%= totalHBUOfflineOvenCuringOven %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+								</ul>
+							</li>
+							<li class="">
+								<a href="#">Paint Booth</a>
+								<ul>
+									<li>
+                    <a href="/tCard/show/HBU/Offline Paint/Paint Booth/Days">
+                      <li class="<% if (failedHBUOfflinePBTech> 0 ) { %>red-li<% } else if  (ContainedHBUOfflinePBTech > 0 ) { %>amber-li<% } else if  (doneHBUOfflinePBTech <  totalHBUOfflinePBTech) { %>grey-li<% } else { %>green-li<% } %>">
+                        Technician
+                        <span>
+                          <%= doneHBUOfflinePBTech %> / <%= totalHBUOfflinePBTech %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+                    <a href="/tCard/show/HBU/Offline Paint/Paint Booth Operator/Days">
+                      <li class="<% if (failedHBUOfflinePBOp > 0 ) { %>red-li<% } else if  (ContainedHBUOfflinePBOp > 0 ) { %>amber-li<% } else if  (doneHBUOfflinePBOp <  totalHBUOfflinePBOp ) { %>grey-li<% } else { %>green-li<% } %>">
+                        Operator
+                        <span>
+                          <%= doneHBUOfflinePBOp %> / <%= totalHBUOfflinePBOp %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+								</ul>
+							</li>
+							<li class="">
+								<a href="#">Track & Hoist</a>
+								<ul>
+									<li>
+                    <a href="/tCard/show/HBU/Offline Paint/Hoist/Days">
+                      <li class="<% if (failedHBUOfflineHoistTech> 0 ) { %>red-li<% } else if  (ContainedHBUOfflineHoistTech > 0 ) { %>amber-li<% } else if  (doneHBUOfflineHoistTech  <  totalHBUOfflineHoistTech ) { %>grey-li<% } else { %>green-li<% } %>">
+                        Technician
+                        <span>
+                          <%= doneHBUOfflineHoistTech %> / <%= totalHBUOfflineHoistTech %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+                    <a href="/tCard/show/HBU/Offline Paint/Hoist Operator/Days">
+                      <li class="<% if (failedHBUOfflineHoistOp> 0 ) { %>red-li<% } else if  (ContainedHBUOfflineHoistOp > 0 ) { %>amber-li<% } else if  (doneHBUOfflineHoistOp <  totalHBUOfflineHoistOp) { %>grey-li<% } else { %>green-li<% } %>">
+                        Operator
+                        <span>
+                          <%= doneHBUOfflineHoistOp %> / <%= totalHBUOfflineHoistOp %>
+                        </span>
+                      </li>
+                    </a>
+                  </li>
+									<li>
+								</ul>
+							</li>
+							<!-- <li>
+                <a href="#">Validation</a>
+              </li> -->
+						</ul>
+					</li>
+
+          <li class="menu-child">
+            <a href="/tCard/show/HBU/Paint Plant/Paint Kitchen/Days">
+              <li class="<% if (failedHBUPaintPlantPK> 0 ) { %>red-li<% } else if  (ContainedHBUPaintPlantPK > 0 ) { %>amber-li<% } else if  (doneHBUPaintPlantPK <  totalHBUPaintPlantPK) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint Kitchen
+                <span>
+                  <%= doneHBUPaintPlantPK %> / <%= totalHBUPaintPlantPK %>
+                </span>
+              </li>
+            </a>
+					</li>
+				
+				</ul>
+			</div>
+      <div class='card-flap flap2'>
+        <div class='card-actions'>
+          <a style="margin-bottom: -12px;" class='btn btn-danger' href='#'>X</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Heavy -->
+  <div class='card col-12'>
+    <div class='card-title grey-card'>
+      <div class="division-header">
+        Heavy Products
+      </div>
+      <div class="plant-wrapper">
+        <!-- change color here -->
+       <div class='plant-check-total  <% if (totalHeavyFailedAttachments > 0 ) { %>red-card<% } else if  (totalHeavyContainedAttachments > 0 ) { %>amber-card<% } else if  (doneHeavyAttachments <  totalHeavyAttachments) { %>grey-card-inner<% } else { %>green-card<% } %>'>
+         <div class='plant-detail'>
+             <p class='plant-detail-holder'>
+              Attachments
+             </p>
+             <p class='progress-holder'>
+               <div>
+                <p class='progress-data'>
+                  <%=  doneHeavyAttachments %>/<%= totalHeavyAttachments %>
+                </p>
+               </div>
+             </p>
+         </div>
+       </div>
+        <!-- change color here -->
+       <div class='plant-check-total  <% if (totalHeavyFailedRevolver > 0 ) { %>red-card<% } else if  (totalHeavyContainedRevolver > 0 ) { %>amber-card<% } else if  (doneHeavyRevolver1 <  totalHeavyRevolver1) { %>grey-card-inner<% } else { %>green-card<% } %>'>
+         <div class='plant-detail'>
+             <p class='plant-detail-holder'>
+              Revolver
+             </p>
+             <p class='progress-holder'>
+               <div>
+                <p class='progress-data'>
+                  <%=  doneHeavyRevolver1 %>/<%= totalHeavyRevolver1 %>
+                </p>
+               </div>
+             </p>
+         </div>
+       </div>
+       <div class='plant-check-total  <% if (totalHeavyFailedSmallParts > 0 ) { %>red-card<% } else if  (totalHeavyContainedSmallParts > 0 ) { %>amber-card<% } else if  (doneHeavySmallParts <  totalHeavySmallParts) { %>grey-card-inner<% } else { %>green-card<% } %>'>
+         <div class='plant-detail'>
+             <p class='plant-detail-holder'>
+              Small Parts
+             </p>
+             <p class='progress-holder'>
+               <div>
+                <p class='progress-data'>
+                  <%=  doneHeavySmallParts %>/<%= totalHeavySmallParts %>
+                </p>
+               </div>
+             </p>
+         </div>
+       </div>
+
+
+     </div>
+
+      <div class="last-checked-holder">
+        <small>Last checked by <br><%= heavyUpdate.checkedBy %> - <%= moment(heavyUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+      </div>
+    </div>
+    <div class='card-flap flap1'>
+      <div id="" class="menu-parent">
+				<ul class="menu">
+			
+					
+					<li class=" menu-child">
+            <a href="#" class="<% if (totalHeavyFailedAtt > 0 ) { %>red-li<% } else if  (totalHeavyContainedAtt  > 0 ) { %>amber-li<% } else if  (totalHeavyDoneAtt <  totalHeavyAtt) { %>grey-li<% } else { %>green-li<% } %>">
+              Attachments
+            <span><%= totalHeavyDoneAtt %> / <%= totalHeavyAtt %></span>
+            <hr>
+            </a>
+						<ul>
+							<li>
+                <a href="/tCard/show/HP/Attachments/Shot Blast/Days">
+                  <li class="<% if (failsSBAttHeavy > 0  ) { %>red-li<% } else if  (contSBAttHeavy > 0) { %>amber-li<% } else if  (doneAttSBHeavy <  totalAttSBHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                    Shot Blast
+                    <span>
+                      <%= doneAttSBHeavy %> / <%= totalAttSBHeavy %>
+                    </span>
+                  </li>
+                </a>
+              </li>
+							<li>
+                <a href="/tCard/show/HP/Attachments/Oven Cure/Days">
+                  <li class="<% if (failsOCAttHeavy > 0  ) { %>red-li<% } else if  (contOCAttHeavy > 0) { %>amber-li<% } else if  (doneAttOCHeavy <  totalAttOCHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                   Oven Cure
+                    <span>
+                      <%= doneAttOCHeavy %> / <%= totalAttOCHeavy %>
+                    </span>
+                  </li>
+                </a>
+              </li>
+							<li>
+                <a href="/tCard/show/HP/Attachments/Validation/Days">
+                  <li class="<% if (failsVAttHeavy > 0  ) { %>red-li<% } else if  (contVAttHeavy > 0) { %>amber-li<% } else if  (doneAttVHeavy <  totalAttVHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                    Attachments - Validation
+                    <span>
+                      <%= doneAttVHeavy %> / <%= totalAttVHeavy %>
+                    </span>
+                  </li>
+                </a>
+              </li>
+            </ul>
+					</li>
+
+          <li class=" menu-child">
+            <a href="#" class="<% if (totalHeavyFailedRevolver1 > 0 ) { %>red-li<% } else if  (totalHeavyContainedRevolver1 > 0 ) { %>amber-li<% } else if  (totalDonePreTCabs <  totalPreTCabs) { %>grey-li<% } else { %>green-li<% } %>">
+              Revolver
+            <span><%= totalHeavyDoneRevolver %> / <%= totalHeavyRevolver %></span>
+            <hr>
+            </a>
+						<ul>
+							<li>
+                <a href="/tCard/show/HP/Revolver/Shot Blast/Days">
+                  <li class="<% if (failsSBRHeavy > 0  ) { %>red-li<% } else if  (contSBRHeavy > 0) { %>amber-li<% } else if  (doneRSBHeavy <  totalRSBHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                    Shot Blast
+                    <span>
+                      <%= doneAttSBHeavy %> / <%= totalAttSBHeavy %>
+                    </span>
+                  </li>
+                </a>
+              </li>
+							<li>
+                <a href="/tCard/show/HP/Revolver/Oven Cure/Days">
+                  <li  class="<% if (failsOCRHeavy > 0  ) { %>red-li<% } else if  (contOCRHeavy > 0) { %>amber-li<% } else if  (doneROCHeavy <  totalROCHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                    Oven Cure
+                    <span>
+                      <%= doneROCHeavy %> / <%= totalROCHeavy %>
+                    </span>
+                  </li>
+                </a>
+              </li>
+							<li>
+                <a href="/tCard/show/HP/Revolver/Validation/Days">
+                  <li class="<% if (failsVRHeavy > 0  ) { %>red-li<% } else if  (contVRHeavy > 0) { %>amber-li<% } else if  (doneRVHeavy <  totalRVHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                    Validation
+                    <span>
+                      <%= doneRVHeavy %> / <%= totalRVHeavy %>
+                    </span>
+                  </li>
+                </a>
+              </li>
+            </ul>
+					</li>
+
+          <li class=" menu-child">
+            <a href="#" class="<% if (totalHeavyFailedSmallParts> 0 ) { %>red-li<% } else if  (totalHeavyContainedSmallParts > 0 ) { %>amber-li<% } else if  (doneHeavySmallParts <  totalHeavySmallParts) { %>grey-li<% } else { %>green-li<% } %>">
+              Small Parts
+            <span><%= doneHeavySmallParts %> / <%= totalHeavySmallParts %></span>
+            <hr>
+						<ul>
+							<li>
+                <a href="/tCard/show/HP/Small Parts/Pre Treatment/Days">
+                  <li  class="<% if (failsPTSPHeavy > 0  ) { %>red-li<% } else if  (contPTSPHeavy > 0) { %>amber-li<% } else if  (doneSPTHeavy < totalSPTHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                    Pre Treatment
+                    <span>
+                      <%= doneSPTHeavy %> / <%= totalSPTHeavy %>
+                    </span>
+                  </li>
+                </a>
+              </li>
+							<li>
+                <a href="/tCard/show/HP/Small Parts/Validation/Days">
+                  <li  class="<% if (failsVSPHeavy > 0  ) { %>red-li<% } else if  (contVSPHeavy> 0) { %>amber-li<% } else if  (doneSPVHeavy <  totalSPVHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                    Validation
+                    <span>
+                      <%= doneSPVHeavy %> / <%= totalSPVHeavy %>
+                    </span>
+                  </li>
+                </a>
+              </li>
+            </ul>
+					</li>
+				
+				</ul>
+			</div>
+      <div class='card-flap flap2'>
+        <div class='card-actions'>
+          <a style="margin-bottom: -12px;" class='btn btn-danger' href='#'>X</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+  <!-- loadall -->
+  <div class='card col-12'>
+    <div class='card-title grey-card'>
+      <div class="division-header">
+        Loadall
+      </div>
+      <div class="plant-wrapper">
+        <!-- change color here -->
+       <div class='plant-check-total  <% if (totalFailsLoadall > 0 ) { %>red-card<% } else if  (totalContainedLoadall > 0 ) { %>amber-card<% } else if  (doneLoadall <  totalLoadall) { %>grey-card-inner<% } else { %>green-card<% } %>'>
+         <div class='plant-detail'>
+             <p class='plant-detail-holder'>
+               Paint Plant
+             </p>
+             <p class='progress-holder'>
+               <div>
+                <p class='progress-data'>
+                  <%=  doneLoadall %>/<%= totalLoadall %>
+                </p>
+               </div>
+             </p>
+         </div>
+       </div>
+     </div>
+      <div class="last-checked-holder">
+        <small>Last checked by <br><%= loadallUpdate.checkedBy %> - <%= moment(loadallUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+      </div>
+    </div>
+    <div class='card-flap flap1'>
+      <div id="" class="menu-parent">
+				<ul class="menu">
+			
+					
+					<li class="menu-child">
+            <a href="/tCard/show/LDL/Paint Shop/Shot Blast/Days">
+              <li class="<% if (failsShotBlast > 0 ) { %>red-li<% } else if  (containedShotBlast > 0 ) { %>amber-li<% } else if  (doneSB <  totalSB) { %>grey-li<% } else { %>green-li<% } %>">
+                Shot Blast
+                <span>
+                  <%= doneSB %> / <%= totalSB %>
+                </span>
+                <hr>
+              </li>
+            </a>
+					</li>
+					<li class="menu-child">
+            <a href="/tCard/show/LDL/Paint Shop/Wash/Days">
+              <li class="<% if (failsPaintT > 0 ) { %>red-li<% } else if  (containedPaintT > 0 ) { %>amber-li<% } else if  (doneW <  totalW) { %>grey-li<% } else { %>green-li<% } %>">
+                Wash
+                <span>
+                  <%= doneW %> / <%= totalW %>
+                </span>
+                <hr>
+              </li>
+            </a>
+					</li>
+					<li class="menu-child">
+            <a href="/tCard/show/LDL/Paint Shop/Oven/Days">
+              <li class="<% if (failsPaintA > 0 ) { %>red-li<% } else if  (containedPaintA > 0 ) { %>amber-li<% } else if  (doneO <  totalO) { %>grey-li<% } else { %>green-li<% } %>">
+                Oven
+                <span>
+                  <%= doneO %> / <%= totalO %>
+                </span>
+                <hr>
+              </li>
+            </a>
+					</li>
+					<li class="menu-child">
+            <a href="/tCard/show/LDL/Paint Shop/Paint/Days">
+              <li class="<% if (failsOven > 0  ) { %>red-li<% } else if  (containedOven > 0) { %>amber-li<% } else if  (doneP <  totalP) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint
+                <span>
+                  <%= doneP %> / <%= totalP %>
+                </span>
+              </li>
+            </a>
+					</li>
+				
+				</ul>
+			</div>
+      <div class='card-flap flap2'>
+        <div class='card-actions'>
+          <a style="margin-bottom: -12px;" class='btn btn-danger' href='#'>X</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+
+
+
+</div>
+
+
+
+
+  
+
+  
+
+  <div class="container-fluid footer">
+    
+    <div class="row header-top">
+        <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+            <img height="24px" src="/7z/content/images/df.png">
+        </div>
+        <div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+            J.C. Bamford Excavators LTD &copy; 2022
+        </div>
+    </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+  var zindex = 10;
+  
+  $("div.card").click(function(e){
+    // e.preventDefault();
+
+    let isShowing = false;
+
+    if ($(this).hasClass("d-card-show")) {
+      isShowing = true
+     }
+
+    if ($("div.dashboard-cards").hasClass("showing")) {
+      //a card is already in view
+      $("div.card.d-card-show")
+        .removeClass("d-card-show");
+
+      if (isShowing) {
+        // this card was showing - reset the grid
+        $("div.dashboard-cards")
+          .removeClass("showing");
+      } else {
+        // this card isn't showing - get in with it
+        $(this)
+          .css({zIndex: zindex})
+          .addClass("d-card-show");
+
+      }
+
+      zindex++;
+
+    } else {
+      // no dashboard-cards in view
+      $("div.dashboard-cards")
+        .addClass("showing");
+      $(this)
+        .css({zIndex:zindex})
+        .addClass("d-card-show");
+
+      zindex++;
+    }
+
+  });
+
+  $("a.btn").click(function(e){
+    // e.preventDefault();
+
+    location.reload();
+
+   })
+  
+
+});
+
+  
+
+
+</script>
+
+
+
+
+
+<script>
+$(document).ready(function() {
+	// prevent page from jumping to top from  # href link
+	$('.menu-parent li.menu-child > a').click(function(e) {
+		// e.preventDefault();
+	});
+
+	// remove link from menu items that have children
+	$(".menu-parent li.menu-child > a").attr("href", "#");
+
+	//  function to open / close menu items
+	$(".menu-parent a").click(function() {
+		var link = $(this);
+		var closest_ul = link.closest("ul");
+		var parallel_active_links = closest_ul.find(".active")
+		var closest_li = link.closest("li");
+		var link_status = closest_li.hasClass("active");
+		var count = 0;
+
+		closest_ul.find("ul").slideUp(function() {
+			if (++count == closest_ul.find("ul").length)
+			parallel_active_links.removeClass("active");
+		});
+
+		if (!link_status) {
+			closest_li.children("ul").slideDown();
+			closest_li.addClass("active");
+		}
+	})
+})
+
+
+</script>

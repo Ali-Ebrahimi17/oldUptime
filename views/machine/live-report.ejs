@@ -1,0 +1,751 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <meta http-equiv="refresh" content="220"> -->
+    <title>Equipment Monitoring</title>
+    <link rel="icon" href="/home/jcb.png" />
+    <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+    <!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+    <!-- <link rel="stylesheet" href="/content/dashboards.css" type="text/css"> -->
+    <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+    <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+    <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+    <!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+    <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+    <link rel="stylesheet" href="/stylesheets/app.css" />
+    <link rel="stylesheet" href="/fontawesome/css/all.css" />
+
+    <style>
+
+.graph_holder {
+	background-color: rgb(36, 42, 49);
+    height: 200px;
+     width: 300px;
+    margin-bottom: 25px;
+    padding-top: 8px;
+}
+.table_holder {
+	background-color: rgb(36, 42, 49);
+    height: 400px;
+    width: 933px;
+    margin-bottom: 25px;
+}
+
+    </style>
+    
+<body>
+    <%- include('../../views/partials/flash.ejs')%>
+   
+
+
+<div class="container-fluid">
+    <div class="row header-top" style="display: flex; justify-content: space-between;">
+        <div class=" d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px; width: 20%;">
+            <img height="24px" src="/7z/content/images/jcb-logo.png">
+        </div>
+       
+    </div>
+</div>
+
+
+
+
+<!-- header -->
+<div class="container-fluid" style="background-color: black;">
+    <div class="row">
+        <div  style=" width: 100%; display: flex; flex-direction: column;">
+                <div>
+                    <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center;">WEEKLY EQUIPMENT UPTIME REPORT</h1>
+                    <h1 style="font-size: 24px; color: rgb(252, 176, 38); margin-bottom: 16px; text-align: center">Latest data from <%= dateRange %></h1>
+                </div>
+        </div>
+    </div>
+</div> 
+
+
+<!-- main section -->
+
+<section style="background-color: black; padding: 0 10px;">
+    <div class="font-size: 34px; color: white;">
+        <h5 style="font-size: 20px; color: white;">OVERALL RUNNING TIME TREND - 4 WEEK ROLLING AVERAGE</h5>
+    </div>
+    <!-- overall graphs -->
+    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 10px">
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[0].name  %></h5>
+                <canvas  id="canvas0"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[1].name  %></h5>
+                <canvas  id="canvas1"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[2].name  %></h5>
+                <canvas  id="canvas2"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[3].name  %></h5>
+                <canvas  id="canvas3"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[4].name  %></h5>
+                <canvas  id="canvas4"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[5].name  %></h5>
+                <canvas  id="canvas5"  height="18" width="28" ></canvas>
+        </div>
+        
+    </div>
+
+    <div class="font-size: 34px; color: white;">
+        <h5 style="font-size: 20px; color: white;">ROBOT RUNNING TIME TREND - 4 WEEK ROLLING AVERAGE</h5>
+    </div>
+    <!-- robot graphs -->
+    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 10px">
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[6].name  %></h5>
+                <canvas  id="canvas6"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[7].name  %></h5>
+                <canvas  id="canvas7"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[8].name  %></h5>
+                <canvas  id="canvas8"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[9].name  %></h5>
+                <canvas  id="canvas9"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[10].name  %></h5>
+                <canvas  id="canvas10"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[11].name  %></h5>
+                <canvas  id="canvas11"  height="18" width="28" ></canvas>
+        </div>
+        
+    </div>
+    <div class="font-size: 34px; color: white;">
+        <h5 style="font-size: 20px; color: white;">LASER RUNNING TIME TREND - 4 WEEK ROLLING AVERAGE</h5>
+    </div>
+    <!-- laser graphs -->
+    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 10px">
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[12].name  %></h5>
+                <canvas  id="canvas12"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[13].name  %></h5>
+                <canvas  id="canvas13"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[14].name  %></h5>
+                <canvas  id="canvas14"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[15].name  %></h5>
+                <canvas  id="canvas15"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[16].name  %></h5>
+                <canvas  id="canvas16"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[17].name  %></h5>
+                <canvas  id="canvas17"  height="18" width="28" ></canvas>
+        </div>
+    </div>
+    <div class="font-size: 34px; color: white;">
+        <h5 style="font-size: 20px; color: white;">PLASMA RUNNING TIME TREND - 4 WEEK ROLLING AVERAGE</h5>
+    </div>
+    <!-- laser graphs -->
+    <div style="display: flex; justify-content: start; flex-wrap: wrap; margin-bottom: 10px; gap: 16px;">
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[18].name  %></h5>
+                <canvas  id="canvas18"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[19].name  %></h5>
+                <canvas  id="canvas19"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[20].name  %></h5>
+                <canvas  id="canvas20"  height="18" width="28" ></canvas>
+        </div>
+        
+    </div>
+    <div class="font-size: 34px; color: white;">
+        <h5 style="font-size: 20px; color: white;">PROGRAM EFFICIENCY (ROBOTS ONLY) - 4 WEEK ROLLING AVERAGE</h5>
+    </div>
+    <!-- robot efficenncy -->
+    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 10px">
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[21].name  %></h5>
+                <canvas  id="canvas21"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[22].name  %></h5>
+                <canvas  id="canvas22"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[23].name  %></h5>
+                <canvas  id="canvas23"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[24].name  %></h5>
+                <canvas  id="canvas24"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[25].name  %></h5>
+                <canvas  id="canvas25"  height="18" width="28" ></canvas>
+        </div>
+        <div class="graph_holder">
+            <h5 style="color: white; text-align: center; margin-bottom: -10px;"><%= graphDataArr[26].name  %></h5>
+                <canvas  id="canvas26"  height="18" width="28" ></canvas>
+        </div>
+    </div>
+    <div class="font-size: 34px; color: white;" style="display: flex;">
+        <div style="width: 950px;">
+            <h5 style="font-size: 20px; color: white;">PREVIOUS WEEK RUNNING TIME 21/03/2022 - 27/03/2022</h5>
+        </div>
+        <div>
+            <h5 style="font-size: 20px; color: white;">ROBOTS ONLY PROGRAM EFFICIENCY 21/03/2022 - 27/03/2022</h5>
+        </div>
+    </div>
+    <!-- robot efficenncy -->
+    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 10px">
+        <div class="table_holder">
+            <table class="table table-hover table-dark d-flex" style="font-size: 16.3px; text-align: center;  height: 400px;  background-color: rgb(36, 42, 49); ">
+                <thead>
+                    
+                    <tr class="">
+                        <th style="width: 200px; text-align: start;">Business Unit</th>
+                        <th style="width: 185px;">Welding Robots</th>
+                        <th style="width: 175pxw;">Laser Cutters</th>
+                        <th style="width: 175pxw;">Plasma Cutters</th>
+                        <th style="width: 175pxw;">Overall</th>
+                    </tr>
+                </thead>
+                  <tbody>
+                    <tr class="" > 
+                        <td style="width: 200px; text-align: start;">Loadall</td>               
+                        <td style="width: 175px;"><%= robotPrevWeekRunLdl %>%</td>                    
+                        <td style="width: 175px;"><%= laserPrevWeekRunLdl %>%</td>                                               
+                        <td style="width: 175px;"><%= plasmaPrevWeekRunLdl %>%</td>                                               
+                        <td style="width: 175px;"><%= overallPrevWeekLdl %>%</td>                                               
+                    </tr>
+                    <tr class=""> 
+                        <td style="width: 200px; text-align: start;">Backhoe Loader</td>               
+                        <td style="width: 175px;"><%= robotPrevWeekRunBhl %>%</td>                    
+                        <td style="width: 175px;"><%= laserPrevWeekRunBhl %>%</td>                                               
+                        <td style="width: 175px;"><%= plasmaPrevWeekRunBhl %>%</td>                                               
+                        <td style="width: 175px;"><%= overallPrevWeekBhl %>%</td>                                               
+                    </tr>                                            
+                    </tr>
+                    <tr class=""> 
+                        <td style="width: 200px; text-align: start;">Earthmovers</td>               
+                        <td style="width: 175px;"><%= robotPrevWeekRunEm %>%</td>                    
+                        <td style="width: 175px;"><%= laserPrevWeekRunEm %>%</td>                                               
+                        <td style="width: 175px;">--</td>                                               
+                        <td style="width: 175px;"><%= overallPrevWeekEm %>%</td>                                              
+                    </tr>
+                    <tr class=""> 
+                        <td style="width: 200px; text-align: start;">Compact Products</td>                             
+                        <td style="width: 175px;"><%= robotPrevWeekRunCp %>%</td>                    
+                        <td style="width: 175px;"><%= laserPrevWeekRunCp %>%</td>                                               
+                        <td style="width: 175px;">--</td>                                               
+                        <td style="width: 175px;"><%= overallPrevWeekCp %>%</td>                                                
+                    </tr>
+                    <tr class=""> 
+                        <td style="width: 200px; text-align: start;">Heavy Products</td>               
+                        <td style="width: 175px;"><%= robotPrevWeekRunHp %>%</td>                    
+                        <td style="width: 175px;"><%= laserPrevWeekRunHp %>%</td>                                               
+                        <td style="width: 175px;"><%= plasmaPrevWeekRunHp %>%</td>                                               
+                        <td style="width: 175px;"><%= overallPrevWeekHp %>%</td>                                               
+                    </tr>
+                    <tr class=""> 
+                        <td style="width: 200px; text-align: start;">Cabs Systems</td>               
+                        <td style="width: 175px;"><%= robotPrevWeekRunCabs %>%</td>                    
+                        <td style="width: 175px;"><%= laserPrevWeekRunCabs %>%</td>                                               
+                        <td style="width: 175px;">--</td>                                               
+                        <td style="width: 175px;"><%= overallPrevWeekCabs %>%</td>                                               
+                    </tr>
+                    <tr style="font-weight: bold; background-color: rgb(71, 76, 82);"> 
+                        <td style="width: 200px; text-align: start;">UK Operations</td>               
+                        <td style="width: 175px;"><%= lastWeekRobotsEff %>%</td>                    
+                        <td style="width: 175px;"><%= lastWeekLasersEff %>%</td>                                               
+                        <td style="width: 175px;"><%= lastWeekPlasmasEff %>%</td>                                               
+                        <td style="width: 175px;"><%= lastWeekOpsEff %>%</td>                                                
+                    </tr>
+                  </tbody>
+            </table>
+        </div>
+        <div class="table_holder">
+            <table class="table table-hover table-dark d-flex" style="font-size: 16.3px; text-align: center;  height: 400px;  background-color: rgb(36, 42, 49); ">
+                <thead>
+                    
+                    <tr class="">
+                        <th style="width: 200px; text-align: start;">Business Unit</th>
+                        <th style="width: 185px;">Program Efficiency</th>
+                        <th style="width: 175pxw;"></th>
+                        <th style="width: 175pxw;"></th>
+                        <th style="width: 175pxw;"></th>
+                    </tr>
+                </thead>
+                  <tbody>
+                    <tr class="" > 
+                        <td style="width: 200px; text-align: start;">Loadall</td>               
+                        <td style="width: 175px;"><%= robotPrevWeekRunLdl %>%</td>                    
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                               
+                    </tr>
+                    <tr class=""> 
+                        <td style="width: 200px; text-align: start;">Backhoe Loader</td>               
+                        <td style="width: 175px;"><%= robotPrevWeekRunBhl %>%</td>                    
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                               
+                    </tr>                                            
+                    </tr>
+                    <tr class=""> 
+                        <td style="width: 200px; text-align: start;">Earthmovers</td>               
+                        <td style="width: 175px;"><%= robotPrevWeekRunEm %>%</td>                    
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                              
+                    </tr>
+                    <tr class=""> 
+                        <td style="width: 200px; text-align: start;">Compact Products</td>                             
+                        <td style="width: 175px;"><%= robotPrevWeekRunCp %>%</td>                    
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                                
+                    </tr>
+                    <tr class=""> 
+                        <td style="width: 200px; text-align: start;">Heavy Products</td>               
+                        <td style="width: 175px;"><%= robotPrevWeekRunHp %>%</td>                    
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                               
+                    </tr>
+                    <tr class=""> 
+                        <td style="width: 200px; text-align: start;">Cabs Systems</td>               
+                        <td style="width: 175px;"><%= robotPrevWeekRunCabs %>%</td>                    
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                               
+                    </tr>
+                    <tr style="font-weight: bold; background-color: rgb(71, 76, 82);"> 
+                        <td style="width: 200px; text-align: start;">UK Operations</td>               
+                        <td style="width: 175px;"><%= lastWeekRobotsEff %>%</td>                    
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                               
+                        <td style="width: 175px;"></td>                                                
+                    </tr>
+                  </tbody>
+            </table>
+        </div>
+        
+    </div>
+
+    <div class="font-size: 34px; color: white;">
+        <h5 style="font-size: 20px; color: white;">RUNNING TIME YTD PROGRESS BY ASSET TYPE</h5>
+    </div>
+    <!-- laser graphs -->
+    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 10px">
+        <div class="graph_holder">
+     
+        </div>
+        <div class="graph_holder">
+         
+        </div>
+        <div class="graph_holder">
+         
+        </div>
+        <div class="graph_holder">
+     
+        </div>
+        <div class="graph_holder">
+         
+        </div>
+        <div class="graph_holder">
+         
+        </div>
+    </div>
+
+    <div class="font-size: 34px; color: white;" style="display: flex;">
+        <div style="width: 950px;">
+            <h5 style="font-size: 20px; color: white;">OVERALL RUNNING TIME YTD PROGRESS BU</h5>
+        </div>
+        <div>
+            <h5 style="font-size: 20px; color: white;">PROGRAM EFFICIENCY (ROBOTS ONLY) YTD PROGRESS BU</h5>
+        </div>
+    </div>
+    <!-- robot efficenncy -->
+    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 10px">
+        <div class="table_holder">
+     
+        </div>
+        <div class="table_holder">
+     
+        </div>
+        
+    </div>
+    
+   
+
+</section>
+
+
+
+
+<!-- <div class="container-fluid footer">
+    <div class="row header-top">
+        <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+            <img height="24px" src="/7z/content/images/df.png">
+        </div>
+        <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+            J.C. Bamford Excavators LTD &copy; 2022
+        </div>
+    </div>
+</div> -->
+
+
+
+<script>
+    Chart.defaults.global.defaultFontColor = '#fff';
+    Chart.defaults.scale.gridLines.display = false;
+
+
+
+
+
+    let options = {
+        title      : {
+            display : false,
+            text    : '',
+        },
+        legend     : {
+            display : false,
+        },
+        tooltips: {
+          mode: 'label',
+          enabled: true,
+         callbacks: {
+           label: function(tooltipItem, data) {
+			const item = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+			return item + '%';
+			},
+          }
+        },
+        responsive : true,
+                    scales     : {
+            xAxes: [{
+                    ticks: {
+                        minRotation: 90,
+                        maxRotation: 90
+                    }
+                 }],
+            yAxes : [
+                {
+                    stacked    : false,
+                    display:false,
+                    ticks      : {
+                        beginAtZero : true,
+
+                    },
+                    // scaleLabel : {
+                    //     display     : true,
+                    //     labelString : 'Hours',
+                    // },
+                },
+                {
+                    id      : 'bar-y-axis',
+                    stacked : true,
+                    display : false,
+                    ticks   : {
+                        beginAtZero : true,
+                        min: 0,
+                        max: 125,
+  
+                    },
+                    type    : 'linear',
+                },
+            ],
+        },
+
+    }
+
+
+
+
+
+let overallArr = []
+
+<% for (let x of graphDataArr) { %>
+ 
+    barChartData  = {
+
+    labels   : <%- JSON.stringify(graphWeeks) %>,
+        datasets : [
+                {
+                    label           : 'Count',
+                    backgroundColor : <%- JSON.stringify(colors) %>,
+                    yAxisID         : 'bar-y-axis',
+                    datalabels: {
+                        // display labels for this specific dataset
+                        display: true,
+                        color:'white',
+                        align: 'end',
+                        anchor: 'end',
+                        formatter: function(value, context, values) {
+                            if(context.dataIndex === context.dataset.data.length - 1 || context.dataIndex === 0 ){
+                            //  value = value.toString();
+                            //  value = value.split(/(?=(?:...)*$)/);
+                            //  value = value.join(',');
+                                return value + '%';
+                            } else {
+                                value = "";
+                                return value 
+                            
+                            }
+                        },
+                            
+                        font: {
+                            size: 12,
+                            },
+                        },
+                
+                        data:[
+                        <%= x.percentDec %>,
+                        <%= x.percentWeek1 %>,
+                        <%= x.percentWeek2 %>,
+                        <%= x.percentWeek3 %>,
+                        <%= x.percentWeek4 %>,
+                        <%= x.percentWeek5 %>,
+                        <%= x.percentWeek6 %>,
+                        <%= x.percentWeek7 %>,
+                        <%= x.percentWeek8 %>,
+                        <%= x.percentWeek9 %>,
+                        ],
+                },
+            ],
+        }
+
+        overallArr.push(barChartData)
+
+        // console.log(overallArr)
+
+<% } %>
+
+
+
+ 
+
+window.onload = function() {
+
+	const ctx = document.getElementById("canvas0")
+	const myChart = new Chart(ctx, {
+		type: 'bar',
+		data    : overallArr[0],
+        options : options
+	})
+
+	const ctx1 = document.getElementById("canvas1")
+	const myChart1 = new Chart(ctx1, {
+		type: 'bar',
+		data    : overallArr[1],
+        options : options
+	})
+
+	const ctx2 = document.getElementById("canvas2")
+	const myChart2 = new Chart(ctx2, {
+		type: 'bar',
+		data    : overallArr[2],
+        options : options
+	})
+
+	const ctx3 = document.getElementById("canvas3")
+	const myChart3 = new Chart(ctx3, {
+		type: 'bar',
+		data    : overallArr[3],
+        options : options
+	})
+	const ctx4 = document.getElementById("canvas4")
+	const myChart4 = new Chart(ctx4, {
+		type: 'bar',
+		data    : overallArr[4],
+        options : options
+	})
+	const ctx5 = document.getElementById("canvas5")
+	const myChart5 = new Chart(ctx5, {
+		type: 'bar',
+		data    : overallArr[5],
+        options : options
+	})
+
+    //robot running 
+	const ctx6 = document.getElementById("canvas6")
+	const myChart6 = new Chart(ctx6, {
+		type: 'bar',
+		data    : overallArr[6],
+        options : options
+	})
+	const ctx7 = document.getElementById("canvas7")
+	const myChart7 = new Chart(ctx7, {
+		type: 'bar',
+		data    : overallArr[7],
+        options : options
+	})
+	const ctx8 = document.getElementById("canvas8")
+	const myChart8 = new Chart(ctx8, {
+		type: 'bar',
+		data    : overallArr[8],
+        options : options
+	})
+	const ctx9 = document.getElementById("canvas9")
+	const myChart9 = new Chart(ctx9, {
+		type: 'bar',
+		data    : overallArr[9],
+        options : options
+	})
+	const ctx10 = document.getElementById("canvas10")
+	const myChart10 = new Chart(ctx10, {
+		type: 'bar',
+		data    : overallArr[10],
+        options : options
+	})
+	const ctx11 = document.getElementById("canvas11")
+	const myChart11 = new Chart(ctx11, {
+		type: 'bar',
+		data    : overallArr[11],
+        options : options
+	})
+    //laser running 
+	const ctx12 = document.getElementById("canvas12")
+	const myChart12 = new Chart(ctx12, {
+		type: 'bar',
+		data    : overallArr[12],
+        options : options
+	})
+	const ctx13 = document.getElementById("canvas13")
+	const myChart13 = new Chart(ctx13, {
+		type: 'bar',
+		data    : overallArr[13],
+        options : options
+	})
+	const ctx14 = document.getElementById("canvas14")
+	const myChart14 = new Chart(ctx14, {
+		type: 'bar',
+		data    : overallArr[14],
+        options : options
+	})
+	const ctx15 = document.getElementById("canvas15")
+	const myChart15 = new Chart(ctx15, {
+		type: 'bar',
+		data    : overallArr[15],
+        options : options
+	})
+	const ctx16 = document.getElementById("canvas16")
+	const myChart16 = new Chart(ctx16, {
+		type: 'bar',
+		data    : overallArr[16],
+        options : options
+	})
+	const ctx17 = document.getElementById("canvas17")
+	const myChart17 = new Chart(ctx17, {
+		type: 'bar',
+		data    : overallArr[17],
+        options : options
+	})
+    //plasma running
+	const ctx18 = document.getElementById("canvas18")
+	const myChart18 = new Chart(ctx18, {
+		type: 'bar',
+		data    : overallArr[18],
+        options : options
+	})
+	const ctx19 = document.getElementById("canvas19")
+	const myChart19 = new Chart(ctx19, {
+		type: 'bar',
+		data    : overallArr[19],
+        options : options
+	})
+	const ctx20 = document.getElementById("canvas20")
+	const myChart20 = new Chart(ctx20, {
+		type: 'bar',
+		data    : overallArr[20],
+        options : options
+	})
+    //robot eff
+    const ctx21 = document.getElementById("canvas21")
+	const myChart21 = new Chart(ctx21, {
+		type: 'bar',
+		data    : overallArr[21],
+        options : options
+	})
+	const ctx22 = document.getElementById("canvas22")
+	const myChart22 = new Chart(ctx22, {
+		type: 'bar',
+		data    : overallArr[22],
+        options : options
+	})
+	const ctx23 = document.getElementById("canvas23")
+	const myChart23 = new Chart(ctx23, {
+		type: 'bar',
+		data    : overallArr[23],
+        options : options
+	})
+	const ctx24 = document.getElementById("canvas24")
+	const myChart24 = new Chart(ctx24, {
+		type: 'bar',
+		data    : overallArr[24],
+        options : options
+	})
+	const ctx25 = document.getElementById("canvas25")
+	const myChart25 = new Chart(ctx25, {
+		type: 'bar',
+		data    : overallArr[25],
+        options : options
+	})
+	const ctx26 = document.getElementById("canvas26")
+	const myChart26 = new Chart(ctx26, {
+		type: 'bar',
+		data    : overallArr[26],
+        options : options
+	})
+
+}
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

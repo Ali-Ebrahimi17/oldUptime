@@ -1,0 +1,73 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+<div class="vetting-body">
+  <header id="vettingJumbotron">
+
+    <% if ( number == 1) { %>
+    <h1 id="vetting-title"><i class="fas fa-tasks"></i> <%= number %> AWAITING SERVICE USA</h1>
+    <% }; %>
+    <% if ( number != 1) { %>
+    <h1 id="vetting-title"><i class="fas fa-tasks"></i> <%= number %> AWAITING SERVICE USA</h1>
+    <% }; %>
+
+
+    <form class="form-inline" action="/claims/service/<%= division %>" method="GET">
+      <div class="form-group">
+        <!-- <label for="search"></label> -->
+        <!-- <input class="form-control" type="text" name="search" placeholder="Search by Serial" autocomplete="off" /> -->
+        <select class="form-control" type="text" name="buildmonth" autocomplete="off">
+          <option></option>
+          <option>Jan-20</option>
+          <option>Feb-20</option>
+          <option>Mar-20</option>
+          <option>Apr-20</option>
+          <option>May-20</option>
+          <option>Jun-20</option>
+          <option>Jul-20</option>
+          <option>Aug-20</option>
+          <option>Sep-20</option>
+          <option>Oct-20</option>
+          <option>Nov-20</option>
+          <option>Dec-20</option>
+        </select>
+      </div>
+      <button class="btn btn-md btn-success"><i class="fas fa-search"></i></button>
+    </form>
+  </header>
+
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 15px;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 5vw;">T Period</th>
+        <th style="width: 7vw;">Claim Number</th>
+        <th style="width: 7vw;">Serial Number</th>
+        <th style="width: 6vw;">Model</th>
+        <th style="width: 6vw;">Build Month</th>
+        <th style="width: 7vw;">Build Date</th>
+        <th style="width: 15vw;">Failed Part</th>
+        <th style="width: 51vw;">Narrative</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (let claim of claims) { %>
+      <tr class="d-flex">
+        <td style="height: 79px; width: 5vw;"><%= claim.tPeriod %></td>
+        <td style="width: 7vw;"><a href="/claims/serviceres/<%= claim._id %>"><%= claim.claimNumber %></a></td>
+        <td style="width: 7vw;"><%= claim.name %></td>
+        <td style="width: 6vw;"> <%= claim.model %></td>
+        <td style="width: 6vw;"> <%= claim.buildmonth %></td>
+        <td style="width: 7vw;"> <%= claim.buildDate %></td>
+        <td style="width: 15vw;"> <%= claim.failedPart %></td>
+        <td style="width: 51vw;"> <%= claim.description.substring(0, 180) %>...</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+</div>

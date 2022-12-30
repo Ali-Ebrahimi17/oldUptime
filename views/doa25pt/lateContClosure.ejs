@@ -1,0 +1,1055 @@
+<% layout('layouts/doa')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/8z/content/bootstrap/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css" />
+<link rel="stylesheet" href="/content/table2.css" type="text/css" />
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+<script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+
+<style>
+	body {
+		background-color: black;
+	}
+
+	h5 {
+		color: white;
+		font-size: 1.5rem;
+		margin-bottom: -15px;
+	}
+
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+
+	h2 {
+		font-weight: bold;
+		color: black;
+	}
+
+	h1 {
+		font-size: 4rem;
+	}
+
+	h6 {
+		font-size: 1rem;
+	}
+
+	hr {
+		background-color: #6a6d6d;
+	}
+
+	.last-checked-holder {
+		padding-top: 12px;
+	}
+
+	.division-holder {
+		height: 200px;
+		width: 280px;
+		background-color: #33383a;
+		color: white;
+		text-align: center;
+	}
+
+	.group-holder {
+		height: 200px;
+		width: 885px;
+		background-color: #33383a;
+		color: white;
+		text-align: center;
+	}
+
+	.group-div-title {
+		margin-top: 10px;
+		margin-bottom: -8px;
+	}
+</style>
+
+<div class="main-header-holder">
+	<!-- <h1>DOA Major Escapes 4C Status</h1> -->
+</div>
+
+<div class="outside-holder">
+	<!-- left -->
+	<div class="wrapper">
+		<div class="header">
+			<div class="header-text" style="margin-bottom: 40px"><a>Late 24 Working Hour Containment</a></div>
+		</div>
+
+		<div style="display: flex; justify-content: space-around; margin-bottom: 20px">
+			<div class="division-holder">
+				<p class="group-div-title">BHL/SD</p>
+				<canvas id="canvas1" height="260" width="430"></canvas>
+			</div>
+
+			<div class="division-holder">
+				<p class="group-div-title">LDL</p>
+				<canvas id="canvas2" height="260" width="430"></canvas>
+			</div>
+
+			<div class="division-holder">
+				<p class="group-div-title">CP</p>
+				<canvas id="canvas3" height="260" width="430"></canvas>
+			</div>
+		</div>
+		<div style="display: flex; justify-content: space-around; margin-bottom: 20px">
+			<div class="division-holder">
+				<p class="group-div-title">EM</p>
+				<canvas id="canvas4" height="260" width="430"></canvas>
+			</div>
+
+			<div class="division-holder">
+				<p class="group-div-title">LP</p>
+				<canvas id="canvas5" height="260" width="430"></canvas>
+			</div>
+
+			<div class="division-holder">
+				<p class="group-div-title">HP</p>
+				<canvas id="canvas6" height="260" width="430"></canvas>
+			</div>
+		</div>
+
+		<div style="display: flex; justify-content: space-evenly; margin-top: 15px">
+			<div class="group-holder">
+				<p class="group-div-title">UK GROUP</p>
+				<canvas id="canvas7" height="6" width="30"></canvas>
+			</div>
+		</div>
+
+		<!-- amber -->
+	</div>
+	<hr style="width: 1px; height: 700px; display: inline-block; background-color: grey; margin-top: 40px" />
+	<!-- Month to date-->
+	<div class="wrapper">
+		<div class="header">
+			<div class="header-text" style="margin-bottom: 40px"><a>Late 5 Working Day Closure</a></div>
+
+			<div style="display: flex; justify-content: space-around; margin-bottom: 20px">
+				<div class="division-holder">
+					<p class="group-div-title">BHL/SD</p>
+					<canvas id="canvas8" height="260" width="430"></canvas>
+				</div>
+
+				<div class="division-holder">
+					<p class="group-div-title">LDL</p>
+					<canvas id="canvas9" height="260" width="430"></canvas>
+				</div>
+
+				<div class="division-holder">
+					<p class="group-div-title">CP</p>
+					<canvas id="canvas10" height="260" width="430"></canvas>
+				</div>
+			</div>
+			<div style="display: flex; justify-content: space-around; margin-bottom: 20px">
+				<!-- background-color: #33383a; -->
+
+				<div class="division-holder">
+					<p class="group-div-title">EM</p>
+					<canvas id="canvas11" height="260" width="430"></canvas>
+				</div>
+
+				<div class="division-holder">
+					<p class="group-div-title">LP</p>
+					<canvas id="canvas12" height="260" width="430"></canvas>
+				</div>
+
+				<div class="division-holder">
+					<p class="group-div-title">HP</p>
+					<canvas id="canvas13" height="260" width="430"></canvas>
+				</div>
+			</div>
+
+			<div style="display: flex; justify-content: space-evenly; margin-top: 15px">
+				<div class="group-holder">
+					<p class="group-div-title">UK GROUP</p>
+					<canvas id="canvas14" height="6" width="30"></canvas>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid footer">
+			<div class="row header-top">
+				<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+			</div>
+		</div>
+
+		<script>
+			Chart.defaults.global.defaultFontColor = "#fff";
+			Chart.defaults.global.defaultFontSize = 12;
+			Chart.defaults.scale.gridLines.display = false;
+
+			let defaultLabels = [
+			  <%- JSON.stringify(sevenMonthsAgoText) %>,
+			  <%- JSON.stringify(sixMonthsAgoText) %>,
+			  <%- JSON.stringify(fiveMonthsAgoText) %>,
+			  <%- JSON.stringify(fourMonthsAgoText) %>,
+			  <%- JSON.stringify(threeMonthsAgoText) %>,
+			  <%- JSON.stringify(twoMonthsAgoText) %>,
+			  <%- JSON.stringify(oneMonthAgoText) %>,
+			  <%- JSON.stringify(thisMonthText) %>,
+			]
+
+
+			let barChartData1 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= bhlSDBuildOne %>,
+			      <%= bhlSDBuildTwo %>,
+			      <%= bhlSDBuildThree %>,
+			      <%= bhlSDBuildFour %>,
+			      <%= bhlSDBuildFive%>,
+			      <%= bhlSDBuildSix%>,
+			      <%= bhlSDBuildSeven %>,
+			      <%= bhlSDBuildEight %>,
+			    ],
+			  }, ],
+			};
+			let barChartData2 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= ldlBuildOne %>,
+			      <%= ldlBuildTwo %>,
+			      <%= ldlBuildThree %>,
+			      <%= ldlBuildFour %>,
+			      <%= ldlBuildFive%>,
+			      <%= ldlBuildSix%>,
+			      <%= ldlBuildSeven %>,
+			      <%= ldlBuildEight %>,
+			    ],
+			  }, ],
+			};
+
+			let barChartData3 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= cpBuildOne %>,
+			      <%= cpBuildTwo %>,
+			      <%= cpBuildThree %>,
+			      <%= cpBuildFour %>,
+			      <%= cpBuildFive%>,
+			      <%= cpBuildSix%>,
+			      <%= cpBuildSeven %>,
+			      <%= cpBuildEight %>,
+			    ],
+			  }, ],
+			}
+
+			let barChartData4 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= emBuildOne %>,
+			      <%= emBuildTwo %>,
+			      <%= emBuildThree %>,
+			      <%= emBuildFour %>,
+			      <%= emBuildFive%>,
+			      <%= emBuildSix%>,
+			      <%= emBuildSeven %>,
+			      <%= emBuildEight %>,
+			    ],
+			  }, ],
+			}
+			let barChartData5 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= lpBuildOne %>,
+			      <%= lpBuildTwo %>,
+			      <%= lpBuildThree %>,
+			      <%= lpBuildFour %>,
+			      <%= lpBuildFive%>,
+			      <%= lpBuildSix%>,
+			      <%= lpBuildSeven %>,
+			      <%= lpBuildEight %>,
+			    ],
+			  }, ],
+			}
+
+			let barChartData6 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= hpBuildOne %>,
+			      <%= hpBuildTwo %>,
+			      <%= hpBuildThree %>,
+			      <%= hpBuildFour %>,
+			      <%= hpBuildFive%>,
+			      <%= hpBuildSix%>,
+			      <%= hpBuildSeven %>,
+			      <%= hpBuildEight %>,
+			    ],
+			  }, ],
+			}
+
+			let barChartData7 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= groupBuildOne %>,
+			      <%= groupBuildTwo %>,
+			      <%= groupBuildThree %>,
+			      <%= groupBuildFour %>,
+			      <%= groupBuildFive%>,
+			      <%= groupBuildSix%>,
+			      <%= groupBuildSeven %>,
+			      <%= groupBuildEight %>,
+			    ],
+			  }, ],
+			}
+			let barChartData8 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= bhlSDBuildOneC %>,
+			      <%= bhlSDBuildTwoC %>,
+			      <%= bhlSDBuildThreeC %>,
+			      <%= bhlSDBuildFourC %>,
+			      <%= bhlSDBuildFiveC %>,
+			      <%= bhlSDBuildSixC %>,
+			      <%= bhlSDBuildSevenC %>,
+			      <%= bhlSDBuildEightC %>,
+			    ],
+			  }, ],
+			}
+			let barChartData9 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= ldlBuildOneC %>,
+			      <%= ldlBuildTwoC %>,
+			      <%= ldlBuildThreeC %>,
+			      <%= ldlBuildFourC %>,
+			      <%= ldlBuildFiveC %>,
+			      <%= ldlBuildSixC %>,
+			      <%= ldlBuildSevenC %>,
+			      <%= ldlBuildEightC %>,
+			    ],
+			  }, ],
+			}
+
+			let barChartData10 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= cpBuildOneC %>,
+			      <%= cpBuildTwoC %>,
+			      <%= cpBuildThreeC %>,
+			      <%= cpBuildFourC %>,
+			      <%= cpBuildFiveC %>,
+			      <%= cpBuildSixC %>,
+			      <%= cpBuildSevenC %>,
+			      <%= cpBuildEightC %>,
+			    ],
+			  }, ],
+			}
+
+			let barChartData11 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= emBuildOneC %>,
+			      <%= emBuildTwoC %>,
+			      <%= emBuildThreeC %>,
+			      <%= emBuildFourC %>,
+			      <%= emBuildFiveC %>,
+			      <%= emBuildSixC %>,
+			      <%= emBuildSevenC %>,
+			      <%= emBuildEightC %>,
+			    ],
+			  }, ],
+			}
+
+			let barChartData12 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= lpBuildOneC %>,
+			      <%= lpBuildTwoC %>,
+			      <%= lpBuildThreeC %>,
+			      <%= lpBuildFourC %>,
+			      <%= lpBuildFiveC %>,
+			      <%= lpBuildSixC %>,
+			      <%= lpBuildSevenC %>,
+			      <%= lpBuildEightC %>,
+			    ],
+			  }, ],
+			}
+
+			let barChartData13 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= hpBuildOneC %>,
+			      <%= hpBuildTwoC %>,
+			      <%= hpBuildThreeC %>,
+			      <%= hpBuildFourC %>,
+			      <%= hpBuildFiveC %>,
+			      <%= hpBuildSixC %>,
+			      <%= hpBuildSevenC %>,
+			      <%= hpBuildEightC %>,
+			    ],
+			  }, ],
+			}
+
+			let barChartData14 = {
+			  labels: defaultLabels,
+			  datasets: [{
+			    label: '',
+			    backgroundColor: 'rgb(54, 162, 235)',
+			    yAxisID: 'bar-y-axis',
+			    datalabels: {
+			      // display labels for this specific dataset
+			      display: true,
+			      color: 'white',
+			      align: 'end',
+			      anchor: 'end',
+			      formatter: function(value, index, values) {
+			        if (value > 0) {
+			          value = value.toString();
+			          value = value.split(/(?=(?:...)*$)/);
+			          value = value.join(',');
+			          return value;
+			        } else {
+			          value = "";
+			          return value;
+			        }
+			      },
+			    },
+			    data: [
+			      <%= groupBuildOneC %>,
+			      <%= groupBuildTwoC %>,
+			      <%= groupBuildThreeC %>,
+			      <%= groupBuildFourC %>,
+			      <%= groupBuildFiveC %>,
+			      <%= groupBuildSixC %>,
+			      <%= groupBuildSevenC %>,
+			      <%= groupBuildEightC %>,
+			    ],
+			  }, ],
+			}
+
+			let options = {
+
+			  legend: {
+			    display: false,
+			  },
+			  tooltips: {
+			    enabled: false,
+			  },
+			  responsive: true,
+			  scales: {
+			    yAxes: [{
+			        stacked: false,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 60,
+			          // stepSize: 40,
+			        },
+
+			      },
+			      {
+			        id: 'bar-y-axis',
+			        stacked: true,
+			        display: true,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 60,
+			          // stepSize: 2,
+			          callback: function(value) {
+			            if (value > 60) return "";
+			            return value;
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			    ],
+			  },
+			}
+
+			let groupOptions = {
+
+			  legend: {
+			    display: false,
+			  },
+			  tooltips: {
+			    enabled: false,
+			  },
+			  responsive: true,
+			  scales: {
+			    yAxes: [{
+			        stacked: false,
+			        display: false,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 80,
+			          stepSize: 20,
+			        },
+
+			      },
+			      {
+			        id: 'bar-y-axis',
+			        stacked: true,
+			        display: true,
+			        ticks: {
+			          beginAtZero: true,
+			          min: 0,
+			          max: 80,
+			          callback: function(value) {
+			            if (value > 100) return "";
+			            return value;
+			          }
+			        },
+			        type: 'linear',
+
+			      },
+			    ],
+			  },
+			}
+
+			window.onload = function() {
+			  var ctx = document.getElementById("canvas1");
+			  var myChart = new Chart(ctx, {
+			      type: 'bar',
+			      data: barChartData1,
+			      options: options
+			    },
+			    document.getElementById("canvas1").onclick = function(evt) {
+			      var activePoints = myChart.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart.data.labels[firstPoint._index];
+			      var value = myChart.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateContMonthDetail/BHL/${label}`
+			    })
+
+			  var ctx2 = document.getElementById("canvas2");
+			  var myChart2 = new Chart(ctx2, {
+			      type: 'bar',
+			      data: barChartData2,
+			      options: options
+			    },
+			    document.getElementById("canvas2").onclick = function(evt) {
+			      var activePoints = myChart2.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart2.data.labels[firstPoint._index];
+			      var value = myChart2.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+
+			        window.location.href = `/doa25pt/lateContMonthDetail/LDL/${label}`
+			    })
+
+			  var ctx3 = document.getElementById("canvas3");
+			  var myChart3 = new Chart(ctx3, {
+			      type: 'bar',
+			      data: barChartData3,
+			      options: options
+			    },
+			    document.getElementById("canvas3").onclick = function(evt) {
+			      var activePoints = myChart3.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart3.data.labels[firstPoint._index];
+			      var value = myChart3.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateContMonthDetail/CP/${label}`
+			    })
+
+			  var ctx4 = document.getElementById("canvas4");
+			  var myChart4 = new Chart(ctx4, {
+			      type: 'bar',
+			      data: barChartData4,
+			      options: options
+			    },
+			    document.getElementById("canvas4").onclick = function(evt) {
+			      var activePoints = myChart4.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart4.data.labels[firstPoint._index];
+			      var value = myChart4.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateContMonthDetail/EM/${label}`
+			    })
+
+
+			  var ctx5 = document.getElementById("canvas5");
+			  var myChart5 = new Chart(ctx5, {
+			      type: 'bar',
+			      data: barChartData5,
+			      options: options
+			    },
+			    document.getElementById("canvas5").onclick = function(evt) {
+			      var activePoints = myChart5.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart5.data.labels[firstPoint._index];
+			      var value = myChart5.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateContMonthDetail/LP/${label}`
+			    })
+
+
+			  var ctx6 = document.getElementById("canvas6");
+			  var myChart6 = new Chart(ctx6, {
+			      type: 'bar',
+			      data: barChartData6,
+			      options: options
+			    },
+			    document.getElementById("canvas6").onclick = function(evt) {
+			      var activePoints = myChart6.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart6.data.labels[firstPoint._index];
+			      var value = myChart6.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateContMonthDetail/HP/${label}`
+			    })
+
+
+			  var ctx7 = document.getElementById("canvas7");
+			  var myChart7 = new Chart(ctx7, {
+			      type: 'bar',
+			      data: barChartData7,
+			      options: groupOptions
+			    },
+			    document.getElementById("canvas7").onclick = function(evt) {
+			      var activePoints = myChart7.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart7.data.labels[firstPoint._index];
+			      var value = myChart7.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateContMonthDetail/GROUP/${label}`
+			    })
+
+
+			  var ctx8 = document.getElementById("canvas8");
+			  var myChart8 = new Chart(ctx8, {
+			      type: 'bar',
+			      data: barChartData8,
+			      options: options
+			    },
+			    document.getElementById("canvas8").onclick = function(evt) {
+			      var activePoints = myChart8.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart8.data.labels[firstPoint._index];
+			      var value = myChart8.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateCloseMonthDetail/BHL/${label}`
+			    })
+
+
+			  var ctx9 = document.getElementById("canvas9");
+			  var myChart9 = new Chart(ctx9, {
+			      type: 'bar',
+			      data: barChartData9,
+			      options: options
+			    },
+			    document.getElementById("canvas9").onclick = function(evt) {
+			      var activePoints = myChart9.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart9.data.labels[firstPoint._index];
+			      var value = myChart9.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateCloseMonthDetail/LDL/${label}`
+			    })
+
+
+
+			  var ctx10 = document.getElementById("canvas10");
+			  var myChart10 = new Chart(ctx10, {
+			      type: 'bar',
+			      data: barChartData10,
+			      options: options
+			    },
+			    document.getElementById("canvas10").onclick = function(evt) {
+			      var activePoints = myChart10.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart10.data.labels[firstPoint._index];
+			      var value = myChart10.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateCloseMonthDetail/CP/${label}`
+			    })
+
+
+			  var ctx11 = document.getElementById("canvas11");
+			  var myChart11 = new Chart(ctx11, {
+			      type: 'bar',
+			      data: barChartData11,
+			      options: options
+			    },
+			    document.getElementById("canvas11").onclick = function(evt) {
+			      var activePoints = myChart11.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart11.data.labels[firstPoint._index];
+			      var value = myChart11.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateCloseMonthDetail/EM/${label}`
+			    })
+
+
+			  var ctx12 = document.getElementById("canvas12");
+			  var myChart12 = new Chart(ctx12, {
+			      type: 'bar',
+			      data: barChartData12,
+			      options: options
+			    },
+			    document.getElementById("canvas12").onclick = function(evt) {
+			      var activePoints = myChart12.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart12.data.labels[firstPoint._index];
+			      var value = myChart12.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateCloseMonthDetail/LP/${label}`
+			    })
+
+
+			  var ctx13 = document.getElementById("canvas13");
+			  var myChart13 = new Chart(ctx13, {
+			      type: 'bar',
+			      data: barChartData13,
+			      options: options
+			    },
+			    document.getElementById("canvas13").onclick = function(evt) {
+			      var activePoints = myChart13.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart13.data.labels[firstPoint._index];
+			      var value = myChart13.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateCloseMonthDetail/HP/${label}`
+			    })
+
+			  var ctx14 = document.getElementById("canvas14");
+			  var myChart14 = new Chart(ctx14, {
+			      type: 'bar',
+			      data: barChartData14,
+			      options: groupOptions
+			    },
+			    document.getElementById("canvas14").onclick = function(evt) {
+			      var activePoints = myChart14.getElementsAtEvent(evt);
+			      var firstPoint = activePoints[0];
+			      // var bu = shortBu
+			      var label = myChart14.data.labels[firstPoint._index];
+			      var value = myChart14.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			      if (firstPoint !== undefined)
+			        // alert(label);
+			        window.location.href = `/doa25pt/lateCloseMonthDetail/GROUP/${label}`
+			    })
+
+			}
+		</script>
+	</div>
+</div>

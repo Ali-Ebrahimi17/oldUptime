@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-size=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="30"> -->
+		<title>JCB - Material Planning</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/content/bootswatch/united.css" type="text/css"> -->
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/content/font-awesome/css/all.css" type="text/css" /> -->
+		<link rel="stylesheet" href="/content/ui/jquery-ui.min.css" type="text/css" />
+		<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<!-- <script src="/content/ui/jquery-ui.min.js"></script>
+		<script src="/content/marquee/jquery.marquee.min.js"></script>
+		<script src="/content/timer/moment.js"></script>
+		<script src="/content/timer/dist/ez.countimer.min.js"></script> -->
+
+		<script defer src="/font-v6/js/solid.js"></script>
+		<script defer src="/font-v6/js/brands.js"></script>
+
+		<script defer src="/font-v6/js/fontawesome.js"></script>
+	</head>
+
+	<body
+		style="
+			margin-bottom: 50px;
+			overflow: hidden;
+			background-color: black;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			height: 100vh;
+		"
+	>
+		<!--  add part modal -->
+		<div class="modal fade" id="add-part" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px">
+						<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+						<h3 style="text-align: center; margin: 8px">Add Part</h3>
+					</div>
+					<div class="modal-body">
+						<fieldset>
+							<form action="/materials/add-part" method="POST" onsubmit="upcomingButton.disabled = true; return true;">
+								<div class="row" style="color: black">
+									<div class="col">
+										<input type="hidden" name="division" value="<%= division %>" />
+										<label for="exampleSelect1">Part Number</label>
+										<input class="form-control" type="text" name="partNumber" autocomplete="off" value="" required style="margin-bottom: 5px" />
+
+										<label for="exampleSelect1">Description</label>
+										<input class="form-control" type="text" name="description" autocomplete="off" value="" required style="margin-bottom: 5px" />
+
+										<label for="exampleSelect1">Supplier</label>
+										<input class="form-control" type="text" name="supplier" autocomplete="off" value="" required style="margin-bottom: 5px" />
+
+										<label for="exampleSelect1">Category</label>
+										<select class="form-control" name="category" required style="margin-bottom: 10px">
+											<option hidden></option>
+											<option>A</option>
+											<option>B</option>
+											<option>C</option>
+											<option>ROTO</option>
+										</select>
+
+										<button
+											type="button"
+											id="modalClose"
+											data-dismiss="modal"
+											class="btn btn-danger float-right"
+											style="margin-left: 8px; color: white; border-radius: 4px"
+										>
+											Cancel
+										</button>
+										<button
+											id="upcomingButton"
+											class="btn btn-success float-right"
+											type="submit"
+											style="margin-bottom: 10px; color: white; border-radius: 4px"
+										>
+											Confirm
+										</button>
+									</div>
+								</div>
+							</form>
+						</fieldset>
+					</div>
+					<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+						<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--  edit part modal -->
+		<div class="modal fade" id="edit-part" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px">
+						<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+						<h3 style="text-align: center; margin: 8px">Edit Part</h3>
+					</div>
+					<div class="modal-body">
+						<fieldset>
+							<% if (part) { %>
+							<form action="/materials/edit-part/<%= part._id %>" method="POST" onsubmit="upcomingButton.disabled = true; return true;">
+								<div class="row" style="color: black">
+									<div class="col">
+										<input type="hidden" name="division" value="<%= division %>" />
+										<label for="exampleSelect1">Part Number</label>
+										<input
+											class="form-control"
+											type="text"
+											name="partNumber"
+											autocomplete="off"
+											value="<%= part.partNumber %>"
+											required
+											style="margin-bottom: 5px"
+										/>
+										<label for="exampleSelect1">Description</label>
+										<input
+											class="form-control"
+											type="text"
+											name="description"
+											autocomplete="off"
+											value="<%= part.description %>"
+											required
+											style="margin-bottom: 5px"
+										/>
+
+										<label for="exampleSelect1">Supplier</label>
+										<input
+											class="form-control"
+											type="text"
+											name="supplier"
+											autocomplete="off"
+											value="<%= part.supplier %>"
+											required
+											style="margin-bottom: 5px"
+										/>
+
+										<label for="exampleSelect1">Category</label>
+										<select class="form-control" name="category" required style="margin-bottom: 10px">
+											<option hidden><%= part.category %></option>
+											<option>A</option>
+											<option>B</option>
+											<option>C</option>
+											<option>ROTO</option>
+										</select>
+
+										<button
+											type="button"
+											id="modalClose"
+											data-dismiss="modal"
+											class="btn btn-danger float-right"
+											style="margin-left: 8px; color: white; border-radius: 4px"
+										>
+											Cancel
+										</button>
+										<button
+											id="upcomingButton"
+											class="btn btn-success float-right"
+											type="submit"
+											style="margin-bottom: 10px; color: white; border-radius: 4px"
+										>
+											Confirm
+										</button>
+									</div>
+								</div>
+							</form>
+
+							<% } %>
+						</fieldset>
+					</div>
+					<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+						<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div style="width: 100vw; height: 40px; background-color: #fcb026">
+			<div style="padding: 6px">
+				<img height="24px" src="/media/jcb-logo.png" />
+			</div>
+		</div>
+		<div style="margin-left: 650px; margin-right: 650px; margin-bottom: 700px;"><%- include('../../views/partials/flash.ejs')%></div>
+
+		<section style="display: flex; justify-content: center; margin-top: -1220px">
+			<div style="color: white">
+				<div style="text-align: center">
+					<span style="cursor: pointer"
+						><i
+							class="fa-solid fa-plus float-right"
+							style="font-size: 30px; margin-top: 11px; color: green"
+							data-toggle="modal"
+							data-target="#add-part"
+						></i
+					></span>
+
+					<h1 style="margin-bottom: 8px"><%= division %> Part Risk</h1>
+				</div>
+
+				<div style="display: flex; justify-content: center; margin-bottom: 10px">
+					<form class="form-inline" action="/materials/parts-risk-search/<%= division %>" method="GET">
+						<div class="form-group">
+							<label for="search"></label>
+							<input
+								style="border-radius: 5px; width: 350px"
+								class="form-control"
+								type="text"
+								name="partNumber"
+								placeholder="Search by Part Number"
+							/>
+						</div>
+						<!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+					</form>
+				</div>
+				<% if (part) { %>
+				<div style="width: 350px; height: 200px; display: flex; flex-direction: column; justify-content: space-between">
+					<div style="margin-bottom: 5px;">
+						Part Number: <%= part.partNumber %>
+						<span data-toggle="modal" data-target="#edit-part"
+							><i style="font-size: 25px; cursor: pointer; color: #fcb026" class="fa-solid fa-pencil float-right"></i
+						></span>
+					</div>
+					<div style="margin-bottom: 5px;">Description: <%= part.description %></div>
+					<div  style="margin-bottom: 5px;">Supplier: <%= part.supplier %></div>
+					<div  style="margin-bottom: 5px;">Category: <%= part.category %></div>
+          <div style="width: 350px; height: 100px; display: flex; flex-direction: column; justify-content: space-between; margin-top: -65px;">
+            <div style="height: 250px; width: 250px; transform: scaleX(-1)">
+              <img src="/svg-machine-icons/loadall.svg" />
+            </div>
+				</div>
+			</div>
+
+			<% } else if (search) { %>
+			<div style="width: 350px; height: 200px; display: flex; flex-direction: column">
+				<div style="text-align: center; font-size: 24px; color: red">Part Number Not Found</div>
+        <div style="width: 350px; height: 100px; display: flex; flex-direction: column; justify-content: space-between">
+          <div style="height: 250px; width: 250px; transform: scaleX(-1)">
+            <img src="/svg-machine-icons/loadall.svg" />
+          </div>
+      </div>
+			</div>
+
+			<% } else { %>
+			<div style="width: 350px; height: 200px; display: flex; flex-direction: column; justify-content: space-between">
+				<div style="height: 250px; width: 250px; transform: scaleX(-1)">
+					<img src="/svg-machine-icons/loadall.svg" />
+				</div>
+			</div>
+
+			<% } %>
+		</section>
+    
+
+		<footer style="width: 100vw; height: 40px; background-color: #fcb026; display: flex; justify-content: space-between">
+			<div style="padding: 6px; display: flex">
+				<div>
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+				</div>
+				<div style="margin-left: 8px">
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+			</div>
+			<div style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+		</footer>
+
+		<script></script>
+	</body>
+</html>

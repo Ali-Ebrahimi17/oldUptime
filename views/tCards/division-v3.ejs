@@ -1,0 +1,1244 @@
+
+
+<% layout('layouts/boilertCardNew')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/8z/content/bootstrap/css/bootstrap.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/cards.css" type="text/css">
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<style>
+  body {background-color: black; }
+  h5 {color: white; font-size: 1.5rem; margin-bottom: -15px;}
+  h3 {color: white; font-size: 2rem;}
+  h2 {font-weight: bold; color: black;}
+  h1 {font-weight: bold; font-size: 4rem;}
+  h6{font-size: 1rem;}
+  hr {background-color: #6a6d6d;}
+  .last-checked-holder {
+    padding-top: 12px;
+  }
+  .paint-plant-stat {
+    font-size: 30px;
+  }
+  .paint-plant {
+    padding-bottom: 8px;
+  }
+
+  .paint-plant {
+    padding-bottom: 5px;
+  }
+  .header-text {
+    display: flex;
+   justify-content: center;
+  }
+  .div-detail-button-red {
+    margin-left: 25px;
+    height: 35px;
+    width: 45px;
+    background-color: rgb(238, 28, 37);
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    padding-bottom: 3px;
+    padding-right: 2px;
+  }
+  .div-detail-button-amber {
+    margin-left: 25px;
+    height: 35px;
+    width: 35px;
+    background-color: rgb(252, 176, 38);
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    padding-bottom: 3px;
+  }
+  .div-detail-button-green {
+    margin-left: 25px;
+    height: 35px;
+    width: 35px;
+    background-color: rgb(11, 156, 49);
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    padding-bottom: 3px;
+  }
+ 
+</style>
+
+<div class='main-header-holder'>
+  <h1>PAINT PLANT HEALTH STATUS</h1>
+</div>
+
+<div class="outside-holder">
+
+  <!-- Cabs -->
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text">
+        <a href="/tCard/allhistory/CABS/Paint Shop">Cab Systems</a>
+        
+      </div>
+    <div class="last-checked-holder">
+      <small>Last checked by <%= cabsUpdate.checkedBy %> - <%= moment(cabsUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+    </div>
+    <hr>
+    </div>
+
+    <div class="cards">
+      <div class=" card [ is-collapsed ] ">
+      
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ]  <% if (totalCabsFailed > 0 ) { %>red-card<% } else if  (totalCabsContained > 0 ) { %>amber-card<% } else if  (doneCabs <  totalCabs) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">Paint Plant</span>
+          <span class="paint-plant-stat"><%=  doneCabs %>/<%= totalCabs %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Other/Days">
+              <li class="<% if (failedOther > 0 ) { %>red-li<% } else if  (ContainedOther > 0 ) { %>amber-li<% } else if  (doneOther <  totalOther) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment
+                <span>
+                  <%= doneOther %>/<%= totalOther %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 1  Alkali cleaner/Days">
+              <li class="<% if (failedT1 > 0 ) { %>red-li<% } else if  (ContainedT1 > 0 ) { %>amber-li<% } else if  (doneT1 <  totalT1) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 1 - Alkali Cleaner
+                <span>
+                  <%= doneT1 %>/<%= totalT1 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 2  Alkali cleaner/Days">
+              <li class="<% if (failedT2 > 0 ) { %>red-li<% } else if  (ContainedT2 > 0 ) { %>amber-li<% } else if  (doneT2 <  totalT2) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 2 - Alkali Cleaner
+                <span>
+                  <%= doneT2 %>/<%= totalT2 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 3  Town’s water rinse/Days">
+              <li class="<% if (failedT3 > 0 ) { %>red-li<% } else if  (ContainedT3 > 0 ) { %>amber-li<% } else if  (doneT3 <  totalT3) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 3 - Town’s Water Rinse
+                <span>
+                  <%= doneT3 %>/<%= totalT3 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 5  Acid descale/Days">
+              <li class="<% if (failedT5 > 0 ) { %>red-li<% } else if  (ContainedT5 > 0 ) { %>amber-li<% } else if  (doneT5 <  totalT5) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 5 - Acid Descale
+                <span>
+                  <%= doneT5 %>/<%= totalT5 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 6  Ultrasonic descale/Days">
+              <li class="<% if (failedT6 > 0 ) { %>red-li<% } else if  (ContainedT6 > 0 ) { %>amber-li<% } else if  (doneT6 <  totalT6) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 6 - Ultrasonic Descale
+                <span>
+                  <%= doneT6 %>/<%= totalT6 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 7  Alkali rinse/Days">
+              <li class="<% if (failedT7 > 0 ) { %>red-li<% } else if  (ContainedT7 > 0 ) { %>amber-li<% } else if  (doneT7 <  totalT7) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 7 - Alkali Rinse
+                <span>
+                  <%= doneT7 %>/<%= totalT7 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 10 RO Water rinse/Days">
+              <li class="<% if (failedT10 > 0 ) { %>red-li<% } else if  (ContainedT10 > 0 ) { %>amber-li<% } else if  (doneT10 <  totalT10) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 10 - RO Water Rinse
+                <span>
+                  <%= doneT10 %>/<%= totalT10 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 11 Oxsilan conversion/Days">
+              <li class="<% if (failedT11 > 0 ) { %>red-li<% } else if  (ContainedT11 > 0 ) { %>amber-li<% } else if  (doneT11 <  totalT11) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 11 - Oxsilan Conversion
+                <span>
+                  <%= doneT11 %>/<%= totalT11 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 12 RO Water rinse/Days">
+              <li class="<% if (failedT12 > 0 ) { %>red-li<% } else if  (ContainedT12 > 0 ) { %>amber-li<% } else if  (doneT12 <  totalT12) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 12 - Water Rinse
+                <span>
+                  <%= doneT12 %>/<%= totalT12 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 13 RO Water rinse/Days">
+              <li class="<% if (failedT13 > 0 ) { %>red-li<% } else if  (ContainedT13 > 0 ) { %>amber-li<% } else if  (doneT13 <  totalT13) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 13 - Water Rinse
+                <span>
+                  <%= doneT13 %>/<%= totalT13 %>
+                </span>
+              </li>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 14 RO Water rinse/Days">
+              <li class="<% if (failedT14 > 0 ) { %>red-li<% } else if  (ContainedT14 > 0 ) { %>amber-li<% } else if  (doneT14 <  totalT14) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 14 - Water Rinse
+                <span>
+                  <%= doneT14 %>/<%= totalT14 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Tank 15 E-Coat/Days">
+              <li class="<% if (failedT15 > 0 ) { %>red-li<% } else if  (ContainedT15 > 0 ) { %>amber-li<% } else if  (doneT15 <  totalT15) { %>grey-li<% } else { %>green-li<% } %>">
+                Tank 15 - E-Coat
+                <span>
+                  <%= doneT15 %>/<%= totalT15 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment RO Tank/Days">
+              <li class="<% if (failedTRO > 0 ) { %>red-li<% } else if  (ContainedTRO > 0 ) { %>amber-li<% } else if  (doneTRO <  totalTRO) { %>grey-li<% } else { %>green-li<% } %>">
+                RO Tank
+                <span>
+                  <%= doneTRO %>/<%= totalTRO %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Pre Treatment Boiler/Days">
+              <li class="<% if (failedBoiler > 0 ) { %>red-li<% } else if  (ContainedBoiler > 0 ) { %>amber-li<% } else if  (doneBoiler <  totalBoiler) { %>grey-li<% } else { %>green-li<% } %>">
+                Boiler
+                <span>
+                  <%= doneBoiler %>/<%= totalBoiler %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Ovens/Days">
+              <li class="<% if (failedOvens > 0 ) { %>red-li<% } else if  (ContainedOvens > 0 ) { %>amber-li<% } else if  (doneOvens <  totalOvens) { %>grey-li<% } else { %>green-li<% } %>">
+                Ovens
+                <span>
+                  <%= doneOvens %>/<%= totalOvens %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CABS/Paint Shop/Paint Kitchen/Days">
+              <li class="<% if (failedPaintKitchen > 0 ) { %>red-li<% } else if  (ContainedPaintKitchen > 0 ) { %>amber-li<% } else if  (donePaintKitchen <  totalPaintKitchen) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint Kitchen
+                <span>
+                  <%= donePaintKitchen %>/<%= totalPaintKitchen %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+     
+      </div>
+      <div class=" card [ is-collapsed ] ">
+      
+      </div>
+
+      <!-- extra -->
+      <a>
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (failedCabsValidation  > 0 ) { %>red-cardV<% } else if  (ContainedCabsValidation > 0 ) { %>amber-cardV<% } else if  (doneCabsValidation <  totalCabsValidation) { %>grey-cardV<% } else { %>green-cardV<% } %>">
+          <span class="paint-plant">validation</span>
+          <div style="margin-top: -10px;">
+            <span class="paint-plant-stat-validation"><%= doneCabsValidation %>/<%= totalCabsValidation %></span>
+          </div>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/CABS/Paint Shop/Validation/Days">
+              <li class="<% if (failedCabsValidation > 0 ) { %>red-li<% } else if  (ContainedCabsValidation > 0 ) { %>amber-li<% } else if (doneCabsValidation <  totalCabsValidation) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span>
+                  <%= doneCabsValidation %>/<%= totalCabsValidation %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+      
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Compact -->
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text"><a href="/tCard/allhistory/CP/Paint Shop">Compact Products</a>
+       
+      </div>
+    <div class="last-checked-holder">
+      <small>Last checked by <%= compactUpdate.checkedBy %> - <%= moment(compactUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+    </div>
+    <hr>
+    </div>
+
+    <div class="cards">
+      <div class=" card [ is-collapsed ] ">
+      
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ]  <% if (totalFailsCompact> 0 ) { %>red-card<% } else if  (totalContainedCompact > 0 ) { %>amber-card<% } else if  (doneCompact <  totalCompact) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">Paint Plant</span>
+          <span class="paint-plant-stat"><%=  doneCompact%>/<%= totalCompact %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/CP/Paint Shop/Shot Blast/Days">
+              <li class="<% if (failsSBCompact > 0 ) { %>red-li<% } else if  (contSBCompact > 0 ) { %>amber-li<% } else if  (doneSBCompact <  totalSBCompact) { %>grey-li<% } else { %>green-li<% } %>">
+                Shot Blast
+                <span>
+                  <%= doneSBCompact %>/<%= totalSBCompact%>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CP/Paint Shop/Pre Treatment/Days">
+              <li  class="<% if (failsPTCompact > 0 ) { %>red-li<% } else if  (contPTCompact > 0 ) { %>amber-li<% } else if  (donePTCompact <  totalPTCompact) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment
+                <span>
+                  <%= donePTCompact %>/<%= totalPTCompact %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/CP/Paint Shop/Oven Cure/Days">
+              <li class="<% if (failsOCCompact > 0 ) { %>red-li<% } else if  (contOCCompact > 0 ) { %>amber-li<% } else if  (doneOCCompact <  totalOCCompact) { %>grey-li<% } else { %>green-li<% } %>">
+                Ovens
+                <span >
+                  <%= doneOCCompact %>/<%= totalOCCompact%>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+     
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+     
+      </div>
+      
+
+      <!-- extra -->
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (failsVCompact> 0) { %>red-cardV<% } else if  (contVCompact > 0) { %>amber-cardV<% } else if  (doneVCompact <  totalVCompact) { %>grey-cardV<% } else { %>green-cardV<% } %>">
+          <span class="paint-plant">validation</span>
+          <div style="margin-top: -10px;">
+            <span class="paint-plant-stat-validation"><%= doneVCompact %>/<%= totalVCompact %></span>
+          </div>
+          <i class="fa fa-folder-o"></i>
+        </div>
+
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/CP/Paint Shop/Validation/Days">
+              <li class="<% if (failsVCompact> 0 ) { %>red-li<% } else if  (contVCompact > 0 ) { %>amber-li<% } else if  (doneVCompact <  totalVCompact) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span >
+                  <%= doneVCompact %>/<%= totalVCompact %>
+                </span>
+              </li>
+            </a>
+            
+          </ul>
+        </div>
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+      
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- HBU -->
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text"><a href="/tCard/allhistory/HBU/Paint Shop">HBU</a>
+        
+      </div>
+    </div>
+    <div class="last-checked-holder">
+      <small>Last checked by <%= HBUUpdate.checkedBy %> - <%= moment(HBUUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+    </div>
+    <hr>
+
+    <div class="cards">
+
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (totalHBUFailedAuto > 0 ) { %>red-card<% } else if  (totalHBUContainedAuto > 0 ) { %>amber-card<% } else if  (doneHBUAuto <  totalHBUAuto) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">Auto</span>
+          <span class="paint-plant-stat"><%=  doneHBUAuto %>/<%= totalHBUAuto %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/HBU/Auto Paint Line/Pre Treatment Operator/Days">
+              <li class="<% if (failedHBUPreTreatmentOperator> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentOperator > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentOperator <  totalHBUPreTreatmentOperator) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment - Operator
+                <span>
+                  <%= doneHBUPreTreatmentOperator %>/<%= totalHBUPreTreatmentOperator %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Auto Paint Line/Pre Treatment/Days">
+              <li class="<% if (failedHBUPreTreatmentTech> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentTech > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentTech <  totalHBUPreTreatmentTech) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment - Technician
+                <span>
+                  <%= doneHBUPreTreatmentTech %>/<%= totalHBUPreTreatmentTech %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Auto Paint Line/Paint Booth Operator/Days">
+              <li class="<% if (failedHBUPreTreatmentPaintBoothOp> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentPaintBoothOp > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentPaintBoothOp <  totalHBUPreTreatmentPaintBoothOp) { %>grey-li<% } else { %>green-li<% } %>">
+               Paint Booth - Operator
+                <span>
+                  <%= doneHBUPreTreatmentPaintBoothOp %>/<%= totalHBUPreTreatmentPaintBoothOp %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Auto Paint Line/Paint Booth/Days">
+              <li class="<% if (failedHBUPreTreatmentPaintBoothTech> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentPaintBoothTech > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentPaintBoothTech <  totalHBUPreTreatmentPaintBoothTech) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint Booth - Technician
+                <span>
+                  <%= doneHBUPreTreatmentPaintBoothTech %>/<%= totalHBUPreTreatmentPaintBoothTech %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Auto Paint Line/Ovens Curing Oven/Days">
+              <li class="<% if (failedHBUPreTreatmentOvenCuringOven> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentOvenCuringOven > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentOvenCuringOven <  totalHBUPreTreatmentOvenCuringOven) { %>grey-li<% } else { %>green-li<% } %>">
+                Curing Oven - Technician
+                <span>
+                  <%= doneHBUPreTreatmentOvenCuringOven %>/<%= totalHBUPreTreatmentOvenCuringOven %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Auto Paint Line/Ovens Drying Oven/Days">
+              <li class="<% if (failedHBUPreTreatmentOvenDryingOven > 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentOvenDryingOven > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentOvenDryingOven <  totalHBUPreTreatmentOvenDryingOven) { %>grey-li<% } else { %>green-li<% } %>">
+                Drying Oven - Technician
+                <span>
+                  <%= doneHBUPreTreatmentOvenDryingOven %>/<%= totalHBUPreTreatmentOvenDryingOven %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Auto Paint Line/Manipulator Operator/Days">
+              <li class="<% if (failedHBUPreTreatmentManipulatorOp > 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentManipulatorOp > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentManipulatorOp <  totalHBUPreTreatmentManipulatorOp) { %>grey-li<% } else { %>green-li<% } %>">
+                RAM Manipulator - Operator
+                <span>
+                  <%= doneHBUPreTreatmentManipulatorOp %>/<%= totalHBUPreTreatmentManipulatorOp %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Auto Paint Line/Manipulator/Days">
+              <li class="<% if (failedHBUPreTreatmentManipulatorTech> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentManipulatorTech > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentManipulatorTech <  totalHBUPreTreatmentManipulatorTech) { %>grey-li<% } else { %>green-li<% } %>">
+                RAM Manipulator - Technician
+                <span>
+                  <%= doneHBUPreTreatmentManipulatorTech %>/<%= totalHBUPreTreatmentManipulatorTech %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Auto Paint Line/Track/Days">
+              <li class="<% if (failedHBUPreTreatmentTrack> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentTrack > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentTrack <  totalHBUPreTreatmentTrack) { %>grey-li<% } else { %>green-li<% } %>">
+                Track  - Technician
+                <span>
+                  <%= doneHBUPreTreatmentTrack %>/<%= totalHBUPreTreatmentTrack %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (totalHBUFailedOffline > 0 ) { %>red-card<% } else if  (totalHBUContainedOffline > 0 ) { %>amber-card<% } else if  (doneHBUOffline <  totalHBUOffline) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">Off Line</span>
+          <span class="paint-plant-stat"><%=  doneHBUOffline %>/<%= totalHBUOffline %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/HBU/Offline Paint/Pre Treatment Operator/Days">
+              <li class="<% if (failedHBUOfflineOOp> 0 ) { %>red-li<% } else if  (ContainedHBUOfflineOOp > 0 ) { %>amber-li<% } else if  (doneHBUOfflineOOp <  totalHBUOfflineOOp) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment - Operator
+                <span>
+                  <%= doneHBUOfflineOOp %>/<%= totalHBUOfflineOOp %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Offline Paint/Pre Treatment/Days">
+              <li class="<% if (failedHBUOfflineOTech> 0 ) { %>red-li<% } else if  (ContainedHBUOfflineOTech > 0 ) { %>amber-li<% } else if  (doneHBUOfflineOTech <  totalHBUOfflineOTech) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment - Technician
+                <span>
+                  <%= doneHBUOfflineOTech %>/<%= totalHBUOfflineOTech %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Offline Paint/Paint Booth Operator/Days">
+              <li class="<% if (failedHBUOfflinePBOp > 0 ) { %>red-li<% } else if  (ContainedHBUOfflinePBOp > 0 ) { %>amber-li<% } else if  (doneHBUOfflinePBOp <  totalHBUOfflinePBOp ) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint Booth - Operator
+                <span>
+                  <%= doneHBUOfflinePBOp %>/<%= totalHBUOfflinePBOp %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Offline Paint/Paint Booth/Days">
+              <li class="<% if (failedHBUOfflinePBTech> 0 ) { %>red-li<% } else if  (ContainedHBUOfflinePBTech > 0 ) { %>amber-li<% } else if  (doneHBUOfflinePBTech <  totalHBUOfflinePBTech) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint Booth - Technician
+                <span>
+                  <%= doneHBUOfflinePBTech %>/<%= totalHBUOfflinePBTech %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Offline Paint/Ovens Curing Oven/Days">
+              <li class="<% if (failedHBUOfflineOvenCuringOven > 0 ) { %>red-li<% } else if  (ContainedHBUOfflineOvenCuringOven > 0 ) { %>amber-li<% } else if  (doneHBUOfflineOvenCuringOven <  totalHBUOfflineOvenCuringOven) { %>grey-li<% } else { %>green-li<% } %>">
+                Curing Oven - Technician
+                <span>
+                  <%= doneHBUOfflineOvenCuringOven %>/<%= totalHBUOfflineOvenCuringOven %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Offline Paint/Hoist Operator/Days">
+              <li class="<% if (failedHBUOfflineHoistOp> 0 ) { %>red-li<% } else if  (ContainedHBUOfflineHoistOp > 0 ) { %>amber-li<% } else if  (doneHBUOfflineHoistOp <  totalHBUOfflineHoistOp) { %>grey-li<% } else { %>green-li<% } %>">
+                Track & Hoist - Operator
+                <span>
+                  <%= doneHBUOfflineHoistOp %>/<%= totalHBUOfflineHoistOp %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HBU/Offline Paint/Hoist/Days">
+              <li class="<% if (failedHBUOfflineHoistTech> 0 ) { %>red-li<% } else if  (ContainedHBUOfflineHoistTech > 0 ) { %>amber-li<% } else if  (doneHBUOfflineHoistTech  <  totalHBUOfflineHoistTech ) { %>grey-li<% } else { %>green-li<% } %>">
+                Track & Hoist - Technician
+                <span>
+                  <%= doneHBUOfflineHoistTech %>/<%= totalHBUOfflineHoistTech %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (totalHBUFailedPaintPlant > 0 ) { %>red-card<% } else if  (totalHBUContainedPaintPlant > 0 ) { %>amber-card<% } else if  (doneHBUPaintPlant <  totalHBUPaintPlant) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">Paint Kitchen</span>
+          <span class="paint-plant-stat"><%=  doneHBUPaintPlant %>/<%= totalHBUPaintPlant %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/HBU/Paint Plant/Paint Kitchen/Days">
+              <li class="<% if (totalHBUFailedPaintPlant > 0 ) { %>red-li<% } else if  (totalHBUContainedPaintPlant > 0 ) { %>amber-li<% } else if  (doneHBUPaintPlant <  totalHBUPaintPlant) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint Kitchen
+                <span class="grey-li">
+                  <%=  doneHBUPaintPlant %>/<%= totalHBUPaintPlant %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+       <!-- extra -->
+       <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (failedHBUPreTreatmentValidation > 0 ) { %>red-cardV<% } else if  (ContainedHBUPreTreatmentValidation > 0 ) { %>amber-cardV<% } else if  (doneHBUPreTreatmentValidation <  totalHBUPreTreatmentValidation) { %>grey-cardV<% } else { %>green-cardV<% } %>">
+          <span class="paint-plant">validation</span>
+          <div style="margin-top: -10px;">
+            <span class="paint-plant-stat-validation"><%= doneHBUPreTreatmentValidation %>/<%= totalHBUPreTreatmentValidation %></span>
+          </div>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/HBU/Auto Paint Line/Validation/Days">
+              <li class="<% if (failedHBUPreTreatmentValidation> 0 ) { %>red-li<% } else if  (ContainedHBUPreTreatmentValidation > 0 ) { %>amber-li<% } else if  (doneHBUPreTreatmentValidation <  totalHBUPreTreatmentValidation) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span>
+                  <%= doneHBUPreTreatmentValidation %>/<%= totalHBUPreTreatmentValidation %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <!-- extra -->
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (totalHBUFailedOfflineV > 0 ) { %>red-cardV<% } else if  (totalHBUContainedOfflineV > 0 ) { %>amber-cardV<% } else if  (doneHBUOfflineV <  totalHBUOfflineV) { %>grey-cardV<% } else { %>green-cardV<% } %>">
+          <span class="paint-plant">validation</span>
+          <div style="margin-top: -10px;">
+            <span class="paint-plant-stat-validation"><%= doneHBUOfflineV %>/<%= totalHBUOfflineV %></span>
+          </div>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/HBU/Offline Paint/Validation/Days">
+              <li class="<% if (totalHBUFailedOfflineV > 0 ) { %>red-li<% } else if  (totalHBUContainedOfflineV> 0 ) { %>amber-li<% } else if  (doneHBUOfflineV <  totalHBUOfflineV) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span>
+                 <%= doneHBUOfflineV %>/<%= totalHBUOfflineV %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+       <!-- extra -->
+       <div class=" card [ is-collapsed ] ">
+       
+      </div>
+
+    </div>
+
+  </div>
+  <!-- HEAVY-->
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text"><a href="/tCard/allhistory/HP/Paint Shop">Heavy Products</a>
+        
+      </div>
+    </div>
+    <div class="last-checked-holder">
+      <small>Last checked by <%= heavyUpdate.checkedBy %> - <%= moment(heavyUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+    </div>
+    <hr>
+
+    <div class="cards">
+
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (totalHeavyFailedAttachments > 0 ) { %>red-card<% } else if  (totalHeavyContainedAttachments > 0 ) { %>amber-card<% } else if  (doneHeavyAttachments <  totalHeavyAttachments) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">Attachments</span>
+          <span class="paint-plant-stat"><%=  doneHeavyAttachments %>/<%= totalHeavyAttachments %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/HP/Attachments/Shot Blast/Days">
+              <li class="<% if (failsSBAttHeavy > 0  ) { %>red-li<% } else if  (contSBAttHeavy > 0) { %>amber-li<% } else if  (doneAttSBHeavy <  totalAttSBHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                Shot Blast
+                <span >
+                  <%= doneAttSBHeavy %>/<%= totalAttSBHeavy %>
+                </span>
+              </li>
+            </a>
+            <!-- <a href="/tCard/show/HP/Attachments/Oven Cure/Days">
+              <li class="<% if (failsOCAttHeavy > 0  ) { %>red-li<% } else if  (contOCAttHeavy > 0) { %>amber-li<% } else if  (doneAttOCHeavy <  totalAttOCHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                Oven Cure
+                <span >
+                  <%= doneAttOCHeavy %>/<%= totalAttOCHeavy %>
+                </span>
+              </li>
+            </a> -->
+          </ul>
+        </div>
+      </div>
+
+      
+
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (totalHeavyFailedRevolver > 0 ) { %>red-card<% } else if  (totalHeavyContainedRevolver > 0 ) { %>amber-card<% } else if  (doneHeavyRevolver1 <  totalHeavyRevolver1) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">Revolver</span>
+          <span class="paint-plant-stat"><%=  doneHeavyRevolver1 %>/<%= totalHeavyRevolver1 %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/HP/Revolver/Shot Blast/Days">
+              <li class="<% if (failsSBRHeavy > 0  ) { %>red-li<% } else if  (contSBRHeavy > 0) { %>amber-li<% } else if  (doneRSBHeavy <  totalRSBHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                Shot Blast
+                <span >
+                  <%= doneRSBHeavy %>/<%= totalRSBHeavy %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/HP/Revolver/Oven Cure/Days">
+              <li  class="<% if (failsOCRHeavy > 0  ) { %>red-li<% } else if  (contOCRHeavy > 0) { %>amber-li<% } else if  (doneROCHeavy <  totalROCHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                Ovens
+                <span >
+                  <%= doneROCHeavy %>/<%= totalROCHeavy %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (totalHeavyFailedSmallParts > 0 ) { %>red-card<% } else if  (totalHeavyContainedSmallParts > 0 ) { %>amber-card<% } else if  (doneHeavySmallParts <  totalHeavySmallParts) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">Small Parts</span>
+          <span class="paint-plant-stat"><%=  doneHeavySmallParts %>/<%= totalHeavySmallParts %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/HP/Small Parts/Pre Treatment/Days">
+              <li  class="<% if (failsPTSPHeavy > 0  ) { %>red-li<% } else if  (contPTSPHeavy > 0) { %>amber-li<% } else if  (doneSPTHeavy < totalSPTHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment
+                <span >
+                  <%= doneSPTHeavy %>/<%= totalSPTHeavy %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+   
+<!-- extra -->
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (failsVAttHeavy > 0 ) { %>red-cardV<% } else if  (contVAttHeavy > 0> 0 ) { %>amber-cardV<% } else if  (doneAttVHeavy <  totalAttVHeavy) { %>grey-cardV<% } else { %>green-cardV<% } %>">
+          <span class="paint-plant">validation</span>
+          <div style="margin-top: -10px;">
+            <span class="paint-plant-stat-validation"><%=  doneAttVHeavy %>/<%= totalAttVHeavy %></span>
+          </div>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/HP/Attachments/Validation/Days">
+              <li class="<% if (failsVAttHeavy > 0  ) { %>red-li<% } else if  (contVAttHeavy > 0) { %>amber-li<% } else if  (doneAttVHeavy <  totalAttVHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span >
+                  <%= doneAttVHeavy %>/<%= totalAttVHeavy %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+<!-- extra -->
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (failsVRHeavy > 0 ) { %>red-cardV<% } else if  (contVRHeavy > 0 ) { %>amber-cardV<% } else if  (doneRVHeavy <  totalRVHeavy) { %>grey-cardV<% } else { %>green-cardV<% } %>">
+          <span class="paint-plant">validation</span>
+          <div style="margin-top: -10px;">
+            <span class="paint-plant-stat-validation"><%=  doneRVHeavy %>/<%= totalRVHeavy%></span>
+          </div>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/HP/Revolver/Validation/Days">
+              <li class="<% if (failsVRHeavy > 0  ) { %>red-li<% } else if  (contVRHeavy > 0) { %>amber-li<% } else if  (doneRVHeavy <  totalRVHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span>
+                  <%= doneRVHeavy %>/<%= totalRVHeavy %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+<!-- extra -->
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (failsVSPHeavy > 0 ) { %>red-cardV<% } else if  (contVSPHeavy > 0 ) { %>amber-cardV<% } else if  (doneSPVHeavy <  totalSPVHeavy) { %>grey-cardV<% } else { %>green-cardV<% } %>">
+          <span class="paint-plant">validation</span>
+          <div style="margin-top: -10px;">
+            <span class="paint-plant-stat-validation"><%=  doneSPVHeavy %>/<%= totalSPVHeavy %></span>
+          </div>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/HP/Small Parts/Validation/Days">
+              <li  class="<% if (failsVSPHeavy > 0  ) { %>red-li<% } else if  (contVSPHeavy > 0) { %>amber-li<% } else if  (doneSPVHeavy <  totalSPVHeavy) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span >
+                  <%= doneSPVHeavy %>/<%= totalSPVHeavy %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- loadall -->
+
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text"><a href="/tCard/allhistory/LDL/Paint Shop">Loadall</a>
+        
+      </div>
+    </div>
+    <div class="last-checked-holder">
+      <small>Last checked by <%= loadallUpdate.checkedBy %> - <%= moment(loadallUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+    </div>
+    <hr>
+
+    <div class="cards">
+
+      <div class=" card [ is-collapsed ] ">
+       
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (totalFailsLoadall > 0 ) { %>red-card<% } else if  (totalContainedLoadall > 0 ) { %>amber-card<% } else if  (doneLoadall <  totalLoadall) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">Paint Plant</span>
+          <span class="paint-plant-stat"><%=  doneLoadall %>/<%= totalLoadall %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/LDL/Paint Shop/Shot Blast/Days">
+              <li class="<% if (failsShotBlast > 0 ) { %>red-li<% } else if  (containedShotBlast > 0 ) { %>amber-li<% } else if  (doneSB <  totalSB) { %>grey-li<% } else { %>green-li<% } %>">
+                Shot Blast
+                <span >
+                  <%= doneSB %>/<%= totalSB %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/LDL/Paint Shop/Wash/Days">
+              <li class="<% if (failsPaintT > 0 ) { %>red-li<% } else if  (containedPaintT > 0 ) { %>amber-li<% } else if  (doneW <  totalW) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment
+                <span>
+                  <%= doneW %>/<%= totalW %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/LDL/Paint Shop/Oven/Days">
+              <li class="<% if (failsPaintA > 0 ) { %>red-li<% } else if  (containedPaintA > 0 ) { %>amber-li<% } else if  (doneO <  totalO) { %>grey-li<% } else { %>green-li<% } %>">
+                Ovens
+                <span >
+                  <%= doneO %>/<%= totalO %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/LDL/Paint Shop/Paint/Days">
+              <li class="<% if (failsOven > 0  ) { %>red-li<% } else if  (containedOven > 0) { %>amber-li<% } else if  (doneP <  totalP) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint Booth
+                <span>
+                  <%= doneP %>/<%= totalP %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+      
+      </div>
+      <div class=" card [ is-collapsed ] ">
+      
+      </div>
+      <!-- extra -->
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (totalFailsLoadallV > 0 ) { %>red-cardV<% } else if  (totalContainedLoadallV > 0 ) { %>amber-cardV<% } else if  (doneLoadallV < totalLoadallV) { %>grey-cardV<% } else { %>green-cardV<% } %>">
+          <span class="paint-plant">validation</span>
+          <div style="margin-top: -10px;">
+            <span class="paint-plant-stat-validation"><%= doneLoadallV %>/<%= totalLoadallV %></span>
+          </div>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/LDL/Paint Shop/Validation/Days">
+              <li class="<% if (totalFailsLoadallV > 0 ) { %>red-li<% } else if  (totalContainedLoadallV > 0 ) { %>amber-li<% } else if  (doneLoadallV < totalLoadallV) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span>
+                  <%= doneLoadallV %>/<%= totalLoadallV %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+      <div class=" card [ is-collapsed ] ">
+      
+      </div>
+
+    </div>
+
+  </div>
+
+
+ <!-- earth movers -->
+
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text"><a href="/tCard/allhistory/EM/Paint Shop">Earth Movers</a></div>
+    </div>
+    <div class="last-checked-holder">
+      <small>Last checked by <%= EarthMoversUpdate.checkedBy %> - <%= moment(EarthMoversUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+    </div>
+    <hr>
+
+    <div class="cards">
+
+      <div class=" card [ is-collapsed ] ">
+       
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (totalFailsEarthMovers > 0 ) { %>red-card<% } else if  (totalContainedEarthMovers > 0 ) { %>amber-card<% } else if  (doneEM <  totalEM) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">Paint Plant</span>
+          <span class="paint-plant-stat"><%=  doneEM %>/<%= totalEM %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/EM/Paint Shop/Shot Blast/Days">
+              <li class="<% if (failsShotBlastEM > 0 ) { %>red-li<% } else if  (containedShotBlastEM > 0 ) { %>amber-li<% } else if  (doneSBEM <  totalSBEM) { %>grey-li<% } else { %>green-li<% } %>">
+                Shot Blast
+                <span >
+                  <%= doneSBEM %>/<%= totalSBEM %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/EM/Paint Shop/Wash/Days">
+              <li class="<% if (failsPaintTEM > 0 ) { %>red-li<% } else if  (containedPaintTEM > 0 ) { %>amber-li<% } else if  (doneWEM <  totalWEM) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment
+                <span>
+                  <%= doneWEM %>/<%= totalWEM %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/EM/Paint Shop/Oven/Days">
+              <li class="<% if (failsPaintAEM > 0 ) { %>red-li<% } else if  (containedPaintAEM > 0 ) { %>amber-li<% } else if  (doneOEM <  totalOEM) { %>grey-li<% } else { %>green-li<% } %>">
+                Ovens
+                <span >
+                  <%= doneOEM %>/<%= totalOEM %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/EM/Paint Shop/Paint/Days">
+              <li class="<% if (failsOvenEM > 0  ) { %>red-li<% } else if  (containedOvenEM > 0) { %>amber-li<% } else if  (donePEM <  totalPEM) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint Booth
+                <span>
+                  <%= donePEM %>/<%= totalPEM %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <div class=" card [ is-collapsed ] ">
+      
+      </div>
+      <div class=" card [ is-collapsed ] ">
+      
+      </div>
+      <!-- extra -->
+      <div class=" card [ is-collapsed ] ">
+        <div class="card__inner [ js-expander ] <% if (totalFailsEarthMoversV > 0 ) { %>red-cardV<% } else if  (totalContainedEarthMoversV > 0 ) { %>amber-cardV<% } else if  (doneEMV < totalEMV) { %>grey-cardV<% } else { %>green-cardV<% } %>">
+          <span class="paint-plant">validation</span>
+          <div style="margin-top: -10px;">
+            <span class="paint-plant-stat-validation"><%= doneEMV %>/<%= totalEMV %></span>
+          </div>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/EM/Paint Shop/Validation/Days">
+              <li class="<% if (totalFailsEarthMoversV > 0 ) { %>red-li<% } else if  (totalContainedEarthMoversV > 0 ) { %>amber-li<% } else if  (doneEMV < totalEMV) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span>
+                  <%= doneEMV %>/<%= totalEMV %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+      <div class=" card [ is-collapsed ] ">
+      
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- bhl -->
+
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text"><a href="/tCard/allhistory/BHL/Paint Shop">Backhoe Loader</a></div>
+    </div>
+    <div class="last-checked-holder">
+      <small>Last checked by <%= BackhoeUpdate.checkedBy %> - <%= moment(BackhoeUpdate.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></small>
+    </div>
+    <hr>
+
+    <div class="cards">
+
+     
+
+      <div class=" card [ is-collapsed ] " style="margin-left: 60px;" >
+        <div class="card__inner [ js-expander ] <% if (totalFailsBackhoe1 > 0 ) { %>red-card<% } else if  (totalContainedBackhoe1 > 0 ) { %>amber-card<% } else if  (doneBHL1 <  totalBHL1) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">7 Bay</span>
+          <span class="paint-plant-stat"><%=  doneBHL1 %>/<%= totalBHL1 %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/BHL/Paint Shop1/Shot Blast/Days">
+              <li class="<% if (failsShotBlastBHL1 > 0 ) { %>red-li<% } else if  (containedShotBlastBHL1 > 0 ) { %>amber-li<% } else if  (doneSBBHL1 <  totalSBBHL1) { %>grey-li<% } else { %>green-li<% } %>">
+                Shot Blast
+                <span >
+                  <%= doneSBBHL1 %>/<%= totalSBBHL1 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/BHL/Paint Shop1/Wash/Days">
+              <li class="<% if (failsPaintTBHL1 > 0 ) { %>red-li<% } else if  (containedPaintTBHL1 > 0 ) { %>amber-li<% } else if  (doneWBHL1 <  totalWBHL1) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment
+                <span>
+                  <%= doneWBHL1 %>/<%= totalWBHL1 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/BHL/Paint Shop1/Oven/Days">
+              <li class="<% if (failsPaintABHL1 > 0 ) { %>red-li<% } else if  (containedPaintABHL1 > 0 ) { %>amber-li<% } else if  (doneOBHL1 <  totalOBHL1) { %>grey-li<% } else { %>green-li<% } %>">
+                Ovens
+                <span >
+                  <%= doneOBHL1 %>/<%= totalOBHL1%>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/BHL/Paint Shop1/Paint/Days">
+              <li class="<% if (failsOvenBHL1 > 0  ) { %>red-li<% } else if  (containedOvenBHL1 > 0) { %>amber-li<% } else if  (donePBHL1 <  totalPBHL1) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint Booth
+                <span>
+                  <%= donePBHL1 %>/<%= totalPBHL1 %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <div class=" card [ is-collapsed ] " style="width: 10px;">
+      
+      </div>
+
+      <div class=" card [ is-collapsed ] " style="margin-right: 60px;">
+        <div class="card__inner [ js-expander ] <% if (totalFailsBackhoe2 > 0 ) { %>red-card<% } else if  (totalContainedBackhoe2 > 0 ) { %>amber-card<% } else if  (doneBHL2 <  totalBHL2) { %>grey-card<% } else { %>green-card<% } %>">
+          <span class="paint-plant">8 Bay</span>
+          <span class="paint-plant-stat"><%=  doneBHL2 %>/<%= totalBHL2 %></span>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/BHL/Paint Shop2/Shot Blast/Days">
+              <li class="<% if (failsShotBlastBHL2 > 0 ) { %>red-li<% } else if  (containedShotBlastBHL2 > 0 ) { %>amber-li<% } else if  (doneSBBHL2 <  totalSBBHL2) { %>grey-li<% } else { %>green-li<% } %>">
+                Shot Blast
+                <span >
+                  <%= doneSBBHL2 %>/<%= totalSBBHL2 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/BHL/Paint Shop2/Wash/Days">
+              <li class="<% if (failsPaintTBHL2 > 0 ) { %>red-li<% } else if  (containedPaintTBHL2 > 0 ) { %>amber-li<% } else if  (doneWBHL2 <  totalWBHL2) { %>grey-li<% } else { %>green-li<% } %>">
+                Pre Treatment
+                <span>
+                  <%= doneWBHL2 %>/<%= totalWBHL2 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/BHL/Paint Shop2/Oven/Days">
+              <li class="<% if (failsPaintABHL2 > 0 ) { %>red-li<% } else if  (containedPaintABHL2 > 0 ) { %>amber-li<% } else if  (doneOBHL2 <  totalOBHL2) { %>grey-li<% } else { %>green-li<% } %>">
+                Ovens
+                <span >
+                  <%= doneOBHL2 %>/<%= totalOBHL2 %>
+                </span>
+              </li>
+            </a>
+            <a href="/tCard/show/BHL/Paint Shop2/Paint/Days">
+              <li class="<% if (failsOvenBHL2 > 0  ) { %>red-li<% } else if  (containedOvenBHL2 > 0) { %>amber-li<% } else if  (donePBHL2 <  totalPBHL2) { %>grey-li<% } else { %>green-li<% } %>">
+                Paint Booth
+                <span>
+                  <%= donePBHL2 %>/<%= totalPBHL2 %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+     
+      <!-- extra -->
+      <div class=" card [ is-collapsed ] " style="margin-left: 60px;">
+        <div class="card__inner [ js-expander ] <% if (totalFailsBackhoeV1 > 0 ) { %>red-cardV<% } else if  (totalContainedBackhoeV1 > 0 ) { %>amber-cardV<% } else if  (doneBHLV1 < totalBHLV1) { %>grey-cardV<% } else { %>green-cardV<% } %>">
+          <span class="paint-plant">validation</span>
+          <div style="margin-top: -10px;">
+            <span class="paint-plant-stat-validation"><%= doneBHLV1 %>/<%= totalBHLV1 %></span>
+          </div>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/BHL/Paint Shop1/Validation/Days">
+              <li class="<% if (totalFailsBackhoeV1 > 0 ) { %>red-li<% } else if  (totalContainedBackhoeV1 > 0 ) { %>amber-li<% } else if  (doneBHLV1 < totalBHLV1) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span>
+                  <%= doneBHLV1 %>/<%= totalBHLV1 %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+      <div class=" card [ is-collapsed ] " style="width: 1px;">
+      
+      </div>
+       <!-- extra -->
+       <div class=" card [ is-collapsed ] "  style="margin-right: 60px;">
+        <div class="card__inner [ js-expander ] <% if (totalFailsBackhoeV2 > 0 ) { %>red-cardV<% } else if  (totalContainedBackhoeV2 > 0 ) { %>amber-cardV<% } else if  (doneBHLV2 < totalBHLV2) { %>grey-cardV<% } else { %>green-cardV<% } %>">
+          <span class="paint-plant">validation</span>
+          <div style="margin-top: -10px;">
+            <span class="paint-plant-stat-validation"><%= doneBHLV2 %>/<%= totalBHLV2 %></span>
+          </div>
+          <i class="fa fa-folder-o"></i>
+        </div>
+        <div class="card__expander">
+          <i class="fa fa-close [ js-collapser ]"></i>
+          <ul class='task-list'>
+            <a href="/tCard/show/BHL/Paint Shop2/Validation/Days">
+              <li class="<% if (totalFailsBackhoeV2 > 0 ) { %>red-li<% } else if  (totalContainedBackhoeV2 > 0 ) { %>amber-li<% } else if  (doneBHLV2 < totalBHLV2) { %>grey-li<% } else { %>green-li<% } %>">
+                Validation
+                <span>
+                  <%= doneBHLV2 %>/<%= totalBHLV2 %>
+                </span>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+      <!-- <div class=" card [ is-collapsed ] " style="width: 1px;">
+      
+      </div> -->
+
+      <!-- end here -->
+
+    </div>
+
+  </div>
+
+  <!-- end here -->
+  
+
+
+</div>
+
+
+
+
+  
+
+  
+
+  <div class="container-fluid footer">
+    
+    <div class="row header-top">
+        <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+            <img height="24px" src="/7z/content/images/df.png">
+        </div>
+        <div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+            J.C. Bamford Excavators LTD &copy; 2022
+        </div>
+    </div>
+</div>
+
+<script>
+  var $cell = $('.card');
+
+  //open and close card when clicked on card
+  $cell.find('.js-expander').click(function() {
+
+    var $thisCell = $(this).closest('.card');
+
+    
+
+    if ($thisCell.hasClass('is-collapsed')) {
+      $cell.not($thisCell).removeClass('is-expanded').addClass('is-collapsed').addClass('is-inactive');
+      $thisCell.removeClass('is-collapsed').addClass('is-expanded');
+
+      if ($cell.not($thisCell).hasClass('is-inactive')) {
+        //do nothing
+      } else {
+        $cell.not($thisCell).addClass('is-inactive');
+      }
+
+    } else {
+      $thisCell.removeClass('is-expanded').addClass('is-collapsed');
+      $cell.not($thisCell).removeClass('is-inactive');
+    }
+  });
+
+  //close card when click on cross
+  $cell.find('.js-collapser').click(function() {
+
+    var $thisCell = $(this).closest('.card');
+
+    $thisCell.removeClass('is-expanded').addClass('is-collapsed');
+    $cell.not($thisCell).removeClass('is-inactive');
+
+  });
+
+  
+  
+  
+    </script>

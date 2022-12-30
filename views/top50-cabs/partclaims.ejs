@@ -1,0 +1,58 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+
+<div class="vetting-body">
+  <header id="vettingJumbotron">
+
+    <h1 id="vetting-title" style="margin-top: -30px; color: black;">CLAIM DATA (<%= num %> CLAIMS)<a href="/top50/partsanalysiscabs/<%= failedPart%>"><i style="color: green; margin-top: 10px;" class="fas fa-chart-pie float-right"></i></a></h1>
+
+
+
+  </header>
+
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 15px;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 100px;">T Period</th>
+        <th style="width: 140px;">Claim Number</th>
+        <th style="width: 140px;">Serial Number</th>
+        <th style="width: 250px;">Dealer</th>
+        <th style="width: 120px;">Model</th>
+        <th style="width: 140px;">Build Date</th>
+        <th style="width: 295px;">Failed Part</th>
+        <th style="width: 350px;">Narrative</th>
+        <th style="width: 200px;">Vetted by</th>
+        <th style="width: 200px;">Decision</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <% for (let claim of claims) { %>
+      <tr class="d-flex">
+        <td style="height: 76px; width: 100px;"><%= claim.tPeriod %></td>
+        <td style="width: 140px;"><%= claim.claimNumber %></a></td>
+        <td style="width: 140px;"><%= claim.name %></td>
+        <td style="width: 250px;"><%= claim.dealer %></td>
+        <td style="width: 120px;"> <%= claim.model %></td>
+        <td style="width: 140px;"> <%= claim.buildDate %></td>
+        <td style="width: 300px;"> <%= claim.failedPart %></td>
+        <td style="width: 350px;"> <%= claim.description.substring(0, 80) %>...</td>
+        <% if ( claim.vettedAt != null ) { %>
+        <td style="width: 200px;"> <em><%= claim.vettedBy %> <br> <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm") %></em></td>
+        <% } else { %>
+        <td style="width: 200px;">Un Vetted </em></td>
+        <% }; %>
+        <td style="width: 200px;"><%= claim.division %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+
+</div>

@@ -1,0 +1,49 @@
+<?php
+
+    require($_SERVER['DOCUMENT_ROOT'].'/aws/s3-upload/modules/aws-sdk/aws-autoloader.php');
+
+    use Aws\Sns\SnsClient; 
+    use Aws\Exception\AwsException;
+
+    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+
+        global $error;
+
+        date_default_timezone_set('Europe/London');
+
+        $key = 'AKIAUTQKRKKOMMVUS6EF';
+        $secret = '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';
+        
+        $snsClient = new SnsClient([
+            'profile' => 'default',
+            'region' => 'us-east-1',
+            'version' => 'latest'
+        ]);
+        
+        $message = $_POST['message'];
+        $phone = '+44384436188';
+
+        try {
+        
+            $result = $snsClient->publish([
+                'Message' => $message,
+                'PhoneNumber' => $phone,
+                'MessageAttributes' => [
+                    'AWS.SNS.SMS.SenderID' => [
+                        'DataType' => 'String',
+                        'StringValue' => 'JCBLIVELINK',
+                    ],
+                ],
+            ]);
+        
+            $error = '<div class="alert alert-success" role="alert">SMS Sent Successfully!</div>';
+        
+        } catch (AwsException $e) {
+        
+            $error = '<div class="alert alert-success" role="alert">'.$e->getMessage().'</div>';
+        
+        } 
+
+    }
+ 
+?>

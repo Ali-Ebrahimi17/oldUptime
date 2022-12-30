@@ -1,0 +1,42 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="vetting-body">
+	<header id="vettingJumbotron">
+		<h1 id="vetting-title" style="margin-top: -1rem"><%= doa25pts.length %> DOA MAJOR ESCAPES</h1>
+
+		<!-- <p><strong>The all new online tracker</p></strong> -->
+	</header>
+
+	<table class="table table-hover table-dark" style="font-size: 15px; height: 78vh">
+		<thead>
+			<tr class="d-flex">
+				<th style="width: 6vw">TW Number</th>
+				<th style="width: 6vw">Points</th>
+				<th style="width: 5vw">Reported</th>
+				<th style="width: 7vw">Model</th>
+				<th style="width: 8vw">Serial Number</th>
+				<th style="width: 10vw">Failure Category</th>
+				<th style="width: 10vw">Failure Mode</th>
+				<th style="width: 7vw">Build Date</th>
+				<th style="width: 58vw">Narrative</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% for (let doa25pt of doa25pts) { %>
+
+			<tr class="d-flex">
+				<td style="height: 76px; width: 6vw"><%= doa25pt.twNumber %></td>
+				<td style="height: 76px; width: 6vw"><%= doa25pt.points %></td>
+				<td style="width: 5vw"><%= moment(doa25pt.createdAt).format("DD/MM/YYYY") %></td>
+				<td style="width: 7vw"><%= doa25pt.model %></td>
+				<td style="width: 8vw"><%= doa25pt.name %></td>
+				<td style="width: 10vw"><%= doa25pt.failuretype %></td>
+				<td style="width: 10vw"><%= doa25pt.failuremode %></td>
+				<td style="width: 7vw"><%= moment(doa25pt.buildDate).format("DD/MM/YYYY") %></td>
+				<td style="width: 58vw"><%= doa25pt.description.substring(0, 275) %>...</td>
+			</tr>
+
+			<% } %>
+		</tbody>
+	</table>
+</div>

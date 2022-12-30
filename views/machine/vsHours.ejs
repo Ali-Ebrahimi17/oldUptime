@@ -1,0 +1,172 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="120"> -->
+		<title>JCB - Equipment Monitoring</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/7z/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/dashboards.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css" />
+		<link rel="stylesheet" href=/7z/content/chart-js/chart.min.css" type="text/css">
+		<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+		<!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+	</head>
+
+	<body>
+		<div class="container-fluid">
+			<div class="row header-top">
+				<div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+				</div>
+				<div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+					<a href="/equipment-monitoring/home">
+						<span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 5px" class="fas fa-home icon-home"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-main">
+					<div class="row">
+						<div class="col-lg-3"></div>
+						<div class="col-lg-6">
+							<h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Loadall</h1>
+							<h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: 0px 0px 16px 0px; text-align: center">Machines Overview</h1>
+						</div>
+						<div class="col-lg-3"></div>
+
+						<div
+							class="col-lg-12"
+							style="
+								height: 90px;
+								margin-bottom: 18px;
+								padding: 8px 0px 8px 0px;
+								border-top: 3px solid rgb(26, 28, 30);
+								border-bottom: 3px solid rgb(26, 28, 30);
+							"
+						>
+							<div class="col-measure" style="width: 25%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">T-Time (Vs Shift)</h1>
+								<h1 class="line-measure-value-top text-grey">60%</h1>
+							</div>
+
+							<div class="col-measure" style="width: 25%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">Running Time (Vs Shift)</h1>
+								<h1 class="line-measure-value-top text-grey">85%</h1>
+							</div>
+
+							<div class="col-measure" style="width: 25%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">T-Time (Vs 168 Hrs)</h1>
+								<h1 class="line-measure-value-top text-grey">34%</h1>
+							</div>
+
+							<div class="col-measure" style="width: 25%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">Running Time (Vs 168 Hrs)</h1>
+								<h1 class="line-measure-value-top text-grey">58%</h1>
+							</div>
+						</div>
+
+						<div class="col-lg-12">
+							<!-- <h1 style="font-size: 24px; color: white; margin: 15px 0px 25px 0px; text-align: center">Machines Overview</h1> -->
+							<canvas id="canvas" height="100"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid footer">
+			<div class="row header-top">
+				<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+					J.C. Bamford Excavators LTD &copy; 2022
+				</div>
+			</div>
+		</div>
+
+		<script src="/7z/content/modal/modal.js"></script>
+
+		<script>
+			Chart.defaults.global.defaultFontColor = '#fff'
+
+			let barChartData = {
+				labels: ['Machine 1', 'Machine 2', 'Machine 3', 'Machine 4', 'Machine 5', 'Machine 6', 'Machine 7'],
+				datasets: [
+					{
+						label: 'Vs 168 Hours',
+						backgroundColor: 'rgb(252, 126, 38)',
+						borderColor: 'white',
+						borderWidth: 1,
+						data: [45, 26, 22, 18, 32, 10, 15],
+					},
+					{
+						label: 'Vs Current Shift (Days Only)',
+						backgroundColor: 'green',
+						borderColor: 'white',
+						borderWidth: 1,
+						data: [80, 35, 55, 44, 64, 29, 75],
+					},
+				],
+			}
+
+			let chartOptions = {
+				responsive: true,
+				legend: {
+					position: 'top',
+				},
+				title: {
+					display: false,
+					text: 'Vs Hours',
+				},
+
+				scales: {
+					yAxes: [
+						{
+							gridLines: {
+								display: true,
+								color: 'rgb(30, 30, 30)',
+								zeroLineColor: 'rgb(30, 30, 30)',
+								lineWidth: 2,
+								zeroLineWidth: 2,
+							},
+							//
+							ticks: {
+								min: 0,
+								max: 100, // Your absolute max value
+								callback: function (value) {
+									return ((value / 100) * 100).toFixed(0) + '%' // convert it to percentage
+								},
+							},
+							scaleLabel: {
+								display: true,
+								labelString: 'Utilisation',
+							},
+						},
+					],
+				},
+			}
+
+			window.onload = function () {
+				var ctx = document.getElementById('canvas').getContext('2d')
+				window.myBar = new Chart(ctx, {
+					type: 'bar',
+					data: barChartData,
+					options: chartOptions,
+				})
+			}
+		</script>
+	</body>
+</html>

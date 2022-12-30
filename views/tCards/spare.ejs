@@ -1,0 +1,885 @@
+<% layout('layouts/boilertCardDash')%>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-size=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="30" /> -->
+		<title>JCB - Equipment Monitoring</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<link rel="stylesheet" href="/content/font-awesome/css/all.css" type="text/css" />
+
+		<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+	</head>
+
+	<style>
+		h2 {
+			font-weight: bold;
+		}
+		.vertical-text {
+			transform: rotate(-90deg);
+			/* transform-origin: left top 1; */
+			color: white;
+			font-size: 25px;
+			width: 150px;
+			margin-left: -60px;
+		}
+	</style>
+
+	<body>
+		<%- include('../../views/partials/flash.ejs')%>
+
+		<div class="col-main" style="margin-top: -28px">
+			<div class="row" style="display: flex; justify-content: center">
+				<div class="col-lg-3" style="margin-top: 18px"></div>
+				<div class="col-lg-6" style="margin-bottom: -5px">
+					<h1 style="font-size: 34px; color: white; text-align: center"><%= longDivision %></h1>
+					<h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: -5px 0px 16px 0px; text-align: center"><%= section %></h1>
+				</div>
+
+				<div class="col-lg-3" style="display: flex; justify-content: flex-end">
+					<span style="margin-right: 10px">
+						<!-- Default dropleft button -->
+
+						<div class="btn-group dropleft">
+							<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<%= section %>
+							</button>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="/tCard/qcs/all-checks/<%= division %>">All</a>
+								<a class="dropdown-item" href="/tCard/qcs/section-checks/<%= division %>/Plant Quality">Plant Quality</a>
+								<a class="dropdown-item" href="/tCard/qcs/section-checks/<%= division %>/Assembly">Assembly</a>
+								<a class="dropdown-item" href="/tCard/qcs/section-checks/<%= division %>/Manufacturing">Manufacturing</a>
+								<% if (currentUser) { %>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="/tCard/qcs/my-checks/<%= division %>/<%= currentUser._id %>">My Checks</a>
+								<% } %>
+							</div>
+						</div>
+					</span>
+				</div>
+
+				<!-- Daily row -->
+				<div
+					style="
+						display: flex;
+						border-top: 3px solid rgb(26, 28, 30);
+						width: 100%;
+						justify-content: space-evenly;
+						flex-wrap: wrap;
+						margin-bottom: 20px;
+					"
+				>
+					<!-- col 1 -->
+					<div class="" style="width: 20px; display: flex; flex-direction: column; justify-content: center; min-height: 250px">
+						<!-- <h1 class="vertical-text" style="">type</h1> -->
+						<div class="vertical-text">Daily</div>
+					</div>
+					<!-- col 1 -->
+					<div class="" style="text-align: center; width: 460px">
+						<h1 class="line-sub-header-top">Equipment</h1>
+						<div class="" style="color: grey; font-size: 18px">Due Today <%= totalChecksDueTodayEq %></div>
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksEquipmentPlant.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+
+							<% }) %>
+						</div>
+					</div>
+
+					<!-- col 2 -->
+					<div class="" style="text-align: center; width: 700px">
+						<h1 class="line-sub-header-top">Process</h1>
+						<div class="" style="color: grey; font-size: 18px">Due Today <%= totalChecksDueTodayProcess %></div>
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksProcessPlant.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+							<% }) %>
+						</div>
+					</div>
+					<!-- col 3 -->
+					<div class="" style="text-align: center; width: 340px">
+						<h1 class="line-sub-header-top">People</h1>
+						<div class="" style="color: grey; font-size: 18px">Due Today <%= totalChecksDueTodayPeople %></div>
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksPeoplePlant.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+
+							<% }) %>
+						</div>
+					</div>
+					<!-- col 4 -->
+					<div class="" style="text-align: center; width: 340px">
+						<h1 class="line-sub-header-top">Adherence to Standards</h1>
+						<div class="" style="color: grey; font-size: 18px">Due Today <%= totalChecksDueTodayStandards %></div>
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksStandardsPlant.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+							<% }) %>
+						</div>
+					</div>
+				</div>
+
+				<!-- Weekly row -->
+				<div
+					style="
+						display: flex;
+						border-top: 3px solid rgb(26, 28, 30);
+						width: 100%;
+						justify-content: space-evenly;
+						flex-wrap: wrap;
+						margin-bottom: 20px;
+					"
+				>
+					<!-- col 1 -->
+					<div class="" style="width: 20px; display: flex; flex-direction: column; justify-content: center; min-height: 250px">
+						<!-- <h1 class="vertical-text" style="">type</h1> -->
+						<div class="vertical-text">Weekly</div>
+					</div>
+					<!-- col 1 -->
+					<div class="" style="text-align: center; width: 460px">
+						<!-- <h1 class="line-sub-header-top">Equipment</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksEquipmentAsembly.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+
+							<% }) %>
+						</div>
+					</div>
+
+					<!-- col 2 -->
+					<div class="" style="text-align: center; width: 700px">
+						<!-- <h1 class="line-sub-header-top">Process</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksProcessAsembly.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+
+							<% }) %>
+						</div>
+					</div>
+					<!-- col 3 -->
+					<div class="" style="text-align: center; width: 340px">
+						<!-- <h1 class="line-sub-header-top">People</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksPeopleAsembly.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+
+							<% }) %>
+						</div>
+					</div>
+					<!-- col 4 -->
+					<div class="" style="text-align: center; width: 340px">
+						<!-- <h1 class="line-sub-header-top">Adherence to Standards</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksStandardsAsembly.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+							<% }) %>
+						</div>
+					</div>
+				</div>
+
+				<!-- Monthly row -->
+				<div
+					style="
+						display: flex;
+						border-top: 3px solid rgb(26, 28, 30);
+						width: 100%;
+						justify-content: space-evenly;
+						flex-wrap: wrap;
+						margin-bottom: 20px;
+					"
+				>
+					<!-- col 1 -->
+					<div class="" style="width: 20px; display: flex; flex-direction: column; justify-content: center; min-height: 250px">
+						<!-- <h1 class="vertical-text" style="">type</h1> -->
+						<div class="vertical-text">Monthly</div>
+					</div>
+					<!-- col 1 -->
+					<div class="" style="text-align: center; width: 460px">
+						<!-- <h1 class="line-sub-header-top">Equipment</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksEquipmentManufacturing.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<div style="font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+
+							<% }) %>
+						</div>
+					</div>
+
+					<!-- col 2 -->
+					<div class="" style="text-align: center; width: 700px">
+						<!-- <h1 class="line-sub-header-top">Process</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksProcessManufacturing.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<div style="font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+
+							<% }) %>
+						</div>
+					</div>
+					<!-- col 3 -->
+					<div class="" style="text-align: center; width: 340px">
+						<!-- <h1 class="line-sub-header-top">People</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksPeopleManufacturing.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<div style="font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+
+							<% }) %>
+						</div>
+					</div>
+					<!-- col 4 -->
+					<div class="" style="text-align: center; width: 340px">
+						<!-- <h1 class="line-sub-header-top">Adherence to Standards</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksStandardsManufacturing.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<div style="font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+							<% }) %>
+						</div>
+					</div>
+				</div>
+
+				<!-- Quarterly row -->
+				<div
+					style="
+						display: flex;
+						border-top: 3px solid rgb(26, 28, 30);
+						width: 100%;
+						justify-content: space-evenly;
+						flex-wrap: wrap;
+						margin-bottom: 20px;
+					"
+				>
+					<!-- col 1 -->
+					<div class="" style="width: 20px; display: flex; flex-direction: column; justify-content: center; min-height: 250px">
+						<!-- <h1 class="vertical-text" style="">type</h1> -->
+						<div class="vertical-text">Quarterly</div>
+					</div>
+					<!-- col 1 -->
+					<div class="" style="text-align: center; width: 460px">
+						<!-- <h1 class="line-sub-header-top">Equipment</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksEquipmentQuarterly.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+
+							<% }) %>
+						</div>
+					</div>
+
+					<!-- col 2 -->
+					<div class="" style="text-align: center; width: 700px">
+						<!-- <h1 class="line-sub-header-top">Process</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksProcessQuarterly.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+
+							<% }) %>
+						</div>
+					</div>
+					<!-- col 3 -->
+					<div class="" style="text-align: center; width: 340px">
+						<!-- <h1 class="line-sub-header-top">People</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksPeopleQuarterly.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+
+							<% }) %>
+						</div>
+					</div>
+					<!-- col 4 -->
+					<div class="" style="text-align: center; width: 340px">
+						<!-- <h1 class="line-sub-header-top">Adherence to Standards</h1> -->
+						<!-- <div class="" style="color: grey; font-size: 18px">Due Today 8</div> -->
+						<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+							<!-- card -->
+							<% allQualityChecksStandardsQuarterly.map((c) => { %>
+							<a href="/tCard/edit/<%= c._id %>">
+								<div style="display: flex; flex-direction: column">
+									<div style="color: white"><%=c.level %></div>
+									<div
+										style="
+											width: 135px;
+											height: 75px;
+											background-color: <%= c.boxColor %>;
+											margin: 2px;
+											display: flex;
+											justify-content: space-between;
+											flex-direction: column;
+										"
+									>
+										<div>
+											<div style="padding-top: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.name %></div>
+										</div>
+										<% if (c.status === 'Open') { %>
+
+										<div>
+											<hr style="margin-top: -12px" />
+											<div style="margin-top: -12px; font-size: 13px; color: <%= c.textColor %>"><%= c.primaryUserName %></div>
+											<div style="margin-bottom: 5px; font-size: 13px; color: <%= c.textColor %>"><%= c.secondUserName %></div>
+										</div>
+
+										<% } else { %>
+										<div>
+											<hr style="margin-top: 1px" />
+											<div style="margin-top: -10px; font-size: 13px; color: <%= c.textColor %>">Value = <%= c.result %></div>
+											<div style="margin-bottom: 15px; font-size: 13px; color: <%= c.textColor %>"><%= c.checkedBy %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+							</a>
+							<% }) %>
+						</div>
+					</div>
+				</div>
+
+				<!-- end of rows -->
+			</div>
+		</div>
+
+		<div class="container-fluid footer" style="background-color: black">
+			<div class="row header-top">
+				<div class="col-lg-6 d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+					J.C. Bamford Excavators LTD &copy; 2022
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

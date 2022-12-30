@@ -1,0 +1,280 @@
+<% layout('layouts/boilerplate')%>
+
+
+<div style="width: 100%; display: flex; justify-content: center; margin-bottom: 8px; margin-top: -20px;">
+  <h1><%= division %> Download Options</h1>
+</div>
+<div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
+
+  <% if (division === 'GROUP') { %>
+    <div style=" width: 275px; background-color: rgb(92, 84, 75); padding: 12px; border-radius: 4px;  margin-bottom: 20px; margin-right: 10px;">
+      <form action="/download/paint-check-results" method="POST" onsubmit="myButton3.disabled = true; return true;">
+        <fieldset>
+          <legend style="text-align: center;">Paint Check Results</legend>
+          <div class="form-group">
+            <label for="buildNumber">Start Date</label>
+              <input class="form-control" type="date"  name="startDate" style="margin-bottom: 10px;"  required>
+          </div>
+          <div class="form-group">
+              <label for="buildNumber">End Date</label>
+              <input class="form-control" type="date"  name="endDate" style="margin-bottom: 10px;" required>
+          </div>
+          <small>Download paint T-Card check results.</small>
+          <hr>
+          <div class="form-group">
+            <button name="myButton3" class="btn btn-primary btn-md btn-block" type="submit" value="Download" >Download</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+
+  <% } else { %>
+
+    <% if (division === 'BHL' || division === 'CP' || division === 'LDL' || division === 'SD') { %>
+      <!-- q smart stage download-->
+    <div style=" width: 450px; background-color: rgb(92, 84, 75); padding: 12px; border-radius: 4px; margin-bottom: 20px; margin-right: 10px">
+      <form action="/download/q-smart-stage/<%= division %>" method="POST" onsubmit="myButton1.disabled = true; return true;">
+        
+        <fieldset>
+          <legend style="text-align: center;">Machines Booked Into Stage</legend>
+          <div class="row" style="color:white; display: flex; ">
+            <div class="col" style="width: 50%px;">        
+                <label for="buildNumber">Start Date</label>
+                <input class="form-control" type="date"  name="startDate" style="margin-bottom: 10px;" required>
+                <input class="form-control" type="time"  name="startTime" required>
+            </div>
+            <div class="col">
+                <label for="buildNumber">End Date</label>
+                <input class="form-control" type="date"  name="endDate" style="margin-bottom: 10px;" required>
+                <input class="form-control" type="time"  name="endTime" required style="margin-bottom: 10px;">
+            </div>
+          </div>
+          <div class="row" style="color:white; display: flex; ">
+            <div class="col" style="width: 50%px; margin-bottom: 23px; ">        
+              <label for="area">Stage</label>
+              <select  class="form-control" type="text" name="stage"  autocomplete="off" required>
+                <option hidden ></option>
+                <% let x = 1 %>
+                <% while (x < 26 ) { %></21>
+                  <option><%= x %></option>
+                  <% x++ %>
+                <% } %>
+   
+              </select>
+            </div>
+            
+            <div class="col" style="padding-top: 25px;">
+              <label  style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; position: absolute; margin-top: -20px;">Maximum of 3 months</label>
+              <small>Download machines booked onto selected stage.</small>
+            </div>
+          </div>
+          <hr>
+          <div class="form-group">
+            <button name="myButton1"  class="btn btn-primary btn-md btn-block" type="submit" value="Download" >Download</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  
+    <!-- q smart faults by area -->
+    <div style=" width: 450px; background-color: rgb(92, 84, 75); padding: 12px; border-radius: 4px; margin-bottom: 20px; margin-right: 10px">
+      <form action="/download/q-smart-faults/<%= division %>" method="POST" onsubmit="myButton2.disabled = true; return true;">
+        
+        <fieldset>
+          <legend style="text-align: center;">Q Smart Fault Data</legend>
+          <div class="row" style="color:white; display: flex; ">
+            <div class="col" style="width: 50%px;">        
+                <label for="buildNumber">Start Date</label>
+                <input class="form-control" type="date"  name="startDate" style="margin-bottom: 10px;" required>
+                <input class="form-control" type="time"  name="startTime" required>
+                <!-- <label for="buildNumber" style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; ">Maximum of 48 hours</label> -->
+            </div>
+            <div class="col">
+                <label for="buildNumber">End Date</label>
+                <input class="form-control" type="date"  name="endDate" style="margin-bottom: 10px;" required>
+                <input class="form-control" type="time"  name="endTime" required style="margin-bottom: 10px;">
+            </div>
+          </div>
+          <div class="row" style="color:white; display: flex; ">
+            <div class="col" style="width: 50%px; margin-bottom: 23px; ">        
+              <label for="area">Fault Area</label>
+              <select  class="form-control" type="text" name="area"  autocomplete="off" required >
+                <option hidden></option>
+                <option>All Areas</option>
+                <% areas.map ((a) => { %>
+                  <option><%= a %></option>
+                <% }) %>
+                
+              </select>
+            </div>
+            <div class="col" style="padding-top: 25px;">
+              <label  style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; position: absolute; margin-top: -20px;">Maximum of 3 months</label>
+              <small>Download fault data by fault area.</small>
+            </div>
+          </div>
+          <hr>
+          <div class="form-group">
+            <button name="myButton2" class="btn btn-primary btn-md btn-block" type="submit" value="Download" >Download</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+
+
+      <% if (division === 'LDL') { %>
+        <!-- dpu to aress -->
+        <div style=" width: 275px; background-color: rgb(92, 84, 75); padding: 12px; border-radius: 4px; margin-bottom: 20px; margin-right: 10px">
+          <form action="/download/dpuForward/<%= division %>" method="POST" onsubmit="myButton2.disabled = true; return true;">
+            
+            <fieldset>
+              <legend style="text-align: center;">DPU Passed Forward</legend>
+              <div class="row" style="color:white; display: flex; ">
+                <div class="col" style="width: 50%px; margin-bottom: 23px; ">        
+                  <label for="area">Faults forward to Stage</label>
+                  <select  class="form-control" type="text" name="stage"  autocomplete="off" required>
+                    <option hidden ></option>
+                      <option>16</option>
+                      <option>18</option>
+                      <option>19</option>
+                      <option>CFC</option>
+                  </select>
+                </div>
+              
+              </div>
+              <div class="row" style="color:white; display: flex; ">
+                
+                <div class="col" style="padding-top: 25px; margin-bottom: 100px;">
+                  <label  style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; position: absolute; margin-top: -10px;">Download DPU passed forward for the last month</label>
+
+                </div>
+              </div>
+              <hr>
+              <div class="form-group">
+                <button name="myButton2" class="btn btn-primary btn-md btn-block" type="submit" value="Download" >Download</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+
+      <% } %>
+  
+    <% } %>
+  
+    
+    <% if( currentUser && currentUser.isVetter) {%>
+      <!-- t3 warranty claim download -->
+      <div style=" width: 275px; background-color: rgb(92, 84, 75); padding: 12px; border-radius: 4px;  margin-bottom: 20px;">
+        <form action="/download/claims/<%= division %>" method="POST" onsubmit="myButton3.disabled = true; return true;">
+          
+          <fieldset>
+            <legend style="text-align: center;">T3 Warranty Claims</legend>
+            <div class="form-group">
+              <label for="buildNumber">Start Date</label>
+                <input class="form-control" type="date"  name="startDate" style="margin-bottom: 10px;"  required>
+            </div>
+            <div class="form-group">
+                <label for="buildNumber">End Date</label>
+                <input class="form-control" type="date"  name="endDate" style="margin-bottom: 10px;" required>
+            </div>
+            <small>Download DOA - T3 warranty claims by machine build date.</small>
+            <hr>
+            <div class="form-group">
+              <button name="myButton3" class="btn btn-primary btn-md btn-block" type="submit" value="Download" >Download</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <% if (division !== 'USA') { %> 
+       <!-- doa major escapes download -->
+       <div style=" width: 275px; background-color: rgb(92, 84, 75); padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+        <form action="/download/majors/<%= division %>" method="POST" onsubmit="myButton4.disabled = true; return true;">
+          
+          <fieldset>
+            <legend style="text-align: center;">DOA Major Escapes</legend>
+            <div class="form-group">
+              <label for="buildNumber">Start Date</label>
+                <input class="form-control" type="date"  name="startDate" style="margin-bottom: 10px;"  required>
+            </div>
+            <div class="form-group">
+                <label for="buildNumber">End Date</label>
+                <input class="form-control" type="date"  name="endDate" style="margin-bottom: 10px;" required>
+            </div>
+            <small>Download DOA major escapes by machine build date.</small>
+            <hr>
+            <div class="form-group">
+              <button name="myButton4"  class="btn btn-primary btn-md btn-block" type="submit" value="Download" >Download</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+  
+      <% } %>
+  
+  <!-- t3 warranty claim download -->
+      <div style=" width: 275px; background-color: rgb(92, 84, 75); padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+        <form action="/download/retails/<%= division %>" method="POST" onsubmit="myButton5.disabled = true; return true;">
+          
+          <fieldset>
+            <legend style="text-align: center;">Machines Build/Retails</legend>
+            <div class="form-group">
+              <label for="buildNumber">Start Date</label>
+                <input class="form-control" type="date"  name="startDate" style="margin-bottom: 10px;"  required>
+            </div>
+            <div class="form-group">
+                <label for="buildNumber">End Date</label>
+                <input class="form-control" type="date"  name="endDate" style="margin-bottom: 10px;" required>
+            </div>
+            <small>Download machines built by machine build date.</small>
+            <hr>
+            <div class="form-group">
+              <button name="myButton5"  class="btn btn-primary btn-md btn-block" type="submit" value="Download" >Download</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+  
+      <% if (division !== 'USA') { %> 
+        
+  <!-- mri doa donload -->
+      <div style=" width: 275px; background-color: rgb(92, 84, 75); padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+        <form action="/download/mri-doa/<%= division %>" method="POST" onsubmit="myButton5.disabled = true; return true;">
+          
+          <fieldset>
+            <legend style="text-align: center;">MRI DOA Claims</legend>
+            <div class="form-group">
+              <label for="buildNumber">Start Date</label>
+                <input class="form-control" type="date"  name="startDate" style="margin-bottom: 10px;"  required>
+            </div>
+            <div class="form-group">
+                <label for="buildNumber">End Date</label>
+                <input class="form-control" type="date"  name="endDate" style="margin-bottom: 10px;" required>
+            </div>
+            <small>Download DOA MRI warranty claims by build date.</small>
+            <hr>
+            <div class="form-group">
+              <button name="myButton5"  class="btn btn-primary btn-md btn-block" type="submit" value="Download" >Download</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+  
+
+      <% } %>
+    <% } %>
+  <% } %>
+
+ 
+
+
+  
+
+      
+
+    
+
+
+ 
+
+      
+    
+</div>

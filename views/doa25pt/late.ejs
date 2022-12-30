@@ -1,0 +1,273 @@
+<% layout('layouts/doa')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/8z/content/bootstrap/css/bootstrap.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css">
+<link rel="stylesheet" href="/content/table2.css" type="text/css">
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<style>
+  body {
+    background-color: black;
+  }
+
+  h5 {
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: -15px;
+  }
+
+  h3 {
+    color: white;
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-weight: bold;
+    color: black;
+  }
+
+  h1 {
+    font-size: 4rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  hr {
+    background-color: #6a6d6d;
+  }
+
+  .last-checked-holder {
+    padding-top: 12px;
+  }
+</style>
+
+<div class='main-header-holder'>
+  <h1>DOA Major Escapes 4C Status</h1>
+</div>
+
+<div class="outside-holder">
+
+
+
+
+
+  <!-- left -->
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text"><a href="#">Not Contained Within 24 Working Hours</a></div>
+    </div>
+    <!-- <div class="last-checked-holder">
+      <small>W/C <%= thisWeek %></small>
+    </div> -->
+    <hr>
+
+    <div style="display: flex; justify-content: space-evenly;">
+
+      <div class="grey-card" style="<% if (majorsTotalGroup > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="group-div">UK GROUP</p>
+        <p class="group-stat"><%= majorsTotalGroup %></p>
+      </div>
+
+    </div>
+
+
+
+    <div style="display: flex; justify-content: space-evenly; margin-top: 35px;">
+
+      <div class="grey-card-div" style="<% if (majorsOpenLDL > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">LDL</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenLDL %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenBHL > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">BHL</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenBHL %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenSD > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">SD</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenSD %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenCP > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">CP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenCP %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenHP > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">HP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenHP %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenEM > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">EM</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenEM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenLP > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">LP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenLP %></p>
+      </div>
+
+
+
+    </div>
+
+    <table class="table" id="table-requests" style="margin-bottom: 42px;">
+      <thead>
+
+        <tr style="font-size: 15px;">
+          <th class="th-centre" style="height: 10px; width: 20px; border-right: 1px solid rgb(42, 44, 46);">DIVISION</th>
+          <th class="th-centre" style="width: 50px; border-right: 1px solid rgb(42, 44, 46);">MODEL</th>
+          <th class="th-centre" style="width: 50px; border-right: 1px solid rgb(42, 44, 46);">SERIAL</th>
+          <th class="th-centre" style="width: 120px; border-right: 1px solid rgb(42, 44, 46);">RAISED</th>
+          <th class="th-centre" style="width: 500px; border-right: 1px solid rgb(42, 44, 46);">ISSUE</th>
+
+
+        </tr>
+      </thead>
+      <tbody style="color: white;">
+        <% for (let m of majorsOpenGroupData) { %>
+        <tr>
+          <td class='td-centre' style="width: 5px; height: 15px;"><a href="/claims/4cshow/<%=m._id%>"><%= m.division %></a></td>
+          <td class='td-centre' style="width: 2px"><a href="/claims/4cshow/<%=m._id%>"><%= m.model.substring(0, 7) %></a></td>
+          <td class='td-centre' style="width: 2px"><a href="/claims/4cshow/<%=m._id%>"><%= m.name %></a></td>
+          <td class='td-centre' style="width: 2px"><a href="/claims/4cshow/<%=m._id%>"><%= moment(m.vettedAt).format("DD/MM/YYYY  HH:mm") %></a></td>
+          <td class='td-centre' style="width: 10px; text-align: left;"><a href="/claims/4cshow/<%=m._id%>"><%= m.description.substring(0, 120)%>...</a></td>
+        </tr>
+        <% } %>
+
+      </tbody>
+    </table>
+
+
+
+
+  </div>
+  <hr style="width: 1px; height: 800px; display: inline-block; background-color: grey; ">
+  <!-- Month to date-->
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text"><a href="#">Not Closed Within 5 Working Days</a></div>
+    </div>
+    <!-- <div class="last-checked-holder">
+      <small>July 2021</small>
+    </div> -->
+    <hr>
+
+    <div style="display: flex; justify-content: space-evenly;">
+
+      <div class="grey-card" style="<% if (majorsTotalGroupM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <p class="group-div">UK GROUP</p>
+        <p class="group-stat"><%= majorsTotalGroupM %></p>
+      </div>
+
+    </div>
+
+
+
+
+
+    <!-- amber -->
+    <div style="display: flex; justify-content: space-evenly; margin-top: 35px;">
+
+      <div class="grey-card-div" style="<% if (majorsContainedLDLM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">LDL</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsContainedLDLM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedBHLM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">BHL</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsContainedBHLM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedSDM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">SD</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsContainedSDM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedCPM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">CP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsContainedCPM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedHPM> 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">HP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsContainedHPM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedEMM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">EM</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsContainedEMM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedLPM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">LP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsContainedLPM %></p>
+      </div>
+
+    </div>
+
+    <table class="table" id="table-requests" style="margin-bottom: 42px;">
+      <thead>
+
+        <tr style="font-size: 15px;">
+          <th class="th-centre" style="height: 10px; width: 20px; border-right: 1px solid rgb(42, 44, 46);">DIVISION</th>
+          <th class="th-centre" style="width: 50px; border-right: 1px solid rgb(42, 44, 46);">MODEL</th>
+          <th class="th-centre" style="width: 50px; border-right: 1px solid rgb(42, 44, 46);">SERIAL</th>
+          <th class="th-centre" style="width: 120px; border-right: 1px solid rgb(42, 44, 46);">RAISED</th>
+          <th class="th-centre" style="width: 500px; border-right: 1px solid rgb(42, 44, 46);">ISSUE</th>
+
+
+        </tr>
+      </thead>
+      <tbody style="color: white;">
+        <% for (let m of majorsContainedGroupMData) { %>
+        <tr>
+          <td class='td-centre' style="width: 5px; height: 15px;"><a href="/claims/4cshow/<%=m._id%>"><%= m.division %></a></td>
+          <td class='td-centre' style="width: 2px"><a href="/claims/4cshow/<%=m._id%>"><%= m.model.substring(0, 7) %></a></td>
+          <td class='td-centre' style="width: 2px"><a href="/claims/4cshow/<%=m._id%>"><%= m.name %></a></td>
+          <td class='td-centre' style="width: 2px"><a href="/claims/4cshow/<%=m._id%>"><%= moment(m.vettedAt).format("DD/MM/YYYY  HH:mm") %></a></td>
+          <td class='td-centre' style="width: 10px; text-align: left;"><a href="/claims/4cshow/<%=m._id%>"><%= m.description.substring(0, 120)%>...</a></td>
+        </tr>
+        <% } %>
+
+      </tbody>
+    </table>
+
+
+
+
+
+  </div>
+
+
+
+</div>
+</div>
+
+
+
+
+
+<div class="container-fluid footer">
+
+  <div class="row header-top">
+    <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+      <img height="24px" src="/7z/content/images/jcb-logo.png">
+      <img height="24px" src="/7z/content/images/df.png">
+    </div>
+    <div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+      J.C. Bamford Excavators LTD &copy; 2022
+    </div>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="edit-container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1>Vetting Options</h1>
+    </div>
+
+
+    <div class="col">
+      <!-- <form action="/claims/serviceres/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data"> -->
+      <label for="claimNumber">Narrative</label>
+      <textarea style="height: 318px;" class="form-control" type="text" name="claimNumber" disabled><%= claim.description %></textarea>
+      <label for="name">Dealer</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.dealer %>" disabled>
+      <label for="name">Customer</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.customer %>" disabled>
+      <label for="name">Cost</label>
+      <input class="form-control mb-3" type="text" name="name" value="£<%= claim.cost %>" disabled>
+    </div>
+
+    <div class="col">
+      <label for="name">Claim Number</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.claimNumber %>" disabled>
+      <label for="name">Serial Number</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.name %>" disabled>
+      <label for="name">Hours</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.hours %>" disabled>
+      <label for="name">Model</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.model %>" disabled>
+      <label for="name">Build Date</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.buildDate %>" disabled>
+      <label for="name">Fail Date</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.failDate %>" disabled>
+      <label for="name">Failed Part</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.failedPart %>" disabled>
+      <label for="name">Part Supplier</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.partSupplier %>" disabled>
+    </div>
+
+    <div class="col">
+      <label for="area">Request from <%= claim.vettedBy %></label>
+      <input class="form-control" type="text" name="name" value="<%= claim.outcome %>" disabled>
+      <label for="notes"><%= claim.vettedBy %>'s Comments</label>
+      <textarea style="height: 388px; margin-bottom: 30px;" class="form-control" type="text" name="claimNumber" disabled><%= claim.notes %></textarea>
+
+      <a class="btn btn-primary btn-md btn-block " style="margin-bottom: 1rem;  text-align: center;" target="_blank" href="https://internal.jcb.local/BuildLookup/?searchTerm=<%= claim.name %>&searchCategory=SERIALNUMBER">Go to Machine Details</a>
+
+    </div>
+    <div class="col">
+      <label for="actioned"><%= claim.serviceResBy %> Actioned</label>
+      <input class="form-control" type="text" name="name" value="<%= claim.actioned%>" disabled>
+      <label for="notes"><%= claim.serviceResBy %> Comments</label>
+      <textarea style="height: 388px; margin-bottom: 30px;" class="form-control" name="campground[serviceRes]" disabled><%= claim.serviceRes %></textarea>
+      <div class="form-group text-center">
+        <!-- <button class="btn btn-md btn-success btn-block">Submit</button> -->
+      </div>
+    </div>
+    </form>
+  </div>
+  <div>
+    <a href="/claims/vetting">Go Back</a>
+  </div>

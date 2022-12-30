@@ -1,0 +1,1582 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- <meta http-equiv="refresh" content="620"> -->
+  <title>JCB - Quality Uptime</title>
+  <link rel="icon" href="/home/jcb.png" />
+  <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+  <!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+  <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+  <link rel="stylesheet" href="/content/table.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+  <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/7z/content/chart-js/chart.bundle.js"></script>
+  <!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+  <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+  <link rel="stylesheet" href="/stylesheets/app.css" />
+  <link rel="stylesheet" href="/fontawesome/css/all.css" />
+</head>
+
+<style>
+  .firstRowholder {
+    /* background-color: rgb(36, 42, 49); */
+    /* border-radius: 4px; */
+    margin-left: 5px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    /* border-bottom: 2px solid rgb(36, 42, 49); */
+
+  }
+
+  .green-top50 {
+    background-color: green;
+  }
+
+  .amber-top50 {
+    background-color: orange;
+  }
+
+  .red-top50 {
+    background-color: red;
+  }
+</style>
+
+<body>
+
+  <div class="container-fluid">
+    <div class="row header-top">
+      <div class="col-lg-5 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <a href="/"><img height="24px" src="/7z/content/images/jcb-logo.png"></a>
+        <!-- <a href="/"><img height="44px" src="/dog/dog.gif"></a>  -->
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid" style="background-color: black;">
+
+    <div class="row" style="display: flex; flex-wrap: wrap; margin-left: 5px; margin-right: 5px; gap: 2;">
+      <div style="display: flex; justify-content: center; background-color: black; width: 100%;">
+        <h1 style="font-size: 34px; color: white; margin: 0px; text-align: center"><%= division %> Quality Management Report</h1>
+      </div>
+
+      <section style=" margin-right: 10px; width: 1250px; flex-direction: column;  height: 86vh; display: flex; flex-wrap: wrap;  color: white; ">
+        <!-- first row -->
+        <div style="display: flex; justify-content: space-between; width: 100%; height: 555px; margin-bottom: 16px;">
+
+          <div style=" width: 615px;">
+            <div style="margin-bottom: 10px;">
+              <!-- <span style=" font-size: 18px; color: <%= t3RftColor  %>; " class="fas fa-circle"></span> - T1 & T3 RFT -->
+              T1 & T3 RFT
+            </div>
+            <div style="height: 85%;">
+              <canvas id="chart1"></canvas>
+            </div>
+          </div>
+
+
+          <div style=" width: 615px;">
+            <div style="margin-bottom: 10px;">
+              <!-- <span style=" font-size: 18px; color: <%= t3DPUColor  %>; " class="fas fa-circle"></span> - T1 & T3 DPU -->
+              T1 & T3 DPU
+            </div>
+            <div style="height: 85%;">
+              <canvas id="chart2"></canvas>
+            </div>
+          </div>
+
+        </div>
+        <!-- second row -->
+        <div style="display: flex; justify-content: space-between; width: 100%; height: 200px; margin-bottom: 16px;">
+
+          <div style="width: 455px;">
+            <div style="margin-bottom: 10px;">
+              Service Top 10 Operations
+            </div>
+            <div style="height: 85%;">
+              <canvas id="chart4"></canvas>
+            </div>
+          </div>
+          <div style="width: 455px;">
+            <div style="margin-bottom: 10px;">
+              Service Top 10 Supplier Quality
+            </div>
+            <div style="height: 85%;">
+              <canvas id="chart5"></canvas>
+            </div>
+          </div>
+
+
+
+          <div style=" width: 305px;">
+            <div style="display: flex; flex-direction: column;">
+              <div style="margin-bottom: 5px; text-align: center;">
+                T3 Top 50 Rag - (Target 75%)
+              </div>
+              <div style="background: white; height: 70px; width: 6px; margin-top: 24px; margin-left: 225px; margin-right: -50px; z-index: 100; position: absolute;"></div>
+              <div class="progress" style="height: 60px; border-radius: 0px; margin-bottom: 25px; width: auto; background-color: black;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: green; font-size: 20px; color: black; font-weight: bold; width: <%= t3Top50Green %>%"><%= t3Top50Green %>%</div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: orange; font-size: 20px; color: black; font-weight: bold; width: <%= t3Top50Amber %>%"><%= t3Top50Amber %>%</div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: red;  font-size: 20px; color: black; font-weight: bold; width: <%= t3Top50Red %>%"><%= t3Top50Red %>%</div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: grey;  font-size: 20px; color: black; font-weight: bold; width: <%= noActionPercentT3 %>%"><%= noActionPercentT3 %>%</div>
+              </div>
+            </div>
+            <div style="margin-bottom: 5px; text-align: center; margin-top: -10px;">
+              T3 Top 50 Rag - (Target 75%)
+            </div>
+            <div style="display: flex; justify-content: space-evenly; margin-top: -5px;">
+              <div style="color: white; text-align: center;">
+                <div>Prev Month</div>
+                <div style="  margin-top: -10px; font-size: 45px;"><%= t3Top50RepeatPrev %>%</div>
+              </div>
+              <div style="color: white; text-align: center;">
+                <div>Current Month</div>
+                <div style=" margin-top: -10px; font-size: 45px; color: <%= t3Top5RepeatPercentColor %>;"><%= t3Top50RepeatCurrent %>%</div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+
+        </div>
+
+       
+
+
+
+      </section>
+
+      <section style="width: 600px; height: 86vh; display: flex; flex-direction: column; color: white;">
+
+        <!-- first row -->
+        <div style="display: flex; justify-content: center; width: 100%; height: 555px; margin-bottom: 16px;">
+
+          <div style="width: 575px;">
+            <div style="margin-bottom: 10px;">
+              T1 & T3 LEAKS DPU
+            </div>
+            <div style="height: 85%;">
+              <canvas id="chart3"></canvas>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- first row -->
+        <div style="display: flex; justify-content: center; width: 100%; height: 200px;">
+
+          <div style=" width: 575px;">
+            T3 Overall Improvement Plan
+            <table class="table table-dark table-striped" style="height: 200px; font-size: 12px;">
+              <thead>
+                <tr style="">
+                  <th style=" width: 5px;">#</th>
+                  <th style=" width: 105px;">Improvement</th>
+                  <th style=" width: 90px;"">Who</th>
+                  <th style=" width: 90px;">When</th>
+                  <th style=" width: 95px;">Status</th>
+                  <th style=" width: 105px;">Impact</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% let x = 0 %>
+                <% for (let d of t3Improvements) { %>
+                <% x++ %>
+                <% if (currentUser && currentUser.isQmr)  { %>
+                <tr>
+                  <td style=" width: 5px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= x %></a></td>
+                  <td style=" width: 105px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.name %></a></td>
+                  <td style=" width: 90px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.who %></a></td>
+                  <td style=" width: 90px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.when %></a></td>
+                  <td style=" width: 95px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.status %></a></td>
+                  <td style=" width: 95px;"><a href="" data-toggle="modal" data-target="#modal<%= d._id %>"><%= d.impact %></a></td>
+                </tr>
+                <% } else { %>
+                <tr>
+                  <td style=" width: 5px;"><%= x %></td>
+                  <td style=" width: 105px;"><%= d.name %></td>
+                  <td style=" width: 90px;"><%= d.who %></td>
+                  <td style=" width: 90px;"><%= d.when %></td>
+                  <td style=" width: 95px;"><%= d.status %></td>
+                  <td style=" width: 95px;"><%= d.impact %></td>
+                </tr>
+
+                <%  } %>
+
+                <div class="modal fade" id="modal<%= d._id %>" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+
+                      <div style="background-color: rgb(252, 176, 38); height: 50px;">
+                        <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+                        <h3 style="text-align: center; margin: 8px;">Update <%= d.name %></h3>
+                      </div>
+                      <div class="modal-body">
+                        <fieldset>
+                          <form id='theForm' action="/dash/updateQmrC/<%= d._id %>" method="POST">
+                            <div class="row" style="color:black">
+                              <div class="col" style="margin-bottom: 10px;">
+                                <label for="buildNumber">Improvement</label>
+                                <input class="form-control" type="text" name="name" style="margin-bottom: 10px;" value="<%= d.name %>" required>
+                                <label for="buildNumber">Who</label>
+                                <input class="form-control" type="text" name="who" style="margin-bottom: 10px;" value="<%= d.who %>" required>
+                                <label for="buildNumber">When</label>
+                                <input class="form-control" type="text" name="when" style="margin-bottom: 10px;" value="<%= d.when %>" required>
+                                <label for="buildNumber">Impact</label>
+                                <input class="form-control" type="text" name="impact" style="margin-bottom: 10px;" value="<%= d.impact %>" required>
+                                <label for="buildNumber">Status</label>
+                                <textarea class="form-control" style="margin-bottom: 10px;" type="text" rows="3" cols="4" name="status" required><%= d.status%></textarea>
+
+                                <!-- <label for="buildNumber" style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; ">Maximum of 48 hours</label> -->
+                                <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                                <button id="btnSave" class="btn btn-success float-right" type='submit' style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                              </div>
+
+                            </div>
+                          </form>
+                        </fieldset>
+                      </div>
+                      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+                        <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+
+
+
+    </div>
+
+
+
+
+    <div class="container-fluid footer">
+
+      <div class="row header-top">
+        <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+          <img height="24px" src="/7z/content/images/jcb-logo.png">
+          <img height="24px" src="/7z/content/images/df.png">
+        </div>
+        <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+          J.C. Bamford Excavators LTD &copy; 2022
+        </div>
+      </div>
+
+    </div>
+
+    <script>
+      Chart.defaults.global.defaultFontColor = "white";
+      //  Chart.defaults.global.defaultFontSize = 10;
+      Chart.defaults.scale.gridLines.display = false;
+      Chart.defaults.global.defaultFontFamily = "Ubuntu";
+
+      let options = {
+        legend: {
+          labels: {
+            useLineStyle: true,
+            // boxWidth: 25
+          },
+          position: 'top',
+        },
+        tooltips: {
+          enabled: true,
+          mode: 'label',
+          yAlign: 'center',
+          //      callbacks: {
+          //      title: function(tooltipItem, data) {
+          //      return ""
+          //      },
+          //      // label: function(tooltipItem, data) {
+          //      //   return data['datasets'][0]['data'][tooltipItem['index']];
+          //      // },
+          //      // afterLabel: function(tooltipItem, data) {
+          //      //   var dataset = data['datasets'][0];
+          //      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+          //      //   return '(' + percent + '%)';
+          //      // }
+          //  },
+
+        },
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+          xAxes: [{
+            stacked: true,
+            barPercentage: 0.8,
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 9,
+              fontColor: '#fff',
+              autoSkip: false,
+              maxRotation: 90,
+              minRotation: 90,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+            //     scaleLabel : {
+            //       display     : true,
+            //     //   labelString : 'Build Month',
+            //       fontSize: 10,
+            //       fontColor:'#fff'
+            //   },
+          }],
+          yAxes: [{
+              id: 'bar-y-axis',
+              position: 'left',
+              //  stacked : true,
+              display: true,
+              ticks: {
+                beginAtZero: true,
+                min: 0,
+                max: 100,
+                // stepSize: 0.3,
+                fontSize: 2,
+                fontColor: 'black',
+                //  formatter:: function(value, context, values) {
+                //              if(context.dataIndex === context.dataset.data.length - 1){
+                //                       return value
+                //      }
+                //  }
+
+                callback: function(value) {
+                  if (value % 0.2 === 0) {
+                    return value
+                  }
+                }
+              },
+              type: 'linear',
+
+            },
+            {
+              id: 'bar-y-axis1',
+              position: 'right',
+              //  stacked : true,
+              //    display : true,
+              ticks: {
+                beginAtZero: true,
+                min: 0,
+                max: 120,
+                //  stepSize: 50,
+                fontSize: 2,
+                fontColor: 'black',
+                callback: function(value) {
+                  if (value > 100) {
+                    return ''
+                  } else {
+                    if (value % 1 === 0) {
+                      return value + '%'
+                    }
+                  }
+
+                }
+              },
+              type: 'linear',
+            },
+
+          ],
+        },
+      }
+
+      let options2 = {
+        legend: {
+          labels: {
+            useLineStyle: true,
+            // boxWidth: 25
+          },
+          position: 'top',
+        },
+
+        tooltips: {
+          enabled: true,
+          mode: 'label',
+          yAlign: 'center',
+          //      callbacks: {
+          //      title: function(tooltipItem, data) {
+          //      return ""
+          //      },
+          //      // label: function(tooltipItem, data) {
+          //      //   return data['datasets'][0]['data'][tooltipItem['index']];
+          //      // },
+          //      // afterLabel: function(tooltipItem, data) {
+          //      //   var dataset = data['datasets'][0];
+          //      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+          //      //   return '(' + percent + '%)';
+          //      // }
+          //  },
+
+        },
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+          xAxes: [{
+            stacked: true,
+            barPercentage: 0.8,
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 9,
+              fontColor: '#fff',
+              autoSkip: false,
+              maxRotation: 90,
+              minRotation: 90,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+            //     scaleLabel : {
+            //       display     : true,
+            //     //   labelString : 'Build Month',
+            //       fontSize: 10,
+            //       fontColor:'#fff'
+            //   },
+          }],
+          yAxes: [{
+              id: 'bar-y-axis',
+              position: 'right',
+              //  stacked : true,
+              display: true,
+              ticks: {
+                beginAtZero: true,
+                min: 0,
+                max: 0.3,
+                // stepSize: 0.3,
+                fontSize: 2,
+                fontColor: 'black'
+                //  formatter:: function(value, context, values) {
+                //              if(context.dataIndex === context.dataset.data.length - 1){
+                //                       return value
+                //      }
+                //  }
+
+                //  callback: function(value) {
+                //      if (value % 0.2 === 0) {
+                //      return value
+                //      }
+                //  }
+              },
+              type: 'linear',
+
+            },
+            //  {
+            //      id      : 'bar-y-axis1',
+            //      position: 'right',
+            //     //  stacked : true,
+            //     //    display : true,
+            //      ticks   : {
+            //          beginAtZero : true,
+            //          min         : 0,
+            //          max         : 20,
+            //         //  stepSize: 50,
+            //          fontSize: 9,
+            //         //  callback: function(value) {
+            //         //      if (value > 100) {
+            //         //          return ''
+            //         //      } else {
+            //         //      if (value % 1 === 0) {
+            //         //          return value + '%'
+            //         //          }
+            //         //      }
+
+            //         //      }
+            //      },
+            //      type    : 'linear',
+            //  },
+
+          ],
+        },
+      }
+
+      let leaksOptions = {
+        legend: {
+          labels: {
+            useLineStyle: true,
+            // boxWidth: 25
+          },
+          position: 'top',
+        },
+
+        tooltips: {
+          enabled: true,
+          mode: 'label',
+          yAlign: 'center',
+          //      callbacks: {
+          //      title: function(tooltipItem, data) {
+          //      return ""
+          //      },
+          //      // label: function(tooltipItem, data) {
+          //      //   return data['datasets'][0]['data'][tooltipItem['index']];
+          //      // },
+          //      // afterLabel: function(tooltipItem, data) {
+          //      //   var dataset = data['datasets'][0];
+          //      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+          //      //   return '(' + percent + '%)';
+          //      // }
+          //  },
+
+        },
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+          xAxes: [{
+            stacked: true,
+            barPercentage: 0.8,
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 9,
+              fontColor: '#fff',
+              autoSkip: false,
+              maxRotation: 90,
+              minRotation: 90,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+            //     scaleLabel : {
+            //       display     : true,
+            //     //   labelString : 'Build Month',
+            //       fontSize: 10,
+            //       fontColor:'#fff'
+            //   },
+          }],
+          yAxes: [{
+              id: 'bar-y-axis',
+              position: 'right',
+              //  stacked : true,
+              display: false,
+              ticks: {
+                beginAtZero: true,
+                min: 0,
+                max: 0.3,
+                // stepSize: 0.3,
+                fontSize: 9,
+                //  formatter:: function(value, context, values) {
+                //              if(context.dataIndex === context.dataset.data.length - 1){
+                //                       return value
+                //      }
+                //  }
+
+                //  callback: function(value) {
+                //      if (value % 0.2 === 0) {
+                //      return value
+                //      }
+                //  }
+              },
+              type: 'linear',
+
+            },
+            //  {
+            //      id      : 'bar-y-axis1',
+            //      position: 'right',
+            //     //  stacked : true,
+            //     //    display : true,
+            //      ticks   : {
+            //          beginAtZero : true,
+            //          min         : 0,
+            //          max         : 20,
+            //         //  stepSize: 50,
+            //          fontSize: 9,
+            //         //  callback: function(value) {
+            //         //      if (value > 100) {
+            //         //          return ''
+            //         //      } else {
+            //         //      if (value % 1 === 0) {
+            //         //          return value + '%'
+            //         //          }
+            //         //      }
+
+            //         //      }
+            //      },
+            //      type    : 'linear',
+            //  },
+
+          ],
+        },
+      }
+
+      let top10Options = {
+        //  legend     : {
+        //      display : false,
+
+        //  },
+        legend: {
+          labels: {
+            useLineStyle: true,
+            // boxWidth: 25
+          },
+          position: 'top',
+        },
+        tooltips: {
+          enabled: true,
+        },
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+          xAxes: [{
+            stacked: true,
+            barPercentage: 0.8,
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              fontSize: 9,
+              fontColor: '#fff',
+              autoSkip: false,
+              maxRotation: 90,
+              minRotation: 90,
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+            //     scaleLabel : {
+            //       display     : true,
+            //     //   labelString : 'Build Month',
+            //       fontSize: 10,
+            //       fontColor:'#fff'
+            //   },
+          }],
+          yAxes: [{
+              id: 'bar-y-axis',
+              position: 'left',
+              //  stacked : true,
+              display: false,
+              ticks: {
+                beginAtZero: true,
+                min: 0,
+                // max: 10,
+                // stepSize: 0.3,
+                fontSize: 9,
+                //  formatter:: function(value, context, values) {
+                //              if(context.dataIndex === context.dataset.data.length - 1){
+                //                       return value
+                //      }
+                //  }
+
+                callback: function(value) {
+                  if (value % 0.2 === 0) {
+                    return value
+                  }
+                }
+              },
+              type: 'linear',
+
+            },
+            {
+              id: 'bar-y-axis1',
+              position: 'right',
+              //  stacked : true,
+              display: false,
+              ticks: {
+                beginAtZero: true,
+                min: 0,
+                // max: 10,
+                //  stepSize: 50,
+                fontSize: 9,
+                //  callback: function(value) {
+                //      if (value > 100) {
+                //          return ''
+                //      } else {
+                //      if (value % 1 === 0) {
+                //          return value + '%'
+                //          }
+                //      }
+
+                //      }
+              },
+              type: 'linear',
+            },
+
+          ],
+        },
+      }
+
+      let barChartData1 = {
+        labels: <%- JSON.stringify(theMonths) %>,
+        datasets: [
+        {
+          type: 'line',
+          label: 'T0 RFT',
+          borderColor: 'green',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          lineTension: 0,
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'top',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= t0RFT %>],
+
+        },
+        {
+          type: 'line',
+          label: 'T1 RFT',
+          pointRadius: 0,
+          lineTension: 0,
+          borderColor: 'blue',
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            clamp: true,
+            align: 'top',
+            offset: -2,
+            //  anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= t1Rft %>],
+
+        },
+        // {
+        //   type: 'line',
+        //   label: 'Target',
+        //   borderColor: 'red',
+        //   pointRadius: 0,
+        //   borderDash: [10, 5],
+        //   backgroundColor: 'transparent',
+        //   yAxisID: 'bar-y-axis1',
+        //   datalabels: {
+        //     // display labels for this specific dataset
+        //     display: true,
+        //     color: 'white',
+        //     //  rotation: -90,
+        //     align: 'top',
+        //     offset: -4,
+        //     // anchor: 'start',
+        //     formatter: function(value, context, values) {
+        //       if (context.dataIndex === context.dataset.data.length - 1) {
+        //         //  value = value.toString();
+        //         //  value = value.split(/(?=(?:...)*$)/);
+        //         //  value = value.join(',');
+        //         return value + '%';
+        //       } else {
+        //         value = "";
+        //         return value
+
+        //       }
+        //     },
+        //   },
+        //   data: [<%= t0RFTTarget %>],
+
+        // },
+        {
+          type: 'line',
+          label: 'T3 RFT',
+          borderColor: 'orange',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          lineTension: 0,
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -90,
+            align: 'bottom',
+            // offset: 8,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+           data: [<%= t3Rft %>],
+          },
+          {
+          type: 'line',
+          label: 'T0 Target',
+          borderColor: 'green',
+          pointRadius: 0,
+          borderDash: [10, 5],
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            //  rotation: -90,
+            align: 'top',
+            offset: -4,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (context.dataIndex === context.dataset.data.length - 1) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                return value + '%';
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= t0RFTTarget %>],
+
+        },
+        {
+          type: 'line',
+          label: 'T3 Target',
+          borderColor: 'orange',
+          pointRadius: 0,
+          borderDash: [10, 5],
+
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis1',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            //  rotation: -90,
+            align: 'top',
+            offset: -4,
+            // anchor: 'start',
+            formatter: function(value, context, values) {
+              if (context.dataIndex === context.dataset.data.length - 3) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                return value + '%';
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= t3RFTTarget %>],
+          },
+        ],
+      }
+
+      let barChartData2 = {
+        labels: <%- JSON.stringify(theMonths) %>,
+        datasets: [
+        {
+          type: 'line',
+          label: 'T0 DPU',
+          borderColor: 'green',
+          pointRadius: 0,
+          lineTension: 0,
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            rotation: -45,
+            clamp: true,
+            align: 'top',
+            offset: -2,
+            formatter: function(value, context, values) {
+              if (value > 0) {
+                //  value = value.toString();
+                //  value = value.split(/(?=(?:...)*$)/);
+                //  value = value.join(',');
+                return value;
+              } else {
+                value = "";
+                return value
+
+              }
+            },
+          },
+          data: [<%= t0DPU %>],
+
+        },
+          {
+            type: 'line',
+            label: 'T1 DPU',
+            borderColor: 'blue',
+            backgroundColor: 'transparent',
+            pointRadius: 0,
+            lineTension: 0,
+            yAxisID: 'bar-y-axis',
+            datalabels: {
+              // display labels for this specific dataset
+              display: true,
+              color: 'white',
+              rotation: -45,
+              clamp: true,
+              align: 'top',
+              offset: -2,
+              formatter: function(value, context, values) {
+                if (value > 0) {
+                  value = value.toString();
+                  value = value.split(/(?=(?:...)*$)/);
+                  value = value.join('');
+                  return value;
+                } else {
+                  value = "";
+                  return value
+
+                }
+              },
+            },
+            data: [<%= t1DPU %>],
+          },
+          //  {
+          //      type            : 'line',
+          //      label           : 'Target',
+          //      borderColor     : 'red',
+          //      pointRadius: 0,
+          //      borderDash: [10,5],
+          //      backgroundColor : 'transparent',
+          //      yAxisID         : 'bar-y-axis1',
+          //      datalabels: {
+          //          // display labels for this specific dataset
+          //          display: true,
+          //          color:'white',
+          //         //  rotation: -90,
+          //          align: 'top',
+          //          offset: -4,
+          //          // anchor: 'start',
+          //          formatter: function(value, context, values) {
+          //                  if(context.dataIndex === context.dataset.data.length - 1){
+          //                     //  value = value.toString();
+          //                     //  value = value.split(/(?=(?:...)*$)/);
+          //                     //  value = value.join(',');
+          //                      return value + '%';
+          //                  }else{
+          //                      value = "";
+          //                      return value 
+
+          //                  }
+          //              },
+          //          },
+          //     data: [<%= t0RFTTarget %>],
+
+          //  },
+          {
+            type: 'line',
+            label: 'T3 DPU',
+            borderColor: 'orange',
+            pointRadius: 0,
+            lineTension: 0,
+            backgroundColor: 'transparent',
+            yAxisID: 'bar-y-axis',
+            datalabels: {
+              // display labels for this specific dataset
+              display: true,
+              color: 'white',
+              rotation: -45,
+              clamp: true,
+              align: 'top',
+              offset: -2,
+              formatter: function(value, context, values) {
+                if (value > 0) {
+                  //  value = value.toString();
+                  //  value = value.split(/(?=(?:...)*$)/);
+                  //  value = value.join(',');
+                  return value;
+                } else {
+                  value = "";
+                  return value
+
+                }
+              },
+            },
+            data: [<%= t3DPU %>],
+          },
+          {
+          type: 'line',
+          label: 'T0 Target',
+          borderColor: 'green',
+          pointRadius: 0,
+          borderDash: [10, 5],
+          //  segment: {
+          //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+          //     },
+          backgroundColor: 'transparent',
+          yAxisID: 'bar-y-axis',
+          datalabels: {
+            // display labels for this specific dataset
+            display: true,
+            color: 'white',
+            display: true,
+            color: 'white',
+            rotation: -90,
+            // anchor: 'start',
+            align: 'top',
+            // offset: -8,
+            formatter: function(value, context) {
+              if (context.dataIndex === context.dataset.data.length - 1) {
+                return value;
+              }
+              return "";
+            }
+          },
+          data: [<%= t0DPUTarget %>],
+
+        },
+          {
+            type: 'line',
+            label: 'T3 Target',
+            borderColor: 'orange',
+            pointRadius: 0,
+            borderDash: [10, 5],
+            //  segment: {
+            //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+            //     },
+            backgroundColor: 'transparent',
+            yAxisID: 'bar-y-axis',
+            datalabels: {
+              // display labels for this specific dataset
+              display: true,
+              color: 'white',
+              display: true,
+              color: 'white',
+              rotation: -90,
+              // anchor: 'start',
+              align: 'top',
+              // offset: -8,
+              formatter: function(value, context) {
+                if (context.dataIndex === context.dataset.data.length - 3) {
+                  return value;
+                }
+                return "";
+              }
+            },
+            data: [<%= t3DPUTarget %>],
+          },
+        ],
+      }
+
+      let barChartData3 = {
+        labels: <%- JSON.stringify(theMonths) %>,
+        datasets: [{
+            type: 'line',
+            label: 'T1',
+            borderColor: 'blue',
+            backgroundColor: 'transparent',
+            pointRadius: 0,
+            lineTension: 0,
+            yAxisID: 'bar-y-axis',
+            datalabels: {
+              // display labels for this specific dataset
+              display: true,
+              color: 'white',
+              rotation: -45,
+              align: 'bottom',
+              anchor: 'start',
+              offset: -12,
+              //  formatter: function(value, context, values) {
+              //          if(value >0 ){
+              //              value = value.toString();
+              //              value = value.split(/(?=(?:...)*$)/);
+              //              value = value.join(',');
+              //              return value;
+              //          }else{
+              //              value = "";
+              //              return value
+
+              //          }
+              //      },
+            },
+            data: [<%= t1LeakDPU %>],
+          },
+          {
+            type: 'line',
+            label: 'T1 Target',
+            borderColor: 'red',
+            pointRadius: 0,
+            borderDash: [10, 5],
+            backgroundColor: 'transparent',
+            yAxisID: 'bar-y-axis',
+            datalabels: {
+              // display labels for this specific dataset
+              display: true,
+              color: 'white',
+              //  rotation: -90,
+              align: 'top',
+              offset: -4,
+              // anchor: 'start',
+              formatter: function(value, context, values) {
+                if (context.dataIndex === context.dataset.data.length - 1) {
+                  //  value = value.toString();
+                  //  value = value.split(/(?=(?:...)*$)/);
+                  //  value = value.join(',');
+                  return value;
+                } else {
+                  value = "";
+                  return value
+                }
+              },
+            },
+            data: [<%= t1LeakDPUTarget %>],
+          },
+          {
+            type: 'line',
+            label: 'T3',
+            borderColor: 'orange',
+            pointRadius: 0,
+            lineTension: 0,
+            backgroundColor: 'transparent',
+            yAxisID: 'bar-y-axis',
+            datalabels: {
+              display: true,
+              color: 'white',
+              rotation: -45,
+              align: 'top',
+              anchor: 'start',
+              offset: -6,
+              formatter: function(value, context, values) {
+                if (value > 0) {
+                  //  value = value.toString();
+                  //  value = value.split(/(?=(?:...)*$)/);
+                  //  value = value.join(',');
+                  return value;
+                } else {
+                  value = "";
+                  return value
+
+                }
+              },
+            },
+            data: [<%= t3LeakDPU %>],
+          },
+          {
+            type: 'line',
+            label: 'T3 Target',
+            borderColor: 'red',
+            pointRadius: 0,
+            borderDash: [10, 5],
+            //  segment: {
+            //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+            //     },
+            backgroundColor: 'transparent',
+            yAxisID: 'bar-y-axis',
+            datalabels: {
+              // display labels for this specific dataset
+              display: true,
+              color: 'white',
+              //  rotation: -90,
+              // anchor: 'start',
+              // align: 'bottom',
+              //  offset: 8,
+              // anchor: 'start',
+              formatter: function(value, context) {
+                if (context.dataIndex === context.dataset.data.length - 1) {
+                  return value;
+                }
+                return "";
+              }
+            },
+            data: [<%= t3LeakDPUTarget %>],
+          },
+        ],
+      }
+
+      let barChartData4 = {
+        labels: <%- JSON.stringify(extraShortMonths) %>,
+
+        datasets: [
+
+          {
+            type: 'line',
+            label: '> 20 days',
+            borderColor: 'red',
+            pointRadius: 0,
+            borderDash: [10, 5],
+            backgroundColor: 'transparent',
+            pointRadius: 0,
+            lineTension: 0,
+            yAxisID: 'bar-y-axis1',
+            datalabels: {
+              // display labels for this specific dataset
+              color: 'white',
+              // rotation: -90,
+              align: 'top',
+              offset: -1,
+              // anchor: 'end',
+              formatter: function(value, context, values) {
+                if (value > 0) {
+                  value = value.toString();
+                  value = value.split(/(?=(?:...)*$)/);
+                  value = value.join(',');
+                  return value;
+                } else {
+                  value = "";
+                  return value
+
+                }
+              },
+            },
+            data: [<%= serviceTop10OperationsLate %>],
+
+          },
+          //  {
+          //      type            : 'line',
+          //      label           : 'Target',
+          //      borderColor     : 'red',
+          //      pointRadius: 0,
+          //      borderDash: [10,5],
+          //      backgroundColor : 'transparent',
+          //      yAxisID         : 'bar-y-axis1',
+          //      datalabels: {
+          //          // display labels for this specific dataset
+          //          display: true,
+          //          color:'white',
+          //         //  rotation: -90,
+          //          align: 'top',
+          //          offset: -4,
+          //          // anchor: 'start',
+          //          formatter: function(value, context, values) {
+          //                  if(context.dataIndex === context.dataset.data.length - 1){
+          //                     //  value = value.toString();
+          //                     //  value = value.split(/(?=(?:...)*$)/);
+          //                     //  value = value.join(',');
+          //                      return value + '%';
+          //                  }else{
+          //                      value = "";
+          //                      return value 
+
+          //                  }
+          //              },
+          //          },
+          //     data: [<%= t0RFTTarget %>],
+
+          //  },
+          {
+            type: 'bar',
+            label: 'Cumulative Total',
+            borderColor: 'green',
+            pointRadius: 0,
+            lineTension: 0,
+            backgroundColor: 'green',
+            yAxisID: 'bar-y-axis1',
+            datalabels: {
+              // display labels for this specific dataset
+              display: true,
+              color: 'white',
+              // rotation: -90,
+              align: 'top',
+              anchor: 'end',
+              offset: -4,
+              formatter: function(value, context, values) {
+                if (value > 0) {
+                  //  value = value.toString();
+                  //  value = value.split(/(?=(?:...)*$)/);
+                  //  value = value.join(',');
+                  return value;
+                } else {
+                  value = "";
+                  return value
+
+                }
+              },
+            },
+            data: [<%= serviceTop10OperationsTotal %>],
+            //  data: [
+            //      3,2,
+            //  ],
+
+          },
+          //  {
+          //      type            : 'line',
+          //      label           : 'DPU Target',
+          //      borderColor     : 'red',
+          //      pointRadius: 0,
+          //      borderDash: [10,5],
+          //     //  segment: {
+          //     //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+          //     //     },
+          //      backgroundColor : 'transparent',
+          //      yAxisID         : 'bar-y-axis',
+          //      datalabels: {
+          //          // display labels for this specific dataset
+          //          display: true,
+          //          color:'white',
+          //         //  rotation: -90,
+          //         // anchor: 'start',
+          //         // align: 'bottom',
+          //         //  offset: 8,
+          //          // anchor: 'start',
+          //          formatter: function(value, context) {
+          //         if (context.dataIndex === context.dataset.data.length - 1)
+          //         {
+          //             return value;
+          //         }
+          //         return "";
+          //     }
+          //          },
+          //     data: [<%= t0DPUTarget %>],
+
+          //  },
+
+
+        ],
+      }
+
+      let barChartData5 = {
+        labels: <%- JSON.stringify(extraShortMonths) %>,
+
+        datasets: [
+
+          {
+            type: 'line',
+            label: '> 40 days',
+            borderColor: 'red',
+            pointRadius: 0,
+            borderDash: [10, 5],
+            backgroundColor: 'transparent',
+            pointRadius: 0,
+            lineTension: 0,
+            yAxisID: 'bar-y-axis1',
+            datalabels: {
+              // display labels for this specific dataset
+              color: 'white',
+              // rotation: -90,
+              align: 'top',
+              offset: -1,
+              // anchor: 'end',
+              formatter: function(value, context, values) {
+                if (value > 0) {
+                  value = value.toString();
+                  value = value.split(/(?=(?:...)*$)/);
+                  value = value.join(',');
+                  return value;
+                } else {
+                  value = "";
+                  return value
+
+                }
+              },
+            },
+            data: [<%= serviceTop10SupplierLate %>],
+          },
+          //  {
+          //      type            : 'line',
+          //      label           : 'Target',
+          //      borderColor     : 'red',
+          //      pointRadius: 0,
+          //      borderDash: [10,5],
+          //      backgroundColor : 'transparent',
+          //      yAxisID         : 'bar-y-axis1',
+          //      datalabels: {
+          //          // display labels for this specific dataset
+          //          display: true,
+          //          color:'white',
+          //         //  rotation: -90,
+          //          align: 'top',
+          //          offset: -4,
+          //          // anchor: 'start',
+          //          formatter: function(value, context, values) {
+          //                  if(context.dataIndex === context.dataset.data.length - 1){
+          //                     //  value = value.toString();
+          //                     //  value = value.split(/(?=(?:...)*$)/);
+          //                     //  value = value.join(',');
+          //                      return value + '%';
+          //                  }else{
+          //                      value = "";
+          //                      return value 
+
+          //                  }
+          //              },
+          //          },
+          //     data: [<%= t0RFTTarget %>],
+
+          //  },
+          {
+            type: 'bar',
+            label: 'Cumulative Total',
+            borderColor: 'green',
+            pointRadius: 0,
+            lineTension: 0,
+            backgroundColor: 'green',
+            yAxisID: 'bar-y-axis1',
+            datalabels: {
+              // display labels for this specific dataset
+              display: true,
+              color: 'white',
+              // rotation: -90,
+              align: 'top',
+              anchor: 'end',
+              offset: -4,
+              formatter: function(value, context, values) {
+                if (value > 0) {
+                  //  value = value.toString();
+                  //  value = value.split(/(?=(?:...)*$)/);
+                  //  value = value.join(',');
+                  return value;
+                } else {
+                  value = "";
+                  return value
+
+                }
+              },
+            },
+            data: [<%= serviceTop10SupplierTotal %>],
+            //  data: [
+            //      3,2,
+            //  ],
+
+          },
+          //  {
+          //      type            : 'line',
+          //      label           : 'DPU Target',
+          //      borderColor     : 'red',
+          //      pointRadius: 0,
+          //      borderDash: [10,5],
+          //     //  segment: {
+          //     //         borderDash: ctx => ((ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1) === ctx.p1DataIndex ? [2, 2] : undefined)
+          //     //     },
+          //      backgroundColor : 'transparent',
+          //      yAxisID         : 'bar-y-axis',
+          //      datalabels: {
+          //          // display labels for this specific dataset
+          //          display: true,
+          //          color:'white',
+          //         //  rotation: -90,
+          //         // anchor: 'start',
+          //         // align: 'bottom',
+          //         //  offset: 8,
+          //          // anchor: 'start',
+          //          formatter: function(value, context) {
+          //         if (context.dataIndex === context.dataset.data.length - 1)
+          //         {
+          //             return value;
+          //         }
+          //         return "";
+          //     }
+          //          },
+          //     data: [<%= t0DPUTarget %>],
+
+          //  },
+
+
+        ],
+      }
+
+      // t1 & t3 rft
+      const ctx = document.getElementById("chart1")
+      options.scales.yAxes[0].ticks.max = <%= doaDPUMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart1 = new Chart(ctx, {
+        //  type: 'bar',
+        data: barChartData1,
+        options: options
+      })
+
+      // t1 & t3 dpu
+      const ctx2 = document.getElementById("chart2")
+      options2.scales.yAxes[0].ticks.max = <%= t3DPUMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: barChartData2,
+        options: options2
+      })
+
+      // major escape dpu
+      const ctx3 = document.getElementById("chart3")
+      leaksOptions.scales.yAxes[0].ticks.max = <%= t3LeakDPUMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart3 = new Chart(ctx3, {
+        type: 'bar',
+        data: barChartData3,
+        options: leaksOptions
+      })
+
+      // Top 10 dealer rft
+      const ctx4 = document.getElementById("chart4")
+      //    middleOptions.scales.yAxes[0].ticks.max = 20
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart4 = new Chart(ctx4, {
+        type: 'bar',
+        data: barChartData4,
+        options: top10Options
+      })
+
+      // Top 10 customer rft
+      const ctx5 = document.getElementById("chart5")
+      //    options.scales.yAxes[0].ticks.max = <%= t0DPUMax %>
+      //   options.scales.yAxes[0].ticks.stepSize = 600
+      //   options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+      const myChart5 = new Chart(ctx5, {
+        type: 'bar',
+        data: barChartData5,
+        options: top10Options
+      })
+    </script>
+
+
+
+
+
+</body>
+
+</html>

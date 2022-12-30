@@ -1,0 +1,1377 @@
+<% layout('layouts/heatmap')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css" />
+<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css" />
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css" />
+<link rel="stylesheet" href="/content/table2.css" type="text/css" />
+<link rel="stylesheet" href="/stylesheets/ldlHeatmap.css" type="text/css" />
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<style>
+	body {
+		background-color: black;
+	}
+
+	h5 {
+		color: white;
+		font-size: 2rem;
+		padding-top: 10px;
+	}
+
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+
+	h2 {
+		font-weight: bold;
+		color: black;
+	}
+
+	h1 {
+		font-size: 4rem;
+	}
+
+	h6 {
+		font-size: 1rem;
+	}
+
+	hr {
+		background-color: #6a6d6d;
+	}
+
+	.zone-stat {
+		font-size: 60px;
+		margin-top: -10px;
+	}
+
+	.zone-span {
+		font-size: 60px;
+		padding-top: 6px;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: white;
+	}
+
+	.area-holder {
+		height: 300px;
+		width: 500px;
+		border-radius: 5px;
+		background-color: rgb(64, 64, 64);
+		text-align: center;
+		margin-bottom: 40px;
+	}
+
+	.cabs-status-open {
+		font-size: 25px;
+		color: red;
+		font-weight: bold;
+	}
+
+	.cabs-status-contained {
+		font-size: 25px;
+		color: orange;
+		font-weight: bold;
+	}
+
+	.cabs-status-closed {
+		font-size: 25px;
+		color: green;
+		font-weight: bold;
+	}
+
+	.cabs-stat-open {
+		font-size: 55px;
+		color: red;
+		font-weight: bold;
+	}
+
+	.cabs-stat-contained {
+		font-size: 55px;
+		color: orange;
+		font-weight: bold;
+	}
+
+	.cabs-stat-closed {
+		font-size: 55px;
+		color: green;
+		font-weight: bold;
+	}
+
+	.cabs-row {
+		display: flex;
+		justify-content: space-evenly;
+		flex-wrap: wrap;
+	}
+</style>
+
+<!-- bhl open -->
+<div
+	class="modal fade"
+	id="bhlOpen"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">BHL/HP Line Open 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: red">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let bhlOx = 0 %> <% for (let c of openbhlLine) { %> <% bhlOx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= bhlOx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: red; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- bhl contained -->
+<div
+	class="modal fade"
+	id="bhlContained"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">BHL/HP Line Contained 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: orange">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let bhlCx = 0 %> <% for (let c of containedbhlLine) { %> <% bhlCx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= bhlCx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: orange; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- bhl closed -->
+<div
+	class="modal fade"
+	id="bhlClosed"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">BHL/HP Line Closed 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: green">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let bhlClx = 0 %> <% for (let c of closedbhlLine) { %> <% bhlClx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= bhlClx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.closedAt).format('DD/MM/YYYY') %><br /><%= moment(c.closedAt).format('HH:mm') %></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: green; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- cp open -->
+<div
+	class="modal fade"
+	id="cpOpen"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">CP/EM/LP Line Open 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: red">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let cpOx = 0 %> <% for (let c of opencpLine) { %> <% cpOx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= cpOx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: red; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- cp contained -->
+<div
+	class="modal fade"
+	id="cpContained"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">CP/EM/LP Line Contained 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: orange">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let cpCx = 0 %> <% for (let c of containedcpLine) { %> <% cpCx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= cpCx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: orange; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- cp closed -->
+<div
+	class="modal fade"
+	id="cpClosed"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">CP/EM/LP Line Closed 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: green">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let cpClx = 0 %> <% for (let c of closedcpLine) { %> <% cpClx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= cpClx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.closedAt).format('DD/MM/YYYY') %><br /><%= moment(c.closedAt).format('HH:mm') %></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: green; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ldl open -->
+<div
+	class="modal fade"
+	id="ldlOpen"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">LDL Line Open 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: red">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let ldlOx = 0 %> <% for (let c of openldlLine) { %> <% ldlOx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= ldlOx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: red; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ldl contained -->
+<div
+	class="modal fade"
+	id="ldlContained"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">LDL Line Contained 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: orange">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let ldlCx = 0 %> <% for (let c of containedldlLine) { %> <% ldlCx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= ldlCx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: orange; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ldl closed -->
+<div
+	class="modal fade"
+	id="ldlClosed"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">LDL Line Closed 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: green">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let ldlClx = 0 %> <% for (let c of closedldlLine) { %> <% ldlClx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= ldlClx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.closedAt).format('DD/MM/YYYY') %><br /><%= moment(c.closedAt).format('HH:mm') %></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: green; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- paint open -->
+<div
+	class="modal fade"
+	id="paintOpen"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">Manufacturing/Paint Open 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: red">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let paintOx = 0 %> <% for (let c of openPaintLine) { %> <% paintOx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= paintOx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: red; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- paint contained -->
+<div
+	class="modal fade"
+	id="paintContained"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">Manufacturing/Paint Contained 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: orange">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let paintCx = 0 %> <% for (let c of containedPaintLine) { %> <% paintCx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= paintCx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: orange; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- paint closed -->
+<div
+	class="modal fade"
+	id="paintClosed"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">Manufacturing/Paint Closed 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: green">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let paintClx = 0 %> <% for (let c of closedPaintLine) { %> <% paintClx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= paintClx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.closedAt).format('DD/MM/YYYY') %><br /><%= moment(c.closedAt).format('HH:mm') %></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: green; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- materials open -->
+<div
+	class="modal fade"
+	id="materialsOpen"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">Materials/Kitting Open 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: red">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let materialsOx = 0 %> <% for (let c of openMaterialsLine) { %> <% materialsOx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= materialsOx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: red; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- materials contained -->
+<div
+	class="modal fade"
+	id="materialsContained"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">Materials/Kitting Contained 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: orange">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let materialsCx = 0 %> <% for (let c of containedMaterialsLine) { %> <% materialsCx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= materialsCx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: orange; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- materials closed -->
+<div
+	class="modal fade"
+	id="materialsClosed"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">Materials/Kitting Closed 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: green">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let materialsClx = 0 %> <% for (let c of closedMaterialsLine) { %> <% materialsClx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= materialsClx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.closedAt).format('DD/MM/YYYY') %><br /><%= moment(c.closedAt).format('HH:mm') %></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: green; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- sqDesign open -->
+<div
+	class="modal fade"
+	id="sqDesignOpen"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">Supplier Quality/Design Open 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: red">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let sqDesignOx = 0 %> <% for (let c of openSqDesignLine) { %> <% sqDesignOx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= sqDesignOx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: red; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- sqDesign contained -->
+<div
+	class="modal fade"
+	id="sqDesignContained"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">Supplier Quality/Design Contained 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: orange">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let sqDesignCx = 0 %> <% for (let c of containedSqDesignLine) { %> <% sqDesignCx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= sqDesignCx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: orange; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- sqDesign closed -->
+<div
+	class="modal fade"
+	id="sqDesignClosed"
+	data-backdrop="static"
+	data-keyboard="false"
+	tabindex="-1"
+	aria-labelledby="staticBackdropLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px; color: black">
+				<h3 style="text-align: center; margin: 8px; color: black">Supplier Quality/Design Closed 4C's</h3>
+			</div>
+			<div class="modal-body" style="background-color: green">
+				<table class="table table-hover table-dark" style="font-size: 15px; height: fit-content">
+					<thead>
+						<tr class="d-flex">
+							<th style="width: 15px">#</th>
+							<th style="width: 87px">T Period</th>
+							<th style="width: 130px">Claim Number</th>
+							<th style="width: 100px">Build Date</th>
+							<th style="width: 90px">Model</th>
+							<th style="width: 100px">Issued</th>
+							<th style="width: 100px">Contained</th>
+							<th style="width: 100px">Closed</th>
+							<th style="width: 370px">Narrative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% let sqDesignClx = 0 %> <% for (let c of closedSqDesignLine) { %> <% sqDesignClx++ %>
+						<tr class="d-flex">
+							<th style="width: 15px"><%= sqDesignClx %></th>
+							<td style="height: 76px; width: 87px"><%= c.tPeriod %></td>
+							<td style="width: 130px"><a href="/claims/4cshow/<%= c._id %>"><%= c.claimNumber %></a></td>
+							<td style="width: 100px"><%= c.buildDate%></td>
+							<td style="width: 90px"><%= c.model %></td>
+							<td style="width: 100px"><%= moment(c.vettedAt).format('DD/MM/YYYY') %><br /><%= moment(c.vettedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.containedAt).format('DD/MM/YYYY') %><br /><%= moment(c.containedAt).format('HH:mm') %></td>
+							<td style="width: 100px"><%= moment(c.closedAt).format('DD/MM/YYYY') %><br /><%= moment(c.closedAt).format('HH:mm') %></td>
+							<td style="width: 370px"><%= c.description.substring(0, 180) %>...</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer" style="border: none; background-color: green; border-radius: 0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="main-header-holder">
+	<h1>Cabs Internal 4C Status</h1>
+</div>
+
+<div class="loadall-main-wrapper">
+	<div class="cabs-row">
+		<div class="area-holder">
+			<h5>BHL/HP Line</h5>
+			<div style="display: flex; justify-content: space-evenly; margin-top: 50px">
+				<div>
+					<p class="cabs-status-open">Open</p>
+					<% if (openbhlLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#bhlOpen" style="cursor: pointer">
+						<p class="cabs-stat-open"><%= openbhlLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-open"><%= openbhlLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-contained">Contained</p>
+					<% if (containedbhlLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#bhlContained" style="cursor: pointer">
+						<p class="cabs-stat-contained"><%= containedbhlLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-contained"><%= containedbhlLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-closed">Closed</p>
+					<% if (closedbhlLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#bhlClosed" style="cursor: pointer">
+						<p class="cabs-stat-closed"><%= closedbhlLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-closed"><%= closedbhlLine.length %></p>
+					<%} %>
+				</div>
+			</div>
+		</div>
+
+		<div class="area-holder">
+			<h5>CP/EM/LP Line</h5>
+			<div style="display: flex; justify-content: space-evenly; margin-top: 50px">
+				<div>
+					<p class="cabs-status-open">Open</p>
+					<% if (opencpLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#cpOpen" style="cursor: pointer">
+						<p class="cabs-stat-open"><%= opencpLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-open"><%= opencpLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-contained">Contained</p>
+					<% if (containedcpLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#cpContained" style="cursor: pointer">
+						<p class="cabs-stat-contained"><%= containedcpLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-contained"><%= containedcpLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-closed">Closed</p>
+					<% if (closedcpLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#cpClosed" style="cursor: pointer">
+						<p class="cabs-stat-closed"><%= closedcpLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-closed"><%= closedcpLine.length %></p>
+					<%} %>
+				</div>
+			</div>
+		</div>
+
+		<div class="area-holder">
+			<h5>LDL Line</h5>
+			<div style="display: flex; justify-content: space-evenly; margin-top: 50px">
+				<div>
+					<p class="cabs-status-open">Open</p>
+					<% if (openldlLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#ldlOpen" style="cursor: pointer">
+						<p class="cabs-stat-open"><%= openldlLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-open"><%= openldlLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-contained">Contained</p>
+					<% if (containedldlLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#ldlContained" style="cursor: pointer">
+						<p class="cabs-stat-contained"><%= containedldlLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-contained"><%= containedldlLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-closed">Closed</p>
+					<% if (closedldlLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#ldlClosed" style="cursor: pointer">
+						<p class="cabs-stat-closed"><%= closedldlLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-closed"><%= closedldlLine.length %></p>
+					<%} %>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="cabs-row">
+		<div class="area-holder">
+			<h5>Manufacturing/Paint</h5>
+			<div style="display: flex; justify-content: space-evenly; margin-top: 50px">
+				<div>
+					<p class="cabs-status-open">Open</p>
+					<% if (openPaintLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#paintOpen" style="cursor: pointer">
+						<p class="cabs-stat-open"><%= openPaintLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-open"><%= openPaintLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-contained">Contained</p>
+					<% if (containedPaintLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#paintContained" style="cursor: pointer">
+						<p class="cabs-stat-contained"><%= containedPaintLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-contained"><%= containedPaintLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-closed">Closed</p>
+					<% if (closedPaintLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#paintClosed" style="cursor: pointer">
+						<p class="cabs-stat-closed"><%= closedPaintLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-closed"><%= closedPaintLine.length %></p>
+					<%} %>
+				</div>
+			</div>
+		</div>
+
+		<div class="area-holder">
+			<h5>Materials/Kitting</h5>
+			<div style="display: flex; justify-content: space-evenly; margin-top: 50px">
+				<div>
+					<p class="cabs-status-open">Open</p>
+					<% if (openMaterialsLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#materialsOpen" style="cursor: pointer">
+						<p class="cabs-stat-open"><%= openMaterialsLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-open"><%= openMaterialsLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-contained">Contained</p>
+					<% if (containedMaterialsLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#materialsContained" style="cursor: pointer">
+						<p class="cabs-stat-contained"><%= containedMaterialsLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-contained"><%= containedMaterialsLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-closed">Closed</p>
+					<% if (closedMaterialsLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#materialsClosed" style="cursor: pointer">
+						<p class="cabs-stat-closed"><%= closedMaterialsLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-closed"><%= closedMaterialsLine.length %></p>
+					<%} %>
+				</div>
+			</div>
+		</div>
+
+		<div class="area-holder">
+			<h5>Supplier Quality/Design</h5>
+			<div style="display: flex; justify-content: space-evenly; margin-top: 50px">
+				<div>
+					<p class="cabs-status-open">Open</p>
+					<% if (openSqDesignLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#sqDesignOpen" style="cursor: pointer">
+						<p class="cabs-stat-open"><%= openSqDesignLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-open"><%= openSqDesignLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-contained">Contained</p>
+					<% if (containedSqDesignLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#sqDesignContained" style="cursor: pointer">
+						<p class="cabs-stat-contained"><%= containedSqDesignLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-contained"><%= containedSqDesignLine.length %></p>
+					<%} %>
+				</div>
+				<div>
+					<p class="cabs-status-closed">Closed</p>
+					<% if (closedSqDesignLine.length > 0) { %>
+					<a data-toggle="modal" data-target="#sqDesignClosed" style="cursor: pointer">
+						<p class="cabs-stat-closed"><%= closedSqDesignLine.length %></p>
+					</a>
+					<% } else { %>
+					<p class="cabs-stat-closed"><%= closedSqDesignLine.length %></p>
+					<%} %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid footer">
+	<div class="row header-top">
+		<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+			<img height="24px" src="/7z/content/images/jcb-logo.png" />
+			<img height="24px" src="/7z/content/images/df.png" />
+		</div>
+		<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+	</div>
+</div>

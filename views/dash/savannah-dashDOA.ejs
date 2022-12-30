@@ -1,0 +1,731 @@
+<% layout('layouts/boilerplate')%>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- <meta http-equiv="refresh" content="1900" /> -->
+
+	<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+
+	<!-- <script src="/7z/content/chart-js/chart.bundle.min.js"></script> -->
+
+	<script src="/7z/content/chart-js/chart.bundle.js"></script>
+
+	<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+	<link rel="stylesheet" href="/stylesheets/dash.css" />
+</head>
+
+<style></style>
+
+<!-- The dash layout -->
+
+<section style="display: flex; justify-content: space-evenly; height: 85vh; flex-wrap: wrap; margin-top: -20px">
+	<!-- doa side -->
+	<div style="width: 1070px">
+		<div style="display: flex; justify-content: space-evenly">
+			<div style="display: flex; flex-direction: column; width: 250px; margin-top: 38px">
+				<!-- doa stat -->
+				<a href="/dash/savannah-dashDOA">
+					<div class="card" style="height: 380px; margin-bottom: 15px; display: flex; flex-direction: column; justify-content: space-evenly">
+						<div style="text-align: center; margin-top: -10px; font-size: 30px">DOA</div>
+						<div style="text-align: center; font-size: 15px"><%= newDOAStat.monthYear %></div>
+						<% if ( newDOAStat.totalDPU > newDOALastStat.totalDPU) { %>
+						<div style="text-align: center; font-size: 55px; font-weight: bold"><%= newDOAStat.totalDPU %></div>
+						<div style="text-align: center">
+							<div style="margin-bottom: 15px; font-size: 15px">Vs Prev Month</div>
+							<i class="fa fa-caret-up" style="text-align: center; font-size: 165px; margin-top: -55px; color: red" aria-hidden="true"></i>
+						</div>
+
+						<% } else { %>
+						<div style="text-align: center; font-size: 55px; font-weight: bold"><%= newDOAStat.totalDPU %></div>
+						<div style="text-align: center">
+							<div style="margin-bottom: 15px; font-size: 15px">Vs Prev Month</div>
+							<i class="fa fa-caret-down" style="text-align: center; font-size: 165px; margin-top: -55px; color: green" aria-hidden="true"></i>
+						</div>
+
+						<% } %>
+					</div>
+				</a>
+				<!-- t3 stat -->
+				<a href="/dash/savannah-dashT3">
+					<div class="card" style="height: 380px; margin-bottom: 15px; display: flex; flex-direction: column; justify-content: space-evenly">
+						<div style="text-align: center; margin-top: -10px; font-size: 30px">T3</div>
+						<div style="text-align: center; font-size: 15px"><%= newT3LastStat.monthYear %></div>
+						<% if ( newT3LastStat.totalDPU > newT3PrevLastStat.totalDPU ) { %>
+						<div style="text-align: center; font-size: 55px; font-weight: bold"><%= newT3LastStat.totalDPU%></div>
+						<div style="text-align: center">
+							<div style="margin-bottom: 15px; font-size: 15px">Vs Prev Month</div>
+							<i class="fa fa-caret-up" style="text-align: center; font-size: 165px; margin-top: -55px; color: red" aria-hidden="true"></i>
+						</div>
+
+						<% } else { %>
+						<div style="text-align: center; font-size: 55px; font-weight: bold"><%= newT3LastStat.totalDPU %></div>
+						<div style="text-align: center">
+							<div style="margin-bottom: 15px; font-size: 15px">Vs Prev Month</div>
+							<i class="fa fa-caret-down" style="text-align: center; font-size: 165px; margin-top: -55px; color: green" aria-hidden="true"></i>
+						</div>
+
+						<% } %>
+					</div>
+				</a>
+			</div>
+			<div style="display: flex; flex-direction: column; width: 770px">
+				<div style="text-align: center; font-size: 25px">DELIVERED QUALITY DOA PERFORMANCE</div>
+				<!-- t3 dpu chart -->
+				<div class="card" style="height: 629px; margin-bottom: 15px">
+					<div style="height: 629px">
+						<canvas id="t3Chart"></canvas>
+					</div>
+				</div>
+				<!-- prediction 1 -->
+				<div
+					class="card"
+					style="height: 130px; margin-bottom: 15px; display: flex; justify-content: space-between; flex-direction: row; padding: 0px 10px"
+				>
+					<div style="font-size: 15px; display: flex; flex-direction: column">
+						<div style="margin-bottom: 15px"><%= prediction1Date %></div>
+						<div>Builds <%= prediction1TotalBuildNumber %></div>
+						<div>Retailed <%= prediction1InT3 %> - (<%= prediction1MRIPercent %>%)</div>
+						<div>Claims <%= prediction1InT3Claims %></div>
+					</div>
+					<div style="font-size: 15px; display: flex; flex-direction: column">
+						<div style="margin-bottom: 15px">Vs Prev Month</div>
+						<% if (prediction1 > newDOAStat.totalDPU) { %>
+						<i class="fa fa-caret-up" style="text-align: center; font-size: 165px; margin-top: -55px; color: red" aria-hidden="true"></i>
+						<% } else { %>
+						<i class="fa fa-caret-down" style="text-align: center; font-size: 165px; margin-top: -55px; color: green" aria-hidden="true"></i>
+						<% } %>
+					</div>
+					<div style="font-size: 15px; width: 40%; text-align: center; display: flex; flex-direction: column">
+						<div style="margin-bottom: 15px">Prediction</div>
+						<% if (prediction1 > newDOAStat.totalDPU) { %>
+						<div style="font-size: 75px; margin-top: -30px; font-weight: bold; color: red"><%= prediction1 %></div>
+						<% } else { %>
+						<div style="font-size: 75px; margin-top: -30px; font-weight: bold; color: green"><%= prediction1 %></div>
+						<% } %>
+
+						<!-- <div style="margin-top: -15px">TARGET - 0.150</div> -->
+					</div>
+					<div style="font-size: 15px; width: 20%; text-align: center; display: flex; flex-direction: column">
+						<div style="margin-bottom: 10px">RFT</div>
+						<div>
+							<canvas id="doughnut-chart1"></canvas>
+							<div style="position: relative; margin-top: -50px; font-size: 14px"><%= prediction1RFT %>%</div>
+						</div>
+					</div>
+				</div>
+				<!-- prediction 2 -->
+
+				<!-- prediction 3 -->
+			</div>
+		</div>
+	</div>
+
+	<!-- t3 side -->
+	<div style="width: 830px">
+		<div style="text-align: center; font-size: 25px">DOA WARRANTY ANALYSIS</div>
+		<div style="display: flex; justify-content: space-between">
+			<div style="display: flex; flex-direction: column; width: 825px">
+				<div class="card" style="height: 775px; margin-bottom: 15px; display: flex; justify-content: space-evenly">
+					<div style="text-align: center; font-size: 15px">(<%= preT3Month1 %> <%= preT3Month2 %> <%= preT3Month3 %> Build)</div>
+					<!-- machine analysis -->
+					<div style="display: flex; justify-content: space-evenly; padding-left: 10px">
+						<div style="width: 26%px; height: 320px">
+							<canvas id="failedParts"></canvas>
+						</div>
+						<div style="width: 35%; height: 320px">
+							<canvas id="failureTypes"></canvas>
+						</div>
+						<div style="width: 26%; height: 320px">
+							<canvas id="models"></canvas>
+						</div>
+					</div>
+					<hr style="background-color: grey" style="width: 60%" />
+					<div style="text-align: center; font-size: 15px; margin-top: -10px">(<%= preT3Month4 %> <%= preT3Month5 %> <%= preT3Month6 %> Build)</div>
+					<!-- leaks analysis -->
+
+					<div style="display: flex; justify-content: space-evenly; padding-left: 10px">
+						<div style="width: 26%px; height: 320px">
+							<canvas id="new1"></canvas>
+						</div>
+						<div style="width: 35%; height: 320px">
+							<canvas id="new2"></canvas>
+						</div>
+						<div style="width: 26%; height: 320px">
+							<canvas id="new3"></canvas>
+						</div>
+					</div>
+
+					<!-- leaks trend -->
+
+					<!-- <div style="width: 800px; height: 720px">
+						<canvas id="leaksTrend"></canvas>
+					</div> -->
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+
+	Chart.defaults.global.defaultFontColor = "white";
+	// Chart.defaults.global.defaultFontSize = 15;
+	Chart.defaults.scale.gridLines.display = false;
+	// Chart.defaults.global.defaultFontFamily = "Ubuntu";
+
+
+		new Chart(document.getElementById("failureTypes"),
+		{
+		type: 'horizontalBar',
+		data: {
+		  labels: <%- JSON.stringify(top10FailureCodeLabels); %>,
+
+		  datasets: [{
+		    label: "Claims",
+		    backgroundColor: 'rgb(37 99 235)',
+	       hoverBackgroundColor: 'rgb(37 99 235)',
+
+		    data: <%- JSON.stringify(top10FailureCodeData) %>,
+		    // borderWidth: 1,
+		    // borderColor: '#777',
+		    // hoverBorderWidth: 3,
+		    // hoverBorderColor: '#FFFFFF',
+		    fontSize: 10,
+
+		  }, ]
+		},
+		options: {
+		  maintainAspectRatio: false,
+		  responsive: true,
+		  scales: {
+		    xAxes: [{
+
+		      ticks: {
+		         stacked: true,
+		           barPercentage: 0.8,
+		           ticks: {
+		             display: true,
+		             beginAtZero: true,
+		             fontSize: 9,
+		             fontColor: '#fff',
+		             autoSkip: false,
+		             maxRotation: 90,
+		             minRotation: 90,
+		             // callback: function(value) {if (value % 1 === 0) {return value;}}
+		           },
+		           dataLabels: {
+		             fontSize: 2
+		           },
+
+		        display: false,
+		        beginAtZero: true,
+		        callback: function(value) {
+		          if (value % 1 === 0) {
+		            return value;
+		          }
+		        }
+		      }
+		    }]
+		  },
+		  legend: {
+		    display: false
+		  },
+		  title: {
+		    display: true,
+		    text: 'TOP 10 FAILURE MODES',
+		    fontSize: 15	  }
+		}
+		})
+
+	   new Chart(document.getElementById("failedParts"),
+		{
+		type: 'horizontalBar',
+		data: {
+		  labels: <%- JSON.stringify(top10FailedPartsLabels); %>,
+
+		  datasets: [{
+		    label: "Claims",
+		    backgroundColor: 'rgb(37 99 235)',
+	       hoverBackgroundColor: 'rgb(37 99 235)',
+
+		    data: <%- JSON.stringify(top10FailedPartsData) %>,
+		    // borderWidth: 1,
+		    // borderColor: '#777',
+		    // hoverBorderWidth: 3,
+		    // hoverBorderColor: '#FFFFFF',
+		    fontSize: 10,
+
+		  }, ]
+		},
+		options: {
+		  maintainAspectRatio: false,
+		  responsive: true,
+		  scales: {
+		    xAxes: [{
+
+		      ticks: {
+		         stacked: true,
+		           barPercentage: 0.8,
+		           ticks: {
+		             display: true,
+		             beginAtZero: true,
+		             fontSize: 9,
+		             fontColor: '#fff',
+		             autoSkip: false,
+		             maxRotation: 90,
+		             minRotation: 90,
+		             // callback: function(value) {if (value % 1 === 0) {return value;}}
+		           },
+		           dataLabels: {
+		             fontSize: 2
+		           },
+
+		        display: false,
+		        beginAtZero: true,
+		        callback: function(value) {
+		          if (value % 1 === 0) {
+		            return value;
+		          }
+		        }
+		      }
+		    }]
+		  },
+		  legend: {
+		    display: false
+		  },
+		  title: {
+		    display: true,
+		    text: 'TOP 10 PARTS',
+		    fontSize: 15	  }
+		}
+		})
+
+
+	   const ctx2 = document.getElementById('t3Chart').getContext('2d');
+	 const chart2 = new Chart(ctx2, {
+	   type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+	     data: {
+	       labels: <%- JSON.stringify(fullT3Labels) %>,
+	       datasets: [
+	         {
+	           label: "Target",
+	           type: "line",
+	           borderColor: "red",
+	           data: [ <%= newT3DPUTargetArr %> ],
+	           fill: false
+	         },
+	         {
+	           label: 'Closed',
+	           data: [<%= newT3ClosedArr %>],
+	           backgroundColor: 'green'
+	         },
+	         {
+	           label: 'Contained',
+	           data: [<%= newT3ContainedArr %>],
+	           backgroundColor: 'orange',
+	         },
+	         {
+	           label: 'Open',
+	           data: [<%= newT3OpenArr %>],
+	           backgroundColor: 'red',
+	         },
+	         {
+	           label: 'WIP',
+	           data: [<%= newT3UnactionedArr %>],
+	           backgroundColor: <%- JSON.stringify(newT3UnactionedColorArr) %>,
+	         }
+	       ]
+	     },
+	     options: {
+	       maintainAspectRatio: false,
+	     responsive: true,
+	     legend: {
+	       display: false,
+	       position: 'bottom',
+	       // labels: {
+	       //   useLineStyle: true,
+	       //   // boxWidth: 25
+	       // },
+	     },
+	       scales: {
+	         xAxes: [{
+	           stacked: true,
+	           gridLines: {
+	           display: true,
+	           color: "#555555",
+	           drawBorder: true,
+	           drawOnChartArea: false,
+	           },
+	           ticks: {
+	             display: true,
+	             beginAtZero: true,
+	             fontSize: 12,
+	             fontColor: '#fff',
+	             autoSkip: false,
+	             maxRotation: 90,
+	             minRotation: 90,
+	             // callback: function(value) {if (value % 1 === 0) {return value;}}
+	           },
+
+	           dataLabels: {
+	             fontSize: 2
+	           },
+	         }],
+	         yAxes: [{
+	           stacked: true,
+	           gridLines: {
+	           display:true,
+	           color: "#555555",
+	           drawBorder: true,
+	           },
+	           ticks: {
+	             display: true,
+	             beginAtZero: true,
+	             fontSize: 12,
+	             // callback: function(value) {if (value % 1 === 0) {return value;}}
+	           },
+	           dataLabels: {
+	             fontSize: 2
+	           },
+	         }]
+	       },
+	       title: {
+	         display: true,
+	         text: 'T3 DPU',
+	         fontSize: 15
+	       },
+	       legend: {
+	         display: false,
+	         position: 'right',
+	         labels: {
+	           fontColor: '#000'
+	         }
+	       },
+	       layout: {
+	         padding: {
+	           left: 0,
+	           right: 0,
+	           bottom: 0,
+	           top: 0
+	         }
+	       },
+	       tooltips: {
+	         enabled: true,
+	         mode:'label',
+	         callbacks: {
+	           label: function(tooltipItem, data) {
+
+	             let dataset = data.datasets[tooltipItem.datasetIndex]
+	             let datasetLabel = data.datasets[tooltipItem.datasetIndex].label
+
+	             if (datasetLabel === "Target" || dataset.data[tooltipItem.index] === 0) {
+	               return false
+	             } else {
+	               let dpu = "DPU: "+dataset.data[tooltipItem.index];
+	               return dpu
+	             }
+	           }
+	        },
+	       },
+	       plugins: {
+	         datalabels: {
+	           display: false,
+	         },
+	       }
+
+	     },
+	 })
+
+
+
+
+
+
+	 new Chart(document.getElementById("models"),
+		{
+		type: 'horizontalBar',
+		data: {
+		  labels: <%- JSON.stringify(top10ModelsLabels); %>,
+
+		  datasets: [{
+		    label: "Claims",
+		    backgroundColor: 'rgb(37 99 235)',
+	       hoverBackgroundColor: 'rgb(37 99 235)',
+
+		    data: <%- JSON.stringify(top10ModelsData) %>,
+		    // borderWidth: 1,
+		    // borderColor: '#777',
+		    // hoverBorderWidth: 3,
+		    // hoverBorderColor: '#FFFFFF',
+		    fontSize: 10,
+
+		  }, ]
+		},
+		options: {
+		  maintainAspectRatio: false,
+		  responsive: true,
+		  scales: {
+		    xAxes: [{
+
+		      ticks: {
+		         stacked: true,
+		           barPercentage: 0.8,
+		           ticks: {
+		             display: true,
+		             beginAtZero: true,
+		             fontSize: 9,
+		             fontColor: '#fff',
+		             autoSkip: false,
+		             maxRotation: 90,
+		             minRotation: 90,
+		             // callback: function(value) {if (value % 1 === 0) {return value;}}
+		           },
+		           dataLabels: {
+		             fontSize: 2
+		           },
+
+		        display: false,
+		        beginAtZero: true,
+		        callback: function(value) {
+		          if (value % 1 === 0) {
+		            return value;
+		          }
+		        }
+		      }
+		    }]
+		  },
+		  legend: {
+		    display: false
+		  },
+		  title: {
+		    display: true,
+		    text: 'TOP 10 MODELS',
+		    fontSize: 15	  }
+		}
+	})
+
+
+	 new Chart(document.getElementById("new1"),
+		{
+		type: 'horizontalBar',
+		data: {
+		  labels: <%- JSON.stringify(top10FailedPartsLabelsNew); %>,
+
+		  datasets: [{
+		    label: "Claims",
+		    backgroundColor: 'rgb(37 99 235)',
+	       hoverBackgroundColor: 'rgb(37 99 235)',
+
+		    data: <%- JSON.stringify(top10FailedPartsDataNew) %>,
+		    // borderWidth: 1,
+		    // borderColor: '#777',
+		    // hoverBorderWidth: 3,
+		    // hoverBorderColor: '#FFFFFF',
+		    fontSize: 10,
+
+		  }, ]
+		},
+		options: {
+		  maintainAspectRatio: false,
+		  responsive: true,
+		  scales: {
+		    xAxes: [{
+
+		      ticks: {
+		         stacked: true,
+		           barPercentage: 0.8,
+		          //  ticks: {
+		          //    display: true,
+		          //    beginAtZero: true,
+		          //    fontSize: 9,
+		          //    fontColor: '#fff',
+		          //    autoSkip: false,
+		          //    maxRotation: 90,
+		          //    minRotation: 90,
+		             // callback: function(value) {if (value % 1 === 0) {return value;}}
+		           //},
+		           dataLabels: {
+		             fontSize: 2
+		           },
+
+		        display: false,
+		        beginAtZero: true,
+		        callback: function(value) {
+		          if (value % 1 === 0) {
+		            return value;
+		          }
+		        }
+		      }
+		    }]
+		  },
+		  legend: {
+		    display: false
+		  },
+		  title: {
+		    display: true,
+		    text: 'TOP 10 PARTS',
+		    fontSize: 15	  }
+		}
+	})
+
+
+	 new Chart(document.getElementById("new2"),
+		{
+		type: 'horizontalBar',
+		data: {
+		  labels: <%- JSON.stringify(top10FailureCodeLabelsNew); %>,
+
+		  datasets: [{
+		    label: "Claims",
+		    backgroundColor: 'rgb(37 99 235)',
+	       hoverBackgroundColor: 'rgb(37 99 235)',
+		    data: <%- JSON.stringify(top10FailureCodeDataNew) %>,
+		  }, ]
+		},
+		options: {
+		  maintainAspectRatio: false,
+		  responsive: true,
+		  scales: {
+		    xAxes: [{
+
+		      ticks: {
+		         stacked: true,
+		           barPercentage: 0.8,
+		           ticks: {
+		             display: true,
+		             beginAtZero: true,
+		             fontSize: 9,
+		             fontColor: '#fff',
+		             autoSkip: false,
+		             maxRotation: 90,
+		             minRotation: 90,
+		             // callback: function(value) {if (value % 1 === 0) {return value;}}
+		           },
+		           dataLabels: {
+		             fontSize: 2,
+
+		           },
+
+		        display: false,
+		        beginAtZero: true,
+		        callback: function(value) {
+		          if (value % 1 === 0) {
+		            return value;
+		          }
+		        }
+		      }
+		    }]
+		  },
+		  legend: {
+		    display: false
+		  },
+		  title: {
+		    display: true,
+		    text: 'TOP 10 FAILURE MODES',
+		    fontSize: 15	  }
+		}
+	})
+
+	 new Chart(document.getElementById("new3"),
+		{
+		type: 'horizontalBar',
+		data: {
+		  labels: <%- JSON.stringify(top10ModelsLabelsNew); %>,
+
+		  datasets: [{
+		    label: "Claims",
+		    backgroundColor: 'rgb(37 99 235)',
+	       hoverBackgroundColor: 'rgb(37 99 235)',
+		    data: <%- JSON.stringify(top10ModelsDataNew) %>,
+		  }, ]
+		},
+		options: {
+		  maintainAspectRatio: false,
+		  responsive: true,
+		  scales: {
+		    xAxes: [{
+
+		      ticks: {
+		         stacked: true,
+		           barPercentage: 0.8,
+		           ticks: {
+		             display: true,
+		             beginAtZero: true,
+		             fontSize: 9,
+		             fontColor: '#fff',
+		             autoSkip: false,
+		             maxRotation: 90,
+		             minRotation: 90,
+		             // callback: function(value) {if (value % 1 === 0) {return value;}}
+		           },
+		           dataLabels: {
+		             fontSize: 2,
+
+		           },
+
+		        display: false,
+		        beginAtZero: true,
+		        callback: function(value) {
+		          if (value % 1 === 0) {
+		            return value;
+		          }
+		        }
+		      }
+		    }]
+		  },
+		  legend: {
+		    display: false
+		  },
+		  title: {
+		    display: true,
+		    text: 'TOP 10 MODELS',
+		    fontSize: 15	  }
+		}
+	})
+
+
+
+
+
+
+	  new Chart(document.getElementById("doughnut-chart1"), {
+	     type: 'doughnut',
+	     data: {
+	       labels: ['RFT', 'Not RFT'],
+	       datasets: [{
+	         label: "",
+	         backgroundColor: ["green", ],
+
+	         data: [<%= prediction1RFTNUmber  %>, <%= prediction1NRFTNUmber %>]
+	       }]
+	     },
+	     options: {
+	       plugins: {
+	       labels: {
+	         render: function(args) {
+	           conso
+	           if (args.percentage > 4) {
+	             return args.label + "\n" + args.percentage + '%';
+	           }
+	         },
+	         position: 'border'
+	       }
+
+	     },
+
+	       legend: {
+	         display: false,
+	       },
+	       elements: {
+	         center: {
+	           text: '60%',
+	           color: '#FFF', // Default is #000000
+	           sidePadding: 20, // Default is 20 (as a percentage)
+	           // minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+	           lineHeight: 25 // Default is 25 (in px), used for when text wraps
+	         }
+	       }
+	     }
+	   });
+</script>

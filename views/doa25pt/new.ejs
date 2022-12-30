@@ -1,0 +1,121 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Log new <%= division %> Escape</h1>
+    </div>
+
+
+
+    <div class="container form">
+
+
+
+      <div class="col">
+        <form action="/doa25pt/new/<%= division %>" method="POST" novalidate class="validated-form">
+          <input type="hidden" name="doa25pt[division]" value="<%= division %>">
+          <label class="form-label" for="title">TW Number</label>
+          <input class="form-control" type="text" name="doa25pt[twNumber]" required />
+
+          <label class="form-label" for="title">TW Score</label>
+          <input class="form-control" type="text" name="doa25pt[score]" required />
+
+          <label class="form-label" for="title">Serial Number</label>
+          <input class="form-control" type="text" name="doa25pt[name]" required />
+
+          <label class="form-label" for="title">Build Date</label>
+          <input class="form-control" type="text" name="doa25pt[buildDate]" required />
+          <label for="description">Built post cut in</label>
+          <select class="form-control" type="text" name="doa25pt[postCutIn]" autocomplete="off" required>
+            <option hidden></option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+
+
+          <label for="area">Model</label>
+          <select class="form-control" type="text" name="doa25pt[model]" autocomplete="off" required>
+            <% models.forEach(model => { %>
+            <option hidden></option>
+            <option label="<%= model.name %>" value="<%= model.name %>">
+              <% }) %>
+          </select>
+
+          <label for="area">Inspector</label>
+          <select class="form-control" type="text" name="doa25pt[inspector]" autocomplete="off" required>
+            <% inspectors.forEach(inspector => { %>
+            <option hidden></option>
+            <option label="<%= inspector.name %>" value="<%= inspector.name %>">
+              <% }) %>
+          </select>
+
+          <label for="description">Was issue Picked up at <%= division %></label>
+          <select class="form-control" type="text" name="doa25pt[wasPickedUp]" autocomplete="off" required>
+            <option hidden></option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+
+          <label for="description">Was on the video</label>
+          <select class="form-control" type="text" name="doa25pt[onVideo]" autocomplete="off" required>
+            <option hidden></option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+
+
+      </div>
+    </div>
+
+
+    <div class="col">
+
+      <label for="inspector" style="color: white;">Should/Could/Can't</label>
+      <select class="form-control" type="text" name="doa25pt[scc]" autocomplete="off" required>
+        <option hidden></option>
+        <option>Should</option>
+        <option>Could</option>
+        <option>Cannot</option>
+      </select>
+      <label for="inspector" style="color: white;">DOA Type</label>
+      <select class="form-control" type="text" name="doa25pt[failuremode]" autocomplete="off" required>
+        <option hidden></option>
+        <% failuremodes.forEach(failuremode => { %>
+
+        <option label="<%= failuremode.name %>" value="<%= failuremode.name %>">
+
+          <% }) %>
+
+      </select>
+      <label for="inspector" style="color: white;">Failure Mode</label>
+      <select class="form-control" type="text" name="doa25pt[failuretype]" autocomplete="off" required>
+        <option hidden></option>
+        <% failuretypes.forEach(failuretype => { %>
+
+        <option label="<%= failuretype.name %>" value="<%= failuretype.name %>">
+
+          <% }) %>
+
+      </select>
+
+      <label for="inspector" style="color: white;">Status</label>
+      <select class="form-control" type="text" name="doa25pt[status]" autocomplete="off" required>
+        <option hidden></option>
+        <option>Open</option>
+        <option>Contained</option>
+        <option>Closed</option>
+      </select>
+      <label for="notes" style="color: white;">Description of issue</label>
+      <textarea style="height: 252px; margin-bottom: 26px;" class="form-control" name="doa25pt[description]" required></textarea>
+      <div class="valid-feedback">Looks good</div>
+      <div class="form-group ">
+
+        <button class="btn btn-md btn-success btn-block">Submit</button>
+      </div>
+    </div>
+    </form>
+  </div>

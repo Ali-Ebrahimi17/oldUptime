@@ -1,0 +1,278 @@
+<% layout('layouts/doa')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/8z/content/bootstrap/css/bootstrap.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css">
+<link rel="stylesheet" href="/content/table2.css" type="text/css">
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<style>
+  body {
+    background-color: black;
+  }
+
+  h5 {
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: -15px;
+  }
+
+  h3 {
+    color: white;
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-weight: bold;
+    color: black;
+  }
+
+  h1 {
+    font-weight: bold;
+    font-size: 4rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  hr {
+    background-color: #6a6d6d;
+  }
+
+  .last-checked-holder {
+    padding-top: 12px;
+  }
+
+  a:hover {
+    color: inherit;
+  }
+
+  [
+</style>]
+
+<div class='main-header-holder'>
+  <!-- <h1>PAINT PLANT HEALTH STATUS</h1> -->
+</div>
+
+<div class="outside-holder">
+
+
+
+
+
+  <!-- HBU -->
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text"><a href="#">DOA Major Escapes</a></div>
+    </div>
+    <div class="last-checked-holder">
+      <small><%= today %></small>
+
+    </div>
+    <hr>
+
+    <div style="display: flex; justify-content: space-evenly;">
+
+      <div class="<% if (majorsGroup > 0) { %>red-card<% } else  { %>grey-card<% } %>">
+        <p class="group-div">UK GROUP</p>
+        <p class="group-stat"><%= majorsGroup %></p>
+      </div>
+
+    </div>
+    <div style="display: flex; justify-content: space-evenly; margin-top: 15px;">
+
+      <div class="<% if (majorsLDL > 0  ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">LDL</p>
+        <p class="card-stat"><%= majorsLDL %></p>
+      </div>
+
+      <div class="<% if (majorsBHL > 0 ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">BHL</p>
+        <p class="card-stat"><%= majorsBHL %></p>
+      </div>
+
+      <div class="<% if (majorsSD > 0 ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">SD</p>
+        <p class="card-stat"><%= majorsSD %></p>
+      </div>
+
+      <div class="<% if (majorsCP > 0 ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">CP</p>
+        <p class="card-stat"><%= majorsCP %></p>
+      </div>
+
+      <div class="<% if (majorsHP > 0) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">HP</p>
+        <p class="card-stat"><%= majorsHP %></p>
+      </div>
+
+      <div class="<% if (majorsEM > 0 ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">EM</p>
+        <p class="card-stat"><%= majorsEM %></p>
+      </div>
+
+      <div class="<% if (majorsLP > 0) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">LP</p>
+        <p class="card-stat"><%= majorsLP %></p>
+      </div>
+
+    </div>
+
+
+    <table class="table" id="table-requests" style="margin-bottom: 42px">
+      <thead>
+
+        <tr style="font-size: 15px;">
+          <th class="th-centre" style="height: 10px; width: 20px; border-right: 1px solid rgb(42, 44, 46);">BU</th>
+          <th class="th-centre" style="height: 10px; width: 20px; border-right: 1px solid rgb(42, 44, 46);">SCORE</th>
+          <th class="th-centre" style="width: 50px; border-right: 1px solid rgb(42, 44, 46);">MODEL</th>
+          <th class="th-centre" style="width: 50px; border-right: 1px solid rgb(42, 44, 46);">SERIAL</th>
+          <th class="th-centre" style="width: 120px; border-right: 1px solid rgb(42, 44, 46);">BUILD DATE</th>
+          <th class="th-centre" style="width: 500px; border-right: 1px solid rgb(42, 44, 46);">ISSUE</th>
+
+
+        </tr>
+      </thead>
+      <tbody style="color: white;">
+        <% for (let m of majors) { %>
+        <tr style="<% if (m.points === '250') { %>color: rgb(238, 28, 37)<% } else { %><% } %>">
+
+          <td class='td-centre' style="width: 5px; height: 15px;"><%= m.division %></td>
+          <td class='td-centre' style="width: 5px; height: 15px;"><%= m.points %></td>
+          <td class='td-centre' style="width: 2px"><%= m.model %></td>
+          <td class='td-centre' style="width: 2px"><%= m.name %></td>
+          <td class='td-centre' style="width: 2px"><%= moment(m.buildDate).format("DD/MM/YYYY") %></td>
+          <% if (currentUser && currentUser.is25ptAdmin) { %>
+          <td class='td-centre' style="width: 10px; text-align: left;"><a href="/doa25pt/gradeAgain/<%=m._id%>"><%= m.shortDescription.substring(0, 105) %>...</a></td>
+          <% } else { %>
+          <td class='td-centre' style="width: 10px; text-align: left;"><%= m.shortDescription.substring(0, 105) %>...</td>
+          <% } %>
+          <% } %>
+
+        </tr>
+ 
+
+      </tbody>
+    </table>
+
+  </div>
+  <!-- HBU -->
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text"><a href="#">Overdue Containment/Closure</a></div>
+    </div>
+    <div class="last-checked-holder">
+      <small>24 Working Hour Containment/5 Working Day Closure</small>
+    </div>
+    <hr>
+    <div style="display: flex; justify-content: space-evenly;">
+
+      <div class="<% if (majorsTotalGroup > 0 || majorsTotalGroupM  > 0 ) { %>red-card<% } else  { %>grey-card<% } %>">
+        <p class="group-div">UK GROUP</p>
+        <p class="group-stat"><%= majorsTotalGroup %>/<%= majorsTotalGroupM %></p>
+      </div>
+
+    </div>
+    <div style="display: flex; justify-content: space-evenly; margin-top: 15px;">
+
+      <div class="<% if (majorsOpenLDL > 0 || majorsContainedLDLM > 0 ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">LDL</p>
+        <p class="card-stat"><%= majorsOpenLDL %>/<%= majorsContainedLDLM %></p>
+      </div>
+
+      <div class="<% if (majorsOpenBHL > 0 || majorsContainedBHLM > 0 ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">BHL</p>
+        <p class="card-stat"><%= majorsOpenBHL %>/<%= majorsContainedBHLM %></p>
+      </div>
+
+      <div class="<% if (majorsOpenSD > 0 || majorsContainedSDM > 0 ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">SD</p>
+        <p class="card-stat"><%= majorsOpenSD %>/<%= majorsContainedSDM %></p>
+      </div>
+
+      <div class="<% if (majorsOpenCP > 0 || majorsContainedCPM > 0 ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">CP</p>
+        <p class="card-stat"><%= majorsOpenCP %>/<%= majorsContainedCPM %></p>
+      </div>
+
+      <div class="<% if (majorsOpenHP > 0 || majorsContainedHPM > 0 ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">HP</p>
+        <p class="card-stat"><%= majorsOpenHP %>/<%= majorsContainedHPM %></p>
+      </div>
+
+      <div class="<% if (majorsOpenEM > 0 || majorsContainedEMM > 0 ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">EM</p>
+        <p class="card-stat"><%= majorsOpenEM %>/<%= majorsContainedEMM %></p>
+      </div>
+
+      <div class="<% if (majorsOpenLP > 0 || majorsContainedLPM > 0 ) { %>red-card-div<% } else  { %>grey-card-div<% } %>">
+        <p class="card-div">LP</p>
+        <p class="card-stat"><%= majorsOpenLP %>/<%= majorsContainedLPM %></p>
+      </div>
+
+    </div>
+
+
+
+
+    <table class="table" id="table-requests" style="margin-bottom: 42px;">
+      <thead>
+
+        <tr style="font-size: 15px;">
+          <th class="th-centre" style="height: 10px; width: 20px; border-right: 1px solid rgb(42, 44, 46);">BU</th>
+          <th class="th-centre" style="height: 10px; width: 20px; border-right: 1px solid rgb(42, 44, 46);">SCORE</th>
+          <th class="th-centre" style="width: 50px; border-right: 1px solid rgb(42, 44, 46);">MODEL</th>
+          <th class="th-centre" style="width: 50px; border-right: 1px solid rgb(42, 44, 46);">SERIAL</th>
+          <th class="th-centre" style="width: 120px; border-right: 1px solid rgb(42, 44, 46);">RAISED</th>
+          <th class="th-centre" style="width: 100px; border-right: 1px solid rgb(42, 44, 46);">AREA</th>
+          <th class="th-centre" style="width: 400px; border-right: 1px solid rgb(42, 44, 46);">ISSUE</th>
+
+
+        </tr>
+      </thead>
+      <tbody style="color: white;">
+        <% for (let m of allLateData) { %>
+        <tr style="<% if (m.status === 'Open') { %>color: rgb(238, 28, 37)<% } else { %>color: rgb(252, 176, 38)<% } %>">
+          <td class='td-centre' style="width: 5px; height: 15px;"><a href="/claims/4cshow/<%=m._id%>"><%= m.division %></a></td>
+          <td class='td-centre' style="width: 5px; height: 15px;"><a href="/claims/4cshow/<%=m._id%>"><%= m.points %></a></td>
+          <td class='td-centre' style="width: 2px"><a href="/claims/4cshow/<%=m._id%>"><%= m.model.substring(0, 7) %></a></td>
+          <td class='td-centre' style="width: 2px"><a href="/claims/4cshow/<%=m._id%>"><%= m.name %></a></td>
+          <td class='td-centre' style="width: 2px"><a href="/claims/4cshow/<%=m._id%>"><%= moment(m.vettedAt).format("DD/MM/YYYY  HH:mm") %></a></td>
+          <td class='td-centre' style="width: 2px"><a href="/claims/4cshow/<%=m._id%>"><%= m.area %></a></td>
+          <td class='td-centre' style="width: 10px; text-align: left;"><a href="/claims/4cshow/<%=m._id%>"><%= m.description.substring(0, 75)%>...</a></td>
+        </tr>
+        <% } %>
+
+      </tbody>
+    </table>
+
+  </div>
+
+
+
+</div>
+</div>
+
+
+
+
+
+<div class="container-fluid footer">
+
+  <div class="row header-top">
+    <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+      <img height="24px" src="/7z/content/images/jcb-logo.png">
+      <img height="24px" src="/7z/content/images/df.png">
+    </div>
+    <div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+      J.C. Bamford Excavators LTD &copy; 2022
+    </div>
+  </div>
+</div>

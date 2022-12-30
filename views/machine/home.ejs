@@ -1,0 +1,311 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="refresh" content="9120">
+    <title>JCB - Equipment Monitoring</title>
+    <link rel="icon" href="/home/jcb.png" />
+    <link rel="stylesheet" href="/7z/content/bootstrap/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/dashboards.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+    <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+    <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+    <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+    <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+
+    <div class="row header-top">
+        <div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+            <img height="24px" src="/7z/content/images/jcb-logo.png">
+        </div>
+        <div class="col-lg-4 d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+            <!-- <a href="/equipment-monitoring/machine">
+                <span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 5px" class="fas fa-desktop icon-home"></span>
+            </a> -->
+            
+            <a href="/equipment-monitoring/operations">
+                <span style="font-size: 21px; padding-top: 2px; color: black; margin-left: 5px;" class="fas fa-chart-bar icon-home"></span>
+            </a>
+            <a href="/equipment-monitoring/vsHours">
+                <span style="font-size: 21px; padding-top: 2px; color: black; margin-left: 5px;" class="fas fa-chart-line icon-home"></span>
+            </a>
+            </a>
+            <a href="/equipment-monitoring/global">
+                <span style="font-size: 21px; padding-top: 2px; color: black; margin-left: 5px;" class="fas fa-globe-americas icon-home"></span>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-main">
+
+            <div class="row">
+
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">Loadall</h1>
+                    <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: 0px 0px 16px 0px; text-align: center">Daily Robot Overview</h1>
+                </div>
+                <div class="col-lg-3"></div>
+
+                <div class="col-lg-12" style=" height: 90px; margin-bottom: 18px; padding: 8px 0px 8px 0px; border-top: 3px solid rgb(26, 28, 30); border-bottom: 3px solid rgb(26, 28, 30)">
+
+                    <div class="col-measure" style="width: 16.6%; float: left; text-align: center; margin: 0px">
+                        <h1 class="line-sub-header-top">T-Time</h1>
+                        <h1 class="line-measure-value-top text-grey">00:25:14</h1>
+                    </div>
+
+                    <div class="col-measure" style="width: 16.6%; float: left; text-align: center; margin: 0px">
+                        <h1 class="line-sub-header-top">Running Time</h1>
+                        <h1 class="line-measure-value-top text-grey">00:52:30</h1>
+                    </div>
+
+                    <div class="col-measure" style="width: 16.6%; float: left; text-align: center; margin: 0px">
+                        <h1 class="line-sub-header-top">Known Breakdown</h1>
+                        <h1 class="line-measure-value-top text-grey">00:30:45</h1>
+                    </div>
+
+                    <div class="col-measure" style="width: 16.6%; float: left; text-align: center; margin: 0px">
+                        <h1 class="line-sub-header-top">Unknown Breakdown</h1>
+                        <h1 class="line-measure-value-top text-grey">00:19:03</h1>
+                    </div>
+
+                    <div class="col-measure" style="width: 16.6%; float: left; text-align: center; margin: 0px">
+                        <h1 class="line-sub-header-top">Waiting (Parts)</h1>
+                        <h1 class="line-measure-value-top text-grey" >00:18:00</h1>
+                    </div>
+
+                    <div class="col-measure" style="width: 16.6%; float: left; text-align: center; margin: 0px">
+                        <h1 class="line-sub-header-top">Waiting (Wire)</h1>
+                        <h1 class="line-measure-value-top text-grey" >00:20:00</h1>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-12">
+                    <!-- <h1 style="font-size: 24px; color: white; margin: 15px 0px 25px 0px; text-align: center">Machines Overview</h1> -->
+                    <canvas id="canvas" height="100" ></canvas>
+                    <!-- <hr class="hr1" style="margin-top: -220px;">
+                    <hr class="hr1" style="margin-top: -197px;">
+                    <hr class="hr1" style="margin-top: -196px;"> -->
+                </div>
+
+                
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid footer">
+        
+    <div class="row header-top">
+        <div class="col-lg-6 d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+            <img height="24px" src="/7z/content/images/df.png">
+        </div>
+        <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+            J.C. Bamford Excavators LTD &copy; 2022
+        </div>
+    </div>
+
+</div>
+
+<script  src="/7z/content/modal/modal.js"></script>
+
+<script>
+
+
+Chart.defaults.global.defaultFontColor = '#fff';
+
+let barChartData = {
+	labels   : [
+		'Machine 1',
+		'Machine 2',
+		'Machine 3',
+		'Machine 4',
+		'Machine 5',
+		'Machine 6',
+		'Machine 7',
+	],
+	datasets : [
+		{
+			label           : 'T-Time',
+			backgroundColor : 'rgb(0, 169, 79)',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				3,
+				3,
+				3,
+				2,
+				6,
+				7,
+				2,
+			],
+		},
+		{
+			label           : 'Running Time',
+			backgroundColor : 'rgb(255, 123, 0)',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				1,
+				2,
+				2,
+				1,
+				6,
+				7,
+				2,
+			],
+		},
+		{
+			label           : 'Known Breakdown',
+			backgroundColor : 'rgb(0, 173, 238)',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				6,
+				3,
+				3,
+				2,
+				4,
+				2,
+				6,
+			],
+		},
+		{
+			label           : 'Un-known Breakdown',
+			backgroundColor : 'rgb(238, 28, 37)',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				6,
+				1,
+				2,
+				1,
+				3,
+				4,
+				6,
+			],
+		},
+		{
+			label           : 'Waiting (Parts)',
+			backgroundColor : 'purple',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				6,
+				4,
+				3,
+				1,
+				4,
+				2,
+				6,
+			],
+		},
+		{
+			label           : 'Waiting (Wire)',
+			backgroundColor : 'grey',
+			yAxisID         : 'bar-y-axis',
+			data            : [
+				2,
+				3,
+				3,
+				1,
+				1,
+				2,
+				2,
+			],
+		},
+	],
+};
+
+window.onload = function() {
+	let ctx = document.getElementById('canvas').getContext('2d');
+	window.myBar = new Chart(ctx, {
+		type    : 'bar',
+		data    : barChartData,
+		options : {
+			title      : {
+				display : false,
+				text    : 'Title Here',
+			},
+			legend     : {
+				display : true,
+			},
+			tooltips   : {
+				enabled : true,
+			},
+			responsive : true,
+            			scales     : {
+				xAxes : [
+					{
+						stacked       : true,
+						barPercentage : 0.4,
+						plugins       : {
+							datalabels : {
+								formatter : function(value, ctx) {
+									let sum = 0;
+									let dataArr = ctx.chart.data.datasets[0].data;
+									dataArr.map((data) => {
+										sum += data;
+									});
+									let percentage = (value * 100 / sum).toFixed(0) + '%';
+									return percentage;
+								},
+								font      : {
+									weight : 'normal',
+								},
+								color     : '#fff',
+							},
+						},
+					},
+				],
+				yAxes : [
+					{
+						stacked    : false,
+						ticks      : {
+							beginAtZero : true,
+							min         : 0,
+							max         : 24,
+						},
+						scaleLabel : {
+							display     : true,
+							labelString : 'Hours',
+						},
+					},
+					{
+						id      : 'bar-y-axis',
+						stacked : true,
+						display : false,
+						ticks   : {
+							beginAtZero : true,
+							min         : 0,
+							max         : 24,
+						},
+						type    : 'linear',
+					},
+				],
+			},
+		},
+	});
+};
+
+
+
+
+
+</script>
+
+</body>
+</html>

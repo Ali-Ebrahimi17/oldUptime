@@ -1,0 +1,160 @@
+/* @import url('https://fonts.googleapis.com/css?family=Noto+Sans&display=swap'); */
+
+body {
+	/* background: rgb(19, 19, 19); */
+	color: #fff;
+	/* box-sizing: border-box; */
+	/* font-family: 'Noto Sans', sans-serif; */
+	/* padding-bottom: 200px; */
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	/* justify-content: center; */
+	/* align-items: center; */
+	/* background: #353535; */
+	border: 1px solid #353535;
+	background: rgb(19, 19, 19);
+	font-size: 3rem;
+	color: #fff;
+	box-shadow: rgba(3, 8, 20, 0.1) 0px 0.15rem 0.5rem, rgba(2, 8, 20, 0.1) 0px 0.075rem 0.175rem;
+	height: 100%;
+	width: 100%;
+	border-radius: 4px;
+	transition: all 500ms;
+	overflow: hidden;
+}
+.card-outline {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	/* justify-content: center; */
+	/* align-items: center; */
+	/* background: #353535; */
+	border: 1px solid #353535;
+	background: rgb(19, 19, 19);
+	font-size: 3rem;
+	color: #fff;
+	box-shadow: rgba(3, 8, 20, 0.1) 0px 0.15rem 0.5rem, rgba(2, 8, 20, 0.1) 0px 0.075rem 0.175rem;
+	height: 100%;
+	width: 100%;
+	border-radius: 4px;
+	transition: all 500ms;
+	overflow: hidden;
+}
+
+.dash-layout {
+	height: 75vh;
+	margin: 10px;
+	margin-bottom: 25px;
+
+	display: grid;
+	gap: 1rem;
+
+	/* grid-template-rows: repeat(4, 45%); */
+	grid-template-rows: 430px 300px 480px 380px 310px;
+	grid-template-columns: 15% 84%;
+}
+@media screen and (min-width: 600px) {
+	.card-full {
+		grid-row: span 6 / auto;
+	}
+	.card-2tall {
+		grid-row: span 2 / auto;
+	}
+
+	.card-wide {
+		grid-column: span 1 / auto;
+	}
+}
+a {
+	text-decoration: none;
+	color: inherit;
+}
+a:hover {
+	text-decoration: none; /* no underline */
+	color: inherit;
+}
+.card-c {
+	text-align: center;
+}
+.c {
+	font-size: 3rem;
+	font-weight: bold;
+}
+.c-full {
+	font-size: 2rem;
+}
+
+.c-description {
+	font-size: 1rem;
+}
+.machine-info {
+	font-size: 0.8rem;
+}
+/* ul {
+	list-style-type: none;
+} */
+.machine-info-container {
+	display: flex;
+	
+	/* flex-direction: row; */
+	/* justify-content: space-between; */
+}
+.c2-form-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	font-size: 1rem;
+	height: 500px;
+}
+.image-holder {
+	/* float: left; */
+	width: 20%;
+	height: 300px;
+	/* object-fit: cover; */
+	/* overflow: hidden; */
+}
+.claim-image {
+	/* float: left; */
+	/* width: 200px; */
+	height: 100%;
+	/* object-fit: cover; */
+	/* overflow: hidden; */
+}
+
+.interim {
+	font-size: 0.8rem;
+}
+.c4-holder1 {
+	display: flex;
+	flex-direction: column;
+	font-size: 1rem;
+}
+.c4-holder2 {
+	display: flex;
+	flex-direction: row;
+	font-size: 1rem;
+}
+
+
+wrapper {
+	display: flex;
+	justify-content: space-evenly;
+	margin-bottom: 25px;
+}
+
+ side1 {
+	width: 75%;
+}
+
+side2 {
+
+	width: 25%;
+	
+}
+.card-body {
+	font-size: 1rem;
+}

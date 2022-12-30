@@ -1,0 +1,57 @@
+<% layout('layouts/boilerplate')%>
+
+<% let numb = 0 %>
+<% throughput.forEach(throughput => {%>
+<% if ( moment(throughput.createdAt).isSame(moment(), 'day')) { %>
+<% numb = numb +1 %>
+<% }; %>
+<% }) %>
+
+
+<div class="vetting-body">
+  <header id="vettingJumbotron">
+
+    <h1 id="vetting-title"><i class="fas fa-wrench"></i> <%= number %> MACHINES ON RED</h1>
+
+    <form class="form-inline float-left" action="/throughput/reds/<%= division %>" method="GET">
+      <div class="form-group">
+        <label for="search"></label>
+        <input class="form-control" type="text" name="buildNumber" placeholder="Search by build Number" autocomplete="off" />
+      </div>
+    </form>
+
+    <form class="form-inline" action="/throughput/reds/<%= division %>" value="" method="GET">
+      <button class="btn btn-md btn-danger" style="margin-left: 5px;"><i class="fas fa-times-circle"></i></button>
+      <!-- <h4 style="color: black; margin-left: 600px;"><strong><%= numb %> ADDED TODAY</strong></h4> -->
+
+  </header>
+
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 15px; height: 70vh;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 140px;">Build Number</th>
+        <th style="width: 120px;">Model</th>
+        <th style="width: 140px;">Inspector</th>
+        <th style="width: 100px;">Building</th>
+        <th style="width: 150px;">Put on Red</th>
+        <th style="width: 1165px;">Fault Details</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <% throughput.forEach(throughput => {%>
+      <tr class="d-flex">
+        <td style="height: 59px; width: 140px;"><a href="/throughput/<%= throughput._id %>"><%= throughput.buildNumber %></a></td>
+        <td style="width: 120px;"> <%= throughput.model %></td>
+        <td style="width: 140px;"> <%= throughput.inspector %></td>
+        <td style="width: 100px;"> <%= throughput.building %></td>
+        <td style="width: 150px;"> <em><%= throughput.createdAt.toDateString() %> <br> <%= moment(throughput.createdAt).fromNow() %></em></td>
+        <td style="width: 1165px;"> <%= throughput.faults.substring(0, 300) %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>

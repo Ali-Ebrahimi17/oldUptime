@@ -1,0 +1,49 @@
+<% layout('layouts/boilerplate')%>
+<div class="container">
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1>Update DOA 2021 Build</h1>
+    </div>
+
+
+    <div class="container form">
+      <form action="/claims/reallocate/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col">
+            <label for="area">Area Responsible</label>
+            <select class="form-control" type="text" name="claim[status]" autocomplete="off" required>
+              <option hidden><%= claim.status %></option>
+              <option>Open</option>
+              <option>Contained</option>
+              <option>Closed</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="area">S.C.C</label>
+            <select class="form-control" type="text" name="claim[scc]" autocomplete="off" required>
+              <option hidden><%= claim.scc %></option>
+              <option>Should</option>
+              <option>Could</option>
+              <option>Cannot</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="area">Closure Date</label>
+            <input class="form-control" type="date" name="claim[closedAt]" value="<%=  moment(claim.ClosedAt).format("DD/MM/YYYY") %>">
+            <div class="valid-feedback">Looks good</div>
+          </div>
+
+        </div>
+        <br>
+
+        <div class="form-group text-center">
+          <button class="btn btn-lg btn-success">Submit</button>
+        </div>
+      </form>
+
+
+
+    </div>
+  </div>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Uptime</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/stylesheets/home.css" />
+	</head>
+
+	<body class="d-flex text-center text-white bg-dark">
+		<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+			<header class="mb-auto">
+				<%- include('../views/partials/flash.ejs')%>
+				<div>
+					<!-- <h3 class="float-md-left mb-0">JCB</h3> -->
+					<nav class="nav nav-masthead justify-content-center">
+						<!-- <a class="nav-link active" aria-current="page" href="#">Home</a> -->
+						<!-- <a class="nav-link" href="/claims/4c/Training">Training</a> -->
+						<a class="nav-link" href="/claims/4c/Attachments">Attachments</a>
+						<a class="nav-link" href="/doa25pt/tracker/BHL">Backhoe</a>
+						<a class="nav-link" href="/claims/component4c/Cabs">Cab Systems</a>
+						<a class="nav-link" href="/doa25pt/tracker/CP">Compact Products</a>
+						<a class="nav-link" href="/doa25pt/tracker/EM">Earthmovers</a>
+						<a class="nav-link" href="/claims/component4c/HBU">HBU</a>
+						<a class="nav-link" href="/doa25pt/tracker/HP">Heavy Products</a>
+						<a class="nav-link" href="/doa25pt/tracker/LP">Landpower</a>
+						<a class="nav-link" href="/doa25pt/tracker/LDL">Loadall</a>
+						<a class="nav-link" href="/doa25pt/tracker/SD">Site Dumper</a>
+						<a class="nav-link" href="/dash/savannah-dashT3">Savannah</a>
+						<a class="nav-link" href="/doa25pt/tracker/TMS">Transmissions</a>
+						<a class="nav-link" href="/dash/group-utc">Group UTC Wall</a>
+						<a class="nav-link" href="/dash/group-fourc">Group RAG Status</a>
+						<!-- <a class="nav-link" href="/dash/group-topdealers/LDL">Group Dealer Top 10</a> -->
+						<!-- <% if(!currentUser) { %>
+            <a class="nav-link float-md-right" href="/login">Login</a>
+            <a class="nav-link float-md-right" href="/register">Sign Up</a>
+            <% } else { %>
+            <a class="nav-link float-md-right" href="/logout">Logout</a>
+            <% } %> -->
+					</nav>
+				</div>
+			</header>
+			<main class="px-3">
+				<h1>Quality Uptime</h1>
+				<!-- <p class="lead">
+          JCB UPTIME <br />
+          Some tect can go here. <br />
+          Some more narrative
+        </p> -->
+				<!-- <a
+          href="/claims"
+          class="btn btn-lg btn-secondary font-weight-bold border-white bg-white"
+          >Enter</a
+        > -->
+			</main>
+
+			<footer class="mt-auto text-white-50">
+				<!-- <p>&copy; 2020</p> -->
+				<p>Created by Ali Ebrahimi</p>
+			</footer>
+		</div>
+
+		<script src="/bootstrap/js/jquery.js"></script>
+		<script src="/bootstrap/js/bootstrap.min.js"></script>
+	</body>
+</html>

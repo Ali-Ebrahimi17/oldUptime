@@ -1,0 +1,67 @@
+<nav class="navbar navbar-light" style="background-color: #fcb026; height: 54px; position: fixed; width: 100%; z-index: 100">
+	<div style="display: flex; justify-content: space-between; width: 100%">
+		<div>
+			<% if (division === 'Training') { %>
+			<a href="/tCard/training"><img height="38px" src="/7z/content/images/jcb-logo.png" /></a>
+			<% } else if (area === 'quality') { %>
+
+			<a href="/tCard/qcs/all-checks/<%= division %>"><img height="38px" src="/7z/content/images/jcb-logo.png" /></a>
+			<% } else { %>
+			<a href="/tCard/operations"><img height="38px" src="/7z/content/images/jcb-logo.png" /></a>
+			<% } %>
+		</div>
+		<div>
+			<% if (division === 'Training') { %>
+			<a href="/tCard/training">
+				<span style="font-size: 32px; padding-top: 4px; padding-left: 6px; color: black; margin-right: 5px" class="fas fa-home icon-home"></span>
+			</a>
+			<% } else if (division && area && area === 'quality') { %>
+			<a href="/tCard/qcs/all-checks/<%= division %>">
+				<span style="font-size: 32px; padding-top: 4px; padding-left: 6px; color: black; margin-right: 5px" class="fas fa-home icon-home"></span>
+			</a>
+			<% } else { %>
+			<a href="/tCard/operations">
+				<span style="font-size: 32px; padding-top: 4px; padding-left: 6px; color: black; margin-right: 5px" class="fas fa-home icon-home"></span>
+			</a>
+
+			<% } %>
+		</div>
+		<% if ( area && area !== 'quality') { %>
+		<a href="/tCard/analysis">
+			<span style="font-size: 32px; padding-top: 4px; padding-left: 6px; color: black; margin-right: 5px" class="fa fa-chart-bar icon-home"></span>
+		</a>
+		<% } %> <% if ( area && area === 'quality') { %>
+		<a href="/tCard/qcs-dash">
+			<span style="font-size: 32px; padding-top: 4px; padding-left: 6px; color: black; margin-right: 5px" class="fa fa-chart-bar icon-home"></span>
+		</a>
+		<% if ((division && currentUser && currentUser.divisions && currentUser.divisions.includes(division) && currentUser.canAssignCardUsers) || (
+		division && currentUser && currentUser.isTCardAdmin )) { %>
+		<a href="/tCard/qcs-assign-card-users/<%= division %>">
+			<span
+				style="font-size: 32px; padding-top: 4px; padding-left: 6px; color: black; margin-right: 5px; font-size: 30px"
+				class="fas fa-user-check icon-home"
+			></span>
+		</a>
+		<% } %> <% } %>
+
+		<div style="width: 100%">
+			<h2 style="margin-right: 5%">Digital QASI</h2>
+		</div>
+		<div class="float-right" style="padding: 5px; width: 170px">
+			<% if ( area && area === 'quality') { %> <% } else { %> <% if (division != 'training') { %> <% if(!currentUser) { %>
+			<h4 style="font-weight: bold; color: black"><a href="/tCard/login">Login</a></h4>
+			<% } else {%>
+			<h4 style="font-weight: bold; color: black"><a href="/tCard/logout">Log out</a></h4>
+			<% } %> <% } %> <% } %>
+		</div>
+	</div>
+</nav>
+<nav class="navbar navbar-light header-bottom" style="position: fixed; width: 100%; margin-top: 50px; z-index: 100">
+	<div>
+		<div style="display: flex; justify-content: space-between">
+			<div class="header-bottom-other">
+				<p>J.C Bamford Excavators LTD</p>
+			</div>
+		</div>
+	</div>
+</nav>

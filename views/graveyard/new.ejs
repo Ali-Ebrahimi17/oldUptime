@@ -1,0 +1,57 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="newred-container" style="color: white;">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1>Add To Graveyard</h1>
+    </div>
+
+
+
+    <div class="col">
+      <form action="/graveyard/new/<%= division %>" method="POST">
+        <label for="buildNumber">Full Build Number</label>
+        <input class="form-control" type="text" name="graveyard[buildNumber]" required>
+
+        <input type="hidden" name="graveyard[division]" value="<%= division %>">
+
+        <label for="responsible">Responsible</label>
+        <input class="form-control" type="text" name="graveyard[responsible]" required>
+
+        <label for="area">Plan Fix Date</label>
+        <input class="form-control" type="date" name="graveyard[planFixDate]" required>
+
+        <label for="responsible">Area</label>
+        <input class="form-control" type="text" name="graveyard[faultArea]" required>
+
+
+        <label for="responsible">Time Taken</label>
+        <input class="form-control" type="text" name="graveyard[timeTaken]">
+
+
+    </div>
+
+
+
+    <div class="col">
+      <label for="faults">Fault</label>
+      <textarea style="height:110px;" class="form-control" name="graveyard[fault]" required></textarea>
+
+      <label for="faults">Re-Work Action</label>
+      <textarea style="height:110px; margin-bottom: 25px;" class="form-control" name="graveyard[reworkAction]" required></textarea>
+      <div class="form-group text-center">
+        <button class="btn btn-lg btn-danger btn-block ">Add To GY</button>
+      </div>
+    </div>
+
+
+
+
+    </form>
+  </div>
+  <div>
+    <a href="/graveyard/all/<%= division %>">Go Back</a>
+  </div>

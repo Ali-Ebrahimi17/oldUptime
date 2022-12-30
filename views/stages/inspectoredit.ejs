@@ -1,0 +1,26 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container">
+  <table class="table table-hover table-dark" style="font-size: 15px; width: 400px; margin: auto; ">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 400px;">Inspectors For <%= stage.name %> <a class="float-right" href="/stage/newchecker/<%= division %>/<%= stage._id %>"> <i class="fas fa-plus"></i></a></th>
+
+
+
+      </tr>
+    </thead>
+    <tbody>
+      <% stage.inspectors.forEach(function(inspector){ %>
+      <tr>
+        <td style="font-weight: bold;"><%= insector.name %> </td>
+        <th scope="row">
+          <form class="d-inline" action="/area/<%= area._id %>/email/<%= email._id %>?_method=DELETE" method="POST">
+            <button style="background-color: transparent; margin-top: -5px; color: red; font-weight: bold; border: none; font-size: 1.2rem;" class="btn btn-danger btn-sm float-right">X</button>
+          </form>
+        </th>
+      </tr>
+      <% }) %>
+
+    </tbody>
+  </table>

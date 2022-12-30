@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- <meta http-equiv="refresh" content="220"> -->
+  <title>Equipment Monitoring</title>
+  <link rel="icon" href="/home/jcb.png" />
+  <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+  <!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+  <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+  <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+  <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+  <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+  <link rel="stylesheet" href="/stylesheets/app.css" />
+  <link rel="stylesheet" href="/fontawesome/css/all.css" />
+
+  <style>
+    .update-history {
+      border: 1px solid rgb(221, 214, 214);
+      background-color: #e9e9e9;
+      /* border-radius: 5px; */
+      height: 46vh;
+      list-style-type: none;
+      padding-top: 10px;
+      overflow-x: hidden;
+      /* Hide horizontal scrollbar */
+      overflow-y: auto;
+      /* Add vertical scrollbar */
+    }
+
+    .update-history ul {
+      list-style-type: none;
+      margin-left: -30px;
+      color: black;
+    }
+
+    .upcoming-color {
+      background-color: #fcb026;
+
+    }
+
+    .upcoming-color:hover {
+      background-color: #fcb026;
+    }
+
+    .upcoming-text {
+      color: #fcb026;
+    }
+  </style>
+
+<body>
+  <%- include('../../views/partials/flash.ejs')%>
+
+
+  <!-- convert ms into HH:MM:SS -->
+  <% function msToTime(duration) { %>
+  <%  let milliseconds = parseInt((duration%1000)/100) %>
+  <%  seconds = (parseInt((duration/1000)%60)) %>
+  <%  minutes = parseInt((duration/(1000*60))%60) %>
+  <%  hours = parseInt((duration/(1000*60*60))%24); %>
+  <%   hours = (hours < 10) ? "0" + hours : hours;      %>
+  <%   minutes = (minutes < 10) ? "0" + minutes : minutes; %>
+  <%   seconds = (seconds < 10) ? "0" + seconds : seconds; %>
+  <%  return hours + ":" + minutes + ":" + seconds %>
+  <% } %>
+
+
+  <!--  download 1 & 0 Modal -->
+  <div class="modal fade" id="stop-start-modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+          <h3 style="text-align: center; margin: 8px;">Events Log</h3>
+        </div>
+        <div class="modal-body">
+          <fieldset>
+            <form id='theForm' action="/equipment-monitoring/machine-stop-start/<%= machine._id %>" method="POST">
+              <div class="row" style="color:black">
+                <div class="col">
+                  <label for="buildNumber">Start Date</label>
+                  <input class="form-control" type="date" name="startDate" style="margin-bottom: 10px;" value="" required>
+                  <input class="form-control" type="time" name="startTime" value="" required>
+                  <label for="buildNumber" style="color: red; font-size: 14px; font-weight: bold; margin-top: 20px; ">Maximum of 48 hours</label>
+                </div>
+                <div class="col">
+                  <label for="buildNumber">End Date</label>
+                  <input class="form-control" type="date" name="endDate" style="margin-bottom: 10px;" value="" required>
+                  <input class="form-control" type="time" name="endTime" value="" required style="margin-bottom: 10px;">
+
+                  <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                  <button id="btnSave" class="btn btn-success float-right" type='submit' style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                </div>
+              </div>
+            </form>
+          </fieldset>
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--  upcoming Stoppage Modal -->
+  <div class="modal fade" id="upcoming-stoppage" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+          <h3 style="text-align: center; margin: 8px;">Upcoming Stoppage</h3>
+        </div>
+        <div class="modal-body">
+          <fieldset>
+            <form action="/equipment-monitoring/create-new-andon" method="POST" onsubmit="upcomingButton.disabled = true; return true;">
+              <div class="row" style="color:black">
+                <div class="col">
+                  <input class="form-control" type="text" name="id" value="<%= machine._id %>" required hidden>
+
+                  <label for="exampleSelect1">Please select the stoppage Reason from the dropdown</label>
+                  <select class="form-control" name="concern" required>
+                    <option hidden></option>
+                    <% andonConcerns.forEach(c => { %>
+                    <option label="<%= c.name %>" value="<%= c.name %>">
+                      <% }) %>
+                  </select>
+
+                  <label for="exampleSelect1">How long until the stoppage?</label>
+                  <select class="form-control" name="type" style="margin-bottom: 12px;" required>
+                    <option hidden></option>
+                    <% andonTypes.forEach(t => { %>
+                      <option label="<%= t.name %>" value="<%= t.name %>">
+                        <% }) %>
+                  </select>
+
+
+
+                  <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                  <button id="upcomingButton" class="btn btn-success float-right" type='submit' style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                </div>
+
+              </div>
+            </form>
+          </fieldset>
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- andon modal -->
+
+  <div id="myModal" class=" modal fade modal modal1" style="height: fit-content; ">
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+      <% if (machine.state === 'Running') { %>
+      <!-- raise new andon -->
+
+      <div class="modal-content">
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+          <h3 style="text-align: center; margin: 8px;">Record Stoppage</h3>
+        </div>
+        <div class="modal-body">
+
+
+
+          <form action="/stoppage/new/<%= machine._id %>" method="POST" onsubmit="myButton.disabled = true; return true;">
+            <fieldset>
+              <input type="hidden" name="stoppage[vin]" value="<%= machine.vin %>">
+              <!-- <legend>Log New Concern</legend> -->
+              <div class="form-group" style="color:black">
+                <label for="exampleSelect1">Please select the Stoppage Type</label>
+                <select class="form-control" name="stoppage[type]" id="Type" required>
+                  <option hidden></option>
+                  <% types.forEach(type => { %>
+                  <option label="<%= type.name %>" value="<%= type.value %>">
+                    <% }) %>
+                    <div class="dropdown-divider"></div>
+                  <!-- <option>Unknown Stoppage or Breakdown - Request Team Leader</option>
+                  <option>Unknown Stoppage or Breakdown - Request Team Leader/Setter</option> -->
+                  <option>Unknown Stoppage or Breakdown - Request Team Leader/Setter/Maintenance</option>
+                </select>
+              </div>
+              <div class="form-group" style="color:black">
+                <label id="plannedLabel" for="exampleSelect1" hidden>Please select the stoppage type from the dropdown</label>
+                <select class="form-control" name="stoppage[concern]" id="planned" hidden>
+                  <option hidden></option>
+                  <% plannedConcerns.forEach(pl => { %>
+                  <option label="<%= pl.name %>" value="<%= pl.name %>">
+                    <% }) %>
+                    <!-- <option>Other</option> -->
+                </select>
+                <label id="unPlannedLabel" for="exampleSelect1" hidden>Please select the stoppage type from the dropdown</label>
+                <select class="form-control" name="stoppage[concern]" id="unPlanned" hidden>
+                  <option hidden></option>
+                  <% unplannedConcerns.forEach(upl => { %>
+                  <option label="<%= upl.name %>" value="<%= upl.name %>">
+                    <% }) %>
+                    <!-- <option>Other</option> -->
+                </select>
+                <label id="breakdownLabel" for="exampleSelect1" hidden>Please select the breakdown type from the dropdown</label>
+                <select class="form-control" name="stoppage[concern]" id="breakdown" hidden>
+                  <option hidden></option>
+                  <% breakdownConcerns.forEach(b=> { %>
+                  <option label="<%= b.name %>" value="<%= b.name %>">
+                    <% }) %>
+                    <!-- <option>Other</option> -->
+                </select>
+              </div>
+
+
+              <div class="form-group" style="color:black">
+                <label id="otherLabel" for="exampleTextarea" hidden>Give details of Other</label>
+                <textarea class="form-control" name="stoppage[detail]" id="other" rows="8" style="resize: none" hidden></textarea>
+              </div>
+
+              <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+              <!-- <button type="button" data-dismiss="My" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button> -->
+              <button type="submit" name="myButton" class="btn btn-success float-right" style=" margin-bottom: 10px;">Submit</button>
+              <!-- <button type="close" class="btn btn-danger float-right">Cancel</button> -->
+            </fieldset>
+          </form>
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+      </div>
+
+      <% } else { %>
+      <!-- update/close andon -->
+
+      <div class="modal-content">
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+          <h3 style="text-align: center; margin: 8px;">Stoppage Options</h3>
+        </div>
+        <div class="modal-body">
+          <% if  (stoppages.length > 0 && stoppages[0].open) { %>
+          <form action="/stoppage/edit/<%= stoppages[0]._id %>/<%= machine._id %>" method="POST" onsubmit="myButton.disabled = true; return true;">
+            <fieldset>
+
+
+
+              <div class="form-group" style="color:black">
+                <label for="exampleSelect1">Select Action</label>
+                <select class="form-control" name="stoppage[action]" id="UpdateReason" required>
+                  <option hidden></option>
+                  <option>End Stoppage</option>
+                  <option>Update Stoppage</option>
+                  <!-- <% if (stoppages[0].escalateTo) { %>
+                  <option>Escalate to <%= stoppages[0].escalateTo %></option>
+                  <% } %> -->
+                </select>
+              </div>
+
+
+
+              <div class="form-group" style="color:black">
+                <label id="newTypeLabel" for="exampleSelect1" hidden>Please confirm new type</label>
+                <select class="form-control" name="stoppage[type]" id="newType" required hidden>
+                  <option hidden></option>
+                  <option>Breakdown</option>
+                  <option>Planned Stoppage</option>
+                  <option>Unplanned Stoppage</option>
+                  <!-- <option>Unknown Stoppage or Breakdown - Request Team Leader</option>
+                  <option>Unknown Stoppage or Breakdown - Request Team Leader/Setter</option> -->
+                  <option>Unknown Stoppage or Breakdown - Request Team Leader/Setter/Maintenance</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="color:black">
+                <label id="newPlannedLabel" for="exampleSelect1" hidden>Please confirm the new stoppage reason</label>
+                <select class="form-control" name="stoppage[concern]" id="newPlanned" hidden>
+                  <option hidden></option>
+                  <% plannedConcerns.forEach(pl => { %>
+                  <option label="<%= pl.name %>" value="<%= pl.name %>">
+                    <% }) %>
+
+                </select>
+
+                <label id="newUnPlannedLabel" for="exampleSelect1" hidden>Please confirm the new stoppage reason</label>
+                <select class="form-control" name="stoppage[concern]" id="newUnPlanned" hidden>
+                  <option hidden></option>
+                  <% unplannedConcerns.forEach(upl => { %>
+                  <option label="<%= upl.name %>" value="<%= upl.name %>">
+                    <% }) %>
+
+                </select>
+                <label id="newBreakdownLabel" for="exampleSelect1" hidden>Please confirm the new stoppage reason</label>
+                <select class="form-control" name="stoppage[concern]" id="newBreakdown" hidden>
+                  <option hidden></option>
+                  <% breakdownConcerns.forEach(b=> { %>
+                  <option label="<%= b.name %>" value="<%= b.name %>">
+                    <% }) %>
+
+                </select>
+              </div>
+              <div class="form-group" style="color:black">
+                <label id="other1Label" for="exampleTextarea" hidden>Give details of Other</label>
+                <textarea class="form-control" name="stoppage[detail]" id="other1" rows="8" style="resize: none" hidden></textarea>
+              </div>
+
+              <div class="form-group" style="color:black">
+                <label id="closeLabel" for="exampleTextarea" hidden>Give details of action taken</label>
+                <textarea class="form-control" name="stoppage[closeNotes]" id="close" rows="8" style="resize: none" hidden ></textarea>
+              </div>
+              <% if  (stoppages[0].level.length > 0) { %>
+              <div class="form-group" style="color:black">
+                <label for="exampleSelect1">Clock Number</label>
+                <input class="form-control" type="password" name="clockNumber"  autocomplete="off" value="" required>
+              </div>
+              <% } %>
+
+              <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+              <!-- <button type="button" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button> -->
+              <button type="submit" name="myButton" class="btn btn-success float-right" style=" margin-bottom: 10px;">Submit</button>
+              <!-- <button type="close" class="btn btn-danger float-right">Cancel</button> -->
+            </fieldset>
+          </form>
+          <% } else { %>
+          <form></form>
+          <% } %>
+
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+      </div>
+
+      <% } %>
+
+
+    </div>
+  </div>
+
+
+  <!-- Programing Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+          <h3 style="text-align: center; margin: 8px;">Programming Mode</h3>
+        </div>
+        <div class="modal-body">
+
+          <% if (machine.programming) { %>
+          <div>
+            <form method='POST' action='/stoppage/outProgram/<%= machine._id %>'>
+              <fieldset>
+
+                <div class="form-group" style="color:black">
+                  <label id="closeLabel" for="exampleTextarea">Would you like to remove <%= machine.machineName %> from programming mode? </label>
+                  <div class="form-group" style="color:black">
+                    <label for="exampleSelect1">Setter Code</label>
+                    <input class="form-control" type="password" name="clockNumber"  autocomplete="off" value="" required>
+                  </div>
+                  <% if (machine.lastProgrammeNote) { %>
+                  <textarea class="form-control" id="close" rows="8" style="resize: none" disabled><%= machine.lastProgrammeNote  %></textarea>
+                  <% } else { %>
+                  <textarea class="form-control" id="close" rows="8" style="resize: none" disabled></textarea>
+                  <% } %>
+                </div>
+                <div class="form-group" style="color:black; margin-top: 20px; ">
+                  <label for="exampleSelect1">Put into programming mode on <%= moment(machine.lastProgrammeDate).format("DD/MM/YYYY - HH:mm")  %></label>
+                </div>
+                <div style="margin-top: -50px;">
+                  <button type="button" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                  <button href="/stoppage/outProgram/<%= machine._id %>" class="btn btn-success float-right" style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</>
+
+                </div>
+
+              </fieldset>
+            </form>
+          </div>
+
+          <% } else { %>
+          <div>
+            <form method='POST' action='/stoppage/inProgram/<%= machine._id %>'>
+              <fieldset>
+                <div class="form-group" style="color:black">
+                  <label for="exampleSelect1">Would you like to put <%= machine.machineName %> into programming mode? </label>
+                </div>
+                <div class="form-group" style="color:black">
+                  <label for="exampleSelect1">Setter Code</label>
+                  <input class="form-control" type="password" name="clockNumber"  autocomplete="off" value="" required>
+                </div>
+                <div class="form-group" style="color:black">
+                  <label id="closeLabel" for="exampleTextarea">Please give details</label>
+                  <textarea class="form-control" name="notes" rows="8" style="resize: none" required></textarea>
+                </div>
+                <button type="button" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+                <button type='submit' class="btn btn-success float-right" style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+                <!-- <button type="close" class="btn btn-danger float-right">Cancel</button> -->
+              </fieldset>
+            </form>
+
+          </div>
+
+          <% } %>
+
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- machine notes modal -->
+  <div class="modal fade" id="machine_notes_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <% if (machine.programming) { %>
+        <div style="background-color: rgb(252, 176, 38); height: 50px; margin-top: -10px; padding-top: 2px;">
+          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+
+          <h3 style="text-align: center; margin: 8px;"><%= machine.machineName %> Notes</h3>
+        </div>
+
+        <% } else { %>
+        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+          <h3 style="text-align: center; margin: 8px;"><%= machine.machineName %> Notes</h3>
+        </div>
+
+        <% } %>
+
+
+        <div class="modal-body">
+          <form method='POST' action='/equipment-monitoring/addMachineNotes/<%= machine._id %>'>
+            <fieldset>
+              <div style="color:black;">
+                <label for="message-text" class="col-form-label">New Note</label>
+              </div>
+
+              <div class="form-group" style="color:black;">
+                <textarea class="form-control" name='body' rows="3" id="message-text" required></textarea>
+
+              </div>
+              <div style="display: flex; justify-content: flex-end;">
+                <button class="btn btn-success" type="submit" style="margin-left: 8px;">Add Note</button>
+
+              </div>
+              <div class="form-group" style="color:black">
+                <label id="closeLabel" for="exampleTextarea">Previous Notes</label>
+                <div class="form-group update-history">
+                  <ul>
+                    <% for (let note of notes) { %>
+
+                    <li><strong><em><%= moment(note.createdAt).format("DD/MM/YYYY - HH:mm") %></em></strong><br>
+                      <%=  note.body %><br>
+                      <% if (note.read) { %>
+                      <span style="color: rgb(0, 196, 70);">Acknowledged <em><%= moment(note.createdAt).format("DD/MM/YYYY - HH:mm") %></em></span>
+                      <% } else { %>
+                      <span style="color: red;">Not Acknowledged</span>
+                      <% } %>
+                    </li>
+                    <hr style="width: 99%; margin-left: -2px; background-color: rgb(202, 196, 196); height: 1px;">
+                    <% } %>
+                  </ul>
+                </div>
+
+                <div class="form-group" style="color:black; margin-top: 25px; ">
+                  <label for="exampleSelect1"></label>
+                </div>
+                <div style="margin-top: -50px;">
+
+                  <button type="button" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Close</button>
+                  <a href="/equipment-monitoring/readNotes/<%= machine._id %>" class="btn btn-info float-right" style=" margin-bottom: 10px; color: white; border-radius: 4px;">Acknowledge Notes</a>
+                </div>
+            </fieldset>
+          </form>
+        </div>
+        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div class="container-fluid">
+
+
+    <div class="row header-top">
+
+      <div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+      </div>
+      <div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+        <!-- <span  style="font-size: 19px; padding-top: 2px; margin-right: 4px; color: black; font-weight: bold; " >Last Update:  <%= moment(update.lastUpdate).format("DD/MM/YYYY - HH:mm:ss") %> </span> -->
+        <!-- <a href="/equipment-monitoring/home">
+                <span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 5px" class="fas fa-home icon-home"></span>
+            </a> -->
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-main">
+
+        <div class="row">
+
+
+
+          <div style=" width: 100%; display: flex; flex-direction: column;">
+
+
+            <div>
+              <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center;"><a href="/equipment-monitoring/business-unit/<%=machine.shortBu %>"><%= machine.businessUnit %></a></h1>
+              <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin-bottom: 16px; text-align: center"><a href="/equipment-monitoring/business-unit/<%=machine.shortBu %>"><%= machine.machineName %></a></h1>
+              <span style="margin-top: -75px; margin-right: 10px;" class='float-right'>
+                <a type="button" class="btn" data-toggle="modal" data-target="#stop-start-modal"><i class="fas fa-stopwatch"></i></a>
+                <!-- Button trigger modal -->
+                <% if (unReadNotes > 0) { %>
+                <a type="button" class="btn" data-toggle="modal" data-target="#machine_notes_modal"><i style="font-size: 40px; color: red;" class="far fa-comment-dots"></i></a>
+                <% } else { %>
+                <a type="button" class="btn" data-toggle="modal" data-target="#machine_notes_modal"><i style="font-size: 40px; color: rgb(221, 202, 202);" class="far fa-comment-dots"></i></a>
+                <%  } %>
+
+                <a type="button" class="btn" href='/equipment-monitoring/help' target="_blank" fullscreen=yes><i class="fas fa-info"></i></a>
+                <a type="button" class="btn" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-wrench"></i></a>
+              </span>
+
+            </div>
+          </div>
+
+
+          <div id="example1"></div>
+
+
+          <div style=" display: flex; width: 100%; justify-content: space-around; height: 91px; margin-bottom: 18px;  padding: 8px 0px 8px 0px; border-top: 3px solid rgb(26, 28, 30); border-bottom: 3px solid rgb(26, 28, 30)">
+
+
+
+            <div class="col-measure" style=" float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Running Time at <span style="font-size: 26px;"><%= moment(machine.thelastSignal).format("HH:mm:ss") %></span></h1>
+              <h1 class="line-measure-value-top text-warning"><%= sumOfRunningTime %></h1>
+            </div>
+
+            <div class="col-measure" style=" float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Planned Stoppage</h1>
+              <h1 class="line-measure-value-top text-grey"><%= sumOfBdTime %></h1>
+            </div>
+
+            <div class="col-measure" style=" float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Unplanned Stoppage</h1>
+              <h1 class="line-measure-value-top text-info"><%= sumOfUnknownBdTime %></h1>
+            </div>
+
+            <div class="col-measure" style=" float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Breakdown</h1>
+              <h1 class="line-measure-value-top" style="color: rgb(255, 10, 10)"><%= sumOfWireTime %></h1>
+            </div>
+
+          </div>
+
+
+          <div class="col-lg-6">
+            <h1 style="font-size: 24px; color: white; margin: 0px 0px 13px 0px; text-align: center">Current Shift Performance</h1>
+
+            <div class="progress" style="margin-left: 50px; height: 60px; border-radius: 0; margin-bottom: 30px; width: auto; background-color: black;">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgba(255, 123, 0, 0.8); font-size: 20px; color: black; font-weight: bold; width: <%= teff12 %>%"></div>
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(255, 123, 0); font-size: 20px; color: black; font-weight: bold; width: <%= eff12 %>%"><span style="margin-left: <%= margin %>px;"><%= machine.eff %>%</span></div>
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: grey;  font-size: 20px; color: black; font-weight: bold; width: <%= knownBdPercent %>%"><%= knownBdPercent %>%</div>
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(0, 173, 238);  font-size: 20px; color: black; font-weight: bold; width: <%= unKnownBdPercent %>%"><%= unKnownBdPercent %>%</div>
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: purple; font-size: 20px; color: black; font-weight: bold;  width: <%= partsTimePercent %>%"><%= partsTimePercent %>%</div>
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(238, 28, 37); font-size: 20px; color: black; font-weight: bold; width: <%= wireTimePercent %>%"><%= wireTimePercent %>%</div>
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(2, 2, 2); font-size: 20px; color: white; font-weight: bold; width: <%= remaining %>%"><%= remaining %>%</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-left: 48px; margin-top: -10px; margin-bottom: 10px;">
+              <div style="display: flex;">
+                <h1 style="font-size: 20px; color: white; margin-top: -10px;  text-align: center">Running Time</h1>
+                <div style="height: 16px; width: 30px; background-color: rgb(255, 123, 0); margin-left: 10px; margin-top: -5px;"></div>
+              </div>
+              <div style="display: flex;">
+                <h1 style="font-size: 20px; color: white; margin-top: -10px;  text-align: center">Planned Stoppage</h1>
+                <div style="height: 16px; width: 30px; background-color: grey; margin-left: 10px; margin-top: -5px;"></div>
+              </div>
+              <div style="display: flex;">
+                <h1 style="font-size: 20px; color: white; margin-top: -10px;  text-align: center">Unplanned Stoppage</h1>
+                <div style="height: 16px; width: 30px; background-color: rgb(0, 173, 238); margin-left: 10px; margin-top: -5px;"></div>
+              </div>
+              <div style="display: flex;">
+                <h1 style="font-size: 20px; color: white; margin-top: -10px;  text-align: center">Breakdown</h1>
+                <div style="height: 16px; width: 30px; background-color: rgb(238, 28, 37); margin-left: 10px; margin-top: -5px;"></div>
+              </div>
+            </div>
+
+
+
+            <div style=" padding-left: 48px; margin-bottom: 2%">
+              <% if (machine.inShift && data.length > 0) { %>
+              <canvas id="bar-chart-horizontal" height="158"></canvas>
+              <hr style="position: relative;  border-color: white; margin-top: -6%;" />
+
+              <% } else {  %>
+              <div style="display: flex; justify-content: center; margin-top: 15px;">
+                <div style="display: flex;">
+                  <h1 style="font-size: 18px; color: white; font-weight: bold;   text-align: center">No Current Stoppages</h1>
+
+                </div>
+
+              </div>
+              <div style="border-bottom: 1px solid white; border-left: 1px solid white; height: 379px; width: 100%; margin-bottom: 4px;">
+
+              </div>
+              <% } %>
+
+
+            </div>
+
+            <div style="width: 99vw;">
+              <% if (machine.inShift) { %>
+              <div style="color: white; text-align: center;">
+                <h6 style="font-size: 20px;">Current Shift (<%= moment(machine.shiftStart).format("HH:mm") %> - <%= moment(machine.shiftEnd).format("HH:mm") %>)</h6>
+              </div>
+              <!-- <div style="color: rgb(252, 176, 38); text-align: center;">
+                <h6 style="font-size: 20px;">Last Signal: <%= moment(machine.thelastSignal).format("HH:mm:ss") %></h6>
+              </div> -->
+              <% } %>
+            </div>
+
+          </div>
+
+          <div class="col-lg-6">
+
+            <% if (stoppages.length > 0) { %>
+            <h1 style="font-size: 24px; color: white; margin: 0px 0px 13px 0px; text-align: center"> Total Stoppages ( <%= sumOfStoppages %> )</h1>
+            <% } else { %>
+            <h1 style="font-size: 24px; color: white; margin: 0px 0px 13px 0px; text-align: center"> No Current Stoppages </h1>
+            <%  } %>
+            <div>
+
+              <% if (machine.programming) { %>
+              <div type="button" class="btn btn-danger btn-lg btn-block" style="height: 61px; background-color: grey; border: none; color: black; font-size: 30px; margin-bottom: 25px; border-radius: 0;" disabled><i style="font-size:30px; color: black;" class="fas fa-exclamation"></i> PROGRAMMING MODE</div>
+              <% } else { %>
+              <% if (machine.inShift) { %>
+              <div style="display: flex; justify-content: space-evenly;">
+                <div style="flex: 1; margin-right: 7px;">
+                  <a id="myBtn" data-toggle="modal" data-target="#myModal" type="button" class="btn btn-danger btn-lg btn-block" style="height: 61px; <% if (machine.state === 'Running') { %>background-color: red;<% } else { %>background-color: rgb(0, 196, 70);<% } %>  border: none; color: black; font-size: 30px; margin-bottom: 25px; border-radius: 0;">
+                    <i style="font-size:30px; color: black;" class="fas fa-exclamation"></i>
+                    <% if (machine.state === 'Running') { %> RECORD STOPPAGE<% } else { %> STOPPAGE OPTIONS<% } %></a>
+                </div>
+                <div style="flex: 1; margin-left: 7px;">
+                  <% if (machine.state === 'Running' && andonConcerns.length > 0 ) { %>
+                  <a data-toggle="modal" data-target="#upcoming-stoppage" type="button" class="btn btn-danger btn-lg btn-block upcoming-color" style="height: 61px;  border: none; color: black; font-size: 30px; margin-bottom: 25px; border-radius: 0;">
+                    <i style="font-size:30px; color: black;" class="fas fa-clock"></i>
+                    UPCOMING STOPPAGE</a>
+
+                  <% } else { %>
+                  <a class="btn btn-danger btn-lg btn-block" style="height: 61px;  border: none; color: black; font-size: 30px; margin-bottom: 25px; border-radius: 0; background-color: grey;">
+                    <i style="font-size:30px; color: black;" class="fas fa-exclamation"></i>
+                    UPCOMING STOPPAGE</a>
+                  <% } %>
+
+                </div>
+              </div>
+
+              <% } %>
+
+              <% if (!machine.inShift){ %>
+              <div type="button" class="btn btn-danger btn-lg btn-block" style="height: 61px; background-color: grey; border: none; color: black; font-size: 30px; margin-bottom: 25px; border-radius: 0;" disabled><i style="font-size:30px; color: black;" class="fas fa-exclamation"></i> MACHINE NOT IN SHIFT</div>
+              <% } %>
+              <% } %>
+            </div>
+
+            <table class="table table-hover table-dark" style="font-size: 16px;  height: 440px; text-align: center; background-color: rgb(44, 47, 49); ">
+              <thead style="font-size: 16.8px; ">
+
+                <tr class="d-flex">
+                  <th style="width: 2vw;">#</th>
+                  <th style="width: 7vw;">Start Time</th>
+                  <th style="width: 7vw;">End Time</th>
+                  <th style="width: 7vw;">Total Time</th>
+                  <th style="width: 10vw;">Type</th>
+                  <th style="width: 15.5vw;">Reason</th>
+
+                </tr>
+              </thead>
+              <tbody>
+
+                <% let x = 0 %>
+                <% stoppagesAll.forEach(stoppage => { %>
+                <% if (stoppage.createdAt > new Date(machine.shiftStart)) { %>
+                <% openTime = Date.now() - new Date(stoppage.createdAt) %>
+                <% } else { %>
+                <% openTime = Date.now() - new Date(machine.shiftStart) %>
+                <% } %>
+                <tr style="text-align: center;" class="<% if (stoppage.name === 'andon') { %>upcoming-text<% } %>">
+                  <%  x++ %>
+                  <td style="width: 2vw;"><%= x %></td>
+                  <% if (stoppage.createdAt > new Date(machine.shiftStart)) { %>
+                  <td style="width: 7vw;"> <%= moment(stoppage.startTime).format("HH:mm:ss") %></td>
+                  <% } else { %>
+                  <td style="width: 7vw;"> <%= moment(machine.shiftStart).format("HH:mm:ss") %></td>
+                  <% } %>
+                  <% if (stoppage.endTime) { %>
+                  <td style="width: 7vw;"><%= moment(stoppage.endTime).format("HH:mm:ss") %></td>
+                  <%  if (stoppage.createdAt > new Date(machine.shiftStart)) { %>
+                  <td style="width: 7vw;"><%= msToTime(stoppage.endTime - stoppage.startTime) %></td>
+                  <% } else { %>
+                  <td style="width: 7vw;"><%= msToTime(stoppage.endTime - new Date(machine.shiftStart)) %></td>
+                  <% } %>
+                  <% } else { %>
+                  <td style="width: 7vw;">--</td>
+                  <td style="width: 7vw;"><%= msToTime(openTime) %></td>
+                  <% } %>
+
+                  <td style="width: 10vw;"><%= stoppage.type %></td>
+                  <% if (stoppage.concern === 'Other') { %>
+                  <!-- Modal -->
+                  <div class="modal fade " id="staticBackdrop<%= x %>" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                      <div class="modal-content">
+                        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+                          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+                          <h3 style="text-align: center; margin: 8px;">Stoppage Detail</h3>
+                        </div>
+                        <div class="modal-body">
+                          <div style="margin-bottom: 10px;">
+                            <%= stoppage.detail %>
+                          </div>
+
+                          <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Close</button>
+                        </div>
+
+                        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+                          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+                        </div>
+
+                      </div>
+
+                    </div>
+                  </div>
+                  <!-- end Modal -->
+                  <td style="width: 15.5vw;"><%= stoppage.concern %> <i style=" margin-left: 15px; margin-right: 25px;" class="far fa-comment-dots btn btn-info" data-toggle="modal" data-target="#staticBackdrop<%= x %>"></i></td>
+                  <% } else if (stoppage.name === 'andon') { %>
+                  <!-- Modal -->
+                  <div class="modal fade " id="removeUpcoming<%= x %>" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-md">
+                      <div class="modal-content">
+                        <div style="background-color: rgb(252, 176, 38); height: 50px;">
+                          <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+                          <h3 style="text-align: center; margin: 8px;">Remove Upcoming Stoppage</h3>
+                        </div>
+                        <div class="modal-body">
+                          <div style="margin-top: 20px; ">
+                            Are you sure?
+
+                          </div>
+                          <div style="margin-top: -25px;">
+                            <button type="removeButton" id="modalClose" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 6px; color: white; border-radius: 4px;">Cancel</button>
+                            <a href="/equipment-monitoring/remove-andon/<%= stoppage._id %>/<%= machine._id %>" class="btn btn-success float-right" type='submit' style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</a>
+                          </div>
+
+
+
+                        </div>
+
+                        <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+                          <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+                        </div>
+
+                      </div>
+
+                    </div>
+                  </div>
+                  <!-- end Modal -->
+                  <td style="width: 15.5vw;"><%= stoppage.concern %><span><i class="fa fa-trash float-right" style="margin-right:15px; cursor: pointer;" aria-hidden="true" data-toggle="modal" data-target="#removeUpcoming<%= x %>"></i></span></td>
+                  <% } else { %>
+                  <td style="width: 15.5vw;"><%= stoppage.concern %></td>
+                  <% } %>
+                </tr>
+                <% }) %>
+
+              </tbody>
+            </table>
+            <!-- <div class="col-lg-12" style="margin-top: 28px; display: flex; justify-content: space-evenly;">
+                        <button type="button" class="btn btn-danger btn-lg" style="font-size: 30px; width: 500px; background-color: rgb(238, 28, 37)">Parts Require Re Work <i style="font-size: 30px" class="far fa-thumbs-down"></i></button>
+                        <!-- <button type="button" class="btn btn-success btn-lg" style="background-color: rgb(0, 169, 79); font-size: 30px; width: 350px">Good Part  <i style="font-size: 30px" class="far fa-thumbs-up"></i></button> -->
+
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid footer">
+
+    <div class="row header-top">
+      <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+        <img height="24px" src="/7z/content/images/df.png">
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+        J.C. Bamford Excavators LTD &copy; 2022
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let dis = document.getElementById('Type')
+
+    dis.onchange = function() {
+      if (this.value === 'Breakdown') {
+        document.getElementById('breakdownLabel').hidden = false
+        document.getElementById('breakdown').hidden = false
+        document.getElementById('breakdown').required = true
+        document.getElementById('plannedLabel').hidden = true
+        document.getElementById('planned').hidden = true
+        document.getElementById('planned').value = null
+        document.getElementById('unPlannedLabel').hidden = true
+        document.getElementById('unPlanned').hidden = true
+        document.getElementById('unPlanned').value = null
+        document.getElementById('otherLabel').hidden = true
+        document.getElementById('other').hidden = true
+        document.getElementById('other').value = null
+      } else {
+        document.getElementById('breakdown').required = false
+      }
+      if (this.value === 'Planned Stoppage') {
+        document.getElementById('breakdownLabel').hidden = true
+        document.getElementById('breakdown').hidden = true
+        document.getElementById('breakdown').value = null
+        document.getElementById('plannedLabel').hidden = false
+        document.getElementById('planned').hidden = false
+        document.getElementById('planned').required = true
+        document.getElementById('unPlannedLabel').hidden = true
+        document.getElementById('unPlanned').hidden = true
+        document.getElementById('unPlanned').value = null
+        document.getElementById('otherLabel').hidden = true
+        document.getElementById('other').hidden = true
+        document.getElementById('other').value = null
+      } else {
+        document.getElementById('planned').required = false
+      }
+      if (this.value === 'Unplanned Stoppage') {
+        document.getElementById('breakdownLabel').hidden = true
+        document.getElementById('breakdown').hidden = true
+        document.getElementById('breakdown').value = null
+        document.getElementById('plannedLabel').hidden = true
+        document.getElementById('planned').hidden = true
+        document.getElementById('planned').value = null
+        document.getElementById('unPlannedLabel').hidden = false
+        document.getElementById('unPlanned').hidden = false
+        document.getElementById('unPlanned').required = true
+        document.getElementById('otherLabel').hidden = true
+        document.getElementById('other').hidden = true
+        document.getElementById('other').value = null
+      } else {
+        document.getElementById('unPlanned').required = false
+      }
+      if (this.value === 'Unknown Stoppage or Breakdown - Request Team Leader/Setter/Maintenance') {
+        document.getElementById('breakdownLabel').hidden = true
+        document.getElementById('breakdown').hidden = true
+        document.getElementById('breakdown').value = null
+        document.getElementById('breakdown').required = false
+        document.getElementById('plannedLabel').hidden = true
+        document.getElementById('planned').hidden = true
+        document.getElementById('planned').value = null
+        document.getElementById('planned').required = false
+        document.getElementById('unPlannedLabel').hidden = true
+        document.getElementById('unPlanned').hidden = true
+        document.getElementById('unPlanned').required = false
+        document.getElementById('otherLabel').hidden = true
+        document.getElementById('other').hidden = true
+        document.getElementById('other').value = null
+        document.getElementById('other').required = false
+      }
+
+    }
+
+    let dis1 = document.getElementById('planned')
+
+    dis1.onchange = function() {
+      if (this.value === 'Other') {
+        document.getElementById('otherLabel').hidden = false
+        document.getElementById('other').hidden = false
+        document.getElementById('other').required = true
+      } else {
+        document.getElementById('otherLabel').hidden = true
+        document.getElementById('other').hidden = true
+        document.getElementById('other').required = false
+      }
+    }
+    let dis2 = document.getElementById('unPlanned')
+
+    dis2.onchange = function() {
+      if (this.value === 'Other') {
+        document.getElementById('otherLabel').hidden = false
+        document.getElementById('other').hidden = false
+        document.getElementById('other').required = true
+      } else {
+        document.getElementById('otherLabel').hidden = true
+        document.getElementById('other').hidden = true
+        document.getElementById('other').required = false
+      }
+    }
+    let dis3 = document.getElementById('breakdown')
+
+    dis3.onchange = function() {
+      if (this.value === 'Other') {
+        document.getElementById('otherLabel').hidden = false
+        document.getElementById('other').hidden = false
+        document.getElementById('other').required = true
+      } else {
+        document.getElementById('otherLabel').hidden = true
+        document.getElementById('other').hidden = true
+        document.getElementById('other').required = false
+      }
+    }
+  </script>
+  <script>
+    let dis4 = document.getElementById('UpdateReason')
+
+    dis4.onchange = function() {
+      if (this.value === 'End Stoppage') {
+        document.getElementById('closeLabel').hidden = false
+        document.getElementById('close').hidden = false
+        // document.getElementById('newReason').value = null
+        // document.getElementById('newType').value = null
+        document.getElementById('other1').value = null
+      } else {
+        document.getElementById('closeLabel').hidden = true
+        document.getElementById('close').hidden = true
+      }
+      if (this.value === 'Update Stoppage') {
+        document.getElementById('newTypeLabel').hidden = false
+        document.getElementById('newType').hidden = false
+        document.getElementById('newType').required = true
+        // document.getElementById('newReasonLabel').hidden = false
+        // document.getElementById('newReason').hidden = false
+        // document.getElementById('newReason').required = true
+
+      } else {
+        document.getElementById('newTypeLabel').hidden = true
+        document.getElementById('newType').hidden = true
+        document.getElementById('newType').required = false
+        // document.getElementById('newReasonLabel').hidden = true
+        // document.getElementById('newReason').hidden = true
+        // document.getElementById('newReason').required = false
+
+      }
+    }
+
+    let dis5 = document.getElementById('newType')
+
+    dis5.onchange = function() {
+      if (this.value === 'Breakdown') {
+        document.getElementById('newBreakdownLabel').hidden = false
+        document.getElementById('newBreakdown').hidden = false
+        document.getElementById('newBreakdown').required = true
+      } else {
+        document.getElementById('newBreakdownLabel').hidden = true
+        document.getElementById('newBreakdown').hidden = true
+        document.getElementById('newBreakdown').required = false
+        document.getElementById('newBreakdown').value = null
+      }
+      if (this.value === 'Planned Stoppage') {
+        document.getElementById('newPlannedLabel').hidden = false
+        document.getElementById('newPlanned').hidden = false
+        document.getElementById('newPlanned').required = true
+      } else {
+        document.getElementById('newPlannedLabel').hidden = true
+        document.getElementById('newPlanned').hidden = true
+        document.getElementById('newPlanned').required = false
+        document.getElementById('newPlanned').value = null
+      }
+      if (this.value === 'Unplanned Stoppage') {
+        document.getElementById('newUnPlannedLabel').hidden = false
+        document.getElementById('newUnPlanned').hidden = false
+        document.getElementById('newUnPlanned').required = true
+      } else {
+        document.getElementById('newUnPlannedLabel').hidden = true
+        document.getElementById('newUnPlanned').hidden = true
+        document.getElementById('newUnPlanned').required = false
+        document.getElementById('newUnPlanned').value = null
+      }
+    }
+  </script>
+
+
+
+
+
+  <script>
+    Chart.defaults.global.defaultFontColor = "#fff";
+    Chart.defaults.global.defaultFontSize = "16";
+    Chart.defaults.global.defaultFontFamily = "Ubuntu";
+
+
+
+    new Chart(document.getElementById("bar-chart-horizontal"), {
+      type: 'horizontalBar',
+
+      data: {
+        labels: <%- JSON.stringify(axisLabels) %>,
+        labels2: <%- JSON.stringify(secondLabels) %>,
+
+        datasets: [{
+          //   label: "Population (millions)",
+          backgroundColor: <%- JSON.stringify(colors) %>,
+          data: <%- JSON.stringify(data) %>,
+        }]
+      },
+      options: {
+
+        tooltips: {
+          enabled: false
+        },
+        plugins: {
+          datalabels: {
+            anchor: 'end',
+            align: 'right',
+            formatter: function(value, context, values) {
+              return context.chart.data.labels2[context.dataIndex];
+            },
+            // font: {
+            // //   weight: 'bold',
+            //   size: 15,
+            // }
+          }
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: true,
+              color: '#fff',
+              zeroLineColor: '#fff',
+              lineWidth: 0,
+              zeroLineWidth: 1
+            },
+            scaleLabel: {
+              display: true,
+              labelString: 'Minutes'
+            },
+            ticks: {
+              fontSize: 12,
+              beginAtZero: true,
+              min: 0,
+              max: <%= max %>,
+              // maxTicksLimit: 5,
+              // stepSize: 5,
+              callback: function(value) {
+                if (value % 5) return "";
+                return value;
+              },
+
+            }
+          }],
+          yAxes: [{
+
+          }],
+
+        },
+
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'Pareto of Stoppages',
+
+        }
+      }
+    });
+  </script>
+
+
+
+
+
+</body>
+
+</html>

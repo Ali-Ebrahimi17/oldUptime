@@ -1,0 +1,88 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="stages-wrapper">
+  <div>
+    <table class="table table-hover table-dark" style="font-size: 15px; width: 320px; margin: auto; ">
+      <thead>
+        <tr class="d-flex">
+          <th style="width: 320px; font-size: 20px; text-align: center;"><%= stage19.length %> MACHINES IN STAGE 19</th>
+        </tr>
+        <tr class="d-flex">
+          <th style="width: 140px;">Build Number</th>
+          <th style="width: 180px;">Date/Time in</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let b of stage19){ %>
+        <tr class="d-flex">
+          <td style=" width: 140px"><%= b.buildNo %></td>
+          <td style=" width: 180px"><%= moment(b.dateToStage).format("DD/MM/YYYY - HH:mm") %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <table class="table table-hover table-dark" style="font-size: 15px; width: 320px; margin: auto; ">
+      <thead>
+        <tr class="d-flex">
+          <th style="width: 320px; font-size: 20px; text-align: center;"><%= stage20.length %> MACHINES IN STAGE 20</th>
+        </tr>
+        <tr class="d-flex">
+          <th style="width: 140px;">Build Number</th>
+          <th style="width: 180px;">Date/Time in</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let b of stage20){ %>
+        <tr class="d-flex">
+          <td style=" width: 140px"><%= b.buildNo %></td>
+          <td style=" width: 180px"><%= moment(b.dateToStage).format("DD/MM/YYYY - HH:mm") %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <table class="table table-hover table-dark" style="font-size: 15px; width: 320px; margin: auto; ">
+      <thead>
+        <tr class="d-flex">
+          <th style="width: 320px; font-size: 20px; text-align: center;"><%= stage21.length %> MACHINES IN STAGE 21</th>
+        </tr>
+        <tr class="d-flex">
+          <th style="width: 140px;">Build Number</th>
+          <th style="width: 180px;">Date/Time in</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let b of stage21){ %>
+        <tr class="d-flex">
+          <td style=" width: 140px"><%= b.buildNo %></td>
+          <td style=" width: 180px"><%= moment(b.dateToStage).format("DD/MM/YYYY - HH:mm") %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <table class="table table-hover table-dark" style="font-size: 15px; width: 320px; margin: auto; ">
+      <thead>
+        <tr class="d-flex">
+          <th style="width: 320px; font-size: 20px; text-align: center;"><%= stage25.length %> SIGNED OUT TODAY</th>
+        </tr>
+        <tr class="d-flex">
+          <th style="width: 140px;">Build Number</th>
+          <th style="width: 180px;">Date/Time in</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let b of stage25){ %>
+        <tr class="d-flex">
+          <td style=" width: 140px"><%= b.buildNo %></td>
+          <td style=" width: 180px"><%= moment(b.dateToStage).format("DD/MM/YYYY - HH:mm") %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>

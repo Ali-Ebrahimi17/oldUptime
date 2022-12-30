@@ -1,0 +1,48 @@
+<% layout('layouts/boilerplate')%>
+
+<div style="display: flex; justify-content: center">
+	<h1>Robbot Eff</h1>
+</div>
+
+<div style="display: flex; justify-content: center">
+	<table class="table table-hover table-dark" style="font-size: 15px; height: 72vh; width: fit-content">
+		<thead>
+			<tr class="d-flex">
+				<th style="width: 150px">Business Unit</th>
+				<th style="width: 300px">Asset</th>
+				<th style="width: 100px">Jan</th>
+				<th style="width: 100px">Feb</th>
+				<th style="width: 100px">Mar</th>
+				<th style="width: 100px">Apr</th>
+				<th style="width: 100px">May</th>
+				<th style="width: 100px">June</th>
+				<th style="width: 100px">July</th>
+				<th style="width: 100px">Aug</th>
+				<th style="width: 100px">Sep</th>
+				<th style="width: 100px">Oct</th>
+				<th style="width: 100px">Nov</th>
+				<th style="width: 100px">Dec</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% for (let c of dataArr) { %>
+			<tr class="d-flex">
+				<td style="height: 55px; width: 150px"><%= c.bu %></td>
+				<td style="width: 300px"><%= c.name %></td>
+				<td style="width: 100px"><%= c.jan %></td>
+				<td style="width: 100px"><%= c.feb %></td>
+				<td style="width: 100px"><%= c.mar %></td>
+				<td style="width: 100px"><%= c.apr %></td>
+				<td style="width: 100px"><%= c.may %></td>
+				<td style="width: 100px"><%= c.jun %></td>
+				<td style="width: 100px"><%= c.jul %></td>
+				<td style="width: 100px"><%= c.aug %></td>
+				<td style="width: 100px"><%= c.sep %></td>
+				<td style="width: 100px"><%= c.oct %></td>
+				<td style="width: 100px"><%= c.nov %></td>
+				<td style="width: 100px"><%= c.dec %></td>
+			</tr>
+			<% } %>
+		</tbody>
+	</table>
+</div>

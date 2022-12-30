@@ -1,0 +1,415 @@
+<% layout('layouts/doa')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/8z/content/bootstrap/css/bootstrap.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/style2.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/cards2.css" type="text/css">
+<link rel="stylesheet" href="/content/table2.css" type="text/css">
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+
+<style>
+  body {
+    background-color: black;
+  }
+
+  h5 {
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: -15px;
+  }
+
+  h3 {
+    color: white;
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-weight: bold;
+    color: black;
+  }
+
+  h1 {
+    font-size: 4rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  hr {
+    background-color: #6a6d6d;
+  }
+
+  .last-checked-holder {
+    padding-top: 12px;
+  }
+</style>
+
+<div class='main-header-holder'>
+  <h1>DOA Major Escapes 4C Status</h1>
+</div>
+
+<div class="outside-holder">
+
+
+
+
+
+  <!-- left -->
+  <div class="wrapper">
+
+    <div class="header">
+
+      <div class="header-text"><a href="#">W/C <%=  moment(thisWeek).format("DD/MM/YYYY") %></a></div>
+    </div>
+    <!-- <div class="last-checked-holder">
+      <small>W/C <%= thisWeek %></small>
+    </div> -->
+    <hr>
+
+    <div style="display: flex; justify-content: space-evenly;">
+
+      <div class="grey-card">
+        <p class="group-div">UK GROUP</p>
+        <p class="group-stat"><%= majorsTotalGroup %></p>
+      </div>
+
+    </div>
+    <div style="display: flex; justify-content: space-evenly; margin-top: 15px;">
+      <!-- background-color: #33383a; -->
+
+
+      <div class="grey-card-div" style="background-color: rgb(238, 28, 37);">
+        <!-- <p class="card-div">OPEN</p> -->
+        <p class="card-stat-group"><%= majorsOpenGroup %></p>
+      </div>
+
+      <div class="grey-card-div" style="background-color: rgb(252, 176, 38);">
+        <!-- <p class="card-div">CONTAINED</p> -->
+        <p class="card-stat-group"><%= majorsContainedGroup %></p>
+      </div>
+
+      <div class="grey-card-div" style="background-color: rgb(11, 156, 49)">
+        <!-- <p class="card-div">CLOSED</p> -->
+        <p class="card-stat-group"><%= majorsClosedGroup %></p>
+      </div>
+
+    </div>
+    <hr>
+
+    <div style="display: flex; justify-content: space-evenly; margin-top: 35px;">
+
+      <div class="grey-card-div" style="<% if (majorsOpenLDL > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">LDL</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenLDL %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenBHL > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">BHL</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenBHL %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenSD > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">SD</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenSD %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenCP > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">CP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenCP %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenHP > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">HP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenHP %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenEM > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">EM</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenEM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenLP > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">LP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenLP %></p>
+      </div>
+
+    </div>
+
+    <!-- amber -->
+    <div style="display: flex; justify-content: space-evenly; margin-top: 15px;">
+
+      <div class="grey-card-div" style="<% if (majorsContainedLDL > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedLDL %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedBHL > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedBHL %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedSD > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedSD %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedCP > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedCP %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedHP > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedHP %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedEM  > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedEM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedLP  > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedLP %></p>
+      </div>
+
+    </div>
+
+    <!-- green -->
+
+    <div style="display: flex; justify-content: space-evenly; margin-top: 15px;">
+
+      <div class="grey-card-div" style="<% if (majorsClosedLDL > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedLDL %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedBHL > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedBHL %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedSD > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedSD %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedCP > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedCP %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedHP > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedHP %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedEM > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedEM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedLP > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedLP %></p>
+      </div>
+
+    </div>
+
+
+
+
+  </div>
+  <hr style="width: 1px; height: 700px; display: inline-block; background-color: grey; ">
+  <!-- Month to date-->
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-text"><a href="#">Year to Date</a></div>
+    </div>
+    <!-- <div class="last-checked-holder">
+      <small>July 2021</small>
+    </div> -->
+    <hr>
+
+    <div style="display: flex; justify-content: space-evenly;">
+
+      <div class="grey-card">
+        <p class="group-div">UK GROUP</p>
+        <p class="group-stat"><%= majorsTotalGroupM %></p>
+      </div>
+
+    </div>
+    <div style="display: flex; justify-content: space-evenly; margin-top: 15px;">
+
+
+
+      <div class="grey-card-div" style="background-color: rgb(238, 28, 37);">
+        <!-- <p class="card-div">OPEN</p> -->
+        <p class="card-stat-group"><%= majorsOpenGroupM %></p>
+      </div>
+
+      <div class="grey-card-div" style="background-color: rgb(252, 176, 38);">
+        <!-- <p class="card-div">CONTAINED</p> -->
+        <p class="card-stat-group"><%= majorsContainedGroupM %></p>
+      </div>
+
+      <div class="grey-card-div" style="background-color: rgb(11, 156, 49)">
+        <!-- <p class="card-div">CLOSED</p> -->
+        <p class="card-stat-group"><%= majorsClosedGroupM %></p>
+      </div>
+
+    </div>
+    <hr>
+
+    <div style="display: flex; justify-content: space-evenly; margin-top: 35px;">
+
+      <div class="grey-card-div" style="<% if (majorsOpenLDLM  > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">LDL</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenLDLM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenBHLM  > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">BHL</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenBHLM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenSDM  > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">SD</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenSDM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenCPM  > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">CP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenCPM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenHPM  > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">HP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenHPM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenEMM  > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">EM</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenEMM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsOpenLPM  > 0) { %>background-color: rgb(238, 28, 37)<% } else { %><% } %>">
+        <p class="card-div" style="margin-top: -30px;">LP</p>
+        <p class="card-stat-group" style="margin-top: -10px;"><%= majorsOpenLPM %></p>
+      </div>
+
+    </div>
+
+    <!-- amber -->
+    <div style="display: flex; justify-content: space-evenly; margin-top: 15px;">
+
+      <div class="grey-card-div" style="<% if (majorsContainedLDLM  > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedLDLM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedBHLM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedBHLM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedSDM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedSDM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedCPM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedCPM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedHPM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedHPM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedEMM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedEMM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsContainedLPM > 0) { %>background-color: rgb(252, 176, 38)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsContainedLPM %></p>
+      </div>
+
+    </div>
+
+    <!-- green -->
+
+    <div style="display: flex; justify-content: space-evenly; margin-top: 15px;">
+
+      <div class="grey-card-div" style="<% if (majorsClosedLDLM > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedLDLM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedBHLM > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedBHLM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedSDM > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedSDM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedCPM > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedCPM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedHPM > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedHPM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedEMM  > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedEMM %></p>
+      </div>
+
+      <div class="grey-card-div" style="<% if (majorsClosedLPM  > 0) { %>background-color: rgb(11, 156, 49)<% } else { %><% } %>">
+        <!-- <p class="card-div">LDL</p> -->
+        <p class="card-stat-group"><%= majorsClosedLPM %></p>
+      </div>
+
+    </div>
+
+
+
+
+
+  </div>
+
+
+
+</div>
+</div>
+
+
+
+
+
+<div class="container-fluid footer">
+
+  <div class="row header-top">
+    <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+      <img height="24px" src="/7z/content/images/jcb-logo.png">
+      <img height="24px" src="/7z/content/images/df.png">
+    </div>
+    <div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+      J.C. Bamford Excavators LTD &copy; 2022
+    </div>
+  </div>
+</div>

@@ -1,0 +1,697 @@
+<% layout('layouts/fourcboilerplate')%>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dash</title>
+
+
+  <link rel="icon" href="/images/jcb.png" />
+  <link rel="stylesheet" href="/stylesheets/fourc.css">
+</head>
+
+<body>
+  <wrapper>
+
+    <side1>
+
+
+
+
+      <!-- The  layout -->
+
+
+
+      <section class="dash-layout">
+
+        <div class="card card-c">
+          <div class="c">
+            <p>C1</p>
+          </div>
+          <div class="c-full">
+            <p>
+              Cause</p>
+          </div>
+          <div class="c-description">
+            <p>Description of the problem</p>
+          </div>
+
+
+        </div>
+
+
+        <div class="card card-wide">
+          <div class="machine-info">
+            <div class="machine-info-container">
+              <div style="max-width: 80%;">
+                <h3>Machine Details - Leaks 4C</h3>
+                <ul>
+                  <% if ( claim.claimNumber === 'Leak Techweb') { %>
+                  <li>Build Number - <%= claim.buildNumber %></li>
+                  <li>Model - <%= claim.model %></li>
+                  <li>Responsible - <%= claim.leakasd %></li>
+                  <li>Narrative - <%= claim.description %></li>
+                  <a class="btn btn-primary btn-sm" style="margin-top: 2.5rem; height: 1.9rem" target="_blank" href="https://internal.jcb.local/BuildLookup/?searchTerm=<%= claim.name %>&searchCategory=SERIALNUMBER">Go to BQT</a>
+                  <% if ((claim.status != 'Closed' &&  currentUser ) && (claim.division === 'BHL' || claim.division === 'EM' || claim.division === 'LP' && !currentUser.isVetter)){ %>
+                  <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/reallocation/newFourC/<%= division %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+                  <% } else { %>
+                  <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+                  <% } %>
+                  <% }; %>
+                  <% if ( claim.claimNumber != 'Leak Techweb') { %>
+                  <li>Claim Number - <%= claim.claimNumber %></li>
+                  <li>Claim Grade - <%= claim.abcd %></li>
+                  <li>T Period - <%= claim.tPeriod %></li>
+                  <li>Serial Number - <%= claim.name %></li>
+                  <li>Hours - <%= claim.hours %></li>
+                  <li>Build Date - <%= claim.buildDate %></li>
+                  <li>Dealer - <%= claim.dealer %></li>
+                  <li>Country - <%= claim.country %></li>
+                  <li>Failed part - <%= claim.failedPart %></li>
+                  <li>Claim Cost - £<%= claim.cost %></li>
+                  <li>Narrative - <%= claim.description %></li>
+                </ul>
+              </div>
+              <div>
+                <a class="btn btn-primary btn-sm" style="margin-top: 2.5rem; height: 1.9rem" target="_blank" href="https://internal.jcb.local/BuildLookup/?searchTerm=<%= claim.name %>&searchCategory=SERIALNUMBER">Go to BQT</a>
+                <% if ((claim.status != 'Closed' &&  currentUser ) && (claim.division === 'BHL' || claim.division === 'EM' || claim.division === 'LP' && !currentUser.isVetter)){ %>
+                <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/reallocation/newFourC/<%= division %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+                <% } else { %>
+                <a class="btn btn-primary py-0 float-left" style="margin-top: 2.5rem; margin-right: 2rem; height: 1.9rem;" href="/claims/reallocate/<%= claim._id %>"><i class="fas fa-exchange-alt"></i> Reallocate 4C</a>
+                <% } %>
+                <% }; %>
+
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>
+        <div class="card card-c">
+          <div class="c">
+            <p>Images</p>
+          </div>
+
+        </div>
+
+
+        <div class="card card-wide">
+          <div class="machine-info">
+            <div class="machine-info-container">
+
+              <div class="image-holder">
+                <% if ( claim.imagePath1 != null) { %>
+                <a href="<%= claim.imagePath1 %>" target="_blank">
+                  <img class="claim-image" src="<%= claim.imagePath1 %>">
+                </a>
+                <% }; %>
+              </div>
+              <div class="image-holder">
+                <% if ( claim.imagePath2 != null) { %>
+                <a href="<%= claim.imagePath2 %>" target="_blank">
+                  <img class="claim-image" src="<%= claim.imagePath2 %>">
+                </a>
+                <% }; %>
+              </div>
+              <div class="image-holder">
+                <% if ( claim.imagePath3 != null) { %>
+                <a href="<%= claim.imagePath3 %>" target="_blank">
+                  <img class="claim-image" src="<%= claim.imagePath3 %>">
+                </a>
+                <% }; %>
+              </div>
+              <div class="image-holder">
+                <% if ( claim.imagePath4 != null) { %>
+                <a href="<%= claim.imagePath4 %>" target="_blank">
+                  <img class="claim-image" src="<%= claim.imagePath4 %>">
+                </a>
+                <% }; %>
+              </div>
+              <div class="image-holder">
+                <% if ( claim.imagePath5 != null) { %>
+                <a href="<%= claim.imagePath5 %>" target="_blank">
+                  <img class="claim-image" src="<%= claim.imagePath5 %>">
+                </a>
+                <% }; %>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-c">
+          <div class="c">
+            <p>C2</p>
+          </div>
+          <div class="c-full">
+            <p><span class="interim">Interim</span><br>
+              Containment</p>
+          </div>
+          <div class="c-description">
+            <p>What are the immediate actions taken to prevent a repeat issue?</p>
+          </div>
+        </div>
+
+        <div class="card card-wide">
+          <div class="c2-form-container">
+            <% if ( claim.status === 'Open') { %>
+            <form style="margin-left: 20px; margin-top: 20px;" action="/claims/contain/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <input type="hidden" name="claim[division]" value="<%= division %>">
+              <input type="hidden" name="claim[leak]" value="Yes">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="processVal">SOP Correct</label>
+                    <select class="form-control" type="text" name="claim[cSop]" value="<%= claim.cSop %>" required>
+                      <option hidden><%= claim.cSop%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Process Validation Done</label>
+                    <select class="form-control" type="text" name="claim[pVal]" value="<%= claim.pVal %>" required>
+                      <option hidden><%= claim.pVal%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="processVal">Torque Tooling Required</label>
+                    <select class="form-control" type="text" name="claim[tToolR]" value="<%= claim.tToolR %>" required>
+                      <option hidden><%= claim.tToolR %></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Torque Tooling Being Used</label>
+                    <select class="form-control" type="text" name="claim[tToolBu]" value="<%= claim.tToolBu %>" required>
+                      <option hidden><%= claim.tToolBu %></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Quality Alert Issued</label>
+                    <select class="form-control" type="text" name="claim[qAlert]" value="<%= claim.qAlert %>" required>
+                      <option hidden><%= claim.qAlert%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+
+                </div>
+
+                <div class="col">
+                  <div class="form-group">
+                    <label for="buildNumber">SOP Number</label>
+                    <input class="form-control" type="text" id="password" name="claim[sopNumber]" value="<%= claim.sopNumber %>" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">Leaking Part Number</label>
+                    <input class="form-control" type="text" id="password" name="claim[lPart]" value="<%= claim.lPart %>" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">TT Value As Per SOP</label>
+                    <input class="form-control" type="text" id="password" name="claim[ttSop]" value="<%= claim.ttSop %>" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">TT Being Used Correct To SOP</label>
+                    <select class="form-control" type="text" name="claim[ttCorrect]" value="<%= claim.ttCorrect %>" required>
+                      <option hidden><%= claim.ttCorrect%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="image">Upload Quality Alert</label>
+                    <input class="form-control" type="file" id="image9" name="image6" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                  </div>
+
+
+                </div>
+
+
+
+                <div class="col">
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Details Of Containment</label>
+                    <textarea style="height: 246px; width: 500px; " class="form-control" name="claim[containNotes]" required><%= claim.containNotes %></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">Containment Cut In Number</label>
+                    <input class="form-control" type="text" id="password" name="claim[containCutIn]" value="<%= claim.containCutIn %>" required>
+                  </div>
+                  <div class="form-group">
+                    <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                  </div>
+                </div>
+            </form>
+
+
+
+
+            <% }; %>
+            <% if ( claim.status === 'Contained' || claim.status === 'Closed') { %>
+            <form style="margin-left: 20px; margin-top: 20px;" action="/claims/<%= claim._id %>/containment?_method=PUT" method="POST" enctype="multipart/form-data">
+              <input type="hidden" name="claim[division]" value="<%= division %>">
+              <input type="hidden" name="claim[leak]" value="Yes">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="processVal">SOP Correct</label>
+                    <select class="form-control" type="text" name="claim[cSop]" value="<%= claim.cSop %>" required disabled>
+                      <option hidden><%= claim.cSop%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Process Validation Done</label>
+                    <select class="form-control" type="text" name="claim[pVal]" value="<%= claim.pVal %>" required disabled>
+                      <option hidden><%= claim.pVal%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="processVal">Torque Tooling Required</label>
+                    <select class="form-control" type="text" name="claim[tToolR]" value="<%= claim.tToolR %>" required disabled>
+                      <option hidden><%= claim.tToolR %></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Torque Tooling Being Used</label>
+                    <select class="form-control" type="text" name="claim[tToolBu]" value="<%= claim.tToolBu %>" required disabled>
+                      <option hidden><%= claim.tToolBu %></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="processVal">Quality Alert Issued</label>
+                    <select class="form-control" type="text" name="claim[qAlert]" value="<%= claim.qAlert %>" required disabled>
+                      <option hidden><%= claim.qAlert%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+
+                </div>
+
+                <div class="col">
+                  <div class="form-group">
+                    <label for="buildNumber">SOP Number</label>
+                    <input class="form-control" type="text" id="password" name="claim[sopNumber]" value="<%= claim.sopNumber %>" required disabled>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">Leaking Part Number</label>
+                    <input class="form-control" type="text" id="password" name="claim[lPart]" value="<%= claim.lPart %>" required disabled>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">TT Value As Per SOP</label>
+                    <input class="form-control" type="text" id="password" name="claim[ttSop]" value="<%= claim.ttSop %>" required disabled>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">TT Being Used Correct To SOP</label>
+                    <select class="form-control" type="text" name="claim[ttCorrect]" value="<%= claim.ttCorrect %>" required disabled>
+                      <option hidden><%= claim.ttCorrect%></option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>N/A</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="image">Upload Quality Alert</label>
+                    <input class="form-control" type="file" id="image9" name="image9" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled>
+                  </div>
+
+
+                </div>
+
+
+
+                <div class="col">
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Details Of Containment</label>
+                    <textarea style="height: 295px; width: 500px; " class="form-control" name="claim[containNotes]" required disabled><%= claim.containNotes %></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">Containment Cut In Number</label>
+                    <input class="form-control" type="text" id="password" name="claim[containCutIn]" value="<%= claim.containCutIn %>" required disabled>
+                  </div>
+                  <!-- <div class="form-group">
+                    <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                    </div> -->
+                </div>
+            </form>
+
+            <% }; %>
+
+
+
+            <div class="">
+              <% if ( claim.status != 'Open') { %>
+              <ul>
+                <% if ( claim.imagePath6 != null) { %>
+                <li>
+                  <a href="<%= claim.imagePath6 %>" target="_blank">
+                    <p>Quality Alert Download</p>
+                  </a>
+                </li>
+                <% }; %>
+              </ul>
+              <% }; %>
+            </div>
+          </div>
+        </div>
+
+
+        </div>
+
+        <div class="card card-c">
+          <h1 class="c">C3</h1>
+          <p class="c-full">
+            Countermeasure</p>
+          <div class="c-description">
+
+          </div>
+
+        </div>
+
+        <div class="card card-wide">
+          <div class="c2-form-container">
+
+            <% if ( claim.status === 'Contained' ) { %>
+
+            <form style="margin-left: 20px; margin-top: 20px;" action="/claims/counter/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <input type="hidden" name="claim[division]" value="<%= division %>">
+              <input type="hidden" name="claim[leak]" value="Yes">
+              <div class="row">
+                <div class="col">
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Why did we have the failure?</label>
+                    <textarea style="height: 300px; width: 340px; " class="form-control" name="claim[counterWhyNotes]" required><%= claim.counterWhyNotes %></textarea>
+                  </div>
+
+                </div>
+                <div class="col">
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1"> What have has been done to prevent re-occurrence?</label>
+                    <textarea style="height: 300px; width: 390px; " class="form-control" name="claim[counterWhatNotes]" required><%= claim.counterWhatNotes %></textarea>
+                  </div>
+
+                </div>
+                <div class="col">
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Root Cause</label>
+                    <textarea style="height: 161px; width: 340px; " class="form-control" name="claim[rootCause]" required><%= claim.rootCause %></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="buildNumber">Closure Cut In Number</label>
+                    <input class="form-control" type="text" id="password" name="claim[closeCutIn]" value="<%= claim.closeCutIn %>" required>
+                  </div>
+                  <div class="form-group">
+                    <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                  </div>
+
+                </div>
+
+              </div>
+
+          </div>
+          </form>
+
+          <% }; %>
+          <% if ( claim.status != 'Contained' ) { %>
+
+          <form style="margin-left: 20px; margin-top: 20px;" action="/claims/counter/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="claim[division]" value="<%= division %>">
+            <input type="hidden" name="claim[leak]" value="Yes">
+            <div class="row">
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Why did we have the failure?</label>
+                  <textarea style="height: 300px; width: 340px; " class="form-control" name="claim[counterWhyNotes]" required disabled><%= claim.counterWhyNotes %></textarea>
+                </div>
+
+              </div>
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1"> What have has been done to prevent re-occurrence?</label>
+                  <textarea style="height: 300px; width: 390px; " class="form-control" name="claim[counterWhatNotes]" required disabled><%= claim.counterWhatNotes %></textarea>
+                </div>
+
+              </div>
+              <div class="col">
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Root Cause</label>
+                  <textarea style="height: 300px; width: 340px; " class="form-control" name="claim[rootCause]" required disabled><%= claim.rootCause %></textarea>
+                </div>
+                <!-- <div class="form-group">
+                    <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                    </div> -->
+
+              </div>
+
+            </div>
+
+        </div>
+        </form>
+
+        <% }; %>
+
+        </div>
+
+        </div>
+
+        <div class="card card-c" style="margin-bottom: 25px;">
+          <div class="c">
+            <p>C4</p>
+          </div>
+          <div class="c-full">
+            <p>
+              Confirmation</p>
+          </div>
+
+        </div>
+
+        <div class="card card-wide">
+          <div class="c4-holder1">
+
+            <div class="c4-holder2">
+              <% if (currentUser && currentUser.isLeak && claim.status === 'Closed')   { %>
+              <form style="margin-left: 20px; margin-top: 20px;" action="/claims/close/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="claim[division]" value="<%= division %>">
+                <input type="hidden" name="claim[leak]" value="Yes">
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="processVal">Post Cut In Internal Failures</label>
+                      <select class="form-control" type="text" name="claim[qSmart]" value="<%= claim.qSmart %>" required>
+                        <option hidden><%= claim.qSmart%></option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>N/A</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="processVal">Post Cut In Warranty Failures</label>
+                      <select class="form-control" type="text" name="claim[warranty]" value="<%= claim.warranty %>" required>
+                        <option hidden><%= claim.warranty%></option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>N/A</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="processVal">Sign Off</label>
+                      <select class="form-control" type="text" name="claim[sOff]" value="<%= claim.sOff %>" required>
+                        <option hidden><%= claim.sOff%></option>
+                        <option>Operations</option>
+                        <option>Quality</option>
+                        <option>Design</option>
+                        <option>Man Eng</option>
+                      </select>
+                    </div>
+
+                  </div>
+
+                  <div class="col">
+
+                    <div class="form-group">
+                      <label for="exampleFormControlTextarea1">Notes</label>
+                      <textarea style="height: 162px; width: 500px; " class="form-control" name="claim[closeNotes]"><%= claim.closeNotes %></textarea>
+                    </div>
+                    <div class="form-group">
+                      <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <% } else { %>
+
+              <form style="margin-left: 20px; margin-top: 20px;" action="/claims/close/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="processVal">Post Cut In Internal Failures</label>
+                      <select class="form-control" type="text" name="claim[qSmart]" value="<%= claim.qSmart %>" required disabled>
+                        <option hidden><%= claim.qSmart%></option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>N/A</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="processVal">Post Cut In Warranty Failures</label>
+                      <select class="form-control" type="text" name="claim[warranty]" value="<%= claim.warranty %>" required disabled>
+                        <option hidden><%= claim.warranty%></option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>N/A</option>
+
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="processVal">Sign Off</label>
+                      <select class="form-control" type="text" name="claim[sOff]" value="<%= claim.sOff %>" required disabled>
+                        <option hidden><%= claim.sOff%></option>
+                        <option>Operations</option>
+                        <option>Quality</option>
+                        <option>Design</option>
+                        <option>Man Eng</option>
+                      </select>
+                    </div>
+
+                  </div>
+
+                  <div class="col">
+
+                    <div class="form-group">
+                      <label for="exampleFormControlTextarea1">Notes</label>
+                      <textarea style="height: 124px; width: 500px; " class="form-control" name="claim[closeNotes]" disabled><%= claim.closeNotes %></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="buildNumber">Closure Cut In Number</label>
+                      <input class="form-control" type="text" id="password" name="claim[closeCutIn]" value="<%= claim.closeCutIn %>" required disabled>
+                    </div>
+                    <!-- <div class="form-group">
+                      <button class="btn btn-success btn-block btn-lg py-0">Save</button>
+                      </div> -->
+                  </div>
+                </div>
+              </form>
+
+              <% }; %>
+
+
+              <div style="margin-left: 3rem;">
+                <% if (currentUser && currentUser.isAdmin)   { %>
+
+                <form action="/claims/nofourc/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                  <button class="btn btn-danger py-0 " style="margin-left: .5rem;"><i class="far fa-trash-alt"></i> Delete</button>
+                </form>
+                <form action="/claims/reopen/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                  <button class="btn btn-primary py-0 " style="margin-left: .5rem; margin-top: 1rem;"><i class="fas fa-redo-alt"></i> Re-Open 4C</button>
+                </form>
+                <% } %>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+      </section>
+
+    </side1>
+
+    <side2>
+      <div>
+        <% if( currentUser && claim.author.equals(currentUser._id)) {%>
+        <div class="card-body">
+          <a class="card-link btn btn-info" href="/claims/<%=claim._id%>/edit">Edit</a>
+          <form class="d-inline" action="/claims/<%=claim._id%>?_method=DELETE" method="POST">
+            <button class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+        <% } %>
+      </div>
+      </div>
+      <div class="col">
+        <% if(currentUser){ %>
+        <h2>Update 4C Notes</h2>
+        <form action="/claims/<%=claim._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
+
+          <div class="mb-3">
+            <label class="form-label" for="body"></label>
+            <textarea class="form-control" name="review[body]" id="body" cols="30" rows="6" required></textarea>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <button class="btn btn-success">Submit</button>
+        </form>
+        <% } %>
+        <% for(let review of claim.reviews) { %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title"><%= review.author.firstName %> <%= review.author.lastName %> <%= moment(review.createdAt).format("DD/MM/YYYY - HH:mm") %></h5>
+            <p class="card-text"><%= review.body %></p>
+            <% if( claim.status != "Closed") {%>
+            <% if( currentUser && review.author.equals(currentUser._id)) {%>
+            <form action="/claims/<%=claim._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+            <% } %>
+            <% } %>
+          </div>
+        </div>
+        <% } %>
+
+      </div>
+
+
+
+    </side2>
+
+
+
+  </wrapper>
+
+
+
+</body>
+
+</html>

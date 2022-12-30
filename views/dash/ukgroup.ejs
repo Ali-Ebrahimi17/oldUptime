@@ -1,0 +1,131 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+<!-- Get the prediction months -->
+<% let prediction1Month = moment().subtract(4, 'months').format('MMM') %>
+<% let prediction2Month = moment().subtract(3, 'months').format('MMM') %>
+<% let prediction3Month = moment().subtract(2, 'months').format('MMM') %>
+
+
+
+
+<div class="vetting-body">
+  <header id="vettingJumbotron">
+
+    <h1 id="vetting-title" style=" margin-top: -20px; font-size: 31px;">UK BUSINESS UNIT STATUS</h1>
+
+
+
+  </header>
+
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 12px; height: 82vh;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 10vw; text-align: center;">Business Unit</th>
+        <th style="width: 10vw; text-align: center;">DOA Post CI<br> Accepted Total</th>
+        <th style="width: 10vw; text-align: center;">DOA Post CI<br>DPU</th>
+        <th style="width: 10vw; text-align: center;">DOA Post CI<br>Accepted This Week</th>
+        <th style="width: 10vw; text-align: center;">DOA 25PT+<br>This Week</th>
+        <th style="width: 10vw; text-align: center;">DOA 4C Status<br>Last 90 days</th>
+        <th style="width: 10vw; text-align: center;">Pre T3<br>DPU</th>
+        <th style="width: 10vw; text-align: center;">Pre T3<br>Accepted Total</th>
+        <th style="width: 10vw; text-align: center;">Pre T3<br>Accepted This Week</th>
+        <th style="width: 10vw; text-align: center;">T3 4C 4C Status<br>Last 90 days</th>
+      </tr>
+    </thead>
+    <tbody>
+
+
+      <tr class="d-flex" style="font-size: 17px; font-weight: bold;">
+        <td style=" width: 10vw; text-align: center;"><span class="div-dash-stat">LDL</span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= ldlDoaClaimsPostCutIn  %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= ldlDPU %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= ldlDoaClaimsThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= ldlDoa25pThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= ldlDoaOpenNum %><br>Contained - <%= ldlDoaContainedNum %><br>Closed - <%= ldlDoaClosedNum %></td>
+        <td style="width: 10vw; text-align: center;"><span class="<% if (ldlPrediction1 > graph[80].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction1Month %> - <%= ldlPrediction1 %></span><br><span class="<% if (ldlPrediction2 > graph[81].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction2Month %> - <%= ldlPrediction2 %></span><br><span class="<% if (ldlPrediction3 > graph[82].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction3Month %> - <%= ldlPrediction3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= ldlDoaClaimsPreT3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= ldlDoaClaimsPreT3ThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= ldlT3OpenNum %><br>Contained - <%= ldlT3ContainedNum %><br>Closed - <%= ldlT3ClosedNum %></td>
+      </tr>
+      <tr class="d-flex" style="font-size: 17px; font-weight: bold;">
+        <td style=" width: 10vw; text-align: center;"><span class="div-dash-stat">BHL</span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= bhlDoaClaimsPostCutIn  %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= bhlDPU %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= bhlDoaClaimsThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= bhlDoa25pThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= bhlDoaOpenNum %><br>Contained - <%= bhlDoaContainedNum %><br>Closed - <%= bhlDoaClosedNum %></td>
+        <td style="width: 10vw; text-align: center;"><span class="<% if (bhlPrediction1 > graph[176].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction1Month %> - <%= bhlPrediction1 %></span><br><span class="<% if (bhlPrediction2 > graph[177].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction2Month %> - <%= bhlPrediction2 %></span><br><span class="<% if (bhlPrediction3 > graph[178].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction3Month %> - <%= bhlPrediction3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= bhlDoaClaimsPreT3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= bhlDoaClaimsPreT3ThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= bhlT3OpenNum %><br>Contained - <%= bhlT3ContainedNum %><br>Closed - <%= bhlT3ClosedNum %></td>
+      </tr>
+      <tr class="d-flex" style="font-size: 17px; font-weight: bold;">
+        <td style=" width: 10vw; text-align: center;"><span class="div-dash-stat">SD</span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= sdDoaClaimsPostCutIn  %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= sdDPU %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= sdDoaClaimsThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= sdDoa25pThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= sdDoaOpenNum %><br>Contained - <%= sdDoaContainedNum %><br>Closed - <%= sdDoaClosedNum %></td>
+        <td style="width: 10vw; text-align: center;"><span class="<% if (sdPrediction1 > graph[272].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction1Month %> - <%= sdPrediction1 %></span><br><span class="<% if (sdPrediction2 > graph[273].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction2Month %> - <%= sdPrediction2 %></span><br><span class="<% if (sdPrediction3 > graph[274].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction3Month %> - <%= sdPrediction3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= sdDoaClaimsPreT3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= sdDoaClaimsPreT3ThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= sdT3OpenNum %><br>Contained - <%= sdT3ContainedNum %><br>Closed - <%= sdT3ClosedNum %></td>
+      </tr>
+      <tr class="d-flex" style="font-size: 17px; font-weight: bold;">
+        <td style=" width: 10vw; text-align: center;"><span class="div-dash-stat">EM</span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= emDoaClaimsPostCutIn  %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= emDPU %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= emDoaClaimsThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= emDoa25pThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= emDoaOpenNum %><br>Contained - <%= emDoaContainedNum %><br>Closed - <%= emDoaClosedNum %></td>
+        <td style="width: 10vw; text-align: center;"><span class="<% if (emPrediction1 > graph[368].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction1Month %> - <%= emPrediction1 %></span><br><span class="<% if (emPrediction2 > graph[369].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction2Month %> - <%= emPrediction2 %></span><br><span class="<% if (emPrediction3 > graph[370].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction3Month %> - <%= emPrediction3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= emDoaClaimsPreT3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= emDoaClaimsPreT3ThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= emT3OpenNum %><br>Contained - <%= emT3ContainedNum %><br>Closed - <%= emT3ClosedNum %></td>
+      </tr>
+      <tr class="d-flex" style="font-size: 17px; font-weight: bold;">
+        <td style=" width: 10vw; text-align: center;"><span class="div-dash-stat">LP</span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= lpDoaClaimsPostCutIn  %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= lpDPU %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= lpDoaClaimsThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= lpDoa25pThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= lpDoaOpenNum %><br>Contained - <%= lpDoaContainedNum %><br>Closed - <%= lpDoaClosedNum %></td>
+        <td style="width: 10vw; text-align: center;"><span class="<% if (lpPrediction1 > graph[463].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction1Month %> - <%= lpPrediction1 %></span><br><span class="<% if (lpPrediction2 > graph[464].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction2Month %> - <%= lpPrediction2 %></span><br><span class="<% if (lpPrediction3 > graph[465].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction3Month %> - <%= lpPrediction3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= lpDoaClaimsPreT3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= lpDoaClaimsPreT3ThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= lpT3OpenNum %><br>Contained - <%= lpT3ContainedNum %><br>Closed - <%= lpT3ClosedNum %></td>
+      </tr>
+      <tr class="d-flex" style="font-size: 17px; font-weight: bold;">
+        <td style=" width: 10vw; text-align: center;"><span class="div-dash-stat">CP</span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= cpDoaClaimsPostCutIn  %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= cpDPU %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= cpDoaClaimsThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= cpDoa25pThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= cpDoaOpenNum %><br>Contained - <%= cpDoaContainedNum %><br>Closed - <%= cpDoaClosedNum %></td>
+        <td style="width: 10vw; text-align: center;"><span class="<% if (cpPrediction1 > graph[560].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction1Month %> - <%= cpPrediction1 %></span><br><span class="<% if (cpPrediction2 > graph[561].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction2Month %> - <%= cpPrediction2 %></span><br><span class="<% if (cpPrediction3 > graph[562].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction3Month %> - <%= cpPrediction3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= cpDoaClaimsPreT3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= cpDoaClaimsPreT3ThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= cpT3OpenNum %><br>Contained - <%= cpT3ContainedNum %><br>Closed - <%= cpT3ClosedNum %></td>
+      </tr>
+      <tr class="d-flex" style="font-size: 17px; font-weight: bold;">
+        <td style=" width: 10vw; text-align: center;"><span class="div-dash-stat">HP</span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= hpDoaClaimsPostCutIn  %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= hpDPU %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= hpDoaClaimsThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= hpDoa25pThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= hpDoaOpenNum %><br>Contained - <%= hpDoaContainedNum %><br>Closed - <%= hpDoaClosedNum %></td>
+        <td style="width: 10vw; text-align: center;"><span class="<% if (hpPrediction1 > graph[656].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction1Month %> - <%= hpPrediction1 %></span><br><span class="<% if (hpPrediction2 > graph[657].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction2Month %> - <%= hpPrediction2 %></span><br><span class="<% if (hpPrediction3 > graph[658].stat) { %>red-span<% } else { %>green-span<% } %>"><%= prediction3Month %> - <%= hpPrediction3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= hpDoaClaimsPreT3 %></span></td>
+        <td style="width: 10vw; text-align: center;"><span class="div-dash-stat"><%= hpDoaClaimsPreT3ThisWeek %></span></td>
+        <td style="width: 10vw; text-align: center;">Open - <%= hpT3OpenNum %><br>Contained - <%= hpT3ContainedNum %><br>Closed - <%= hpT3ClosedNum %></td>
+      </tr>
+
+
+    </tbody>
+  </table>

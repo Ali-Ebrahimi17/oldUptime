@@ -1,0 +1,88 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+
+<div class="vetting-body">
+  <header id="vettingJumbotron">
+
+    <h1 id="vetting-title" style="margin-top: -1rem;">VETTED CLAIMS (<%= numb %> TODAY)</h1>
+
+
+    <form class="form-inline float-left" action="/claims/vetted/<%= division %>" method="GET">
+      <div class="form-group">
+        <label for="search"></label>
+        <input class="form-control" type="text" name="name" placeholder="Search by Serial" autocomplete="off" />
+      </div>
+    </form>
+    <form class="form-inline float-left" style="margin-left: 5px;" action="/claims/vetted/<%= division %>" method="GET">
+      <div class="form-group">
+        <label for="search"></label>
+        <input class="form-control" type="text" name="failedPart" placeholder="Search by Part Number" autocomplete="off" />
+      </div>
+      <% if (claims.length > 0){ %>
+    </form>
+    <form class="form-inline float-right" style="margin-left: 5px;" action="/claims/download/<%= division %>" method="GET">
+      <div class="form-group">
+        <label for="search"></label>
+        <button class="btn btn-md btn btn-info" style="margin-left: 5px;"><i class="fas fa-download"></i></i> Download All Claim File</button>
+      </div>
+    </form>
+    <form class="form-inline float-left" style="margin-left: 5px;" action="/claims/vetted/<%= division %>" method="GET">
+      <div class="form-group">
+        <label for="search"></label>
+        <input class="form-control" type="text" name="claimNumber" placeholder="Search by Claim Number" autocomplete="off" />
+      </div>
+      <!-- <button class="btn btn-md btn-success"><i class="fas fa-search"></i></button> -->
+    </form>
+    <% } %>
+
+    <form class="form-inline" action="/claims/vetted/<%= division %>" value="" method="GET">
+      <button class="btn btn-md btn-danger" style="margin-left: 5px;"><i class="fas fa-times-circle"></i></button>
+
+  </header>
+
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 15px; height: 72vh;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 100px;">T Period</th>
+        <th style="width: 140px;">Claim Number</th>
+        <th style="width: 140px;">Serial Number</th>
+        <th style="width: 200px;">Dealer</th>
+        <th style="width: 120px;">Model</th>
+        <th style="width: 140px;">Build Date</th>
+        <th style="width: 300px;">Failed Part</th>
+        <th style="width: 400px;">Narrative</th>
+        <th style="width: 200px;">Vetted by</th>
+        <th style="width: 200px;">Decision</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <% for (let claim of claims) { %>
+      <tr class="d-flex">
+        <td style="height: 76px; width: 100px;"><%= claim.tPeriod %></td>
+        <td style="width: 140px;"><a href="/claims/<%=claim._id%>/editagain"><%= claim.claimNumber %></a></td>
+        <td style="width: 140px;"><%= claim.name %></td>
+        <td style="width: 200px;"><%= claim.dealer %></td>
+        <td style="width: 120px;"> <%= claim.model %></td>
+        <td style="width: 140px;"> <%= claim.buildDate %></td>
+        <td style="width: 300px;"> <%= claim.failedPart %></td>
+        <td style="width: 400px;"> <%= claim.description.substring(0, 100) %>...</td>
+        <% if ( claim.vettedAt != null ) { %>
+        <td style="width: 200px;"> <em><%= claim.vettedBy %> <br> <%= moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm") %></em></td>
+        <% } else { %>
+        <td style="width: 200px;">Un Vetted </em></td>
+        <% }; %>
+        <td style="width: 200px;"><%= claim.outcome%></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+
+</div>

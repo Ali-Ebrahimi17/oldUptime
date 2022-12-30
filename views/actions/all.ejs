@@ -1,0 +1,18 @@
+<% layout('layouts/boilerplateTCard')%>
+
+<div class="container">
+  <table class="table table-hover table-dark" style="font-size: 15px; width: 600px; margin: auto; ">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 300px;">Action<a class="float-right" href="/action/new/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/<%= frequency %>/<%= cardId%>"> <i class="fas fa-plus"></i></a></th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <% actions.forEach(action => { %>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/area/edit/<%= division %>/<%= area %>/<%= location %>/<%= shiftP %>/<%= frequency %>/<%= cardId %>/<%= card._id %>"><%= action.name %></a></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>

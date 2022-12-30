@@ -1,0 +1,938 @@
+<% layout('layouts/boilertCardDash')%>
+<!-- <meta http-equiv="refresh" content="300"> -->
+<!-- <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css"> -->
+<link rel="stylesheet" href="/8z/content/dashboards.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/bootswatch/united.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/font-awesome/css/all.css" type="text/css">
+<link rel="stylesheet" href="/8z/content/chart-js/chart.min.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/Qcscards.css" type="text/css">
+<script src="/8z/content/jquery/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+<!-- <script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script> -->
+
+<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+<script src="/7z/content/chart-js/chart.bundle.js"></script>
+<!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+<!-- <script src="/7z/content/chart-js/trendLine.js"></script> -->
+<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+
+<script defer src="/font-v6/js/solid.js"></script>
+<script defer src="/font-v6/js/brands.js"></script>
+
+<script defer src="/font-v6/js/fontawesome.js"></script>
+<script src="/content/marquee/jquery.marquee.min.js"></script>
+
+
+
+
+
+
+<style>
+  body {
+    background-color: black;
+  }
+
+  h2 {
+    font-weight: bold;
+    color: black;
+  }
+
+  hr {
+    background-color: #6a6d6d;
+  }
+  .modal-dialog-1 {
+		max-width:100%;
+		margin: 0;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 100vh;
+		display: flex;
+    justify-content: center;
+	}
+  
+</style>
+
+
+<% const redOrGreen = (num1, num2) => { %>
+<%  let color = 'red' %>
+<% if (num1 >= num2) { %>
+<% color = 'green' %>
+<% } %>
+<% return color %>
+<% } %>
+
+
+<% for (let k of data) { %>
+
+<!-- CTQ failed checks -->
+<div class="modal fade" id="<%= k.shortDate %>CTQ" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+    <div class="modal-content" style="background-color: rgb(252, 176, 38);">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= k.date  %> - <%= k.failedChecksCTQ.length %> Failed Critical to Quality Checks </h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38); margin-bottom: 11px;">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 500px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 20px;">#</th>
+              <th style="width: 200px;">Failed By</th>
+              <th style="width: 130px;">Check</th>
+              <th style="width: 90px;">Division</th>
+              <th style="width: 150px;">Area</th>
+              <th style="width: 100px;">Value</th>
+              <th style="width: 450px;">Pass Requirements</th>
+              <th style="width: 250px;">Reason For Faulire</th>
+              <th style="width: 250px;">Action Taken</th>
+              <th style="width: 200px;">Contained By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let  x = 0 %>
+            <% for (let j of k.failedChecksCTQ) { %>
+            <% x++ %>
+            <tr class="d-flex">
+              <th style="width: 20px;"><%= x %></th>
+              <td style="width: 200px;"><%= j.checkedBy %> <br /> <%= moment(j.createdAt).format("DD/MM/YYYY - HH:mm")%></td>
+              <td style="width: 130px;"><%= j.check %></td>
+              <td style="width: 90px;"><%= j.division %></td>
+              <td style="width: 150px;"><%= j.section %></td>
+              <% if (j.value === 'N/A' || !j.value) { %>
+              <td style="width: 100px;">Fail</td>
+              <% } else { %>
+              <% if (j.unit === 'N/A') { %>
+              <td style="width: 100px;"><%= j.value %></td>
+              <% } else { %>
+              <td style="width: 100px;"><%= j.value %> <%= j.unit %></td>
+              <% } %>
+              <% } %>
+              <td style="width: 450px;"><%= j.description %></td>
+              <td style="width: 250px;"><%= j.reason %></td>
+              <td style="width: 250px;"><%= j.action %></td>
+                <% if (j.containedBy) { %>
+                  <td style="width: 200px;"><%= j.containedBy %> <br /> <%= moment(j.containedAt).format("DD/MM/YYYY - HH:mm")%></td>
+                <% } else { %>
+                  <td style="width: 200px;"></td>
+                <% } %>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- QC failed checks -->
+<div class="modal fade" id="<%= k.shortDate %>QC" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+    <div class="modal-content" style="background-color: rgb(252, 176, 38);">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= k.date  %> - <%= k.failedChecksQC.length %> Failed Quality Control Checks </h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38); margin-bottom: 11px;">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 200px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 20px;">#</th>
+              <th style="width: 200px;">Failed By</th>
+              <th style="width: 130px;">Check</th>
+              <th style="width: 90px;">Division</th>
+              <th style="width: 150px;">Area</th>
+              <th style="width: 100px;">Value</th>
+              <th style="width: 450px;">Pass Requirements</th>
+              <th style="width: 250px;">Reason For Faulire</th>
+              <th style="width: 250px;">Action Taken</th>
+              <th style="width: 200px;">Contained By</th>
+            </tr>
+          </thead>
+            <tbody>
+            <% let  x1 = 0 %>
+            <% for (let j of k.failedChecksQC) { %>
+            <% x1++ %>
+            <tr class="d-flex">
+              <th style="width: 20px;"><%= x1 %></th>
+              <td style="width: 200px;"><%= j.checkedBy %> <br /> <%= moment(j.createdAt).format("DD/MM/YYYY - HH:mm")%></td>
+              <td style="width: 130px;"><%= j.check %></td>
+              <td style="width: 90px;"><%= j.division %></td>
+              <td style="width: 150px;"><%= j.section %></td>
+              <% if (j.value === 'N/A' || !j.value) { %>
+              <td style="width: 100px;">Fail</td>
+              <% } else { %>
+              <% if (j.unit === 'N/A') { %>
+              <td style="width: 100px;"><%= j.value %></td>
+              <% } else { %>
+              <td style="width: 100px;"><%= j.value %> <%= j.unit %></td>
+              <% } %>
+              <% } %>
+              <td style="width: 450px;"><%= j.description %></td>
+              <td style="width: 250px;"><%= j.reason %></td>
+              <td style="width: 250px;"><%= j.action %></td>
+                <% if (j.containedBy) { %>
+                  <td style="width: 200px;"><%= j.containedBy %> <br /> <%= moment(j.containedAt).format("DD/MM/YYYY - HH:mm")%></td>
+                <% } else { %>
+                  <td style="width: 200px;"></td>
+                <% } %>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Missed checks -->
+<div class="modal fade" id="<%= k.shortDate %>Missed" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+    <div class="modal-content" style="background-color: rgb(252, 176, 38);">
+      <div style="background-color: rgb(252, 176, 38); height: 50px; color: black;">
+
+        <h3 style="text-align: center; margin: 8px; color: black;"> <%= k.date  %> - <%= k.missedChecksArr.length %> Missed Checks </h3>
+      </div>
+      <div class="modal-body" style="background-color: rgb(252, 176, 38); margin-bottom: 11px;">
+
+        <table class="table table-hover table-dark" style="font-size: 15px; max-height : 200px;">
+          <thead>
+            <tr class="d-flex">
+              <th style="width: 20px;">#</th>
+              <th style="width: 200px;">Due By</th>
+              <th style="width: 150px;">Missed By</th>
+              <th style="width: 100px;">Frequency</th>
+              <th style="width: 80px;">Type</th>
+              <th style="width: 150px;">Check</th>
+              <th style="width: 220px;">Area</th>
+              <th style="width: 920px;">Pass Requirements</th>
+
+            </tr>
+          </thead>
+            <tbody>
+            <% let  x2 = 0 %>
+            <% for (let j of k.missedChecksArr) { %>
+            <% x2++ %>
+            <tr class="d-flex">
+              <th style="width: 20px;"><%= x2 %></th>
+              <td style="width: 200px;"><%= moment(j.createdAt).format("DD/MM/YYYY - HH:mm")%></td>
+              <td style="width: 150px;"><%= j.missedBy %></td>
+              <td style="width: 100px;"><%= j.frequency %></td>
+              <td style="width: 80px;"><%= j.level %></td>
+              <td style="width: 150px;"><%= j.check %></td>
+              <td style="width: 220px;"><%= j.section %></td>
+              <td style="width: 920px;"><%= j.description %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; background-color: rgb(252, 176, 38); border-radius: 0; ">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div> -->
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; justify-content: space-between; ">
+        <div><img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png"></div>
+        <div style="margin-right: 20px; margin-bottom: 11px;"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<% } %>
+
+<!-- week 1 QTC -->
+
+
+<div>
+  <h3 style="color: white; margin-bottom: 25px; margin-top: 10px; font-size: 35px; "><%= formattedBu %> Quality Weekly Status</h3>
+  <div style="display: flex; justify-content: flex-end;">
+    <span style="margin-right: 80px; margin-top: -60px;">
+      <!-- Default dropleft button -->
+      <div class="btn-group dropleft">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <%= formattedBu %>
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="/tCard/qcs-dash/Cabs">Cabs Systems</a>
+          <a class="dropdown-item" href="/tCard/qcs-dash/BHL">Backhoe Loader/Site Dumper</a>
+          <a class="dropdown-item" href="/tCard/qcs-dash/CP">Compact Products</a>
+          <a class="dropdown-item" href="/tCard/qcs-dash/EM">Earthmovers/Landpower</a>
+          <a class="dropdown-item" href="/tCard/qcs-dash/HP">Heavy Products</a>
+          <a class="dropdown-item" href="/tCard/qcs-dash/LDL">Loadall</a>
+          <a class="dropdown-item" href="/tCard/qcs-dash/PS">Power Systems</a>
+          <a class="dropdown-item" href="/tCard/qcs-dash/SAVANNAH">Savannah</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/tCard/qcs-dash">UK Group</a>
+        </div>
+      </div>
+      
+    </span>
+  </div>
+</div>
+
+          
+
+<div style="display: flex; justify-content: center; flex-wrap: wrap; margin-top: 10px;">
+
+  <div style="display: flex; flex-direction: column; margin-right: 35px; ">
+    <div style="width: 700px; height: 520px; margin-bottom: 15px; ">
+      <!-- <h3 style="color: #fff;">Check History</h3> -->
+      <div style="height: 675px;">
+        <div>
+          <h5 style="color: #fff; margin-bottom: 35px;">Completed vs Missed Checks</h3>
+        </div>
+        <div style="height: 465px;">
+          <canvas id="myChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div style="width: 700px; height: 310px;">
+
+      <div style="height: 268px; display: flex;">
+        <table class="table table-sm " style="margin-bottom: 20px; height: 210px; padding: 0px; color: white; text-align: center;">
+          <thead>
+            <tr>
+              <th colspan="1" rowspan="2" style="text-align: left;">Check Type</th>
+              <th colspan="2" style="border-left: 1px solid white; "><%= currentWeek %></th>
+              <th colspan="2" style="border-left: 1px solid white; ">Completed Checks</th>
+            </tr>
+            <tr>
+              <th class="th-centre" style="width: 100px; border-left: 1px solid white;">Completed</th>
+              <th class="th-centre" style="width: 100px;">Missed</th>
+              <th class="th-centre" style="width: 100px; border-left: 1px solid white;"><%= currentWeek %></th>
+              <th class=" th-centre" style="width: 100px;">YTD</th>
+            </tr>
+          </thead>
+          <tbody style="color: white; font-size: 15px;">
+            <tr>
+              <td class='td-centre' style="width: 187px; max-height: 15px; text-align: left;">Plant Quality</td>
+              <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].completedCountBHL %></td>
+              <td class='td-centre' style=" width: 25px"><%= data[5].missedCountBHL %></td>
+              <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( data[5].completedPercentBHL, dataYTD[0].TotalCompletedPercent ) %>;"><%= data[5].completedPercentBHL %>%</td>
+              <td class='td-centre' style="width: 25px"><%= dataYTD[0].TotalCompletedPercent %>%</td>
+            </tr>
+            <tr>
+              <td class='td-centre' style="width: 47px; text-align: left;">Assembly</td>
+              <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].completedCountCP %></td>
+              <td class='td-centre' style=" width: 25px"><%= data[5].missedCountCP %></td>
+              <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( data[5].completedPercentCP, dataYTD[1].TotalCompletedPercent ) %>;"><%= data[5].completedPercentCP %>%</td>
+              <td class='td-centre' style="width: 25px"><%= dataYTD[1].TotalCompletedPercent %>%</td>
+            </tr>
+            <tr>
+              <td class='td-centre' style="width: 47px; text-align: left;">Manufacturing</td>
+              <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].completedCountEM %></td>
+              <td class='td-centre' style=" width: 25px"><%= data[5].missedCountEM %></td>
+              <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( data[5].completedPercentEM, dataYTD[2].TotalCompletedPercent ) %>;"><%= data[5].completedPercentEM %>%</td>
+              <td class='td-centre' style="width: 25px"><%= dataYTD[2].TotalCompletedPercent %>%</td>
+            </tr>
+            <tr>
+              <td class='td-centre' style="width: 47px; text-align: left;">Paint</td>
+              <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].completedCountHP %></td>
+              <td class='td-centre' style=" width: 25px"><%= data[5].missedCountHP %></td>
+              <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( data[5].completedPercentHP, dataYTD[3].TotalCompletedPercent ) %>;"><%= data[5].completedPercentHP %>%</td>
+              <td class='td-centre' style="width: 25px"><%= dataYTD[3].TotalCompletedPercent %>%</td>
+            </tr>
+           
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column;">
+    <div style=" width: 1000px; height: 320px; margin-bottom: 15px;">
+      <!-- <h3 style="color: #fff;">T Card</h3> -->
+      <div style="display: flex;">
+        <div style=" height: 319px; width: 514px; margin-right: 35px;">
+          <h5 style="color: #fff; margin-bottom: 25px;">Passed vs Failed Checks</h5>
+          <div style="height: 280px;">
+            <canvas id="myChart2"></canvas>
+          </div>
+        </div>
+        <div style="height: 319px; width: 494px;">
+          <h5 style="color: #fff; margin-bottom: 25px;">Failed Checks</h3>
+            <div style="height: 280px;">
+              <canvas id="myChart3"></canvas>
+            </div>
+        </div>
+      </div>
+
+    </div>
+    <div style=" width: 1000px; height: 400px;">
+
+      <div style="display: flex;">
+        <div style="height: 400px; width: 494px; margin-right: 35px;">
+          <h5 style="color: #fff; margin-top: 20px;">Critical to Quality Checks</h3>
+            <div style="height: 220px; display: flex;">
+              <table class="table table-sm " style="margin-bottom: 20px; height: 210px; padding: 0px; color: white; text-align: center;">
+                <thead>
+                  <tr>
+                    <th colspan="1" rowspan="2" style="text-align: left;">Check Type</th>
+                    <th colspan="1" style="border-left: 1px solid white; "><%= currentWeek %></th>
+                    <th colspan="2" style="border-left: 1px solid white; ">Pass Rate</th>
+                  </tr>
+                  <tr>
+                    <th class="th-centre" style="width: 100px; border-left: 1px solid white;">Passed</th>
+
+                    <th class="th-centre" style="width: 100px; border-left: 1px solid white;"><%= currentWeek %></th>
+                    <th class=" th-centre" style="width: 100px;">YTD</th>
+                  </tr>
+                </thead>
+                <tbody style="color: white; font-size: 15px;">
+                  <tr>
+                    <td class='td-centre' style="width: 200px; max-height: 15px; text-align: left;">Plant Quality</td>
+                    <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].passCountCTQBHL %></td>
+
+                    <td class='td-centre' style=" width: 25px; border-left: 1px solid white; font-weight: bold;   color:<%- redOrGreen( data[5].passedPercentCTQBHL, dataYTD[0].totalPassedPercentCTQ ) %>;"><%= data[5].passedPercentCTQBHL %>%</td>
+                    <td class='td-centre' style="width: 25px"><%= dataYTD[0].totalPassedPercentCTQ %>%</td>
+                  </tr>
+                  <tr>
+                    <td class='td-centre' style="width: 47px; text-align: left;">Assembly</td>
+                    <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].passCountCTQCP %></td>
+
+                    <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( data[5].passedPercentCTQCP, dataYTD[1].totalPassedPercentCTQ ) %>;"><%= data[5].passedPercentCTQCP %>%</td>
+                    <td class='td-centre' style="width: 25px"><%= dataYTD[1].totalPassedPercentCTQ %>%</td>
+                  </tr>
+                  <tr>
+                    <td class='td-centre' style="width: 47px; text-align: left;">Manufacturing</td>
+                    <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].passCountCTQEM %></td>
+
+                    <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( data[5].passedPercentCTQEM, dataYTD[2].totalPassedPercentCTQ ) %>;"><%= data[5].passedPercentCTQEM %>%</td>
+                    <<td class='td-centre' style="width: 25px"><%= dataYTD[2].totalPassedPercentCTQ %>%</td>
+                  </tr>
+                  <tr>
+                    <td class='td-centre' style="width: 47px; text-align: left;">Paint</td>
+                    <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].passCountCTQHP %></td>
+
+                    <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( data[5].passedPercentCTQHP, dataYTD[3].totalPassedPercentCTQ) %>;"><%= data[5].passedPercentCTQHP %>%</td>
+                    <td class='td-centre' style="width: 25px"><%= dataYTD[3].totalPassedPercentCTQ %>%</td>
+                  </tr>
+                 
+                </tbody>
+              </table>
+            </div>
+            <div style="height: 150px; margin-top: 10px;">
+              <h5 style="color: #fff;">Top Critical To Quality Failures <%= currentWeek %></h5>
+              <% for (let t of  top3FailedLastWeekCTQ) { %>
+              <div style="color: white; margin-bottom: 5px; margin-left: 15px;">
+                <%= t._id %> - <%= t.count %>
+              </div>
+              <% } %>
+
+            </div>
+        </div>
+        <div style="height: 400px; width: 494px;">
+          <h5 style="color: #fff; margin-top: 20px;">Quality Control Checks</h5>
+          <div style="height: 220px; display: flex;">
+            <table class="table table-sm " style="margin-bottom: 20px; height: 210px; padding: 0px; color: white; text-align: center;">
+              <thead>
+                <tr>
+                  <th colspan="1" rowspan="2" style="text-align: left;">Check Type</th>
+                  <th colspan="1" style="border-left: 1px solid white; "><%= currentWeek %></th>
+                  <th colspan="2" style="border-left: 1px solid white; ">Pass Rate</th>
+                </tr>
+                <tr>
+                  <th class="th-centre" style="width: 100px; border-left: 1px solid white;">Passed</th>
+
+                  <th class="th-centre" style="width: 100px; border-left: 1px solid white;"><%= currentWeek %></th>
+                  <th class=" th-centre" style="width: 100px;">YTD</th>
+                </tr>
+              </thead>
+              <tbody style="color: white; font-size: 15px;">
+                <tr>
+                  <td class='td-centre' style="width: 200px; max-height: 15px; text-align: left;">Plant Quality</td>
+                  <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].passCountQCBHL %></td>
+
+                  <td class='td-centre' style=" width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( data[5].passedPercentQCBHL, dataYTD[0].totalPassedPercentQC) %>;"><%= data[5].passedPercentQCBHL %>%</td>
+                  <td class='td-centre' style="width: 25px"><%= dataYTD[0].totalPassedPercentQC %>%</td>
+                </tr>
+                <tr>
+                  <td class='td-centre' style="width: 47px; text-align: left;">Assembly</td>
+                  <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].passCountQCCP %></td>
+
+                  <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( data[5].passedPercentQCCP, dataYTD[1].totalPassedPercentQC) %>;"><%= data[5].passedPercentQCCP %>%</td>
+                  <td class='td-centre' style="width: 25px"><%= dataYTD[1].totalPassedPercentQC %>%</td>
+                </tr>
+                <tr>
+                  <td class='td-centre' style="width: 47px; text-align: left;">Manufacturing</td>
+                  <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].passCountQCEM %></td>
+
+                  <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( data[5].passedPercentQCEM, dataYTD[2].totalPassedPercentQC ) %>;"><%= data[5].passedPercentQCEM %>%</td>
+                  <td class='td-centre' style="width: 25px"><%= dataYTD[2].totalPassedPercentQC %>%</td>
+                </tr>
+                <tr>
+                  <td class='td-centre' style="width: 47px; text-align: left;">Paint</td>
+                  <td class='td-centre' style="width: 25px; border-left: 1px solid white;"><%= data[5].passCountQCHP %></td>
+
+                  <td class='td-centre' style="width: 25px; border-left: 1px solid white; font-weight: bold; color:<%- redOrGreen( data[5].passedPercentQCHP,  dataYTD[3].totalPassedPercentQC ) %>;"><%= data[5].passedPercentQCHP %>%</td>
+                  <td class='td-centre' style="width: 25px"><%= dataYTD[3].totalPassedPercentQC %>%</td>
+                </tr>
+               
+              </tbody>
+            </table>
+          </div>
+          <div style="height: 150px; margin-top: 10px;">
+            <h5 style="color: #fff;">Top Quality Control Failures <%= currentWeek %></h5>
+            <% for (let t of  top3FailedLastWeekQC) { %>
+            <div style="color: white; margin-bottom: 5px;">
+              <%= t._id %> - <%= t.count %>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+
+
+
+
+<div class="container-fluid footer">
+
+  <div class="row header-top">
+    <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+      <img height="24px" src="/7z/content/images/jcb-logo.png">
+      <img height="24px" src="/7z/content/images/df.png">
+    </div>
+    <div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+      J.C. Bamford Excavators LTD &copy; 2022
+    </div>
+  </div>
+</div>
+
+
+<script>
+  Chart.defaults.global.defaultFontColor = "white";
+  //  Chart.defaults.global.defaultFontSize = 10;
+  Chart.defaults.scale.gridLines.display = false;
+  Chart.defaults.global.defaultFontFamily = "Ubuntu";
+
+  let labelArray = <%- JSON.stringify(graphLabels) %>;
+
+  let Pass = [80, 85, 90, 86, 80, 75, 85]
+  let Fail = [20, 15, 10, 14, 20, 25, 15]
+  let Trend = [50, 60, 70, 68, 62, 59, 65]
+
+  let missedPercentArr = [
+    <%= data[0].missedPercent %>,
+    <%= data[1].missedPercent %>,
+    <%= data[2].missedPercent %>,
+    <%= data[3].missedPercent %>,
+    <%= data[4].missedPercent %>,
+    <%= data[5].missedPercent %>,
+  ]
+
+  let completedPercentArr = [
+    <%= data[0].completedPercent %>,
+    <%= data[1].completedPercent %>,
+    <%= data[2].completedPercent %>,
+    <%= data[3].completedPercent %>,
+    <%= data[4].completedPercent %>,
+    <%= data[5].completedPercent %>,
+  ]
+
+  let passCountArr = [
+    <%= data[0].passPercent %>,
+    <%= data[1].passPercent %>,
+    <%= data[2].passPercent %>,
+    <%= data[3].passPercent %>,
+    <%= data[4].passPercent %>,
+    <%= data[5].passPercent %>,
+  ]
+
+  let failCountArr = [
+    <%= data[0].failPercent %>,
+    <%= data[1].failPercent %>,
+    <%= data[2].failPercent %>,
+    <%= data[3].failPercent %>,
+    <%= data[4].failPercent %>,
+    <%= data[5].failPercent %>,
+  ]
+
+  let failCountQCArr = [
+    <%= data[0].failCountQC %>,
+    <%= data[1].failCountQC %>,
+    <%= data[2].failCountQC %>,
+    <%= data[3].failCountQC %>,
+    <%= data[4].failCountQC %>,
+    <%= data[5].failCountQC %>,
+  ]
+  let failCountCTQArr = [
+    <%= data[0].failCountCTQ %>,
+    <%= data[1].failCountCTQ %>,
+    <%= data[2].failCountCTQ %>,
+    <%= data[3].failCountCTQ %>,
+    <%= data[4].failCountCTQ %>,
+    <%= data[5].failCountCTQ %>,
+  ]
+
+
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labelArray,
+      datasets: [
+        // {
+        //   label: 'Completed Trend',
+        //   type: "line",
+        //   borderColor: "Orange",
+        //   pointRadius: 0,
+        //   borderDash: [10, 5],
+        //   fill: false,
+        //   data: Trend,
+        //   // backgroundColor: 'rgb(179,179,179)',
+        //   // borderColor: 'rgb(179,179,179)',
+        //   borderWidth: 4,
+        //   datalabels: {
+        //     // display labels for this specific dataset
+        //     display: false,
+
+        //   },
+        // },
+        {
+          label: 'Completed',
+          data: completedPercentArr,
+          backgroundColor: 'green',
+          // borderColor: 'grey',
+          // borderWidth: 1
+
+        },
+        {
+          label: 'Missed',
+          data: missedPercentArr,
+          backgroundColor: 'red',
+          // borderColor: 'grey',
+          // borderWidth: 1
+        },
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            return Chart.defaults.global.tooltips.callbacks.label(tooltipItem, data) + '%';
+          }
+        }
+      },
+      legend: {
+        display: true,
+        position: 'bottom',
+        // labels: {
+        //   useLineStyle: true,
+        //   // boxWidth: 25
+        // },
+      },
+
+
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true,
+          position: 'left',
+          //  stacked : true,
+          display: false,
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            // stepSize: 0.3,
+            fontSize: 9,
+            //  formatter:: function(value, context, values) {
+            //              if(context.dataIndex === context.dataset.data.length - 1){
+            //                       return value
+            //      }
+            //  }
+
+            callback: function(value) {
+              if (value % 0.2 === 0) {
+                return value
+              }
+            }
+          },
+        }]
+      },
+      plugins: {
+        datalabels: {
+          color: 'white',
+          // font: {
+          //   weight: 'bold'
+          // },
+          formatter: function(value) {
+            if (value === 0) {
+              return ''
+            } else {
+              return Math.round(value) + '%'
+            }
+          },
+        }
+      }
+    }
+  }, document.getElementById("myChart").onclick = function(evt) {
+
+const datasetIndex1 = chart.getElementAtEvent(event)[0]._datasetIndex;
+const model1 = chart.getElementsAtEvent(event)[datasetIndex1]._model;
+onBarClicked1(model1.datasetLabel, model1.label);
+
+});
+
+function onBarClicked1(level, shortDate) {
+
+  
+  // console.log(shortDate)
+// console.log(level + ' ' + date);
+
+let words = shortDate+ level
+let graph = words.replace(/ +/g, "")
+
+// alert(graph)
+
+
+// console.log('I am here')
+
+$(`#${graph}`).modal('show');
+}
+
+  const ctx2 = document.getElementById('myChart2').getContext('2d');
+  const chart2 = new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: labelArray,
+      datasets: [
+        // {
+        //   label: 'Trend',
+        //   type: "line",
+        //   borderColor: "Orange",
+        //   pointRadius: 0,
+        //   borderDash: [10, 5],
+        //   fill: false,
+        //   data: Trend,
+        //   // backgroundColor: 'rgb(179,179,179)',
+        //   // borderColor: 'rgb(179,179,179)',
+        //   borderWidth: 4,
+        //   datalabels: {
+        //     // display labels for this specific dataset
+        //     display: false,
+
+        //   },
+        // },
+        {
+          label: 'Pass',
+          data: passCountArr,
+          backgroundColor: 'green',
+          // borderColor: 'grey',
+          // borderWidth: 1
+        },
+        {
+          label: 'Fail',
+          data: failCountArr,
+          backgroundColor: 'red',
+          // borderColor: 'grey',
+          // borderWidth: 1
+        },
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            return Chart.defaults.global.tooltips.callbacks.label(tooltipItem, data) + '%';
+          }
+        }
+      },
+      legend: {
+        display: true,
+        position: 'bottom',
+        // labels: {
+        //   useLineStyle: true,
+        //   // boxWidth: 25
+        // },
+      },
+
+
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true,
+          position: 'left',
+          //  stacked : true,
+          display: false,
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            // max: 100,
+            // stepSize: 0.3,
+            fontSize: 9,
+            //  formatter:: function(value, context, values) {
+            //              if(context.dataIndex === context.dataset.data.length - 1){
+            //                       return value
+            //      }
+            //  }
+
+            callback: function(value) {
+              if (value % 0.2 === 0) {
+                return value
+              }
+            }
+          },
+        }]
+      },
+      plugins: {
+        datalabels: {
+          color: 'white',
+          font: {
+            weight: 'bold'
+          },
+          formatter: function(value) {
+            if (value === 0) {
+              return ''
+            } else {
+              return Math.round(value) + '%'
+            }
+          },
+        }
+      }
+    }
+  });
+
+  const ctx3 = document.getElementById('myChart3').getContext('2d');
+  const chart3 = new Chart(ctx3, {
+    type: 'bar',
+    data: {
+      labels: labelArray,
+      datasets: [{
+          label: 'Critical to Quality',
+          data: failCountCTQArr,
+          backgroundColor: '#FF0000',
+          // borderColor: 'grey',
+          // borderWidth: 1
+        },
+        {
+          label: 'Quality Control',
+          data: failCountQCArr,
+          backgroundColor: '#ffaa00',
+          // borderColor: 'grey',
+          // borderWidth: 1
+        },
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      legend: {
+        display: true,
+        position: 'bottom',
+        // labels: {
+        //   useLineStyle: true,
+        //   // boxWidth: 25
+        // },
+      },
+
+
+      scales: {
+        xAxes: [{
+          // stacked: true,
+          barPercentage: 0.75,
+        }],
+        yAxes: [{
+          // stacked: true,
+          position: 'left',
+          //  stacked : true,
+          display: false,
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            // max: 100,
+            // stepSize: 0.3,
+            fontSize: 9,
+            //  formatter:: function(value, context, values) {
+            //              if(context.dataIndex === context.dataset.data.length - 1){
+            //                       return value
+            //      }
+            //  }
+
+          },
+        }]
+      },
+      plugins: {
+        datalabels: {
+          color: 'white',
+          font: {
+            weight: 'bold'
+          },
+          formatter: function(value) {
+            if (value === 0) {
+              return ''
+            } else {
+              return value
+            }
+          }
+        }
+      }
+    }
+  }, document.getElementById("myChart3").onclick = function(evt) {
+
+    const datasetIndex = chart3.getElementAtEvent(event)[0]._datasetIndex;
+    const model = chart3.getElementsAtEvent(event)[datasetIndex]._model;
+    onBarClicked(model.datasetLabel, model.label);
+
+  });
+
+  function onBarClicked(level, shortDate) {
+ 
+    // console.log(level + ' ' + date);
+    let type = ''
+    if (level === 'Critical to Quality') type = 'CTQ'
+    if (level === 'Quality Control') type = 'QC'
+
+    let words = shortDate + type
+    let graph = words.replace(/ +/g, "")
+
+    
+
+
+    $(`#${graph}`).modal('show');
+  }
+</script>

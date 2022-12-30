@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-size=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+		<title>JCB - Equipment Monitoring</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/content/font-awesome/css/all.css" type="text/css"> -->
+		<link rel="stylesheet" href="/content/ui/jquery-ui.min.css" type="text/css" />
+		<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<script src="/content/ui/jquery-ui.min.js"></script>
+
+		<!-- Include the plugin's CSS and JS: -->
+		<script type="text/javascript" src="/bootstrap-multiselect-master/dist/js/bootstrap-multiselect.js"></script>
+		<link rel="stylesheet" href="/bootstrap-multiselect-master/dist/css/bootstrap-multiselect.css" type="text/css" />
+
+		<link rel="stylesheet" href="/stylesheets/app.css" />
+		<link rel="stylesheet" href="/font-v6/css/all.css" type="text/css" />
+	</head>
+
+	<%- include('../../views/partials/flash.ejs')%>
+
+	<body style="overflow-x: hidden; background-color: black; margin-top: 35px">
+		<!-- convert ms into HH:MM:SS -->
+		<% function msToTime(duration) { %> <% if (duration === 60000 ) { %> <% return duration/60000 + " " + "minute" %> <% } else { %> <% return
+		duration/60000 + " " + "minutes" %> <% } %> <% } %> <% const capitalizeFirstLetterOfAllWords = (string) => { %> <% let lowerString =
+		string.toLowerCase() %> <% return lowerString.replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase()) %> <% } %>
+
+		<!-- new modal -->
+		<div class="modal fade" id="newContact" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div style="background-color: rgb(252, 176, 38); height: 50px">
+						<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+						<h3 style="text-align: center; margin: 8px">New User</h3>
+					</div>
+					<div class="modal-body">
+						<fieldset>
+							<form action="/equipment-monitoring/register" method="POST">
+								<div class="row" style="color: black">
+									<div class="col">
+										<input class="form-control" type="text" name="shortBu" autocomplete="off" required value="<%= shortBu %>" hidden />
+										<label style="margin-left: 2px; margin-bottom: -2px" for="event">First Name</label>
+										<input
+											style="margin-bottom: 15px; border-radius: 3px"
+											class="form-control"
+											type="text"
+											name="firstName"
+											autocomplete="false"
+											required
+										/>
+
+										<label style="margin-left: 2px; margin-bottom: -2px" for="event">Email</label>
+										<input
+											style="margin-bottom: 15px; border-radius: 3px"
+											class="form-control"
+											type="email"
+											placeholder="Must be a JCB email"
+											name="email"
+											autocomplete="false"
+											required
+										/>
+
+										<label style="margin-left: 2px; margin-bottom: -2px" for="event">Role</label>
+										<select
+											style="margin-bottom: 15px; border-radius: 3px"
+											class="form-control"
+											type="text"
+											placeholder="Must be a JCB mobile"
+											autocomplete="false"
+											required
+											name="role"
+										>
+											<option hidden></option>
+											<% roles.map((role)=> { %>
+											<option><%= role %></option>
+											<% }) %>
+										</select>
+									</div>
+									<div class="col">
+										<label style="margin-left: 2px; margin-bottom: -2px" for="event">Last name</label>
+										<input
+											style="margin-bottom: 15px; border-radius: 3px"
+											class="form-control"
+											type="text"
+											name="lastName"
+											autocomplete="false"
+											required
+										/>
+
+										<label style="margin-left: 2px; margin-bottom: -2px" for="event">Mobile</label>
+										<input
+											style="margin-bottom: 15px; border-radius: 3px"
+											class="form-control"
+											type="text"
+											placeholder="Must be a JCB mobile"
+											minlength="11"
+											maxlength="11"
+											name="mobile"
+											autocomplete="false"
+										/>
+
+										<label style="margin-left: 2px; margin-bottom: -2px" for="event">Clock Number</label>
+										<input
+											style="margin-bottom: 15px; border-radius: 3px"
+											class="form-control"
+											type="text"
+											minlength="6"
+											maxlength="6"
+											autocomplete="false"
+											required
+											name="password"
+										/>
+										<!-- <label style="margin-left: 2px; margin-bottom: -2px; color: red; font-style: italic; font-weight: bolder;" for="event">Must be a JCB work mobile</label> -->
+
+										<!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+										<button
+											type="button"
+											data-dismiss="modal"
+											class="btn btn-danger float-right"
+											style="margin-left: 8px; color: white; border-radius: 4px"
+										>
+											Cancel
+										</button>
+										<button class="btn btn-success float-right" style="margin-bottom: 10px; color: white; border-radius: 4px">Confirm</button>
+									</div>
+								</div>
+							</form>
+							<!-- <button type="close" class="btn btn-danger float-right">Cancel</button> -->
+						</fieldset>
+					</div>
+					<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+						<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row header-top" style="top: 0; position: fixed; width: 102vw; z-index: 100; background-color: rgb(252, 176, 38)">
+			<div class="col text-left" style="padding: 4px 4px 5px 4px">
+				<img style="margin-left: 20px" height="24px" src="/media/jcb-logo.png" />
+			</div>
+			<div class="col text-right" style="padding: 5px 8px 0px 0px">
+				<!-- <a href="/equipment-monitoring/logout/<%= shortBu %>">
+                <span style="font-size: 21px; padding-top: 2px; color: black; margin-left: 5px;;" class="fas fa-cog icon-home"></span>
+            </a> -->
+				<a href="/equipment-monitoring/operations">
+					<span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 3%" class="fas fa-home icon-home"></span>
+				</a>
+			</div>
+		</div>
+
+		<div class="col-main">
+			<div class="float-right"></div>
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center"><%= businessUnit %></h1>
+					<h1 style="font-size: 22px; color: rgb(252, 176, 38); text-align: center">Users</h1>
+				</div>
+
+				<div class="col-lg-12" style="margin-top: 8px; width: 120%; border-top: 3px solid rgb(33, 35, 37)"></div>
+			</div>
+		</div>
+		<section
+			class="float-left"
+			style="
+				background-color: rgb(42, 46, 51);
+				width: 200px;
+				height: 700px;
+				color: white;
+				margin-left: 10px;
+				display: flex;
+				justify-content: space-between;
+				flex-direction: column;
+			"
+		>
+			<div style="text-align: center">
+				<h2 style="font-size: 35px">Options</h2>
+				<% if (shiftAccess) { %>
+				<hr />
+				<a href="/equipment-monitoring/admin/<%= shortBu %>">
+					<h2 style="margin-top: 15px"><i style="font-size: 35px" class="fas fa-clock"></i></h2>
+					<h2 style="font-size: 25px">Edit Shifts</h2>
+				</a>
+				<% } %>
+
+				<hr style="width: 80%; background-color: grey" />
+				<a href="/equipment-monitoring/history/<%= shortBu %>">
+					<h2 style="margin-top: 15px"><i class="fas fa-calendar-alt"></i></h2>
+					<h2 style="font-size: 25px">Shift History</h2>
+				</a>
+				<hr style="width: 80%; background-color: grey" />
+				<a href="/equipment-monitoring/notifications/<%= shortBu %>">
+					<!-- <a type="button" class="btn"  data-toggle="modal" data-target="#exampleModalCenter"><i style="font-size: 38px;" class="far fa-bell"></i></a> -->
+					<h2 style="margin-top: 15px"><i style="font-size: 38px" class="far fa-bell"></i></h2>
+					<h2 style="font-size: 25px">Notifications</h2>
+				</a>
+				<% if (userAccess) { %>
+				<hr style="width: 80%; background-color: grey" />
+				<a href="/equipment-monitoring/contacts/<%= shortBu %>">
+					<!-- <a type="button" class="btn"  data-toggle="modal" data-target="#exampleModalCenter"><i style="font-size: 38px;" class="far fa-bell"></i></a> -->
+					<h2 style="margin-top: 15px"><i style="font-size: 38px" class="fas fa-solid fa-user-plus"></i></h2>
+					<h2 style="font-size: 25px">Edit Users</h2>
+				</a>
+				<% } %>
+				<hr style="width: 80%; background-color: grey" />
+			</div>
+			<div style="text-align: center">
+				<a href="/equipment-monitoring/logout">
+					<!-- <a type="button" class="btn"  data-toggle="modal" data-target="#exampleModalCenter"><i style="font-size: 38px;" class="far fa-bell"></i></a> -->
+					<h2 style="margin-top: 15px"><i style="font-size: 38px" class="fa-solid fa-right-from-bracket"></i></h2>
+					<h2 style="font-size: 25px">Logout</h2>
+				</a>
+			</div>
+		</section>
+		<section style="margin: 0 24%">
+			<table class="table table-hover table-dark" style="font-size: 15px; height: 700px; background-color: rgb(44, 47, 49)">
+				<thead style="font-size: 18px">
+					<tr class="d-flex">
+						<th style="width: 3vw"></th>
+						<th style="width: 13vw">Name</th>
+						<th style="width: 10vw">Role</th>
+						<th style="width: 13vw">Email</th>
+						<th style="width: 13vw; margin-left: -15px">
+							Mobile<a href="" data-toggle="modal" data-target="#newContact"><i style="font-size: 25px" class="fas fa-plus float-right"></i></a>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% for (let c of contacts) { %>
+					<tr class="d-flex">
+						<td style="width: 3vw">
+							<a
+								href=""
+								data-toggle="modal"
+								data-target="#deleteContact<%= c._id %>"
+								style="background-color: transparent; margin-top: -5px; color: red; font-weight: bold; border: none; font-size: 1.2rem"
+								class="btn btn-danger btn-sm"
+								>X</a
+							>
+						</td>
+						<td style="width: 13vw"><%= capitalizeFirstLetterOfAllWords(c.firstName) %> <%= capitalizeFirstLetterOfAllWords(c.lastName) %></td>
+						<td style="width: 10vw"><%= c.role %></td>
+						<td style="width: 12vw"><%= c.email %></td>
+						<td style="width: 13vw">
+							<%= c.mobile %><a href="" data-toggle="modal" data-target="#editContact<%= c._id %>"
+								><i style="font-size: 15px" class="fas fa-pen float-right"></i
+							></a>
+						</td>
+					</tr>
+					<!--edit modal -->
+					<div class="modal fade" id="editContact<%= c._id %>" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered">
+							<div class="modal-content">
+								<div style="background-color: rgb(252, 176, 38); height: 50px">
+									<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+									<h3 style="text-align: center; margin: 8px">Update User</h3>
+								</div>
+								<div class="modal-body">
+									<fieldset>
+										<form action="/equipment-monitoring/edit-user/<%= c._id %>/<%= shortBu %>" method="POST">
+											<div class="row" style="color: black">
+												<div class="col">
+													<input class="form-control" type="text" name="shortBu" autocomplete="off" required value="<%= shortBu %>" hidden />
+
+													<% if (currentUser && currentUser._id == c._id ) { %>
+													<label style="margin-left: 2px; margin-bottom: -2px" for="event">Email</label>
+													<input
+														style="margin-bottom: 15px; border-radius: 3px"
+														class="form-control"
+														type="email"
+														value="<%= c.email %>"
+														name="email"
+														autocomplete="false"
+													/>
+
+													<% } else { %>
+													<label style="margin-left: 2px; margin-bottom: -2px" for="event">Role</label>
+													<select style="margin-bottom: 15px; border-radius: 3px" class="form-control" type="text" autocomplete="false" name="role">
+														<option hidden><%= c.role %></option>
+														<% roles.map((role)=> { %>
+														<option><%= role %></option>
+														<% }) %>
+													</select>
+													<% } %>
+
+													<!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+													<button
+														type="button"
+														data-dismiss="modal"
+														class="btn btn-danger float-right"
+														style="margin-left: 8px; color: white; border-radius: 4px"
+													>
+														Cancel
+													</button>
+													<button class="btn btn-success float-right" style="margin-bottom: 10px; color: white; border-radius: 4px">Confirm</button>
+												</div>
+											</div>
+										</form>
+										<!-- <button type="close" class="btn btn-danger float-right">Cancel</button> -->
+									</fieldset>
+								</div>
+								<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+									<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+									<img height="24px" src="/7z/content/images/df.png" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end modal -->
+					<!--delete modal -->
+					<div class="modal fade" id="deleteContact<%= c._id %>" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered">
+							<div class="modal-content">
+								<div style="background-color: rgb(252, 176, 38); height: 50px">
+									<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+									<h3 style="text-align: center; margin: 8px">Delete Contact</h3>
+								</div>
+								<div class="modal-body">
+									<fieldset>
+										<form action="/equipment-monitoring/delete-user/<%= c._id  %>">
+											<div class="row" style="color: black">
+												<div class="col">
+													<p>
+														<label style="margin-left: 2px; margin-bottom: 20px" for="event"
+															>Are you sure you want to delete <%= c.firstName %> <%= c.lastName %></label
+														>
+													</p>
+
+													<!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+													<button
+														type="button"
+														data-dismiss="modal"
+														class="btn btn-danger float-right"
+														style="margin-left: 8px; color: white; border-radius: 4px"
+													>
+														Cancel
+													</button>
+													<button class="btn btn-success float-right" style="margin-bottom: 10px; color: white; border-radius: 4px">Confirm</button>
+												</div>
+											</div>
+										</form>
+									</fieldset>
+								</div>
+								<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+									<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+									<img height="24px" src="/7z/content/images/df.png" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end modal -->
+					<% } %>
+				</tbody>
+			</table>
+		</section>
+
+		<div
+			class="container-fluid footer"
+			style="bottom: 0; position: fixed; width: 100vw; z-index: 100; background-color: transparent; margin-top: 5px; z-index: 2"
+		>
+			<div class="row header-top">
+				<div class="col-lg-6 d-lg-block text-left" style="padding: 4px 4px 5px 4px; background-color: rgb(252, 176, 38)">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold; background-color: rgb(252, 176, 38)">
+					J.C. Bamford Excavators LTD &copy; 2022
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$('#example-form-group').multiselect({
+					enableFiltering: true,
+					includeSelectAllOption: true,
+					buttonContainer: '<div class="btn-group" style="width: 465px; margin-left: -18px" />',
+					enableClickableOptGroups: true,
+					//    enableCollapsibleOptGroups: true,
+					maxHeight: 500,
+					width: 500,
+				})
+				$('.multiselect-container .multiselect-filter', $('#example-fix-filter').parent()).css({
+					position: 'sticky',
+					top: '0px',
+					'z-index': 1,
+				})
+			})
+		</script>
+		<script type="text/javascript">
+			$('#types').multiselect({
+				// enableFiltering: true,
+				includeSelectAllOption: true,
+				buttonContainer: '<div class="btn-group" style="width: 465px; border-radius: 0px;" />',
+				maxHeight: 250,
+				width: 500,
+			})
+			$('#emails').multiselect({
+				enableFiltering: true,
+				includeSelectAllOption: true,
+				buttonContainer: '<div class="btn-group" style="width: 465px; border-radius: 0px;" />',
+				maxHeight: 250,
+				width: 500,
+			})
+		</script>
+
+		<script src="/multi/script.js"></script>
+	</body>
+</html>

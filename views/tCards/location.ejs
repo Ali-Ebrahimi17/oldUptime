@@ -1,0 +1,103 @@
+<% layout('layouts/boilerplateTCard')%>
+<!-- <meta http-equiv="refresh" content="100"> -->
+<link rel="stylesheet" href="/7z/content/bootstrap/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css" />
+<link rel="stylesheet" href="/7z/content/dashboards.css" type="text/css" />
+<link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css" />
+<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+<script src="/content/marquee/jquery.marquee.min.js"></script>
+<style>
+	body {
+		background-color: black;
+	}
+	h5 {
+		color: white;
+		font-size: 1.5rem;
+		margin-bottom: -15px;
+	}
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+	h2 {
+		font-weight: bold;
+		color: black;
+	}
+	h1 {
+		font-weight: bold;
+		font-size: 4rem;
+	}
+	h6 {
+		margin-left: -5px;
+	}
+	hr {
+		background-color: #6a6d6d;
+	}
+	.div-holder {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		margin: 25px 65px;
+	}
+</style>
+
+<div class="main-tCard-container">
+	<h2 class="main-title">T CARD SYSTEM</h2>
+
+	<div class="row" style="width: 100%">
+		<div class="col-lg check-row;">
+			<h3><%= division %></h3>
+			<div style="text-align: center; font-size: 18px; margin-top: -10px; color: grey">
+				<div style="font-weight: bold">
+					<p><%= doneLoadall %>/<%= totalLoadall %> Completed</p>
+				</div>
+			</div>
+			<hr style="margin-top: -12px" />
+
+			<div class="div-holder">
+				<a href="/tCard/show/LDL/Paint Shop/Shot Blast/Days">
+					<div class="cards-container" style="margin-bottom: 10px">
+						<div
+							class="<% if (failsShotBlast > 0 ) { %>card-wrapper-red<% } else if (containedShotBlast > 0 ) { %>card-wrapper-amber<% } else if (doneSB < totalSB) { %>card-wrapper-grey<% } else { %>card-wrapper-green<% } %>"
+						>
+							<div class="card-content-front">
+								<div>
+									<h5 class="division-card-name">Shot Blast</h5>
+									<br />
+									<% if (failsShotBlast > 0 ) { %>
+									<h1><%= failsShotBlast %></h1>
+									<% } else if (containedShotBlast > 0 ) { %>
+									<h1><%= containedShotBlast %></h1>
+									<% } else if (doneSB < totalSB ) { %>
+									<div style="margin-bottom: 20px; margin-top: 10px">
+										<h1 style="margin-bottom: -2px; font-size: 2.5rem"><%= doneSB %> / <%= totalSB %></h1>
+										<p style="margin-bottom: -10px; font-size: 1.2rem">Completed</p>
+									</div>
+									<% } else { %>
+									<h1><i style="font-size: 3rem" class="fas fa-check"></i></h1>
+									<% } %>
+								</div>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+
+			<div class="container-fluid footer">
+				<div class="row header-top">
+					<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+						<img height="24px" src="/7z/content/images/jcb-logo.png" />
+						<img height="24px" src="/7z/content/images/df.png" />
+					</div>
+					<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+						J.C. Bamford Excavators LTD &copy; 2022
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

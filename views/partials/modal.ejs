@@ -1,0 +1,47 @@
+<div id="myModal" class="modal modal1">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div style="background-color: rgb(252, 176, 38); height: 50px;">
+        <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+        <h3 style="text-align: center; margin: 8px;">Log New Concern</h3>
+      </div>
+      <div class="modal-body">
+        <form action="/stoppage/new" method="POST">
+          <fieldset>
+            <!-- <legend>Log New Concern</legend> -->
+            <div class="form-group">
+              <label for="exampleSelect1">Please select the Breakdown Type</label>
+              <select class="form-control" name="stoppage[type]" id="breakdownType" required>
+                <option hidden></option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="exampleSelect1">Please select the concern type from the dropdown</label>
+              <select class="form-control" name="stoppage[concern]" id="concernType" disabled>
+                <option hidden></option>
+                <option hidden></option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="exampleTextarea">Give details of the concern in the box below</label>
+              <textarea class="form-control" id="reasonTextarea" rows="8" style="resize: none" disabled></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success float-right" style="margin-left: 8px; margin-bottom: 10px;">Submit</button>
+            <!-- <button type="close" class="btn btn-danger float-right">Cancel</button> -->
+          </fieldset>
+        </form>
+      </div>
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+        <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+      </div>
+    </div>
+  </div>
+</div>

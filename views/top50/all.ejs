@@ -1,0 +1,691 @@
+<% layout('layouts/boilerplate')%>
+
+
+<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+<script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+
+
+
+<% let twelveMonthsTime = moment().add(12, 'months').format('MMM-YY') %>
+<% let elevenMonthsTime = moment().add(11, 'months').format('MMM-YY') %>
+<% let tenMonthsTime = moment().add(10, 'months').format('MMM-YY') %>
+<% let nineMonthsTime = moment().add(9, 'months').format('MMM-YY') %>
+<% let eightMonthsTime = moment().add(8, 'months').format('MMM-YY') %>
+<% let sevenMonthsTime = moment().add(7, 'months').format('MMM-YY') %>
+<% let sixMonthsTime = moment().add(6, 'months').format('MMM-YY') %>
+<% let fiveMonthsTime = moment().add(5, 'months').format('MMM-YY') %>
+<% let fourMonthsTime = moment().add(4, 'months').format('MMM-YY') %>
+<% let threeMonthsTime = moment().add(3, 'months').format('MMM-YY') %>
+<% let twoMonthsTime = moment().add(2, 'months').format('MMM-YY') %>
+<% let nextMonth = moment().add(1, 'months').format('MMM-YY') %>
+
+<% let thisMonth = moment().subtract(0, 'months').format('MMM-YY') %>
+
+<% let oneMonthAgo = moment().subtract(1, 'months').format('MMM-YY') %>
+<% let twoMonthsAgo = moment().subtract(2, 'months').format('MMM-YY') %>
+<% let threeMonthsAgo = moment().subtract(3, 'months').format('MMM-YY') %>
+<% let fourMonthsAgo = moment().subtract(4, 'months').format('MMM-YY') %>
+<% let fiveMonthsAgo = moment().subtract(5, 'months').format('MMM-YY') %>
+<% let sixMonthsAgo = moment().subtract(6, 'months').format('MMM-YY') %>
+<% let sevenMonthsAgo = moment().subtract(7, 'months').format('MMM-YY') %>
+<% let eightMonthsAgo = moment().subtract(8, 'months').format('MMM-YY') %>
+<% let nineMonthsAgo = moment().subtract(9, 'months').format('MMM-YY') %>
+<% let tenMonthsAgo= moment().subtract(10, 'months').format('MMM-YY') %>
+<% let elevenMonthsAgo = moment().subtract(11, 'months').format('MMM-YY') %>
+<% let twelveMonthsAgo = moment().subtract(12, 'months').format('MMM-YY') %>
+
+
+<% const closureMonths = [
+    twelveMonthsAgo,
+    elevenMonthsAgo,
+    tenMonthsAgo,
+    nineMonthsAgo,
+    eightMonthsAgo,
+    sevenMonthsAgo,
+    sixMonthsAgo,
+    fiveMonthsAgo,
+    fourMonthsAgo,
+    threeMonthsAgo,
+    twoMonthsAgo,
+    oneMonthAgo,
+    thisMonth,
+    nextMonth,
+    twoMonthsTime,
+    threeMonthsTime,
+    fourMonthsTime,
+    fiveMonthsTime,
+    sixMonthsTime,
+    sevenMonthsTime,
+    eightMonthsTime,
+    nineMonthsTime,
+    tenMonthsTime,
+    elevenMonthsTime,
+    twelveMonthsTime,
+ 
+  ] %>
+
+<% let totalCount = 0 %>
+<% parts.forEach(part => {%>
+<% totalCount += part.count %>
+<% }) %>
+
+<% let closedNum = 0 %>
+<% let closedCount =  0 %>
+<% parts.forEach(part=> {%>
+<% if (part.rag == 'Closed') { %>
+<% closedNum++ %>
+<% closedCount += part.count %>
+<% }; %>
+<% }) %>
+
+<% let containedNum = 0 %>
+<% let containedCount =  0 %>
+<% parts.forEach(part=> {%>
+<% if (part.rag == 'Contained') { %>
+<% containedNum++ %>
+<% containedCount += part.count %>
+<% }; %>
+<% }) %>
+
+<% let openNum = 0 %>
+<% let openCount =  0 %>
+<% parts.forEach(part=> {%>
+<% if (part.rag == '' || part.rag == 'Open' ) { %>
+<% openNum++ %>
+<% openCount += part.count %>
+<% }; %>
+<% }) %>
+
+<% let assemblyNum = 0 %>
+<% let assemblyCount =  0 %>
+<% parts.forEach(part=> {%>
+<% if (part.asdJosh == 'Assembly') { %>
+<% assemblyNum++ %>
+<% assemblyCount += part.count %>
+<% }; %>
+<% }) %>
+
+<% let supplierNum = 0 %>
+<% let supplierCount =  0 %>
+<% parts.forEach(part=> {%>
+<% if (part.asdJosh == 'Supplier') { %>
+<% supplierNum++ %>
+<% supplierCount += part.count %>
+<% }; %>
+<% }) %>
+
+<% let designNum = 0 %>
+<% let designCount =  0 %>
+<% parts.forEach(part=> {%>
+<% if (part.asdJosh == 'Design') { %>
+<% designNum++ %>
+<% designCount += part.count %>
+<% }; %>
+<% }) %>
+
+<% let shouldNum = 0 %>
+<% let shouldCount =  0 %>
+<% parts.forEach(part=> {%>
+<% if (part.sccJosh == 'Should') { %>
+<% shouldNum++ %>
+<% shouldCount += part.count %>
+<% }; %>
+<% }) %>
+
+<% let couldNum = 0 %>
+<% let couldCount =  0 %>
+<% parts.forEach(part=> {%>
+<% if (part.sccJosh == 'Could') { %>
+<% couldNum++ %>
+<% couldCount += part.count %>
+<% }; %>
+<% }) %>
+
+<% let cannotNum = 0 %>
+<% let cannotCount =  0 %>
+<% parts.forEach(part=> {%>
+<% if (part.sccJosh == 'Cannot') { %>
+<% cannotNum++ %>
+<% cannotCount += part.count %>
+<% }; %>
+<% }) %>
+
+
+<% let closedPercent = Math.round((closedCount/totalCount)*100) %>
+<% let containedPercent = Math.round((containedCount/totalCount)*100) %>
+<% let openPercent = Math.round((openCount/totalCount)*100) %>
+
+
+<% let assemblyPercent = Math.round((assemblyCount/totalCount)*100) %>
+<% let supplierPercent = Math.round((supplierCount/totalCount)*100) %>
+<% let designPercent = Math.round((designCount/totalCount)*100) %>
+
+
+<% let shouldPercent = Math.round((shouldCount/totalCount)*100) %>
+<% let couldPercent = Math.round((couldCount/totalCount)*100) %>
+<% let cannotPercent = Math.round((cannotCount/totalCount)*100) %>
+
+
+<% let top50Percent = Math.round((totalCount/allParts)*100) %>
+
+<body style="background-color: black;">
+
+  <div class="top50">
+    <header class="" style="align-items: flex-end; margin-right: 50px;">
+      <% if (period === 'doa') { %>
+      <div class="top-graph-line">
+        <div class="scc-doa">
+          <h2 style="color: white; padding-right: 20px;">DOA <%= type.toUpperCase()  %><br>All Claims</h2>
+        </div>
+        <h5 style="color: white; margin-right: -145px;"></h5>
+        <div style="margin-bottom: -5px;" class="scc-doa">
+          <canvas id="doughnut-chart-warranty"></canvas>
+          <h5 class="float-right" style="color: white; margin-top: -150px;"></h5>
+        </div>
+        <div class="scc-doa">
+          <canvas id="bar-chart-scc"></canvas>
+        </div>
+        <div class="scc-doa">
+          <canvas id="Chart1"></canvas>
+        </div>
+        <div class="scc-doa">
+          <canvas id="pie-chart-asd"></canvas>
+        </div>
+      </div>
+      <% }%>
+      <% if (period === 't0') { %>
+      <div class="top-graph-line">
+        <div class="scc-doa">
+          <h2 style="color: white; ">T3 <%= type.toUpperCase()  %><br>All Claims</h2>
+        </div>
+        <h5 style="color: white; margin-right: -225px;"></h5>
+        <div style="margin-bottom: -5px;" class="scc-doa">
+          <canvas id="doughnut-chart-warranty"></canvas>
+          <h5 class="float-right" style="color: white; margin-top: -150px;"></h5>
+        </div>
+        <div class="scc-doa">
+          <canvas id="doughnut-chart-warranty"></canvas>
+        </div>
+        <div class="scc-doa">
+          <canvas id="bar-chart-scc"></canvas>
+        </div>
+        <div class="scc-doa" style="margin-left: -50%;">
+          <canvas id="Chart1"></canvas>
+        </div>
+        <div class="scc-doa">
+          <canvas id="pie-chart-asd"></canvas>
+        </div>
+      </div>
+      <% }%>
+      <% if (period === 't1') { %>
+      <div class="top-graph-line">
+        <div class="scc-doa">
+          <h2 style="color: white; ">T1 <%= type.toUpperCase()  %><br>All Claims</h2>
+        </div>
+        <h5 style="color: white; margin-right: -225px;"></h5>
+        <div style="margin-bottom: -5px;" class="scc-doa">
+          <canvas id="doughnut-chart-warranty"></canvas>
+          <h5 class="float-right" style="color: white; margin-top: -150px;"></h5>
+        </div>
+        <div class="scc-doa">
+          <canvas id="doughnut-chart-warranty"></canvas>
+        </div>
+        <div class="scc-doa">
+          <canvas id="bar-chart-scc"></canvas>
+        </div>
+        <div class="scc-doa" style="margin-left: -50%;">
+          <canvas id="Chart1"></canvas>
+        </div>
+        <div class="scc-doa">
+          <canvas id="pie-chart-asd"></canvas>
+        </div>
+      </div>
+      <% }%>
+      <% if (period === 't3') { %>
+      <div class="top-graph-line">
+        <div class="scc-doa">
+          <h2 style="color: white; ">T3 <%= type.toUpperCase()  %><br>All Claims</h2>
+        </div>
+        <h5 style="color: white; margin-right: -225px;"></h5>
+        <div style="margin-bottom: -5px;" class="scc-doa">
+          <canvas id="doughnut-chart-warranty"></canvas>
+          <h5 class="float-right" style="color: white; margin-top: -150px;"></h5>
+        </div>
+        <div class="scc-doa">
+          <canvas id="doughnut-chart-warranty"></canvas>
+        </div>
+        <div class="scc-doa">
+          <canvas id="bar-chart-scc"></canvas>
+        </div>
+        <div class="scc-doa" style="margin-left: -50%;">
+          <canvas id="Chart1"></canvas>
+        </div>
+        <div class="scc-doa">
+          <canvas id="pie-chart-asd"></canvas>
+        </div>
+      </div>
+      <% }%>
+
+    </header>
+    <form class="form-inline float-right" action="/top50/all/<%= period %>/<%=division%>/<%= type %>" value="" method="GET">
+      <button class="btn btn-md btn-danger" style="margin-right: 5px; margin-top: -3%;"><i class="fas fa-times-circle"></i> Clear Filters</button>
+    </form>
+
+
+    <table class="table table-hover table-dark " style="font-size: 12px; text-align: center; height: 70vh;">
+      <thead>
+        <tr>
+          <% if (period === 'doa') { %>
+          <h5 style="color: red; margin-bottom: -20px;"># Red text = Claim in last 48 hours</h5>
+          <th  style=" background-color: coral; width: 34.5%;">PRE COUNTED <%= period.toUpperCase() %><br>TOP 50</th>
+          <th style=" background-color: cornflowerblue; width: 20.5%;">COUNTED <%= period.toUpperCase() %><br>TOP 50</th>
+          <th style=" width: 8%; background-color: green;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?rag=Closed">CLOSED<br><%= closedNum %> - (<%= closedPercent %>%)</a></th>
+          <th style=" width: 8%; background-color: orange;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?rag=Contained">CONTAINED<br><%= containedNum %> - (<%= containedPercent %>%)</a></th>
+          <th style=" width: 8%; background-color: red;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?rag=Open">OPEN<br><%= openNum %> - (<%= openPercent %>%)</a></th>
+          <th style=" width: 7%; background-color: cornflowerblue;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?asdJosh=Assembly">ASSEMBLY<br><%= assemblyNum %> - (<%= assemblyPercent %>%)</a></th>
+          <th style=" width: 7%; background-color: cornflowerblue;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?asdJosh=Supplier">SUPPLIER<br><%= supplierNum %> - (<%= supplierPercent%>%)</a></th>
+          <th style=" width: 7%; background-color: cornflowerblue;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?asdJosh=Design">DESIGN<br><%= designNum %> - (<%= designPercent %>%)</a></th>
+
+          <% }%>
+          <% if (period != 'doa') { %>
+          <h5 style="color: red; margin-bottom: -20px;"># Red text = Claim in last 48 hours</h5>
+          <th style=" height: 55px; background-color: coral; width: 38%;"><%= period.toUpperCase() %><br>TOP 50</th>
+          <th style=" background-color: cornflowerblue; width: 17.5%;">PRE <%= period.toUpperCase() %><br>TOP 50</th>
+          <th style=" width: 8%; background-color: green;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?rag=Closed">CLOSED<br><%= closedNum %> - (<%= closedPercent %>%)</a></th>
+          <th style=" width: 8%; background-color: orange;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?rag=Contained">CONTAINED<br><%= containedNum %> - (<%= containedPercent %>%)</a></th>
+          <th style=" width: 8%; background-color: red;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?rag=Open">OPEN<br><%= openNum %> - (<%= openPercent %>%)</a></th>
+          <th style=" width: 7%; background-color: cornflowerblue;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?asdJosh=Assembly">ASSEMBLY<br><%= assemblyNum %> - (<%= assemblyPercent %>%)</a></th>
+          <th style=" width: 7%; background-color: cornflowerblue;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?asdJosh=Supplier">SUPPLIER<br><%= supplierNum %> - (<%= supplierPercent%>%)</a></th>
+          <th style=" width: 7%; background-color: cornflowerblue;"><a href="/top50/all/<%= period %>/<%=division%>/<%= type %>?asdJosh=Design">DESIGN<br><%= designNum %> - (<%= designPercent %>%)</a></th>
+
+          <% } %>
+
+
+          <th colspan="3"></th>
+        </tr>
+        <tr class="d-flex">
+          <th style="width: 13vw; ">Part Number</th>
+          <% if (period === 'doa') { %>
+          <th style="width: 4.2vw; text-align: right; ">In T3</th>
+          <% } %>
+          <% if (period != 'doa') { %>
+          <th style="width: 4.2vw;  text-align: right;">In DOA</th>
+          <% } %>
+          <th style="width: 3.5vw;"><%= tenMonthsAgo %></th>
+          <th style="width: 3.5vw;"><%= nineMonthsAgo %></th>
+          <th style="width: 3.5vw;"><%= eightMonthsAgo %></th>
+          <th style="width: 3.5vw;"><%= sevenMonthsAgo %></th>
+          <th style="width: 3.5vw;"><%= sixMonthsAgo %></th>
+          <th style="width: 3.5vw;"><%= fiveMonthsAgo %></th>
+          <th style="width: 3.5vw;"><%= fourMonthsAgo %></th>
+          <th style="width: 3.5vw;"><%= threeMonthsAgo %></th>
+          <th style="width: 3.5vw;"><%= twoMonthsAgo %></th>
+          <th style="width: 3.5vw;"><%= oneMonthAgo %></th>
+          <th style="width: 3.5vw;"><%= thisMonth %></th>
+          <th style="width: 60px;">Count</th>
+          <th style="width: 150px;">Concern</th>
+          <th style="width: 80px;">RAG</th>
+          <% if (period === 'doa') { %>
+          <th style="width: 3.5vw;">SCC</th>
+          <th style="width: 3.5vw;">ASD</th>
+          <th style="width: 5.5vw;">Action</th>
+          <th style="width: 5vw;">Cut in Date</th>
+          <th style="width: 3.5vw;">Total</th>
+          <th style="width: 145px;">Champion</th>
+          <% }%>
+          <% if (period != 'doa') { %>
+          <th style="width: 3.5vw;">ASD</th>
+          <th style="width: 9vw;">Action</th>
+          <th style="width: 5vw;">Cut in Date</th>
+          <th style="width: 3.5vw;">Total</th>
+          <th style="width: 145px;">Champion</th>
+          <% } %>
+        </tr>
+      </thead>
+
+
+
+
+
+      <tbody>
+        <% let x = 0; %>
+        <% for (let i = 0; i < month1.length; i++) { %>
+        <% let str = JSON.stringify(parts[x].concern) %>
+        <% if (str.length > 2) { %>
+        <%  str = str.substring(2, str.length - 2)%>
+        <% } else { %>
+        <%  str = str.substring(2, str.length )%>
+        <% } %>
+        <% let str1 = JSON.stringify(parts[x].action) %>
+        <% if (str1.length > 2) { %>
+        <%  str1 = str1.substring(2, str1.length - 2)%>
+        <% } else { %>
+        <%  str1 = str1.substring(2, str1.length )%>
+        <% } %>
+
+
+
+
+        <tr class="d-flex">
+          <td style=" width: 15vw; text-align: start; font-size: 1rem;" class="<% if ((last48HoursParts.indexOf(parts[x]._id) > -1) && (parts[x].rag == 'Open' || parts[x].rag == '' )) { %>steady-red<% } else { %> <% } %>"> <a href="/top50/part/<%= period %>/<%=division%>/<%= type %>/<%=parts[x]._id%>"><%= parts[x]._id.substring(0, 23).toUpperCase() %>...</a></td>
+          <% if (otherTParts.indexOf(parts[x]._id) > -1) { %>
+          <td style=" width: 2vw; font-weight: bold;  color: red; font-size: 1.5rem; text-align: center;"><i class="fas fa-exclamation"></i></td>
+          <% } else { %>
+          <td style=" width: 2vw; font-weight: bold; "></td>
+          <% } %>
+          <td style=" width: 3.5vw; font-weight: bold; border-left: 1px solid white;" class="<% if ((closureMonths .indexOf(tenMonthsAgo) > closureMonths .indexOf(parts[x].closureDate.toString()) && month1[x] > 0) && (parts[x].rag == 'Contained' || parts[x].rag == 'Closed' )) { %>top50failure<% } else { %> <% } %>"><%= month1[x] %></td>
+            <td style=" width: 3.5vw; font-weight: bold;" class="<% if ((closureMonths .indexOf(nineMonthsAgo) > closureMonths .indexOf(parts[x].closureDate.toString()) && month2[x] > 0) && (parts[x].rag == 'Contained' || parts[x].rag == 'Closed' )) { %>top50failure<% } else { %> <% } %>"><%= month2[x] %></td>
+            <td style=" width: 3.5vw; font-weight: bold;" class="<% if ((closureMonths .indexOf(eightMonthsAgo) > closureMonths .indexOf(parts[x].closureDate.toString()) && month3[x] > 0) && (parts[x].rag == 'Contained' || parts[x].rag == 'Closed' )) { %>top50failure<% } else { %> <% } %>"><%= month3[x] %></td>
+            <td style=" width: 3.5vw; font-weight: bold;" class="<% if ((closureMonths .indexOf(sevenMonthsAgo) > closureMonths .indexOf(parts[x].closureDate.toString()) && month4[x] > 0) && (parts[x].rag == 'Contained' || parts[x].rag == 'Closed' )) { %>top50failure<% } else { %> <% } %>"><%= month4[x] %></td>
+            <td style=" width: 3.5vw; font-weight: bold;  <% if (period === 'doa') { %>border-right: 1px solid white;<% } else { %> <% } %>" class="<% if ((closureMonths .indexOf(sixMonthsAgo) > closureMonths .indexOf(parts[x].closureDate.toString()) && month5[x] > 0) && (parts[x].rag == 'Contained' || parts[x].rag == 'Closed' )) { %>top50failure<% } else { %> <% } %>"><%= month5[x] %></td>
+            <td style=" width: 3.5vw; font-weight: bold; <% if (period != 'doa') { %>border-right: 1px solid white;<% } else { %> <% } %>" class="<% if ((closureMonths .indexOf(fiveMonthsAgo) > closureMonths .indexOf(parts[x].closureDate.toString()) && month6[x] > 0) && (parts[x].rag == 'Contained' || parts[x].rag == 'Closed' )) { %>top50failure<% } else { %> <% } %>"><%= month6[x] %></td>
+            <td style=" width: 3.5vw; font-weight: bold;" class="<% if ((closureMonths .indexOf(fourMonthsAgo) > closureMonths .indexOf(parts[x].closureDate.toString()) && month7[x] > 0) && (parts[x].rag == 'Contained' || parts[x].rag == 'Closed' )) { %>top50failure<% } else { %> <% } %>"><%= month7[x] %></td>
+            <td style=" width: 3.5vw; font-weight: bold;" class="<% if ((closureMonths .indexOf(threeMonthsAgo) > closureMonths .indexOf(parts[x].closureDate.toString()) && month8[x] > 0) && (parts[x].rag == 'Contained' || parts[x].rag == 'Closed' )) { %>top50failure<% } else { %> <% } %>"><%= month8[x] %></td>
+            <td style=" width: 3.5vw; font-weight: bold;" class="<% if ((closureMonths .indexOf(twoMonthsAgo) > closureMonths .indexOf(parts[x].closureDate.toString()) && month9[x] > 0) && (parts[x].rag == 'Contained' || parts[x].rag == 'Closed' )){ %>top50failure<% } else { %> <% } %>"><%= month9[x] %></td>
+            <td style=" width: 3.5vw; font-weight: bold;" class="<% if ((closureMonths .indexOf(oneMonthAgo) > closureMonths .indexOf(parts[x].closureDate.toString()) && month10[x] > 0) && (parts[x].rag == 'Contained' || parts[x].rag == 'Closed' )) { %>top50failure<% } else { %> <% } %>"><%= month10[x] %></td>
+            <td style=" width: 3.5vw; font-weight: bold;" class="<% if ((closureMonths .indexOf(thisMonth) > closureMonths .indexOf(parts[x].closureDate.toString()) && month11[x] > 0) && (parts[x].rag == 'Contained' || parts[x].rag == 'Closed' )) { %>top50failure<% } else { %> <% } %>"><%= month11[x] %></td>
+            <td style=" width: 60px; font-weight: bold; border-left: 1px solid white;  border-right: 1px solid white;"><%= parts[x].count %></td>
+            <td style=" width: 150px;"><%= str.substring(0,30) %></td>
+            <td style="text-align: center; width: 80px;" class="<% if (parts[x].rag == 'Closed') { %>top50green<% } else if  (parts[x].rag == 'Contained') { %>top50amber<% } else { %>top50red<% } %>"><% if (parts[x].rag == '') { %>Open<% } else { %><%= parts[x].rag %><% } %></td>
+          <% if (period === 'doa') { %>
+          <td style=" width: 3.5vw;"><a href="/top50/50/<%= period %>/<%=division%>/<%= type %>?sccJosh=<%= parts[x].sccJosh %>"><%= parts[x].sccJosh %></a></td>
+          <td style=" width: 3.5vw;"><a href="/top50/50/<%= period %>/<%=division%>/<%= type %>?asdJosh=<%= parts[x].asdJosh %>"><%= parts[x].asdJosh %></a></td>
+          <td style=" width: 5.5vw;"><%= str1.substring(0,20) %></td>
+          <td style=" width: 5vw;"><%= parts[x].closureDate %></td>
+          <td style=" width: 3.5vw;"><a href="/top50/edit/<%= period %>/<%= division %>/<%= type %>/<%=parts[x]._id%>"><%= ((parts[x].count/allParts)* 100).toFixed(1) %>%</a></td>
+          <td style=" width: 145px;"><a href="/top50/50/<%= period %>/<%=division%>/<%= type %>?champion=<%= parts[x].champion %>"><%= parts[x].champion %></a></td>
+          <% }%>
+          <% if (period != 'doa') { %>
+          <td style=" width: 3.5vw;"><a href="/top50/50/<%= period %>/<%=division%>/<%= type %>?asdJosh=<%= parts[x].asdJosh %>"><%= parts[x].asdJosh %></a></td>
+          <td style=" width: 9vw;"><%= str1.substring(0,30) %></td>
+          <td style=" width: 5vw;"><%= parts[x].closureDate %></td>
+          <td style=" width: 3.5vw;"><a href="/top50/edit/<%= period %>/<%= division %>/<%= type %>/<%=parts[x]._id%>"><%= ((parts[x].count/allParts)* 100).toFixed(1) %>%</a></td>
+          <td style=" width: 145px;"><a href="/top50/50/<%= period %>/<%=division%>/<%= type %>?champion=<%= parts[x].champion %>"><%= parts[x].champion %></a></td>
+          <% } %>
+        </tr>
+
+        <%	x++; %>
+
+        <% } %>
+
+
+      </tbody>
+    </table>
+
+</body>
+
+<script>
+  Chart.defaults.global.defaultFontColor = "#fff";
+  Chart.defaults.global.defaultFontSize = '12';
+  Chart.pluginService.register({
+    beforeDraw: function(chart) {
+      if (chart.config.options.elements.center) {
+        // Get ctx from string
+        let ctx = chart.chart.ctx;
+
+        // Get options from the center object in options
+        const centerConfig = chart.config.options.elements.center;
+        const fontStyle = centerConfig.fontStyle || 'Arial';
+        const txt = centerConfig.text;
+        const color = centerConfig.color || '#000';
+        const maxFontSize = centerConfig.maxFontSize || 75;
+        const sidePadding = centerConfig.sidePadding || 20;
+        const sidePaddingCalculated = (sidePadding / 100) * (chart.innerRadius * 2)
+        // Start with a base font of 30px
+        ctx.font = "30px " + fontStyle;
+
+        // Get the width of the string and also the width of the element minus 10 to give it 5px side padding
+        const stringWidth = ctx.measureText(txt).width;
+        const elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
+
+        // Find out how much the font can grow in width.
+        const widthRatio = elementWidth / stringWidth;
+        const newFontSize = Math.floor(30 * widthRatio);
+        const elementHeight = (chart.innerRadius * 2);
+
+        // Pick a new font size so it will not be larger than the height of label.
+        let fontSizeToUse = Math.min(newFontSize, elementHeight, maxFontSize);
+        let minFontSize = centerConfig.minFontSize;
+        let lineHeight = centerConfig.lineHeight || 25;
+        let wrapText = false;
+
+        if (minFontSize === undefined) {
+          minFontSize = 20;
+        }
+
+        if (minFontSize && fontSizeToUse < minFontSize) {
+          fontSizeToUse = minFontSize;
+          wrapText = true;
+        }
+
+        // Set font settings to draw it correctly.
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        let centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+        let centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
+        ctx.font = fontSizeToUse + "px " + fontStyle;
+        ctx.fillStyle = color;
+
+        if (!wrapText) {
+          ctx.fillText(txt, centerX, centerY);
+          return;
+        }
+
+        let words = txt.split(' ');
+        let line = '';
+        let lines = [];
+
+        // Break words up into multiple lines if necessary
+        for (let n = 0; n < words.length; n++) {
+          let testLine = line + words[n] + ' ';
+          let metrics = ctx.measureText(testLine);
+          let testWidth = metrics.width;
+          if (testWidth > elementWidth && n > 0) {
+            lines.push(line);
+            line = words[n] + ' ';
+          } else {
+            line = testLine;
+          }
+        }
+
+        // Move the center up depending on line height and number of lines
+        centerY -= (lines.length / 2) * lineHeight;
+
+        for (let n = 0; n < lines.length; n++) {
+          ctx.fillText(lines[n], centerX, centerY);
+          centerY += lineHeight;
+        }
+        //Draw text in center
+        ctx.fillText(line, centerX, centerY);
+      }
+    }
+  });
+
+
+
+
+  new Chart(document.getElementById("doughnut-chart-warranty"), {
+    type: 'doughnut',
+    data: {
+      labels: ['In', 'Out'],
+      datasets: [{
+        label: "",
+        backgroundColor: ["green", 'rgb(54, 162, 235)', ],
+        data: [
+          <%= totalCount %>,
+          <%= allParts %>,
+        ],
+
+      }]
+    },
+    options: {
+
+      legend: {
+        display: false,
+      },
+      elements: {
+        center: {
+          text: '<%= top50Percent  %>%',
+          color: '#FFF', // Default is #000000
+          sidePadding: 20, // Default is 20 (as a percentage)
+          // minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+          lineHeight: 25 // Default is 25 (in px), used for when text wraps
+        }
+      }
+    }
+  });
+
+  let barOptions_scc = {
+    tooltips: {
+      enabled: false
+    },
+
+    scales: {
+      xAxes: [{
+        gridLines: {
+          color: "rgba(0, 0, 0, 0)",
+        },
+        ticks: {
+          beginAtZero: true,
+          fontSize: 11,
+          display: false
+        },
+        scaleLabel: {
+          display: false
+        },
+        gridLines: {
+          display: false,
+        },
+        stacked: true
+      }],
+      yAxes: [{
+        gridLines: {
+          color: "rgba(0, 0, 0, 0)",
+        },
+        ticks: {
+
+          fontSize: 15,
+          fontStyle: "bold"
+        },
+        stacked: true
+      }]
+    },
+    legend: {
+      display: false
+    },
+    tooltips: {
+      enabled: false,
+    }
+
+  };
+
+  new Chart(document.getElementById("bar-chart-scc"), {
+    <% if (period === 'doa') { %>
+    type: 'horizontalBar',
+    data: {
+      labels: ["Should <%= shouldNum %>  (<%= shouldPercent %>%)", "Could <%= couldNum %>  (<%= couldPercent %>%)", "Cannot <%= cannotNum %>  (<%= cannotPercent %>%)"],
+      fontSize: 10,
+      datasets: [{
+        data: [
+          <%= shouldPercent %>,
+          <%= couldPercent %>,
+          <%= cannotPercent %>,
+        ],
+        backgroundColor: 'rgb(54, 162, 235)',
+        fontSize: 25,
+      }, ]
+    },
+
+    options: barOptions_scc,
+    <% } %>
+  });
+
+  new Chart(document.getElementById("pie-chart-asd"), {
+    type: 'horizontalBar',
+    data: {
+      labels: ["Assembly <%= assemblyNum %>  (<%= assemblyPercent %>%)", "Supplier <%= supplierNum %>  (<%= supplierPercent %>%)", "Design <%= designNum %>  (<%= designPercent %>%)"],
+      fontSize: 20,
+      datasets: [{
+        data: [
+          <%= assemblyPercent  %>,
+          <%= supplierPercent %>,
+          <%= designPercent %>,
+        ],
+        backgroundColor: 'rgb(54, 162, 235)',
+        fontSize: 25,
+      }, ]
+    },
+
+    options: barOptions_scc,
+
+  });
+
+  let barOptions_stacked = {
+    tooltips: {
+      enabled: false
+    },
+
+    scales: {
+      xAxes: [{
+        gridLines: {
+          color: "rgba(0, 0, 0, 0)",
+        },
+        ticks: {
+
+          beginAtZero: true,
+          fontSize: 15,
+          display: false
+        },
+        scaleLabel: {
+          display: false
+        },
+        gridLines: {
+          display: false,
+        },
+        stacked: true
+      }],
+      yAxes: [{
+        gridLines: {
+          color: "rgba(0, 0, 0, 0)",
+        },
+        ticks: {
+
+          fontSize: 18
+        },
+        stacked: true
+      }]
+    },
+    legend: {
+      display: false
+    },
+    tooltips: {
+      enabled: false,
+    }
+
+  };
+
+  new Chart(document.getElementById("Chart1"), {
+    type: 'horizontalBar',
+    data: {
+      labels: ["RAG %"],
+      fontSize: 25,
+      display: false,
+
+
+      datasets: [{
+        data: [<%= closedPercent %>],
+        backgroundColor: "green",
+      }, {
+        data: [<%= containedPercent %>],
+        backgroundColor: "orange",
+      }, {
+        data: [<%= openPercent %>],
+        backgroundColor: "red",
+      }]
+    },
+
+    options: barOptions_stacked,
+  });
+</script>

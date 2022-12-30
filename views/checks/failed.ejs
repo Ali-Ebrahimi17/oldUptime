@@ -1,0 +1,86 @@
+<% layout('layouts/boilerplateTCard')%>
+
+
+<div class="main-tCard-container">
+  <h2 class="main-title"> CRITICAL PLANT CHECKS</h2>
+  <div class="row" style="width: 100%;">
+    <div id="reallocation-container">
+
+
+      <div class="modal-form" style="width: 500px;">
+        <div class="modal-content" style="border-radius: 0;">
+          <div style="background-color: rgb(252, 176, 38); height: 70px;">
+            <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+            <h5 style="text-align: center; margin: 8px;">Failed Check - <%= check.division %> <%= check.area %>, <%= check.location %></h5>
+          </div>
+          <div class="modal-body">
+            <form>
+              <fieldset>
+                <div class="form-group">
+                  <label for="exampleTextarea">Check</label>
+                  <textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none; margin-bottom: 15px;" disabled> <%= check.name  %></textarea>
+                  <label for="exampleTextarea">Pass Requirements</label>
+                  <textarea class="form-control" id="reasonTextarea" rows="3" style="resize: none" disabled><%= check.description  %></textarea>
+                </div>
+                <% if (check.value) { %>
+                <div class="row">
+                  <div class="col">
+                    <label for="exampleTextarea">Failed By</label>
+                    <textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none; margin-bottom: 15px;" disabled> <%= check.checkedBy  %> - <%= moment(check.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <% if (check.target) { %>
+                  <div class="col">
+                    <label for="exampleTextarea">Check Value</label>
+                    <textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none" disabled><%= check.value  %> NM</textarea>
+                  </div>
+                  <div class="col">
+                    <label for="exampleTextarea">Target</label>
+                    <textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none" disabled><%= check.target  %> NM</textarea>
+                  </div>
+                  <div class="col">
+                    <label for="exampleTextarea">Accepted Range</label>
+                    <textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none" disabled><%= ((+check.target / 100) * 90).toFixed(0)  %> - <%= ((+check.target / 100) * 110).toFixed(0)  %> NM</textarea>
+                  </div>
+
+                  <% } else { %>
+                  <div class="col">
+                    <label for="exampleTextarea">Check Value</label>
+                    <textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none" disabled><%= check.value  %> <%= check.unit  %></textarea>
+                  </div>
+
+                  <% } %>
+
+                </div>
+                <% } %>
+                <% if (check.agreed) { %>
+                <div class="row">
+                  <div class="col">
+                    <label for="exampleTextarea">Failed By</label>
+                    <textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none; margin-bottom: 15px;" disabled><%= check.checkedBy  %> - <%= moment(check.createdAt).format("DD/MM/YYYY - HH:mm:ss") %></textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label for="exampleTextarea">Check Outcome</label>
+                    <textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none; margin-bottom: 15px;" disabled><%= check.agreed  %></textarea>
+                  </div>
+                </div>
+                <% } %>
+                <div class="row">
+                  <div class="col">
+                    <label for="exampleTextarea">Comments</label>
+                    <textarea class="form-control" name="check[comments]" id="reasonTextarea" rows="3" style="resize: none; margin-bottom: 15px;" disabled><%= check.comments %></textarea>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+            <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

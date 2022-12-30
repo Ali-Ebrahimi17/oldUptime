@@ -1,0 +1,287 @@
+<% layout('layouts/boilerplateTCard')%>
+
+<div class="main-tCard-container">
+	<h2 class="main-title"><%= division.toUpperCase() %> CRITICAL CHECKS</h2>
+	<div class="row" style="width: 100%">
+		<div id="reallocation-container">
+			<div class="modal-form">
+				<div class="modal-content" style="border-radius: 0">
+					<div style="background-color: rgb(252, 176, 38); height: 50px">
+						<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+						<h4 style="text-align: center; margin: 8px"><%= tCard.name.toUpperCase() %></h4>
+					</div>
+					<div class="modal-body">
+						<form action="/tCard/<%= tCard._id %>/check/contain" method="POST" onsubmit="myButton.disabled = true; return true;">
+							<fieldset>
+								<div class="form-group">
+									<label for="exampleTextarea">Pass Requirements</label>
+									<textarea class="form-control" id="reasonTextarea" rows="3" style="resize: none" disabled><%= tCard.description %></textarea>
+								</div>
+								<% if (tCard.type === 'Value') { %>
+								<div class="row">
+									<% if (tCard.checkedBy === 'Missed') { %>
+									<div class="col">
+										<label for="exampleTextarea">Missed Check</label>
+									</div>
+									<%} else { %>
+									<div class="col">
+										<label for="exampleTextarea">Checked Failed By</label>
+										<textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none; margin-bottom: 15px" disabled>
+<%= tCard.checkedBy  %> - <%= moment(tCard.failedAt).format("DD/MM/YYYY - HH:mm") %></textarea
+										>
+									</div>
+									<div class="col">
+										<label for="exampleTextarea">Check Value</label>
+										<textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none" disabled>
+<%= tCard.value  %><%= tCard.unit  %></textarea
+										>
+									</div>
+									<% } %>
+								</div>
+								<div class="row">
+									<div class="col">
+										<label for="exampleTextarea">Comments</label>
+										<textarea
+											class="form-control"
+											name="check[comments]"
+											id="reasonTextarea"
+											rows="3"
+											style="resize: none; margin-bottom: 15px"
+											disabled
+										>
+<%= tCard.comments  %></textarea
+										>
+									</div>
+								</div>
+								<% if (tCard.checkedBy === 'Missed') { %> <%} else { %>
+								<div class="form-group">
+									<label for="type">Reason For Failure</label>
+									<input class="form-control" type="test" name="check[reason]" required />
+
+									<label for="type">Action Taken</label>
+									<input class="form-control" type="test" name="check[action]" required />
+								</div>
+								<% } %> <% } %> <% if (tCard.type === 'OK/Not OK') { %>
+								<div class="row">
+									<% if (tCard.checkedBy === 'Missed') { %>
+									<div class="col">
+										<label for="exampleTextarea">Missed Check</label>
+									</div>
+									<%} else { %>
+									<div class="col">
+										<label for="exampleTextarea">Checked Failed By</label>
+										<textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none; margin-bottom: 15px" disabled>
+<%= tCard.checkedBy  %> - <%= moment(tCard.failedAt).format("DD/MM/YYYY - HH:mm") %></textarea
+										>
+									</div>
+									<div class="col">
+										<label for="exampleTextarea">Check Value</label>
+										<textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none" disabled>
+<%= tCard.value  %><%= tCard.unit  %></textarea
+										>
+									</div>
+									<% } %>
+								</div>
+								<% if (tCard.checkedBy === 'Missed') { %> <%} else { %>
+								<div class="form-group">
+									<label for="type">Reason For Failure</label>
+									<input class="form-control" type="test" name="check[reason]" required />
+
+									<label for="type">Action Taken</label>
+									<input class="form-control" type="test" name="check[action]" required />
+								</div>
+								<% } %> <% } %> <% if (tCard.type === 'Yes/No') { %>
+								<div class="row">
+									<% if (tCard.checkedBy === 'Missed') { %>
+									<div class="col">
+										<label for="exampleTextarea">Missed Check</label>
+									</div>
+									<%} else { %>
+									<div class="col">
+										<label for="exampleTextarea">Checked Failed By</label>
+										<textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none; margin-bottom: 15px" disabled>
+<%= tCard.checkedBy  %> - <%= moment(tCard.failedAt).format("DD/MM/YYYY - HH:mm") %></textarea
+										>
+									</div>
+									<div class="col">
+										<label for="exampleTextarea">Check Value</label>
+										<textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none" disabled>
+<%= tCard.value  %><%= tCard.unit  %></textarea
+										>
+									</div>
+									<% } %>
+								</div>
+								<div class="row">
+									<div class="col">
+										<label for="exampleTextarea">Comments</label>
+										<textarea
+											class="form-control"
+											name="check[comments]"
+											id="reasonTextarea"
+											rows="3"
+											style="resize: none; margin-bottom: 15px"
+											disabled
+										>
+<%= tCard.comments  %></textarea
+										>
+									</div>
+								</div>
+								<% if (tCard.checkedBy === 'Missed') { %> <%} else { %>
+								<div class="form-group">
+									<label for="type">Reason For Failure</label>
+									<input class="form-control" type="test" name="check[reason]" required />
+
+									<label for="type">Action Taken</label>
+									<input class="form-control" type="test" name="check[action]" required />
+								</div>
+								<% } %> <% } %> <% if (tCard.type === 'On Plan/Off Plan') { %>
+								<div class="row">
+									<% if (tCard.checkedBy === 'Missed') { %>
+									<div class="col">
+										<label for="exampleTextarea">Missed Check</label>
+									</div>
+									<%} else { %>
+									<div class="col">
+										<label for="exampleTextarea">Checked Failed By</label>
+										<textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none; margin-bottom: 15px" disabled>
+<%= tCard.checkedBy  %> - <%= moment(tCard.failedAt).format("DD/MM/YYYY - HH:mm") %></textarea
+										>
+									</div>
+									<div class="col">
+										<label for="exampleTextarea">Check Value</label>
+										<textarea class="form-control" id="reasonTextarea" rows="1" style="resize: none" disabled>
+<%= tCard.value  %><%= tCard.agreed  %></textarea
+										>
+									</div>
+									<% } %>
+								</div>
+								<div class="row">
+									<div class="col">
+										<label for="exampleTextarea">Comments</label>
+										<textarea
+											class="form-control"
+											name="check[comments]"
+											id="reasonTextarea"
+											rows="3"
+											style="resize: none; margin-bottom: 15px"
+											disabled
+										>
+<%= tCard.comments  %></textarea
+										>
+									</div>
+								</div>
+								<% if (tCard.checkedBy === 'Missed') { %> <%} else { %>
+								<div class="form-group">
+									<label for="type">Reason For Failure</label>
+									<input class="form-control" type="test" name="check[reason]" required />
+
+									<label for="type">Action Taken</label>
+									<input class="form-control" type="test" name="check[action]" required />
+								</div>
+								<% } %> <% } %>
+
+								<label for="type" id="maintenanceLabel">Person in Maintenance</label>
+								<input name="check[maintenancePerson]" style="margin-bottom: 8px" class="form-control" id="maintenance" />
+								<!-- <select  class="form-control" name="check[maintenancePerson]" style="margin-bottom: 8px;" id="maintenance1" >
+                            <option hidden ></option>
+                            <% tCard.actions.forEach(function(action){ %>
+                              <option><%= action.name %></option>
+                              <% }) %>
+                            </select> -->
+
+								<label for="type" id="maintenanceLabel1">Person in Maintenance</label>
+								<input name="check[maintenancePerson]" style="margin-bottom: 8px" class="form-control" id="maintenance1" />
+								<!-- <select  class="form-control" name="check[maintenancePerson]" style="margin-bottom: 8px;" id="maintenance1" >
+                              <option hidden ></option>
+                              <% tCard.actions.forEach(function(action){ %>
+                                <option><%= action.name %></option>
+                                <% }) %>
+                              </select> -->
+
+								<% if (tCard.checkedBy === 'Missed') { %>
+								<a class="btn btn-success float-right" style="margin-left: 8px" href="/tCard/edit/<%= tCard._id %>">Re Check</a>
+								<%} else { %>
+								<a
+									class="btn btn-danger float-right"
+									style="margin-left: 8px"
+									href="/tCard/show/<%= tCard.division %>/<%= tCard.area %>/<%= tCard.location %>/<%= tCard.shiftP %>"
+									>Cancel</a
+								>
+								<button type="submit" name="myButton" class="btn btn-success float-right" style="margin-left: 8px">Submit</button>
+								<% } %>
+							</fieldset>
+						</form>
+					</div>
+					<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+						<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- <ul>
+  <% tCard.checks.sort((a,b) => b.createdAt - a.createdAt) %>
+  <% tCard.checks.forEach(function(check){ %>
+    <li>
+      Checked By <%= check.checkedBy %> - <%= moment(check.createdAt).format("DD/MM/YYYY - HH:mm") %> Result - <%= check.result %>
+    </li>
+
+    <% }) %>
+ </ul> -->
+
+	<script>
+		// document.addEventListener("DOMContentLoaded", function(event) {
+
+		let dis = document.getElementById('new')
+
+		document.getElementById('maintenance').disabled = true
+		document.getElementById('maintenance').required = false
+		document.getElementById('maintenance').style.display = 'none'
+		document.getElementById('maintenanceLabel').style.display = 'none'
+
+		dis.onchange = function () {
+			if (this.value.includes('aintenance')) {
+				document.getElementById('maintenance').disabled = false
+				document.getElementById('maintenance').required = true
+				document.getElementById('maintenance').style.display = 'block'
+				document.getElementById('maintenanceLabel').style.display = 'block'
+			} else {
+				document.getElementById('maintenance').disabled = true
+				document.getElementById('maintenance').required = false
+				document.getElementById('maintenance').style.display = 'none'
+				document.getElementById('maintenanceLabel').style.display = 'none'
+				document.getElementById('maintenance').value = ''
+			}
+		}
+
+		// });
+	</script>
+
+	<script>
+		// document.addEventListener("DOMContentLoaded", function(event) {
+
+		let dis1 = document.getElementById('new1')
+		document.getElementById('maintenance1').disabled = true
+		document.getElementById('maintenance1').required = false
+		document.getElementById('maintenance1').style.display = 'none'
+		document.getElementById('maintenanceLabel1').style.display = 'none'
+
+		dis1.onchange = function () {
+			if (this.value.includes('aintenance')) {
+				document.getElementById('maintenance1').disabled = false
+				document.getElementById('maintenance1').required = true
+				document.getElementById('maintenance1').style.display = 'block'
+				document.getElementById('maintenanceLabel1').style.display = 'block'
+			} else {
+				document.getElementById('maintenance1').disabled = true
+				document.getElementById('maintenance1').required = false
+				document.getElementById('maintenance1').style.display = 'none'
+				document.getElementById('maintenanceLabel1').style.display = 'none'
+				document.getElementById('maintenance1').value = ''
+			}
+		}
+
+		// });
+	</script>
+</div>

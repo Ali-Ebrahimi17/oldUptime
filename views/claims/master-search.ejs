@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-size=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="30"> -->
+		<title>JCB Quality Uptime</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/content/bootswatch/united.css" type="text/css"> -->
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/content/font-awesome/css/all.css" type="text/css" /> -->
+		<link rel="stylesheet" href="/content/ui/jquery-ui.min.css" type="text/css" />
+		<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<!-- <script src="/content/ui/jquery-ui.min.js"></script>
+		<script src="/content/marquee/jquery.marquee.min.js"></script>
+		<script src="/content/timer/moment.js"></script>
+		<script src="/content/timer/dist/ez.countimer.min.js"></script> -->
+
+		<script defer src="/font-v6/js/solid.js"></script>
+		<script defer src="/font-v6/js/brands.js"></script>
+
+		<script defer src="/font-v6/js/fontawesome.js"></script>
+	</head>
+
+	<body
+		style="
+			margin-bottom: 50px;
+			overflow: hidden;
+			background-color: black;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			height: 100vh;
+		"
+	>
+
+
+		<div style="width: 100vw; height: 40px; background-color: #fcb026">
+			<div style="padding: 6px">
+				<img height="24px" src="/media/jcb-logo.png" />
+			</div>
+		</div>
+		<!-- <div style="margin-left: 650px; margin-right: 650px; margin-bottom: 700px;"><%- include('../../views/partials/flash.ejs')%></div> -->
+
+
+    <!-- claim number search -->
+		<section style="display: flex; justify-content: center; margin-top: -260px">
+			<div style="color: white">
+				<div style="text-align: center">
+					<h1 style="margin-bottom: 8px"><%= division %> 4C Search</h1>
+				</div>
+
+				<div style="display: flex; justify-content: center; margin-bottom: 10px">
+					<form class="form-inline" action="/claims/master-search/<%= division %>" method="GET">
+						<div class="form-group">
+							<label for="search"></label>
+							<input
+								style="border-radius: 5px; width: 300px"
+								class="form-control"
+								type="text"
+								name="claimNumber"
+								placeholder="Search by Claim/TW Number"
+							/>
+						</div>
+					</form>
+				</div>
+				<% if (claim) { %>
+				<div style="width: 400px; display: flex; flex-direction: column; justify-content: space-between;border: 1px solid white; border-radius: 8px;  padding: 10px;">
+          
+          <a href="/claims/4cshow/<%= claim._id  %>">
+            <div style="margin-bottom: 5px;">
+              Claim Number: <%= claim.claimNumber %>
+            </div>
+            <% if ( claim.reOpenedBy != null) { %>
+              <div style="margin-bottom: 5px;">Re-Opened by: <%=  claim.reOpenedBy %> <%=  moment(claim.reOpenedAt).format("DD/MM/YYYY - HH:mm")%></div>
+              <% } %>
+            <div style="margin-bottom: 5px;">Issued by: <%=  claim.vettedBy %> -  <%=  moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm")%></div>
+            <% if (claim.status !== 'Open') { %>
+              <div style="margin-bottom: 5px;">Contained by: <%=  claim.containedBy %> <%=  moment(claim.containedAt).format("DD/MM/YYYY - HH:mm")%></div>
+            <% } %>
+            <% if (claim.status === 'Closed') { %>
+              <div style="margin-bottom: 5px;">Closed by: <%=  claim.closedBy %> <%=  moment(claim.closedAt).format("DD/MM/YYYY - HH:mm")%></div>
+            <% } %>
+            <div  style="margin-bottom: 5px;">Status: <%= claim.status %></div>
+          </a>
+			  </div>
+
+			<% } else if (search) { %>
+			<div style="width: 300px; height: 100px; display: flex; flex-direction: column">
+				<div style="text-align: center; font-size: 24px; color: red">4C Not Found</div>
+       
+      </div>
+			</div>
+
+			<% } else { %>
+			<!-- <div style="width: 350px; height: 200px; display: flex; flex-direction: column; justify-content: space-between">
+				<div style="height: 250px; width: 250px; transform: scaleX(-1)">
+					<img src="/svg-machine-icons/loadall.svg" />
+				</div> -->
+			</div>
+
+			<% } %>
+		</section>
+
+    <!-- part number search -->
+		<section style="display: flex; justify-content: center; margin-top: -260px">
+			<div style="color: white">
+				<div style="text-align: center">
+					<h1 style="margin-bottom: 8px"><%= division %> 4C Search</h1>
+				</div>
+
+				<div style="display: flex; justify-content: center; margin-bottom: 10px">
+					<form class="form-inline" action="/claims/master-search/<%= division %>" method="GET">
+						<div class="form-group">
+							<label for="search"></label>
+							<input
+								style="border-radius: 5px; width: 300px"
+								class="form-control"
+								type="text"
+								name="failedPart"
+								placeholder="Search by Part Number"
+							/>
+						</div>
+					</form>
+				</div>
+        <%  if (claims && claims.length > 0) { %>
+          <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+            <% for (let claim of claims) { %>
+              <div style="width: 400px; display: flex; flex-direction: column; justify-content: space-between ;border: 1px solid white; border-radius: 8px; padding: 10px; margin-left: 10px; margin-right: 10px; margin-bottom: 14px;">
+                <a href="/claims/4cshow/<%= claim._id  %>">
+                  <div style="margin-bottom: 5px;">
+                    Claim Number: <%= claim.claimNumber %>
+                  </div>
+                  <div style="margin-bottom: 5px;">
+                    Area: <%= claim.area %>
+                  </div>
+                  <% if ( claim.reOpenedBy != null) { %>
+                    <div style="margin-bottom: 5px;">Re-Opened by: <%=  claim.reOpenedBy %> <%=  moment(claim.reOpenedAt).format("DD/MM/YYYY - HH:mm")%></div>
+                    <% } %>
+                  <div style="margin-bottom: 5px;">Issued by: <%=  claim.vettedBy %> -  <%=  moment(claim.vettedAt).format("DD/MM/YYYY - HH:mm")%></div>
+                  <% if (claim.status !== 'Open') { %>
+                    <div style="margin-bottom: 5px;">Contained by: <%=  claim.containedBy %> <%=  moment(claim.containedAt).format("DD/MM/YYYY - HH:mm")%></div>
+                  <% } %>
+                  <% if (claim.status === 'Closed') { %>
+                    <div style="margin-bottom: 5px;">Closed by: <%=  claim.closedBy %> <%=  moment(claim.closedAt).format("DD/MM/YYYY - HH:mm")%></div>
+                  <% } %>
+                  <div  style="margin-bottom: 5px;">Status: <%= claim.status %></div>
+                </a>
+              </div>
+            <% } %>
+
+          </div>
+         
+
+			<% } else if (searchParts) { %>
+        <div style="width: 300px; height: 100px; display: flex; flex-direction: column">
+          <div style="text-align: center; font-size: 24px; color: red">4C Not Found</div>
+        
+        </div>
+			</div>
+
+			<% } else { %>
+			<!-- <div style="width: 350px; height: 200px; display: flex; flex-direction: column; justify-content: space-between">
+				<div style="height: 250px; width: 250px; transform: scaleX(-1)">
+					<img src="/svg-machine-icons/loadall.svg" />
+				</div> -->
+			</div>
+
+			<% } %>
+		</section>
+    
+
+		<footer style="width: 100vw; height: 40px; background-color: #fcb026; display: flex; justify-content: space-between">
+			<div style="padding: 6px; display: flex">
+				<div>
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+				</div>
+				<div style="margin-left: 8px">
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+			</div>
+			<div style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+		</footer>
+
+		<script></script>
+	</body>
+</html>

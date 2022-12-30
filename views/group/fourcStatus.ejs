@@ -1,0 +1,2547 @@
+<!-- <?php // require_once('sql/select-overview.php'); ?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="120"> -->
+		<title>JCB - Quality Uptime</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<link rel="stylesheet" href="/content/table.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css" />
+		<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+		<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+		<!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+		<script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+		<link rel="stylesheet" href="/stylesheets/app.css" />
+		<link rel="stylesheet" href="/fontawesome/css/all.css" />
+	</head>
+
+	<style>
+		.graph-holder {
+			width: 442px;
+			/* background-color: rgb(70, 73, 75); */
+			border-radius: 5px;
+			margin-bottom: 15px;
+			height: 150px;
+		}
+
+		.card {
+			border: 1px solid grey;
+			margin-bottom: 5px;
+			color: white;
+			font-size: 14px;
+		}
+
+		.green-top50 {
+			background-color: green;
+		}
+
+		.amber-top50 {
+			background-color: orange;
+		}
+
+		.red-top50 {
+			background-color: red;
+		}
+
+		.sub-header {
+			color: grey;
+			font-size: 17px;
+		}
+	</style>
+
+	<body>
+		<div class="container-fluid">
+			<div class="row header-top">
+				<div class="col-lg-5 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+				</div>
+				<!-- <div class="col-lg-7 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+            <a href="/equipment-monitoring/operations">
+                <span  style="font-size: 19px; padding-top: 2px; margin-right: 4px; color: black; font-weight: bold;" >Last Update:  DD/MM/YYYY - HH:mm:ss </span>
+            </a>
+        </div> -->
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-main">
+					<div class="row">
+						<div class="col-lg-12" style="margin-top: -12px">
+							<h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">UK Group DOA</h1>
+						</div>
+
+						<div class="col-lg-6" style="margin-top: -10px; margin-bottom: 22px; padding: 8px 0px 8px 0px">
+							<div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">DOA RAG Status</h1>
+								<h1 class="sub-header">Build Month</h1>
+							</div>
+						</div>
+
+						<div class="col-lg-6" style="margin-top: -10px; margin-bottom: 22px; padding: 8px 0px 8px 0px">
+							<div class="col-measure" style="width: 100%; float: left; text-align: center; margin: 0px">
+								<h1 class="line-sub-header-top">DOA RAG Status</h1>
+								<h1 class="sub-header">Intake Month</h1>
+							</div>
+						</div>
+
+						<div style="display: flex; width: 120%; margin-bottom: 20px; margin-top: -20px">
+							<div class="col" style="margin: 0 10px; width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap">
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>BHL/SD</h5>
+										</div>
+										<canvas id="canvas1" height="80"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>LDL</h5>
+										</div>
+										<canvas id="canvas2" height="80"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>CP</h5>
+										</div>
+										<canvas id="canvas3" height="80" style="background-color: transparent"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>EM</h5>
+										</div>
+										<canvas id="canvas4" height="80"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>LP</h5>
+										</div>
+										<canvas id="canvas5" height="80"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>HP</h5>
+										</div>
+										<canvas id="canvas6" height="80"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder" style="width: 900px; height: 300px">
+										<div style="text-align: center; color: white">
+											<h5>UK GROUP</h5>
+										</div>
+										<canvas id="canvas7" height="80"></canvas>
+									</div>
+								</a>
+							</div>
+
+							<hr style="width: 1px; height: 90%; display: inline-block; background-color: grey; margin-top: -1%" />
+
+							<div class="col" style="margin: 0 10px; width: 50%; display: flex; justify-content: space-between; flex-wrap: wrap">
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>BHL/SD</h5>
+										</div>
+										<canvas id="canvas8" height="80"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>LDL</h5>
+										</div>
+										<canvas id="canvas9" height="80"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>CP</h5>
+										</div>
+										<canvas id="canvas10" height="80"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>EM</h5>
+										</div>
+										<canvas id="canvas11" height="80"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>LP</h5>
+										</div>
+										<canvas id="canvas12" height="80"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder">
+										<div style="text-align: center; color: white">
+											<h5>HP</h5>
+										</div>
+										<canvas id="canvas13" height="80"></canvas>
+									</div>
+								</a>
+
+								<a>
+									<div class="graph-holder" style="width: 900px; height: 300px">
+										<div style="text-align: center; color: white">
+											<h5>UK GROUP</h5>
+										</div>
+										<canvas id="canvas14" height="80"></canvas>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid footer">
+			<div class="row header-top">
+				<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+					J.C. Bamford Excavators LTD &copy; 2022
+				</div>
+			</div>
+		</div>
+
+		<script>
+			Chart.defaults.global.defaultFontColor = "white";
+			//  Chart.defaults.global.defaultFontSize = 10;
+			Chart.defaults.scale.gridLines.display = false;
+
+			//  let defaultLabels = <%- JSON.stringify(labels) %>
+
+
+
+			let options = {
+			  legend: {
+			    display: false,
+			  },
+			  tooltips: {
+			    enabled: true,
+			    mode: 'label',
+			    yAlign: 'center',
+			    callbacks: {
+			      title: function(tooltipItem, data) {
+			        return ""
+			      },
+			      // label: function(tooltipItem, data) {
+			      //   return data['datasets'][0]['data'][tooltipItem['index']];
+			      // },
+			      // afterLabel: function(tooltipItem, data) {
+			      //   var dataset = data['datasets'][0];
+			      //   var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+			      //   return '(' + percent + '%)';
+			      // }
+			    },
+
+			  },
+			  responsive: true,
+			  scales: {
+			    xAxes: [{
+			      stacked: true,
+			      barPercentage: 0.8,
+			      ticks: {
+			        display: true,
+			        beginAtZero: true,
+			        fontSize: 12,
+			        fontColor: '#fff'
+			        // callback: function(value) {if (value % 1 === 0) {return value;}}
+			      },
+			      dataLabels: {
+			        fontSize: 2
+			      },
+			      scaleLabel: {
+			        display: true,
+			        labelString: 'Build Month',
+			        fontSize: 10,
+			        fontColor: '#fff'
+			      },
+			    }],
+			    yAxes: [{
+			      id: 'bar-y-axis',
+			      stacked: true,
+			      display: true,
+			      ticks: {
+			        beginAtZero: true,
+			        min: 0,
+			        max: 180,
+			        stepSize: 40,
+			        fontSize: 8,
+			        callback: function(value) {
+			          if (value % 1 === 0) {
+			            return value
+			          }
+			        }
+			      },
+			      type: 'linear',
+
+			    }, ],
+			  },
+			}
+
+
+			let barChartData1 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels1: [
+			    <%- JSON.stringify( doaClosed8BHL + doaContained8BHL + doaMissed8BHL + doaOpen8BHL) %>,
+			    <%- JSON.stringify( doaClosed7BHL + doaContained7BHL + doaMissed7BHL + doaOpen7BHL) %>,
+			    <%- JSON.stringify( doaClosed6BHL + doaContained6BHL + doaMissed6BHL + doaOpen6BHL) %>,
+			    <%- JSON.stringify( doaClosed5BHL + doaContained5BHL + doaMissed5BHL + doaOpen5BHL) %>,
+			    <%- JSON.stringify( doaClosed4BHL + doaContained4BHL + doaMissed4BHL + doaOpen4BHL) %>,
+			    <%- JSON.stringify( doaClosed3BHL + doaContained3BHL + doaMissed3BHL + doaOpen3BHL) %>,
+			    <%- JSON.stringify( doaClosed2BHL + doaContained2BHL + doaMissed2BHL + doaOpen2BHL) %>,
+			    <%- JSON.stringify( doaClosed1BHL + doaContained1BHL + doaMissed1BHL + doaOpen1BHL) %>,
+			    <%- JSON.stringify( doaClosed0BHL + doaContained0BHL + doaMissed0BHL + doaOpen0BHL) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels1[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaClosed8BHL %>,
+			        <%= doaClosed7BHL %>,
+			        <%= doaClosed6BHL %>,
+			        <%= doaClosed5BHL %>,
+			        <%= doaClosed4BHL %>,
+			        <%= doaClosed3BHL %>,
+			        <%= doaClosed2BHL %>,
+			        <%= doaClosed1BHL %>,
+			        <%= doaClosed0BHL %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels1[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaContained8BHL %>,
+			        <%= doaContained7BHL %>,
+			        <%= doaContained6BHL %>,
+			        <%= doaContained5BHL %>,
+			        <%= doaContained4BHL %>,
+			        <%= doaContained3BHL %>,
+			        <%= doaContained2BHL %>,
+			        <%= doaContained1BHL %>,
+			        <%= doaContained0BHL %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels1[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaMissed8BHL %>,
+			        <%= doaMissed7BHL %>,
+			        <%= doaMissed6BHL %>,
+			        <%= doaMissed5BHL %>,
+			        <%= doaMissed4BHL %>,
+			        <%= doaMissed3BHL %>,
+			        <%= doaMissed2BHL %>,
+			        <%= doaMissed1BHL %>,
+			        <%= doaMissed0BHL %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels1[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= doaOpen8BHL %>,
+			        <%= doaOpen7BHL %>,
+			        <%= doaOpen6BHL %>,
+			        <%= doaOpen5BHL %>,
+			        <%= doaOpen4BHL %>,
+			        <%= doaOpen3BHL %>,
+			        <%= doaOpen2BHL %>,
+			        <%= doaOpen1BHL %>,
+			        <%= doaOpen0BHL %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData2 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels2: [
+			    <%- JSON.stringify( doaClosed8LDL + doaContained8LDL + doaMissed8LDL + doaOpen8LDL) %>,
+			    <%- JSON.stringify( doaClosed7LDL + doaContained7LDL + doaMissed7LDL + doaOpen7LDL) %>,
+			    <%- JSON.stringify( doaClosed6LDL + doaContained6LDL + doaMissed6LDL + doaOpen6LDL) %>,
+			    <%- JSON.stringify( doaClosed5LDL + doaContained5LDL + doaMissed5LDL + doaOpen5LDL) %>,
+			    <%- JSON.stringify( doaClosed4LDL + doaContained4LDL + doaMissed4LDL + doaOpen4LDL) %>,
+			    <%- JSON.stringify( doaClosed3LDL + doaContained3LDL + doaMissed3LDL + doaOpen3LDL) %>,
+			    <%- JSON.stringify( doaClosed2LDL + doaContained2LDL + doaMissed2LDL + doaOpen2LDL) %>,
+			    <%- JSON.stringify( doaClosed1LDL + doaContained1LDL + doaMissed1LDL + doaOpen1LDL) %>,
+			    <%- JSON.stringify( doaClosed0LDL + doaContained0LDL + doaMissed0LDL + doaOpen0LDL) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels2[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaClosed8LDL %>,
+			        <%= doaClosed7LDL %>,
+			        <%= doaClosed6LDL %>,
+			        <%= doaClosed5LDL %>,
+			        <%= doaClosed4LDL %>,
+			        <%= doaClosed3LDL %>,
+			        <%= doaClosed2LDL %>,
+			        <%= doaClosed1LDL %>,
+			        <%= doaClosed0LDL %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels2[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaContained8LDL %>,
+			        <%= doaContained7LDL %>,
+			        <%= doaContained6LDL %>,
+			        <%= doaContained5LDL %>,
+			        <%= doaContained4LDL %>,
+			        <%= doaContained3LDL %>,
+			        <%= doaContained2LDL %>,
+			        <%= doaContained1LDL %>,
+			        <%= doaContained0LDL %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels2[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaMissed8LDL %>,
+			        <%= doaMissed7LDL %>,
+			        <%= doaMissed6LDL %>,
+			        <%= doaMissed5LDL %>,
+			        <%= doaMissed4LDL %>,
+			        <%= doaMissed3LDL %>,
+			        <%= doaMissed2LDL %>,
+			        <%= doaMissed1LDL %>,
+			        <%= doaMissed0LDL %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels2[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= doaOpen8LDL %>,
+			        <%= doaOpen7LDL %>,
+			        <%= doaOpen6LDL %>,
+			        <%= doaOpen5LDL %>,
+			        <%= doaOpen4LDL %>,
+			        <%= doaOpen3LDL %>,
+			        <%= doaOpen2LDL %>,
+			        <%= doaOpen1LDL %>,
+			        <%= doaOpen0LDL %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData3 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels3: [
+			    <%- JSON.stringify( doaClosed8CP + doaContained8CP + doaMissed8CP + doaOpen8CP) %>,
+			    <%- JSON.stringify( doaClosed7CP + doaContained7CP + doaMissed7CP + doaOpen7CP) %>,
+			    <%- JSON.stringify( doaClosed6CP + doaContained6CP + doaMissed6CP + doaOpen6CP) %>,
+			    <%- JSON.stringify( doaClosed5CP + doaContained5CP + doaMissed5CP + doaOpen5CP) %>,
+			    <%- JSON.stringify( doaClosed4CP + doaContained4CP + doaMissed4CP + doaOpen4CP) %>,
+			    <%- JSON.stringify( doaClosed3CP + doaContained3CP + doaMissed3CP + doaOpen3CP) %>,
+			    <%- JSON.stringify( doaClosed2CP + doaContained2CP + doaMissed2CP + doaOpen2CP) %>,
+			    <%- JSON.stringify( doaClosed1CP + doaContained1CP + doaMissed1CP + doaOpen1CP) %>,
+			    <%- JSON.stringify( doaClosed0CP + doaContained0CP + doaMissed0CP + doaOpen0CP) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels3[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaClosed8CP %>,
+			        <%= doaClosed7CP %>,
+			        <%= doaClosed6CP %>,
+			        <%= doaClosed5CP %>,
+			        <%= doaClosed4CP %>,
+			        <%= doaClosed3CP %>,
+			        <%= doaClosed2CP %>,
+			        <%= doaClosed1CP %>,
+			        <%= doaClosed0CP %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels3[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaContained8CP %>,
+			        <%= doaContained7CP %>,
+			        <%= doaContained6CP %>,
+			        <%= doaContained5CP %>,
+			        <%= doaContained4CP %>,
+			        <%= doaContained3CP %>,
+			        <%= doaContained2CP %>,
+			        <%= doaContained1CP %>,
+			        <%= doaContained0CP %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels3[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaMissed8CP %>,
+			        <%= doaMissed7CP %>,
+			        <%= doaMissed6CP %>,
+			        <%= doaMissed5CP %>,
+			        <%= doaMissed4CP %>,
+			        <%= doaMissed3CP %>,
+			        <%= doaMissed2CP %>,
+			        <%= doaMissed1CP %>,
+			        <%= doaMissed0CP %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels3[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= doaOpen8CP %>,
+			        <%= doaOpen7CP %>,
+			        <%= doaOpen6CP %>,
+			        <%= doaOpen5CP %>,
+			        <%= doaOpen4CP %>,
+			        <%= doaOpen3CP %>,
+			        <%= doaOpen2CP %>,
+			        <%= doaOpen1CP %>,
+			        <%= doaOpen0CP %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData4 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels4: [
+			    <%- JSON.stringify( doaClosed8EM + doaContained8EM + doaMissed8EM + doaOpen8EM) %>,
+			    <%- JSON.stringify( doaClosed7EM + doaContained7EM + doaMissed7EM + doaOpen7EM) %>,
+			    <%- JSON.stringify( doaClosed6EM + doaContained6EM + doaMissed6EM + doaOpen6EM) %>,
+			    <%- JSON.stringify( doaClosed5EM + doaContained5EM + doaMissed5EM + doaOpen5EM) %>,
+			    <%- JSON.stringify( doaClosed4EM + doaContained4EM + doaMissed4EM + doaOpen4EM) %>,
+			    <%- JSON.stringify( doaClosed3EM + doaContained3EM + doaMissed3EM + doaOpen3EM) %>,
+			    <%- JSON.stringify( doaClosed2EM + doaContained2EM + doaMissed2EM + doaOpen2EM) %>,
+			    <%- JSON.stringify( doaClosed1EM + doaContained1EM + doaMissed1EM + doaOpen1EM) %>,
+			    <%- JSON.stringify( doaClosed0EM + doaContained0EM + doaMissed0EM + doaOpen0EM) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels4[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaClosed8EM %>,
+			        <%= doaClosed7EM %>,
+			        <%= doaClosed6EM %>,
+			        <%= doaClosed5EM %>,
+			        <%= doaClosed4EM %>,
+			        <%= doaClosed3EM %>,
+			        <%= doaClosed2EM %>,
+			        <%= doaClosed1EM %>,
+			        <%= doaClosed0EM %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels4[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaContained8EM %>,
+			        <%= doaContained7EM %>,
+			        <%= doaContained6EM %>,
+			        <%= doaContained5EM %>,
+			        <%= doaContained4EM %>,
+			        <%= doaContained3EM %>,
+			        <%= doaContained2EM %>,
+			        <%= doaContained1EM %>,
+			        <%= doaContained0EM %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels4[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaMissed8EM %>,
+			        <%= doaMissed7EM %>,
+			        <%= doaMissed6EM %>,
+			        <%= doaMissed5EM %>,
+			        <%= doaMissed4EM %>,
+			        <%= doaMissed3EM %>,
+			        <%= doaMissed2EM %>,
+			        <%= doaMissed1EM %>,
+			        <%= doaMissed0EM %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels4[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= doaOpen8EM %>,
+			        <%= doaOpen7EM %>,
+			        <%= doaOpen6EM %>,
+			        <%= doaOpen5EM %>,
+			        <%= doaOpen4EM %>,
+			        <%= doaOpen3EM %>,
+			        <%= doaOpen2EM %>,
+			        <%= doaOpen1EM %>,
+			        <%= doaOpen0EM %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData5 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels5: [
+			    <%- JSON.stringify( doaClosed8LP + doaContained8LP + doaMissed8LP + doaOpen8LP) %>,
+			    <%- JSON.stringify( doaClosed7LP + doaContained7LP + doaMissed7LP + doaOpen7LP) %>,
+			    <%- JSON.stringify( doaClosed6LP + doaContained6LP + doaMissed6LP + doaOpen6LP) %>,
+			    <%- JSON.stringify( doaClosed5LP + doaContained5LP + doaMissed5LP + doaOpen5LP) %>,
+			    <%- JSON.stringify( doaClosed4LP + doaContained4LP + doaMissed4LP + doaOpen4LP) %>,
+			    <%- JSON.stringify( doaClosed3LP + doaContained3LP + doaMissed3LP + doaOpen3LP) %>,
+			    <%- JSON.stringify( doaClosed2LP + doaContained2LP + doaMissed2LP + doaOpen2LP) %>,
+			    <%- JSON.stringify( doaClosed1LP + doaContained1LP + doaMissed1LP + doaOpen1LP) %>,
+			    <%- JSON.stringify( doaClosed0LP + doaContained0LP + doaMissed0LP + doaOpen0LP) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels5[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaClosed8LP %>,
+			        <%= doaClosed7LP %>,
+			        <%= doaClosed6LP %>,
+			        <%= doaClosed5LP %>,
+			        <%= doaClosed4LP %>,
+			        <%= doaClosed3LP %>,
+			        <%= doaClosed2LP %>,
+			        <%= doaClosed1LP %>,
+			        <%= doaClosed0LP %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels5[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaContained8LP %>,
+			        <%= doaContained7LP %>,
+			        <%= doaContained6LP %>,
+			        <%= doaContained5LP %>,
+			        <%= doaContained4LP %>,
+			        <%= doaContained3LP %>,
+			        <%= doaContained2LP %>,
+			        <%= doaContained1LP %>,
+			        <%= doaContained0LP %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels5[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaMissed8LP %>,
+			        <%= doaMissed7LP %>,
+			        <%= doaMissed6LP %>,
+			        <%= doaMissed5LP %>,
+			        <%= doaMissed4LP %>,
+			        <%= doaMissed3LP %>,
+			        <%= doaMissed2LP %>,
+			        <%= doaMissed1LP %>,
+			        <%= doaMissed0LP %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels5[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= doaOpen8LP %>,
+			        <%= doaOpen7LP %>,
+			        <%= doaOpen6LP %>,
+			        <%= doaOpen5LP %>,
+			        <%= doaOpen4LP %>,
+			        <%= doaOpen3LP %>,
+			        <%= doaOpen2LP %>,
+			        <%= doaOpen1LP %>,
+			        <%= doaOpen0LP %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData6 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels6: [
+			    <%- JSON.stringify( doaClosed8HP + doaContained8HP + doaMissed8HP + doaOpen8HP) %>,
+			    <%- JSON.stringify( doaClosed7HP + doaContained7HP + doaMissed7HP + doaOpen7HP) %>,
+			    <%- JSON.stringify( doaClosed6HP + doaContained6HP + doaMissed6HP + doaOpen6HP) %>,
+			    <%- JSON.stringify( doaClosed5HP + doaContained5HP + doaMissed5HP + doaOpen5HP) %>,
+			    <%- JSON.stringify( doaClosed4HP + doaContained4HP + doaMissed4HP + doaOpen4HP) %>,
+			    <%- JSON.stringify( doaClosed3HP + doaContained3HP + doaMissed3HP + doaOpen3HP) %>,
+			    <%- JSON.stringify( doaClosed2HP + doaContained2HP + doaMissed2HP + doaOpen2HP) %>,
+			    <%- JSON.stringify( doaClosed1HP + doaContained1HP + doaMissed1HP + doaOpen1HP) %>,
+			    <%- JSON.stringify( doaClosed0HP + doaContained0HP + doaMissed0HP + doaOpen0HP) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels6[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaClosed8HP %>,
+			        <%= doaClosed7HP %>,
+			        <%= doaClosed6HP %>,
+			        <%= doaClosed5HP %>,
+			        <%= doaClosed4HP %>,
+			        <%= doaClosed3HP %>,
+			        <%= doaClosed2HP %>,
+			        <%= doaClosed1HP %>,
+			        <%= doaClosed0HP %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels6[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaContained8HP %>,
+			        <%= doaContained7HP %>,
+			        <%= doaContained6HP %>,
+			        <%= doaContained5HP %>,
+			        <%= doaContained4HP %>,
+			        <%= doaContained3HP %>,
+			        <%= doaContained2HP %>,
+			        <%= doaContained1HP %>,
+			        <%= doaContained0HP %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels6[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaMissed8HP %>,
+			        <%= doaMissed7HP %>,
+			        <%= doaMissed6HP %>,
+			        <%= doaMissed5HP %>,
+			        <%= doaMissed4HP %>,
+			        <%= doaMissed3HP %>,
+			        <%= doaMissed2HP %>,
+			        <%= doaMissed1HP %>,
+			        <%= doaMissed0HP %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels6[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= doaOpen8HP %>,
+			        <%= doaOpen7HP %>,
+			        <%= doaOpen6HP %>,
+			        <%= doaOpen5HP %>,
+			        <%= doaOpen4HP %>,
+			        <%= doaOpen3HP %>,
+			        <%= doaOpen2HP %>,
+			        <%= doaOpen1HP %>,
+			        <%= doaOpen0HP %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData7 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels7: [
+			    <%- JSON.stringify( doaClosed8 + doaContained8 + doaMissed8 + doaOpen8) %>,
+			    <%- JSON.stringify( doaClosed7 + doaContained7 + doaMissed7 + doaOpen7) %>,
+			    <%- JSON.stringify( doaClosed6 + doaContained6 + doaMissed6 + doaOpen6) %>,
+			    <%- JSON.stringify( doaClosed5 + doaContained5 + doaMissed5 + doaOpen5) %>,
+			    <%- JSON.stringify( doaClosed4 + doaContained4 + doaMissed4 + doaOpen4) %>,
+			    <%- JSON.stringify( doaClosed3 + doaContained3 + doaMissed3 + doaOpen3) %>,
+			    <%- JSON.stringify( doaClosed2 + doaContained2 + doaMissed2 + doaOpen2) %>,
+			    <%- JSON.stringify( doaClosed1 + doaContained1 + doaMissed1 + doaOpen1) %>,
+			    <%- JSON.stringify( doaClosed0 + doaContained0 + doaMissed0 + doaOpen0) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels7[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaClosed8 %>,
+			        <%= doaClosed7 %>,
+			        <%= doaClosed6 %>,
+			        <%= doaClosed5 %>,
+			        <%= doaClosed4 %>,
+			        <%= doaClosed3 %>,
+			        <%= doaClosed2 %>,
+			        <%= doaClosed1 %>,
+			        <%= doaClosed0 %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels7[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaContained8 %>,
+			        <%= doaContained7 %>,
+			        <%= doaContained6 %>,
+			        <%= doaContained5 %>,
+			        <%= doaContained4 %>,
+			        <%= doaContained3 %>,
+			        <%= doaContained2 %>,
+			        <%= doaContained1 %>,
+			        <%= doaContained0 %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels7[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= doaMissed8 %>,
+			        <%= doaMissed7 %>,
+			        <%= doaMissed6 %>,
+			        <%= doaMissed5 %>,
+			        <%= doaMissed4 %>,
+			        <%= doaMissed3 %>,
+			        <%= doaMissed2 %>,
+			        <%= doaMissed1 %>,
+			        <%= doaMissed0 %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels7[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= doaOpen8 %>,
+			        <%= doaOpen7 %>,
+			        <%= doaOpen6 %>,
+			        <%= doaOpen5 %>,
+			        <%= doaOpen4 %>,
+			        <%= doaOpen3 %>,
+			        <%= doaOpen2 %>,
+			        <%= doaOpen1 %>,
+			        <%= doaOpen0 %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData8 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels8: [
+			    <%- JSON.stringify( t3Closed8BHL + t3Contained8BHL + t3Missed8BHL + t3Open8BHL) %>,
+			    <%- JSON.stringify( t3Closed7BHL + t3Contained7BHL + t3Missed7BHL + t3Open7BHL) %>,
+			    <%- JSON.stringify( t3Closed6BHL + t3Contained6BHL + t3Missed6BHL + t3Open6BHL) %>,
+			    <%- JSON.stringify( t3Closed5BHL + t3Contained5BHL + t3Missed5BHL + t3Open5BHL) %>,
+			    <%- JSON.stringify( t3Closed4BHL + t3Contained4BHL + t3Missed4BHL + t3Open4BHL) %>,
+			    <%- JSON.stringify( t3Closed3BHL + t3Contained3BHL + t3Missed3BHL + t3Open3BHL) %>,
+			    <%- JSON.stringify( t3Closed2BHL + t3Contained2BHL + t3Missed2BHL + t3Open2BHL) %>,
+			    <%- JSON.stringify( t3Closed1BHL + t3Contained1BHL + t3Missed1BHL + t3Open1BHL) %>,
+			    <%- JSON.stringify( t3Closed0BHL + t3Contained0BHL + t3Missed0BHL + t3Open0BHL) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels8[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Closed8BHL %>,
+			        <%= t3Closed7BHL %>,
+			        <%= t3Closed6BHL %>,
+			        <%= t3Closed5BHL %>,
+			        <%= t3Closed4BHL %>,
+			        <%= t3Closed3BHL %>,
+			        <%= t3Closed2BHL %>,
+			        <%= t3Closed1BHL %>,
+			        <%= t3Closed0BHL %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels8[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Contained8BHL %>,
+			        <%= t3Contained7BHL %>,
+			        <%= t3Contained6BHL %>,
+			        <%= t3Contained5BHL %>,
+			        <%= t3Contained4BHL %>,
+			        <%= t3Contained3BHL %>,
+			        <%= t3Contained2BHL %>,
+			        <%= t3Contained1BHL %>,
+			        <%= t3Contained0BHL %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels8[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Missed8BHL %>,
+			        <%= t3Missed7BHL %>,
+			        <%= t3Missed6BHL %>,
+			        <%= t3Missed5BHL %>,
+			        <%= t3Missed4BHL %>,
+			        <%= t3Missed3BHL %>,
+			        <%= t3Missed2BHL %>,
+			        <%= t3Missed1BHL %>,
+			        <%= t3Missed0BHL %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels8[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= t3Open8BHL %>,
+			        <%= t3Open7BHL %>,
+			        <%= t3Open6BHL %>,
+			        <%= t3Open5BHL %>,
+			        <%= t3Open4BHL %>,
+			        <%= t3Open3BHL %>,
+			        <%= t3Open2BHL %>,
+			        <%= t3Open1BHL %>,
+			        <%= t3Open0BHL %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData9 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels9: [
+			    <%- JSON.stringify( t3Closed8LDL + t3Contained8LDL + t3Missed8LDL + t3Open8LDL) %>,
+			    <%- JSON.stringify( t3Closed7LDL + t3Contained7LDL + t3Missed7LDL + t3Open7LDL) %>,
+			    <%- JSON.stringify( t3Closed6LDL + t3Contained6LDL + t3Missed6LDL + t3Open6LDL) %>,
+			    <%- JSON.stringify( t3Closed5LDL + t3Contained5LDL + t3Missed5LDL + t3Open5LDL) %>,
+			    <%- JSON.stringify( t3Closed4LDL + t3Contained4LDL + t3Missed4LDL + t3Open4LDL) %>,
+			    <%- JSON.stringify( t3Closed3LDL + t3Contained3LDL + t3Missed3LDL + t3Open3LDL) %>,
+			    <%- JSON.stringify( t3Closed2LDL + t3Contained2LDL + t3Missed2LDL + t3Open2LDL) %>,
+			    <%- JSON.stringify( t3Closed1LDL + t3Contained1LDL + t3Missed1LDL + t3Open1LDL) %>,
+			    <%- JSON.stringify( t3Closed0LDL + t3Contained0LDL + t3Missed0LDL + t3Open0LDL) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels9[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Closed8LDL %>,
+			        <%= t3Closed7LDL %>,
+			        <%= t3Closed6LDL %>,
+			        <%= t3Closed5LDL %>,
+			        <%= t3Closed4LDL %>,
+			        <%= t3Closed3LDL %>,
+			        <%= t3Closed2LDL %>,
+			        <%= t3Closed1LDL %>,
+			        <%= t3Closed0LDL %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels9[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Contained8LDL %>,
+			        <%= t3Contained7LDL %>,
+			        <%= t3Contained6LDL %>,
+			        <%= t3Contained5LDL %>,
+			        <%= t3Contained4LDL %>,
+			        <%= t3Contained3LDL %>,
+			        <%= t3Contained2LDL %>,
+			        <%= t3Contained1LDL %>,
+			        <%= t3Contained0LDL %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels9[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Missed8LDL %>,
+			        <%= t3Missed7LDL %>,
+			        <%= t3Missed6LDL %>,
+			        <%= t3Missed5LDL %>,
+			        <%= t3Missed4LDL %>,
+			        <%= t3Missed3LDL %>,
+			        <%= t3Missed2LDL %>,
+			        <%= t3Missed1LDL %>,
+			        <%= t3Missed0LDL %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels9[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= t3Open8LDL %>,
+			        <%= t3Open7LDL %>,
+			        <%= t3Open6LDL %>,
+			        <%= t3Open5LDL %>,
+			        <%= t3Open4LDL %>,
+			        <%= t3Open3LDL %>,
+			        <%= t3Open2LDL %>,
+			        <%= t3Open1LDL %>,
+			        <%= t3Open0LDL %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData10 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels10: [
+			    <%- JSON.stringify( t3Closed8CP + t3Contained8CP + t3Missed8CP + t3Open8CP) %>,
+			    <%- JSON.stringify( t3Closed7CP + t3Contained7CP + t3Missed7CP + t3Open7CP) %>,
+			    <%- JSON.stringify( t3Closed6CP + t3Contained6CP + t3Missed6CP + t3Open6CP) %>,
+			    <%- JSON.stringify( t3Closed5CP + t3Contained5CP + t3Missed5CP + t3Open5CP) %>,
+			    <%- JSON.stringify( t3Closed4CP + t3Contained4CP + t3Missed4CP + t3Open4CP) %>,
+			    <%- JSON.stringify( t3Closed3CP + t3Contained3CP + t3Missed3CP + t3Open3CP) %>,
+			    <%- JSON.stringify( t3Closed2CP + t3Contained2CP + t3Missed2CP + t3Open2CP) %>,
+			    <%- JSON.stringify( t3Closed1CP + t3Contained1CP + t3Missed1CP + t3Open1CP) %>,
+			    <%- JSON.stringify( t3Closed0CP + t3Contained0CP + t3Missed0CP + t3Open0CP) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels10[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Closed8CP %>,
+			        <%= t3Closed7CP %>,
+			        <%= t3Closed6CP %>,
+			        <%= t3Closed5CP %>,
+			        <%= t3Closed4CP %>,
+			        <%= t3Closed3CP %>,
+			        <%= t3Closed2CP %>,
+			        <%= t3Closed1CP %>,
+			        <%= t3Closed0CP %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels10[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Contained8CP %>,
+			        <%= t3Contained7CP %>,
+			        <%= t3Contained6CP %>,
+			        <%= t3Contained5CP %>,
+			        <%= t3Contained4CP %>,
+			        <%= t3Contained3CP %>,
+			        <%= t3Contained2CP %>,
+			        <%= t3Contained1CP %>,
+			        <%= t3Contained0CP %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels10[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Missed8CP %>,
+			        <%= t3Missed7CP %>,
+			        <%= t3Missed6CP %>,
+			        <%= t3Missed5CP %>,
+			        <%= t3Missed4CP %>,
+			        <%= t3Missed3CP %>,
+			        <%= t3Missed2CP %>,
+			        <%= t3Missed1CP %>,
+			        <%= t3Missed0CP %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels10[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= t3Open8CP %>,
+			        <%= t3Open7CP %>,
+			        <%= t3Open6CP %>,
+			        <%= t3Open5CP %>,
+			        <%= t3Open4CP %>,
+			        <%= t3Open3CP %>,
+			        <%= t3Open2CP %>,
+			        <%= t3Open1CP %>,
+			        <%= t3Open0CP %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData11 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels11: [
+			    <%- JSON.stringify( t3Closed8EM + t3Contained8EM + t3Missed8EM + t3Open8EM) %>,
+			    <%- JSON.stringify( t3Closed7EM + t3Contained7EM + t3Missed7EM + t3Open7EM) %>,
+			    <%- JSON.stringify( t3Closed6EM + t3Contained6EM + t3Missed6EM + t3Open6EM) %>,
+			    <%- JSON.stringify( t3Closed5EM + t3Contained5EM + t3Missed5EM + t3Open5EM) %>,
+			    <%- JSON.stringify( t3Closed4EM + t3Contained4EM + t3Missed4EM + t3Open4EM) %>,
+			    <%- JSON.stringify( t3Closed3EM + t3Contained3EM + t3Missed3EM + t3Open3EM) %>,
+			    <%- JSON.stringify( t3Closed2EM + t3Contained2EM + t3Missed2EM + t3Open2EM) %>,
+			    <%- JSON.stringify( t3Closed1EM + t3Contained1EM + t3Missed1EM + t3Open1EM) %>,
+			    <%- JSON.stringify( t3Closed0EM + t3Contained0EM + t3Missed0EM + t3Open0EM) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels11[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Closed8EM %>,
+			        <%= t3Closed7EM %>,
+			        <%= t3Closed6EM %>,
+			        <%= t3Closed5EM %>,
+			        <%= t3Closed4EM %>,
+			        <%= t3Closed3EM %>,
+			        <%= t3Closed2EM %>,
+			        <%= t3Closed1EM %>,
+			        <%= t3Closed0EM %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels11[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Contained8EM %>,
+			        <%= t3Contained7EM %>,
+			        <%= t3Contained6EM %>,
+			        <%= t3Contained5EM %>,
+			        <%= t3Contained4EM %>,
+			        <%= t3Contained3EM %>,
+			        <%= t3Contained2EM %>,
+			        <%= t3Contained1EM %>,
+			        <%= t3Contained0EM %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels11[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Missed8EM %>,
+			        <%= t3Missed7EM %>,
+			        <%= t3Missed6EM %>,
+			        <%= t3Missed5EM %>,
+			        <%= t3Missed4EM %>,
+			        <%= t3Missed3EM %>,
+			        <%= t3Missed2EM %>,
+			        <%= t3Missed1EM %>,
+			        <%= t3Missed0EM %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels11[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= t3Open8EM %>,
+			        <%= t3Open7EM %>,
+			        <%= t3Open6EM %>,
+			        <%= t3Open5EM %>,
+			        <%= t3Open4EM %>,
+			        <%= t3Open3EM %>,
+			        <%= t3Open2EM %>,
+			        <%= t3Open1EM %>,
+			        <%= t3Open0EM %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData12 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels12: [
+			    <%- JSON.stringify( t3Closed8LP + t3Contained8LP + t3Missed8LP + t3Open8LP) %>,
+			    <%- JSON.stringify( t3Closed7LP + t3Contained7LP + t3Missed7LP + t3Open7LP) %>,
+			    <%- JSON.stringify( t3Closed6LP + t3Contained6LP + t3Missed6LP + t3Open6LP) %>,
+			    <%- JSON.stringify( t3Closed5LP + t3Contained5LP + t3Missed5LP + t3Open5LP) %>,
+			    <%- JSON.stringify( t3Closed4LP + t3Contained4LP + t3Missed4LP + t3Open4LP) %>,
+			    <%- JSON.stringify( t3Closed3LP + t3Contained3LP + t3Missed3LP + t3Open3LP) %>,
+			    <%- JSON.stringify( t3Closed2LP + t3Contained2LP + t3Missed2LP + t3Open2LP) %>,
+			    <%- JSON.stringify( t3Closed1LP + t3Contained1LP + t3Missed1LP + t3Open1LP) %>,
+			    <%- JSON.stringify( t3Closed0LP + t3Contained0LP + t3Missed0LP + t3Open0LP) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels12[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Closed8LP %>,
+			        <%= t3Closed7LP %>,
+			        <%= t3Closed6LP %>,
+			        <%= t3Closed5LP %>,
+			        <%= t3Closed4LP %>,
+			        <%= t3Closed3LP %>,
+			        <%= t3Closed2LP %>,
+			        <%= t3Closed1LP %>,
+			        <%= t3Closed0LP %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels12[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Contained8LP %>,
+			        <%= t3Contained7LP %>,
+			        <%= t3Contained6LP %>,
+			        <%= t3Contained5LP %>,
+			        <%= t3Contained4LP %>,
+			        <%= t3Contained3LP %>,
+			        <%= t3Contained2LP %>,
+			        <%= t3Contained1LP %>,
+			        <%= t3Contained0LP %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels12[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Missed8LP %>,
+			        <%= t3Missed7LP %>,
+			        <%= t3Missed6LP %>,
+			        <%= t3Missed5LP %>,
+			        <%= t3Missed4LP %>,
+			        <%= t3Missed3LP %>,
+			        <%= t3Missed2LP %>,
+			        <%= t3Missed1LP %>,
+			        <%= t3Missed0LP %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels12[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= t3Open8LP %>,
+			        <%= t3Open7LP %>,
+			        <%= t3Open6LP %>,
+			        <%= t3Open5LP %>,
+			        <%= t3Open4LP %>,
+			        <%= t3Open3LP %>,
+			        <%= t3Open2LP %>,
+			        <%= t3Open1LP %>,
+			        <%= t3Open0LP %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData13 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels13: [
+			    <%- JSON.stringify( t3Closed8HP + t3Contained8HP + t3Missed8HP + t3Open8HP) %>,
+			    <%- JSON.stringify( t3Closed7HP + t3Contained7HP + t3Missed7HP + t3Open7HP) %>,
+			    <%- JSON.stringify( t3Closed6HP + t3Contained6HP + t3Missed6HP + t3Open6HP) %>,
+			    <%- JSON.stringify( t3Closed5HP + t3Contained5HP + t3Missed5HP + t3Open5HP) %>,
+			    <%- JSON.stringify( t3Closed4HP + t3Contained4HP + t3Missed4HP + t3Open4HP) %>,
+			    <%- JSON.stringify( t3Closed3HP + t3Contained3HP + t3Missed3HP + t3Open3HP) %>,
+			    <%- JSON.stringify( t3Closed2HP + t3Contained2HP + t3Missed2HP + t3Open2HP) %>,
+			    <%- JSON.stringify( t3Closed1HP + t3Contained1HP + t3Missed1HP + t3Open1HP) %>,
+			    <%- JSON.stringify( t3Closed0HP + t3Contained0HP + t3Missed0HP + t3Open0HP) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels13[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Closed8HP %>,
+			        <%= t3Closed7HP %>,
+			        <%= t3Closed6HP %>,
+			        <%= t3Closed5HP %>,
+			        <%= t3Closed4HP %>,
+			        <%= t3Closed3HP %>,
+			        <%= t3Closed2HP %>,
+			        <%= t3Closed1HP %>,
+			        <%= t3Closed0HP %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels13[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Contained8HP %>,
+			        <%= t3Contained7HP %>,
+			        <%= t3Contained6HP %>,
+			        <%= t3Contained5HP %>,
+			        <%= t3Contained4HP %>,
+			        <%= t3Contained3HP %>,
+			        <%= t3Contained2HP %>,
+			        <%= t3Contained1HP %>,
+			        <%= t3Contained0HP %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels13[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Missed8HP %>,
+			        <%= t3Missed7HP %>,
+			        <%= t3Missed6HP %>,
+			        <%= t3Missed5HP %>,
+			        <%= t3Missed4HP %>,
+			        <%= t3Missed3HP %>,
+			        <%= t3Missed2HP %>,
+			        <%= t3Missed1HP %>,
+			        <%= t3Missed0HP %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        // anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels13[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= t3Open8HP %>,
+			        <%= t3Open7HP %>,
+			        <%= t3Open6HP %>,
+			        <%= t3Open5HP %>,
+			        <%= t3Open4HP %>,
+			        <%= t3Open3HP %>,
+			        <%= t3Open2HP %>,
+			        <%= t3Open1HP %>,
+			        <%= t3Open0HP %>,
+			      ],
+			    },
+			  ],
+			}
+
+			let barChartData14 = {
+			  labels: <%- JSON.stringify(labels) %>,
+			  newLabels14: [
+			    <%- JSON.stringify( t3Closed8 + t3Contained8 + t3Missed8 + t3Open8) %>,
+			    <%- JSON.stringify( t3Closed7 + t3Contained7 + t3Missed7 + t3Open7) %>,
+			    <%- JSON.stringify( t3Closed6 + t3Contained6 + t3Missed6 + t3Open6) %>,
+			    <%- JSON.stringify( t3Closed5 + t3Contained5 + t3Missed5 + t3Open5) %>,
+			    <%- JSON.stringify( t3Closed4 + t3Contained4 + t3Missed4 + t3Open4) %>,
+			    <%- JSON.stringify( t3Closed3 + t3Contained3 + t3Missed3 + t3Open3) %>,
+			    <%- JSON.stringify( t3Closed2 + t3Contained2 + t3Missed2 + t3Open2) %>,
+			    <%- JSON.stringify( t3Closed1 + t3Contained1 + t3Missed1 + t3Open1) %>,
+			    <%- JSON.stringify( t3Closed0 + t3Contained0 + t3Missed0 + t3Open0) %>,
+
+			  ],
+			  datasets: [{
+			      label: 'Closed',
+			      backgroundColor: 'green',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels14[context.dataIndex];
+			          } else {
+			            value = "";
+			            return value
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Closed8 %>,
+			        <%= t3Closed7 %>,
+			        <%= t3Closed6 %>,
+			        <%= t3Closed5 %>,
+			        <%= t3Closed4 %>,
+			        <%= t3Closed3 %>,
+			        <%= t3Closed2 %>,
+			        <%= t3Closed1 %>,
+			        <%= t3Closed0 %>,
+			      ],
+			    },
+			    {
+			      label: 'Contained',
+			      backgroundColor: 'orange',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels14[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Contained8 %>,
+			        <%= t3Contained7 %>,
+			        <%= t3Contained6 %>,
+			        <%= t3Contained5 %>,
+			        <%= t3Contained4 %>,
+			        <%= t3Contained3 %>,
+			        <%= t3Contained2 %>,
+			        <%= t3Contained1 %>,
+			        <%= t3Contained0 %>,
+			      ],
+			    },
+			    {
+			      label: 'Open',
+			      backgroundColor: 'red',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: false,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          if (value > 0) {
+			            value = value.toString();
+			            value = value.split(/(?=(?:...)*$)/);
+			            value = value.join(',');
+			            return context.chart.data.newLabels14[context.dataIndex];
+			          } else {
+			            return '';
+
+			          }
+			        },
+			      },
+			      data: [
+			        <%= t3Missed8 %>,
+			        <%= t3Missed7 %>,
+			        <%= t3Missed6 %>,
+			        <%= t3Missed5 %>,
+			        <%= t3Missed4 %>,
+			        <%= t3Missed3 %>,
+			        <%= t3Missed2 %>,
+			        <%= t3Missed1 %>,
+			        <%= t3Missed0 %>,
+			      ],
+			    },
+			    {
+			      label: 'No Action',
+			      backgroundColor: 'grey',
+			      yAxisID: 'bar-y-axis',
+			      datalabels: {
+			        // display labels for this specific dataset
+			        display: true,
+			        color: 'white',
+			        align: 'end',
+			        anchor: 'end',
+			        formatter: function(value, context, values) {
+			          return context.chart.data.newLabels14[context.dataIndex];
+			        }
+			      },
+			      data: [
+			        <%= t3Open8 %>,
+			        <%= t3Open7 %>,
+			        <%= t3Open6 %>,
+			        <%= t3Open5 %>,
+			        <%= t3Open4 %>,
+			        <%= t3Open3 %>,
+			        <%= t3Open2 %>,
+			        <%= t3Open1 %>,
+			        <%= t3Open0 %>,
+			      ],
+			    },
+			  ],
+			}
+
+
+
+
+			window.onload = function() {
+			  //bhl doa build
+			  const ctx = document.getElementById("canvas1")
+			  options.scales.yAxes[0].ticks.max = 160
+			  options.scales.yAxes[0].ticks.stepSize = 40
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart1 = new Chart(ctx, {
+			    type: 'bar',
+			    data: barChartData1,
+			    options: options
+			  })
+
+			  //ldl doa build
+			  const ctx2 = document.getElementById("canvas2")
+			  options.scales.yAxes[0].ticks.max = 800
+			  options.scales.yAxes[0].ticks.stepSize = 200
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart2 = new Chart(ctx2, {
+			    type: 'bar',
+			    data: barChartData2,
+			    options: options
+			  })
+
+			  //cp doa build
+			  const ctx3 = document.getElementById("canvas3")
+			  options.scales.yAxes[0].ticks.max = 400
+			  options.scales.yAxes[0].ticks.stepSize = 100
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart3 = new Chart(ctx3, {
+			    type: 'bar',
+			    data: barChartData3,
+			    options: options
+			  })
+
+			  //em doa build
+			  const ctx4 = document.getElementById("canvas4")
+			  options.scales.yAxes[0].ticks.max = 300
+			  options.scales.yAxes[0].ticks.stepSize = 100
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart4 = new Chart(ctx4, {
+			    type: 'bar',
+			    data: barChartData4,
+			    options: options
+			  })
+			  //lp doa build
+			  const ctx5 = document.getElementById("canvas5")
+			  options.scales.yAxes[0].ticks.max = 40
+			  options.scales.yAxes[0].ticks.stepSize = 10
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart5 = new Chart(ctx5, {
+			    type: 'bar',
+			    data: barChartData5,
+			    options: options
+			  })
+
+			  //hp doa build
+			  const ctx6 = document.getElementById("canvas6")
+			  options.scales.yAxes[0].ticks.max = 60
+			  options.scales.yAxes[0].ticks.stepSize = 20
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart6 = new Chart(ctx6, {
+			    type: 'bar',
+			    data: barChartData6,
+			    options: options
+			  })
+
+			  //group doa build
+			  const ctx7 = document.getElementById("canvas7")
+			  options.scales.yAxes[0].ticks.max = 1200
+			  options.scales.yAxes[0].ticks.stepSize = 200
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Build Month'
+
+			  const myChart7 = new Chart(ctx7, {
+			    type: 'bar',
+			    data: barChartData7,
+			    options: options
+			  })
+
+
+			  //bhl intake
+			  const ctx8 = document.getElementById("canvas8")
+			  options.scales.yAxes[0].ticks.max = 160
+			  options.scales.yAxes[0].ticks.stepSize = 40
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Intake Month'
+
+			  const myChart8 = new Chart(ctx8, {
+			    type: 'bar',
+			    data: barChartData8,
+			    options: options
+			  })
+
+			  //ldl intake
+			  const ctx9 = document.getElementById("canvas9")
+			  options.scales.yAxes[0].ticks.max = 800
+			  options.scales.yAxes[0].ticks.stepSize = 200
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Intake Month'
+
+			  const myChart9 = new Chart(ctx9, {
+			    type: 'bar',
+			    data: barChartData9,
+			    options: options
+			  })
+
+			  //cp intake
+			  const ctx10 = document.getElementById("canvas10")
+			  options.scales.yAxes[0].ticks.max = 400
+			  options.scales.yAxes[0].ticks.stepSize = 100
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Intake Month'
+
+			  const myChart10 = new Chart(ctx10, {
+			    type: 'bar',
+			    data: barChartData10,
+			    options: options
+			  })
+
+			  //em intake
+			  const ctx11 = document.getElementById("canvas11")
+			  options.scales.yAxes[0].ticks.max = 300
+			  options.scales.yAxes[0].ticks.stepSize = 100
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Intake Month'
+
+			  const myChart11 = new Chart(ctx11, {
+			    type: 'bar',
+			    data: barChartData11,
+			    options: options
+			  })
+
+			  //lp intake
+			  const ctx12 = document.getElementById("canvas12")
+			  options.scales.yAxes[0].ticks.max = 40
+			  options.scales.yAxes[0].ticks.stepSize = 10
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Intake Month'
+
+			  const myChart12 = new Chart(ctx12, {
+			    type: 'bar',
+			    data: barChartData12,
+			    options: options
+			  })
+
+			  //hp intake
+			  const ctx13 = document.getElementById("canvas13")
+			  options.scales.yAxes[0].ticks.max = 60
+			  options.scales.yAxes[0].ticks.stepSize = 20
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Intake Month'
+
+			  const myChart13 = new Chart(ctx13, {
+			    type: 'bar',
+			    data: barChartData13,
+			    options: options
+			  })
+
+			  //group intake
+			  const ctx14 = document.getElementById("canvas14")
+			  options.scales.yAxes[0].ticks.max = 1200
+			  options.scales.yAxes[0].ticks.stepSize = 200
+			  options.scales.xAxes[0].scaleLabel.labelString = 'Intake Month'
+
+			  const myChart14 = new Chart(ctx14, {
+			    type: 'bar',
+			    data: barChartData14,
+			    options: options
+			  })
+
+
+
+
+			}
+		</script>
+	</body>
+</html>

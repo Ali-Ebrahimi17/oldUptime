@@ -1,0 +1,20 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container">
+  <table class="table table-hover table-dark" style="font-size: 15px; width: 300px; margin: auto; height: auto; ">
+    <thead>
+      <tr class="d-flex">
+        <!-- <th style="width: 300px;">Zone<a class="float-right" href="/zone/new/<%= division %>"> <i class="fas fa-plus"></i></a></th> -->
+        <th style="width: 300px;">Zone</th>
+
+
+      </tr>
+    </thead>
+    <tbody>
+      <% zones.forEach(zone => { %>
+      <tr class="d-flex">
+        <td style=" width: 300px"><a href="/zone/edit/<%= zone._id %>"><%= zone.name %></a></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>

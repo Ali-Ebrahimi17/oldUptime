@@ -1,0 +1,38 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="newbuild-container">
+
+
+  <div class="row form-background" style="display: flex; justify-content: center;">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Edit <%= sip.name %></h1>
+    </div>
+
+
+
+
+    <div class="col">
+      <form action="/dash/sip/edit/<%= sip._id %>" method="POST">
+        <label for="buildNumber">Start Date</label>
+        <input class="form-control" type="date" name="sip[startDate]" style="margin-bottom: 10px;" value="<%= sip.startDate %>" required>
+        <input class="form-control" type="time" name="sip[startTime]" value="<%= sip.startTime %>" required>
+
+
+    </div>
+    <div class="col">
+      <label for="buildNumber">End Date</label>
+      <input class="form-control" type="date" name="sip[endDate]" style="margin-bottom: 10px;" value="<%= sip.endDate %>" required>
+      <input class="form-control" type="time" name="sip[endTime]" value="<%= sip.endTime %>" required>
+
+
+      <div class="form-group text-center">
+        <button class="btn btn-md btn-block btn-success" style="margin-top: 10px; margin-left: -55%; ">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+
+  <div>
+    <a href="/dash/sip/all/LDL">Go Back</a>
+  </div>

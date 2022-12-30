@@ -1,0 +1,424 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid" style="margin-left: -10px">
+    <img class="nav-item" src="/home/jcb.png" alt="" style="margin-right: 1rem;" />
+    <% if (division === 'GROUP') { %>
+    <a class="navbar-brand" style="margin-right: 4rem">UK Group Uptime</a>
+    <% } else { %>
+    <a class="navbar-brand" style="margin-right: 4rem"><%= division %> Uptime</a>
+    <% } %>
+
+
+
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+     
+
+      <% if (division === 'USA' || (Array.isArray(division) && division.includes('USA') )) { %>
+
+        <div class="navbar-nav" style="margin-left: -20px;">
+          <a class="nav-link" href="/">Home</a>
+          <a class="nav-link" href="/dash/savannah-dashT3">Warranty Dashboard</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Top 50</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/top50/50/doa/<%= division %>/all"><%= division %> Top 50 DOA</a>
+              <!-- <a class="dropdown-item" href="/top50/50/t0/<%= division %>/all"><%= division %> Top 50 T0</a>
+              <a class="dropdown-item" href="/top50/50/t1/<%= division %>/all"><%= division %> Top 50 T1</a> -->
+              <a class="dropdown-item" href="/top50/50/t3/<%= division %>/all"><%= division %> Top 50 T3</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/top50/all/doa/<%= division %>/all"><%= division %> DOA All</a>
+              <!-- <a class="dropdown-item" href="/top50/all/t0/<%= division %>/all"><%= division %> T0 All</a>
+              <a class="dropdown-item" href="/top50/all/t1/<%= division %>/all"><%= division %> T1 All</a> -->
+              <a class="dropdown-item" href="/top50/all/t3/<%= division %>/all"><%= division %> T3 All</a>
+            </div>
+          </li>
+          <a class="nav-link" href="/claims/4c/<%= division %>">4C</a>
+          <a class="nav-link" href="/download/main/<%= division %>">Downloads</a>
+          <a class="nav-link" href="/tCard/qcs/all-checks/<%= division %>">QASI</a>
+          <% if ( currentUser && currentUser.isAdmin ) { %>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="/inspector/all/<%= division %>">Add/Edit Inspector</a>
+                <a class="dropdown-item" href="/area/all/<%= division %>">Add/Edit Inspection Area</a>
+                <!-- <a class="dropdown-item" href="/model/all/<%= division %>">Add/Edit Models</a> -->
+                <a class="dropdown-item" href="/detection/all/<%= division %>">Add/Edit Detection Point</a>
+                <!-- <a class="dropdown-item" href="/">Add/Edit Int DPU</a> -->
+                <div class="dropdown-divider"></div>
+                
+              <a class="dropdown-item" href="/champion/all/<%= division %>">Add/Edit Top 50 Champion</a>
+                <!-- <a class="dropdown-item" href="/">Update Dash Stats</a> -->
+              </div>
+            </li>
+            <% } %>
+         
+          
+          
+
+        </div>
+
+        <div class="navbar-nav ml-auto">
+         
+          <% if(!currentUser) {%>
+          <a class="nav-link" href="/login">Login</a>
+          <a class="nav-link" href="/register">Sign Up</a>
+          <% } else {%>
+          <a class="nav-link" href="/logout">Logout</a>
+          <% } %>
+          
+
+        </div>
+
+        <% } else if (division === 'TMS') { %>
+          <div class="navbar-nav" style="margin-left: -20px;">
+            <a class="nav-link" href="/tCard/qcs/all-checks/<%= division %>">QASI</a>
+          </div>
+          <div class="navbar-nav ml-auto">
+           
+            <% if(!currentUser) {%>
+            <a class="nav-link" href="/login">Login</a>
+            <a class="nav-link" href="/register">Sign Up</a>
+            <% } else {%>
+            <a class="nav-link" href="/logout">Logout</a>
+            <% } %>
+            
+  
+          </div>
+
+      <% } else { %>
+
+        <% if (division === 'Attachments' || division === 'Training'  ) { %>
+      <div class="navbar-nav" style="margin-left: -20px;">
+        <a class="nav-link" href="/">Home</a>
+
+        <a class="nav-link" href="/claims/4c/<%= division %>">4C Tracker</a>
+        <a class="nav-link" href="/claims/leak4c/<%= division %>">4C Tracker</a>
+
+        <% if ( currentUser && currentUser.isCFC ) { %>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Issue 4C</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/claims/new/<%= division %>">4C</a>
+            <div class="dropdown-divider"></div>
+            <% } %>
+            <% if ( currentUser && currentUser.isLeak ) { %>
+            <a class="dropdown-item" href="/claims/newleak/<%= division %>">Leak 4C</a>
+            <% } %>
+          </div>
+        </li>
+        <% if ( currentUser && currentUser.isAdmin ) { %>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
+          <div class="dropdown-menu">
+            <!-- <a class="dropdown-item" href="/">Add/Edit Inspector</a> -->
+            <a class="dropdown-item" href="/area/all/<%= division %>">Add/Edit Inspection Area</a>
+            <a class="dropdown-item" href="/model/all/<%= division %>">Add/Edit Models</a>
+            <a class="dropdown-item" href="/detection/all/<%= division %>">Add/Edit Detection Point</a>
+            <!-- <a class="dropdown-item" href="/">Add/Edit Int DPU</a> -->
+            <div class="dropdown-divider"></div>
+            <!-- <a class="dropdown-item" href="/">Update Dash Stats</a> -->
+          </div>
+        </li>
+        <% } %>
+      </div>
+      <div class="navbar-nav ml-auto">
+        <% if(!currentUser) {%>
+        <a class="nav-link" href="/login">Login</a>
+        <a class="nav-link" href="/register">Sign Up</a>
+        <% } else {%>
+        <a class="nav-link" href="/logout">Logout</a>
+        <% } %>
+        <% } %>
+        <% if ( division === 'LDL' || Array.isArray(division) || division === 'BHL' ||  division === 'SD' ||   division === 'EM' ||  division === 'LP' ||  division === 'CP' ||   division === 'HP' ||   division === 'HBU' || division === 'Cabs' ) { %>
+        <div class="navbar-nav" style="margin-left: -20px;">
+          <a class="nav-link" href="/">Home</a>
+          <% if (division.includes('Cabs')) { %>
+          <a class="nav-link" href="/dash/heatmap/cabs">Int 4C Status</a>
+          <% } %>
+          <% if (division.includes('HBU') || division.includes('Cabs')) { %>
+          <a class="nav-link" href="/dash/component/<%= division %>">Division Q Smart</a>
+          <a class="nav-link" href="/claims/component4c/<%= division %>">Ext Division 4C Tracker</a>
+          <a class="nav-link" href="/claims/4c/<%= division %>">Internal 4C Tracker</a>
+          <a class="nav-link" href="/claims/leak4c/<%= division %>">Int Leaks</a>
+          <% } else { %>
+          <a class="nav-link" href="/claims/4c/<%= division %>">4C</a>
+          <a class="nav-link" href="/claims/leak4c/<%= division %>">Int Leaks 4C</a>
+          <%  } %>
+          <!-- <% if (division.includes('Cabs')) { %>
+          <a class="nav-link" href="/dash/qmrdcabs">Delivered Quality Report</a>
+
+          <%  } %> -->
+          <% if ( currentUser && currentUser.isVetter || currentUser && currentUser.isCFC ) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Throughput</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/throughput/newso/<%= division %>">Sign Out RFT</a>
+              <a class="dropdown-item" href="/throughput/newred/<%= division %>">Add To Red List</a>
+              <a class="dropdown-item" href="/throughput/reds/<%= division %>">View Reds</a>
+              <% if ( division.includes('LDL')) { %>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/throughput/newPDI/<%= division %>">Add To Test Tracker</a>
+              <a class="dropdown-item" href="/throughput/pdi/<%= division %>">Test Tracker</a>
+              <% } %>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/throughput/soToday/<%= division %>">Signed Out Today</a>
+              <a class="dropdown-item" href="/throughput/all/<%= division %>">Total Throughput</a>
+              <% if (division.includes('Cabs')) { %>
+              <a class="dropdown-item" href="/throughput/startFaults/<%= division %>">Original Faults</a>
+              <% } %>
+            </div>
+          </li>
+          <% } %>
+          <% if ( division.includes('LDL') || division.includes('BHL') ||  division.includes('SD') ||   division.includes('EM') ||  division.includes('LP') ||  division.includes('CP') ||   division.includes('HP') ) { %>
+          <% if ( currentUser && currentUser.isVetter || currentUser && currentUser.isAdmin ) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Claims Vetting</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/claims/vetting/<%= division %>">To Vet</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/claims/vetted/<%= division %>">Vetted Claims</a>
+              <!-- <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/claims/doa2021/<%= division %>">DOA 2021 Claims</a> -->
+            </div>
+          </li>
+          <% } %>
+          <% if ( currentUser && currentUser.isVetter || currentUser && currentUser.isService) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Service</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/claims/service/<%= division %>">Awaiting Service</a>
+              <% if ( division.includes('HP')) { %>
+              <a class="dropdown-item" href="/claims/serviceHd/<%= division %>">Awaiting Service HydraDig</a>
+              <% } %>
+              <a class="dropdown-item" href="/claims/serviceUSA/<%= division %>">Awaiting Service USA</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/claims/serviceaccepted/<%= division %>">Service Agreed</a>
+              <a class="dropdown-item" href="/claims/servicerejected/<%= division %>">Service Not Agreed</a>
+            </div>
+          </li>
+          <% } %>
+          <% } %>
+          <% if ( currentUser && currentUser.isVetter || currentUser && currentUser.isCFC || currentUser && currentUser.isLeak ) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Issue 4C</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/claims/new/<%= division %>">4C</a>
+              <div class="dropdown-divider"></div>
+              <% if ( currentUser && currentUser.isLeak ) { %>
+              <a class="dropdown-item" href="/claims/newleak/<%= division %>">Leak 4C</a>
+              <% } %>
+            </div>
+          </li>
+          <% } %>
+          <% if ( division.includes('LDL') || division.includes('BHL') ||  division.includes('SD') ||   division.includes('EM') ||  division.includes('LP') ||  division.includes('CP') ||   division.includes('HP') ) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Reallocations</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/reallocation/new/<%= division %>">Submit Reallocation</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/reallocation/todo/<%= division %>">Awaiting Reallocation</a>
+              <a class="dropdown-item" href="/reallocation/done/<%= division %>">Processed</a>
+            </div>
+          </li>
+          <% } %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">DOA Major Escapes</a>
+            <div class="dropdown-menu">
+              <!-- <a class="dropdown-item" href="/doa25pt/all/<%= division %>">DOA Major Escapes</a> -->
+              <!-- <a class="dropdown-item" href="/doa25pt/new/<%= division %>">Log New DOA 25pt+</a> -->
+              <a class="dropdown-item" href="/doa25pt/tracker/<%= division %>">DOA Major 4C Tracker</a>
+
+              <a class="dropdown-item" href="/doa25pt/escapeTracker/<%= division %>">Major Escape Closure Tracker</a>
+
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/doa25pt/dash">UK Group Major Escape Daily Dash</a>
+              <a class="dropdown-item" href="/doa25pt/cabsdash">Cabs Major Escape Daily Dash</a>
+              <a class="dropdown-item" href="/doa25pt/weekMonth">UK Group Major Escape Week/Month Dash</a>
+              <a class="dropdown-item" href="/doa25pt/monthlyIntake">UK Group Major Escape Monthly Intake</a>
+              <a class="dropdown-item" href="/doa25pt/lateContClosure">UK Group Major Escape Late Dash</a>
+              <!-- <a class="dropdown-item" href="/doa25pt/late">UK Group Major Escapes Late Dash</a> -->
+              <% if (currentUser && currentUser.is25ptAdmin) { %>
+              <a class="dropdown-item" href="/doa25pt/toGrade">Grade Todays Escapes</a>
+              <a class="dropdown-item" href="/doa25pt/minors">Graded Minor Escapes</a>
+              <a class="dropdown-item" href="/doa25pt/majors">Graded Major Escapes</a>
+              <% } %>
+            </div>
+          </li>
+          <% if ( division.includes('LDL') || division.includes('BHL') ||  division.includes('SD') ||   division.includes('EM') ||  division.includes('LP') ||  division.includes('CP') ||   division.includes('HP') ) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dash</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/dash/single/<%= division %>"><%= division %> Wall</a>
+              <a class="dropdown-item" href="/dash/single/GROUP">UK Group Wall</a>
+              <div class="dropdown-divider"></div>
+              <% if ( division.includes('LDL')) { %>
+              <a class="dropdown-item" href="/dash/heatmap/LDL/Leaks">T3 Leak Heatmap</a>
+              <a class="dropdown-item" href="/dash/heatmap/LDL/Electrics">T3 Electrical Heatmap</a>
+              <a class="dropdown-item" href="/dash/InternalHeatmap/LDL">O Bay Heatmap</a>
+              <a class="dropdown-item" href="/dash/dpu/LDL">DPU Dash</a>
+              <a class="dropdown-item" href="/dash/dpuTrack/LDL">0 Bay Fault Map</a>
+              <% } %>
+              <a class="dropdown-item" href="/dash/group-topdealers/<%= division %>">Top 10 Dealer Quality Report</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/dash/qmrd/<%= division %>">Monthly Delivered Quality Report</a>
+              <a class="dropdown-item" href="/dash/qmrc/<%= division %>">Monthly Customer Quality Report</a>
+            </div>
+          </li>
+          <% if ( division.includes('LDL')) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Zones Dash</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/dash/area/Shot & Paint/<%= division %>">Shot & Paint</a>
+              <a class="dropdown-item" href="/dash/area/Axle Subs/<%= division %>">Axle Subs</a>
+              <a class="dropdown-item" href="/dash/area/Rad Subs/<%= division %>">Rad Subs</a>
+              <a class="dropdown-item" href="/dash/area/Engine Subs/<%= division %>">Engine Subs</a>
+              <a class="dropdown-item" href="/dash/area/Overheads/<%= division %>">Overheads</a>
+              <a class="dropdown-item" href="/dash/area/Booms/<%= division %>">Booms</a>
+              <a class="dropdown-item" href="/dash/area/Zone 2/<%= division %>">Zone 2</a>
+              <a class="dropdown-item" href="/dash/area/Zone 3/<%= division %>">Zone 3</a>
+              <a class="dropdown-item" href="/dash/area/Zone 4/<%= division %>">Zone 4</a>
+              <a class="dropdown-item" href="/dash/area/Zone 5/<%= division %>">Zone 5</a>
+              <a class="dropdown-item" href="/dash/area/Zone 6/<%= division %>">Zone 6</a>
+              <a class="dropdown-item" href="/dash/area/Track 3 Zone 1/<%= division %>">Track 3 Zone 1</a>
+              <a class="dropdown-item" href="/dash/area/Track 3 Zone 2/<%= division %>">Track 3 Zone 2</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/dash/dpuTrackEff/<%= division %>">QCS Efficiency</a>
+            </div>
+          </li>
+
+
+
+          <!-- <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Graveyard</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="/graveyard/all/<%= division %>">View Graveyard</a>
+                <a class="dropdown-item" href="/graveyard/new/<%= division %>">Add To Graveyard</a>
+              </div>
+            </li> -->
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dispatch Yard</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/yard/all/<%= division %>">View Machines on Hold</a>
+              <% if ( currentUser && currentUser.isTopYard ) { %>
+              <a class="dropdown-item" href="/yard/new/<%= division %>">Add Machine to Hold Tracker</a>
+              <% } %>
+            </div>
+          </li>
+          
+
+          <% } %>
+          <% } %>
+
+          <!-- <% if (division === 'HP') { %>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">CFC</a>
+              <div class="dropdown-menu">
+            
+                <a class="dropdown-item" href="/cfc-top-five/all/<%=division %>/Main Line">Main line</a>
+                <a class="dropdown-item" href="/cfc-top-five/all/<%=division %>/Hydradig">Hydradig</a>
+                <a class="dropdown-item" href="/cfc-top-five/all/<%=division %>/Docking > Non con">Docking > Non con</a>
+                <a class="dropdown-item" href="/cfc-top-five/all/<%=division %>/Test > PDI">Test > PDI</a>
+                <a class="dropdown-item" href="/cfc-top-five/all/<%=division %>/GoPro">GoPro</a>
+              </div>
+            </li>
+          <% } %> -->
+          <% if (division === 'LDL') { %>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Post Obay</a>
+              <div class="dropdown-menu">
+                <!-- <a class="dropdown-item" href="/">Add/Edit Inspector</a> -->
+                <a class="dropdown-item" href="/cfc-top-five/all/<%=division %>/CFC">Dially DPU Tracker</a>
+                
+              </div>
+            </li>
+          <% } %>
+
+
+
+
+          <% if ( division.includes('LDL') || division.includes('BHL') ||  division.includes('SD') ||   division.includes('EM') ||  division.includes('LP') ||  division.includes('CP') ||   division.includes('HP') ) { %>
+          <a class="nav-link" href="/download/main/<%= division %>">Downloads</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Top 50</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/top50/50/doa/<%= division %>/all"><%= division %> Top 50 DOA</a>
+              <a class="dropdown-item" href="/top50/50/t0/<%= division %>/all"><%= division %> Top 50 T0</a>
+              <a class="dropdown-item" href="/top50/50/t1/<%= division %>/all"><%= division %> Top 50 T1</a>
+              <a class="dropdown-item" href="/top50/50/t3/<%= division %>/all"><%= division %> Top 50 T3</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/top50/all/doa/<%= division %>/all"><%= division %> DOA All</a>
+              <a class="dropdown-item" href="/top50/all/t0/<%= division %>/all"><%= division %> T0 All</a>
+              <a class="dropdown-item" href="/top50/all/t1/<%= division %>/all"><%= division %> T1 All</a>
+              <a class="dropdown-item" href="/top50/all/t3/<%= division %>/all"><%= division %> T3 All</a>
+            </div>
+          </li>
+
+          <% } %>
+          <% if ( division ==='Cabs' ) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Top 50</a>
+            <div class="dropdown-menu">
+
+              <a class="dropdown-item" href="/top50/50cabs">Top 50 T3</a>
+              <a class="dropdown-item" href="">Top 50 T6</a>
+
+            </div>
+          </li>
+
+          <% } %>
+
+
+
+          <% if ( division.includes('Cabs') ||   division.includes('EM') ||  division.includes('LP') ||  division.includes('CP') ||  division.includes('HP') ||  division.includes('BHL') ||  division.includes('SD') ||  division.includes('LDL')) { %>
+          
+          <a class="nav-link" href="/tCard/qcs/all-checks/<%= division %>">QASI</a>
+       
+          <% } %>
+
+
+          <% if ( currentUser && currentUser.isAdmin ) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/inspector/all/<%= division %>">Add/Edit Inspector</a>
+              <a class="dropdown-item" href="/area/all/<%= division %>">Add/Edit Inspection Area</a>
+              <a class="dropdown-item" href="/model/all/<%= division %>">Add/Edit Models</a>
+              <a class="dropdown-item" href="/detection/all/<%= division %>">Add/Edit Detection Point</a>
+              <!-- <a class="dropdown-item" href="/">Add/Edit Int DPU</a> -->
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/champion/all/<%= division %>">Add/Edit Top 50 Champion</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/figure/all/<%= division %>">Update Dash Stats</a>
+              <% if ( division === 'LDL' ) { %>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/zone/all/<%= division %>">Update Zone Stats</a>
+              <% } %>
+              <% if ( division === 'LDL' ) { %>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/stage/all/<%= division %>">Update QSmart Zones </a>
+              <% } %>
+            </div>
+          </li>
+          <% } %>
+        </div>
+        <div class="navbar-nav ml-auto">
+          <% if(!currentUser) {%>
+          <a class="nav-link" href="/login">Login</a>
+          <a class="nav-link" href="/register">Sign Up</a>
+          <% } else {%>
+          <a class="nav-link" href="/logout">Logout</a>
+          <% } %>
+          <% } %>
+
+        </div>
+      </div>
+    </div>
+
+     <% } %>
+
+      
+</nav>

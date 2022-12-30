@@ -1,0 +1,95 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container" style="color: white;">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1>Issue a new Leak 4C</h1>
+    </div>
+
+
+
+    <div class="container form">
+
+
+
+      <div class="col">
+        <form action="/claims/leak4c/<%= division %>" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+          <input type="hidden" name="claim[division]" value="<%= division %>">
+          <label for="buildNumber">Full build number</label>
+          <input class="form-control" type="text" id="password" name="claim[buildNumber]" minlength="9" maxlength="9" required>
+          <!-- <input class="form-control" type="text" name="buildNumber" required /> -->
+
+          <label for="area">Model</label>
+          <select class="form-control" type="text" name="claim[model]" autocomplete="off" required>
+            <% models.forEach(model => { %>
+            <option hidden></option>
+
+            <option label="<%= model.name %>" value="<%= model.name %>">
+
+              <% }) %>
+
+          </select>
+
+
+          <label for="description">Area at fault</label>
+          <select class="form-control" type="text" name="claim[area]" autocomplete="off" required>
+            <% areas.forEach(area => { %>
+            <option hidden></option>
+
+            <option label="<%= area.name %>" value="<%= area.name %>">
+
+              <% }) %>
+
+          </select>
+          <label for="description">Where it should have been picked up</label>
+          <select class="form-control mb-4" type="text" name="claim[detection]" autocomplete="off" required>
+            <% detections.forEach(detection => { %>
+            <option hidden></option>
+
+            <option label="<%= detection.name %>" value="<%= detection.name %>">
+
+              <% }) %>
+          </select>
+
+          <label for="image">Image 1</label>
+          <input class="form-control" type="file" id="image1" name="image1" accept="image/*" required>
+          <label for="image">Image 2</label>
+          <input class="form-control" type="file" id="image2" name="image2" accept="image/*">
+          <label for="image">Image 3</label>
+          <input class="form-control" type="file" id="image3" name="image3" accept="image/*">
+          <label for="image">Image 4</label>
+          <input class="form-control" type="file" id="image4" name="image4" accept="image/*">
+          <label for="image">Image 5</label>
+          <input class="form-control" type="file" id="image5" name="image5" accept="image/*">
+
+          <!-- <label for="image">Upload image</label> -->
+
+      </div>
+    </div>
+
+
+    <div class="col">
+      <label for="notes">Description of Leak</label>
+      <textarea style="height: 512px;" class="form-control" name="claim[description]" required></textarea>
+      <div class="form-group ">
+        <label for="area">Responsible</label>
+        <select class="form-control" style="margin-bottom: 30px;" type="text" name="claim[leakasd]" autocomplete="off" required>
+          <option hidden></option>
+          <option>Assembly</option>
+          <option>Supplier Quality</option>
+          <option>Design</option>
+        </select>
+        <button class="btn btn-md btn-success btn-block">Submit</button>
+      </div>
+    </div>
+    </form>
+  </div>
+
+
+
+
+
+  <!-- <a href="/claims">Go Back to 4C Page</a> -->

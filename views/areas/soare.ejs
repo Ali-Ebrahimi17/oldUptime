@@ -1,0 +1,20 @@
+<% layout('layouts/boilerplate')%>
+<div class="container">
+  <table class="table table-hover table-dark" style="font-size: 15px; width: 400px; margin: auto; ">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 400px;">Area<a class="float-right" href="/area/new/<%= division %>"> <i class="fas fa-plus"></i></a></th>
+
+
+      </tr>
+    </thead>
+    <tbody>
+      <% areas.forEach(area => { %>
+      <tr class="d-flex">
+        <td style=" width: 400px"><a href="/area/edit/<%= area._id %>"><%= area.name %></a><a href="/area/editemail/<%= area._id %>" class="float-right"><i class="fas fa-at"></i></a></td>
+
+      </tr>
+
+      <% }) %>
+    </tbody>
+  </table>

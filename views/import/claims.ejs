@@ -1,0 +1,20 @@
+<% layout('layouts/boilerplate')%>
+<div class="container">
+    <div class="row">
+      <div class="rwd-form">
+        <form action="/claims/import-claims" method="POST" onsubmit="myButton.disabled = true; return true;" enctype="multipart/form-data" >
+          <fieldset>
+            <legend style="color: black;">Upload RCD</legend>
+            <div class="form-group">
+              <!-- <label for="email">Email</label> -->
+              <input class="form-control" type="file" required  id="claims" name="claims" accept="file_extension|audio/*|video/*|image/*|media_type|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+            </div>
+            <small style="color: black;">Please ensure the file is .xlsx format.</small>
+            <hr>
+            <div class="form-group">
+              <input class="btn btn-primary btn-md" name="myButton" type="submit" value="Continue" />
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>

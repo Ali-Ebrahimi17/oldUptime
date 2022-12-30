@@ -1,0 +1,79 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+
+<div class="vetting-body">
+  <header id="vettingJumbotron" >
+
+    <h1 id="vetting-title" style="margin-top: -1rem;"><i class="far fa-thumbs-up"></i> SIGNED OUT TODAY</h1>
+    <h2 style="color: black;  margin-top: -0.5rem; text-align: center;"><strong><%= throughput.length %></strong></h2>
+
+    <form class="form-inline float-left" action="/throughput/all/<%= division %>" method="GET">
+      <div class="form-group">
+        <label for="search"></label>
+        <input class="form-control" type="text" name="buildNumber" placeholder="Search by build Number" autocomplete="off" >
+      </div>
+    </form>
+    <form class="form-inline float-left" action="/throughput/all/<%= division %>" method="GET">
+      <div class="form-group">
+        <label for="search"></label>
+        <input class="form-control" type="text" name="building" placeholder="Search by building" autocomplete="off" >
+      </div>
+    </form>
+    <% if (throughput.length > 0){ %>
+    <form class="form-inline float-right" style="margin-left: 5px;" action="/throughput/download/<%= division %>" method="GET">
+      <div class="form-group">
+        <label for="search"></label>
+        <button class="btn btn-md btn btn-info" style="margin-left: 5px;"><i class="fas fa-download"></i></i> Download All Throughput File</button>
+      </div>
+    </form>
+    <% } %>
+
+    <form  class="form-inline" action="/throughput/all/<%= division %>" value="" method="GET">
+      <button class="btn btn-md btn-danger" style="margin-left: 5px;"><i class="fas fa-times-circle"></i></button>
+     
+  
+
+  </header>
+
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 15px; height: 70vh;">
+      <thead>
+        <tr class="d-flex">
+          <th style="width: 140px;">Build Number</th>
+          <th style="width: 100px;">Building</th>
+          <th style="width: 120px;">Model</th>
+          <th style="width: 140px;">Inspector</th>
+          <th style="width: 80px;">RFT</th>
+          <th style="width: 160px;">Processed</th>
+          <th style="width: 120px;">Signed Out</th>
+          <th style="width: 990px;">Fault Details</th>
+          
+        </tr>
+      </thead>
+        <tbody>
+        <% throughput.forEach(throughput => {%>
+
+                <td style="height: 59px; width: 140px;"> <%= throughput.buildNumber %></td>
+      
+              <td style="width: 100px;"> <%= throughput.building %></a></td>
+              <td style="width: 120px;"> <%= throughput.model %></td>
+              <td style="width: 140px;"> <%= throughput.inspector %></td>
+              <td style="width: 80px;"> <%= throughput.rft %></td>
+              <td style="width: 170px;"> <em><%= moment(throughput.signedOutAt).format("DD/MM/YYYY - HH:mm") %> <br> <%= moment(throughput.signedOutAt).fromNow() %></em></td>
+              <td style="width: 120px;"> <%= throughput.signedOut %></td>
+              <td style="width: 990px;"> <%= throughput.faults %></td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</div>
+
+
+
+
+

@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- <meta http-equiv="refresh" content="120"> -->
+  <title>Equipment Monitoring</title>
+  <link rel="icon" href="/home/jcb.png" />
+  <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+  <!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+  <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+  <link rel="stylesheet" href="/content/table.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css">
+  <link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css">
+  <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/7z/content/chart-js/chart.bundle.js"></script>
+  <!-- <script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script> -->
+  <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script>
+
+
+
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script> -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css"> -->
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="/stylesheets/app.css" />
+  <link rel="stylesheet" href="/fontawesome/css/all.css" />
+
+
+<body>
+  <%- include('../../views/partials/flash.ejs')%>
+
+
+
+
+
+
+
+
+  <div class="container-fluid">
+
+
+    <div class="row header-top">
+
+      <div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+      </div>
+      <div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+
+        <a href="/equipment-monitoring/operations">
+          <span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 5px" class="fas fa-home icon-home"></span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-main">
+     
+
+        <div class="row" style="height: 69px;">
+          <div style=" width: 100%; display: flex; flex-direction: column;">
+
+            <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center;">Upcoming Stoppages</h1>
+            <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin-bottom: 14px; text-align: center">UK Group</h1>
+
+          </div>
+        </div>
+        <!-- <hr style="height: 2px; background-color: rgb(26, 28, 30);" /> -->
+
+        <div style="display: flex; width: 97vw; height: 35vh; justify-content: center; margin-top: 25px; ">
+          <canvas id="chart5" width="900" height="450"></canvas>
+        </div>
+        <div style="display: flex; width: 97vw; justify-content: center; margin-top: 45px; ">
+          <table class="table table-hover table-dark" style="font-size: 15px; height: auto; text-align: center;">
+            <thead>
+              <tr>
+                <th scope="col">Bu</th>
+                <th scope="col">Jan</th>
+                <th scope="col">Feb</th>
+                <th scope="col">Mar</th>
+                <th scope="col">Apr</th>
+                <th scope="col">May</th>
+                <th scope="col">Jun</th>
+                <th scope="col">Jul</th>
+                <th scope="col">Aug</th>
+                <th scope="col">Sep</th>
+                <th scope="col">Oct</th>
+                <th scope="col">Nov</th>
+                <th scope="col">Dec</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (let div of dataArr) { %>
+                <tr>
+                  <td><%= div.name %></td>
+                  <td><%= div.jan %></td>
+                  <td><%= div.feb %></td>
+                  <td><%= div.mar %></td>
+                  <td><%= div.apr %></td>
+                  <td><%= div.may %></td>
+                  <td><%= div.jun %></td>
+                  <td><%= div.jul %></td>
+                  <td><%= div.aug %></td>
+                  <td><%= div.sep %></td>
+                  <td><%= div.oct %></td>
+                  <td><%= div.nov %></td>
+                  <td><%= div.dec %></td>
+
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+          
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div class="container-fluid footer">
+
+    <div class="row header-top">
+      <div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+        <img height="24px" src="/7z/content/images/df.png">
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+        J.C. Bamford Excavators LTD &copy; 2022
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    Chart.defaults.global.defaultFontColor = "#fff";
+    Chart.defaults.global.defaultFontSize = 12;
+
+
+
+
+    let labelArr = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ]
+
+    let countArr = [
+      0, 
+      0, 
+      0, 
+      0,
+      0,
+      0,
+      0,
+      12,
+      6,
+      20,
+      10,
+      12,
+    ]
+    let minsArr = [
+      'n/a', 
+      'n/a', 
+      'n/a',
+      'n/a',
+      'n/a',
+      'n/a',
+      'n/a',
+      120,
+      40,
+      75,
+      80,
+      22,
+    ]
+
+
+
+    let top10Options = {
+        //  legend     : {
+        //      display : false,
+
+        //  },
+        legend: {
+          labels: {
+            useLineStyle: true,
+            // boxWidth: 25
+          },
+          position: 'top',
+        },
+        tooltips: {
+        enabled: true,
+        mode: 'label',
+        yAlign: 'center',
+        },
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+          xAxes: [{
+            
+            stacked: true,
+            barPercentage: 0.8,
+            ticks: {
+              display: true,
+              beginAtZero: true,
+              // fontSize: 9,
+              fontColor: '#fff',
+              autoSkip: false,
+            
+              // callback: function(value) {if (value % 1 === 0) {return value;}}
+            },
+            dataLabels: {
+              fontSize: 2
+            },
+            //     scaleLabel : {
+            //       display     : true,
+            //     //   labelString : 'Build Month',
+            //       fontSize: 10,
+            //       fontColor:'#fff'
+            //   },
+          }],
+          yAxes: [{
+              id: 'bar-y-axis',
+              gridLines: {
+                display:true,
+                color: "grey"
+              },
+              position: 'left',
+              //  stacked : true,
+              display: true,
+              ticks: {
+                beginAtZero: true,
+                min: 0,
+                max: 50,
+                // stepSize: 0.3,
+                // fontSize: 9,
+                //  formatter:: function(value, context, values) {
+                //              if(context.dataIndex === context.dataset.data.length - 1){
+                //                       return value
+                //      }
+                //  }
+
+                // callback: function(value) {
+                //   if (value % 0.2 === 0) {
+                //     return value
+                //   }
+                // }
+              },
+              scaleLabel: {
+              display: true,
+              labelString: 'Count',
+              maxRotation: 90,
+              minRotation: 90,
+              // fontSize: 12,
+            },
+              type: 'linear',
+
+            },
+            {
+              id: 'bar-y-axis1',
+              // gridLines: {
+              //   display:true,
+              //   color: "grey"
+              // },
+              position: 'right',
+              //  stacked : true,
+              display: true,
+              ticks: {
+              display: true,
+              beginAtZero: true,
+              min: 0,
+              // stepSize: 30,
+              // fontSize:8,
+              callback: function(value) {
+                if (value % 30 === 0) {
+                  return value;
+                }
+              }
+            },
+            scaleLabel: {
+              display: true,
+              labelString: 'Minutes',
+              maxRotation: 90,
+              minRotation: 90,
+              // fontSize: 12,
+            },
+              type: 'linear',
+            },
+
+          ],
+        },
+      }
+
+      // new section
+
+
+      let barChartData5 = {
+       
+        labels: labelArr,
+        datasets: [
+          {
+            type: 'line',
+            label: 'Minutes',
+            borderColor: 'rgba(53, 162, 235, 0.5)',
+            pointRadius: 0,
+            // borderDash: [10, 5],
+            backgroundColor: 'transparent',
+            pointRadius: 0,
+            lineTension: 0,
+            yAxisID: 'bar-y-axis1',
+            datalabels: {
+              // display labels for this specific dataset
+              color: 'white',
+              // rotation: -90,
+              align: 'top',
+              offset: -1,
+              // anchor: 'end',
+              formatter: function(value, context, values) {
+                if (value > 0) {
+                  value = value.toString();
+                  value = value.split(/(?=(?:...)*$)/);
+                  value = value.join(',');
+                  return value;
+                } else {
+                  value = "";
+                  return value
+
+                }
+              },
+            },
+            data: <%- JSON.stringify(totalTimeArr) %>,
+
+          },
+          {
+            type: 'bar',
+            label: 'Count',
+            borderColor: 'orange',
+            pointRadius: 0,
+            lineTension: 0,
+            backgroundColor: 'orange',
+            yAxisID: 'bar-y-axis',
+            datalabels: {
+              // display labels for this specific dataset
+              display: true,
+              color: 'white',
+              // rotation: -90,
+              align: 'top',
+              anchor: 'end',
+              offset: -4,
+              formatter: function(value, context, values) {
+                if (value > 0) {
+                  //  value = value.toString();
+                  //  value = value.split(/(?=(?:...)*$)/);
+                  //  value = value.join(',');
+                  return value;
+                } else {
+                  value = "";
+                  return value
+
+                }
+              },
+            },
+            data: <%- JSON.stringify(totalNumbersArr) %>,
+
+
+          },
+         
+        ],
+      }
+
+      // Top 10 customer rft
+      const ctx5 = document.getElementById("chart5")
+   
+
+      const myChart5 = new Chart(ctx5, {
+        type: 'bar',
+        data: barChartData5,
+        options: top10Options
+      })
+
+
+
+
+  </script>
+
+ 
+
+</body>
+
+</html>

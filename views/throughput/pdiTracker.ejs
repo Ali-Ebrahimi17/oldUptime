@@ -1,0 +1,82 @@
+<% layout('layouts/boilerplate')%>
+
+<% let numb = 0 %>
+<% throughput.forEach(throughput => {%>
+<% if ( moment(throughput.createdAt).isSame(moment(), 'day')) { %>
+<% numb = numb +1 %>
+<% }; %>
+<% }) %>
+<% let numbFaults = 0 %>
+<% throughput.forEach(throughput => {%>
+<% if ( moment(throughput.createdAt).isSame(moment(), 'day')) { %>
+<% numbFaults += (throughput.assembly + throughput.cabs + throughput.fabrication + throughput.quality + throughput.shortages)  %>
+<% }; %>
+<% }) %>
+
+<% let rft = 0 %>
+<% throughput.forEach(throughput => {%>
+<% if ( moment(throughput.createdAt).isSame(moment(), 'day') && throughput.rft ==='Yes') { %>
+<% rft = rft +1  %>
+<% }; %>
+<% }) %>
+
+<% const rftPercentage = Math.round(rft  / numb * 100) || 0 %>
+
+
+<div class="vetting-body">
+  <header id="vettingJumbotron">
+
+    <h1 id="vetting-title"><i class="fas fa-wrench"></i> <%= number %> MACHINES INTO TEST TODAY</h1>
+    <h3 style="text-align: center; align-items: center; margin-bottom: -25px; font-weight: bold;"><%= numbFaults %> faults (<%= rftPercentage %>% RFT)</h3>
+
+    <form class="form-inline float-left" action="/throughput/reds/<%= division %>" method="GET">
+      <div class="form-group">
+        <label for="search"></label>
+        <input class="form-control" type="text" name="buildNumber" placeholder="Search by build Number" autocomplete="off" />
+      </div>
+    </form>
+
+    <form class="form-inline" action="/throughput/reds/<%= division %>" value="" method="GET">
+      <button class="btn btn-md btn-danger" style="margin-left: 5px;"><i class="fas fa-times-circle"></i></button>
+      <!-- <h4 style="color: black; margin-left: 600px;"><strong><%= numb %> ADDED TODAY</strong></h4> -->
+
+  </header>
+
+
+
+
+
+  <table class="table table-hover table-dark" style="font-size: 15px; height: 70vh;">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 140px;">Build Number</th>
+        <th style="width: 120px;">Model</th>
+        <th style="width: 150px;">Processed</th>
+        <th style="width: 150px;">Assembly Faults</th>
+        <th style="width: 120px;">Cabs Faults</th>
+        <th style="width: 110px;">Fab Faults</th>
+        <th style="width: 125px;">Quality Faults</th>
+        <th style="width: 120px;">Shortages</th>
+        <th style="width: 150px;">Total Faults</th>
+        <th style="width: 665px;">Fault Details</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <% throughput.forEach(throughput => {%>
+      <tr class="d-flex">
+        <!-- <td style="height: 59px; width: 140px;"><a href="/throughput/<%= throughput._id %>"><%= throughput.buildNumber %></a></td> -->
+        <td style="height: 59px; width: 140px;"><%= throughput.buildNumber %></td>
+        <td style="width: 120px;"> <%= throughput.model %></td>
+        <td style="width: 150px;"> <em><%= throughput.createdAt.toDateString() %> <br> <%= moment(throughput.createdAt).fromNow() %></em></td>
+        <td style="width: 150px; text-align: center; padding-right: 50px;"> <%= throughput.assembly %></td>
+        <td style="width: 120px; text-align: center; padding-right: 50px;"> <%= throughput.cabs %></td>
+        <td style="width: 110px; text-align: center; padding-right: 40px;"> <%= throughput.fabrication %></td>
+        <td style="width: 125px; text-align: center; padding-right: 10px;"> <%= throughput.quality %></td>
+        <td style="width: 120px; text-align: center; padding-right: 40px;"> <%= throughput.shortages %></td>
+        <td style="width: 150px; text-align: center; padding-right: 50px;"> <%= throughput.assembly + throughput.cabs + throughput.fabrication + throughput.quality + throughput.shortages %></td>
+        <td style="width: 665px;"> <%= throughput.faults %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>

@@ -1,0 +1,505 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+<% let twelveMonthsTime = moment().add(12, 'months').format('MMM-YY') %>
+<% let elevenMonthsTime = moment().add(11, 'months').format('MMM-YY') %>
+<% let tenMonthsTime = moment().add(10, 'months').format('MMM-YY') %>
+<% let nineMonthsTime = moment().add(9, 'months').format('MMM-YY') %>
+<% let eightMonthsTime = moment().add(8, 'months').format('MMM-YY') %>
+<% let sevenMonthsTime = moment().add(7, 'months').format('MMM-YY') %>
+<% let sixMonthsTime = moment().add(6, 'months').format('MMM-YY') %>
+<% let fiveMonthsTime = moment().add(5, 'months').format('MMM-YY') %>
+<% let fourMonthsTime = moment().add(4, 'months').format('MMM-YY') %>
+<% let threeMonthsTime = moment().add(3, 'months').format('MMM-YY') %>
+<% let twoMonthsTime = moment().add(2, 'months').format('MMM-YY') %>
+<% let nextMonth = moment().add(1, 'months').format('MMM-YY') %>
+
+<% let thisMonth = moment().subtract(0, 'months').format('MMM-YY') %>
+
+<% let oneMonthAgo = moment().subtract(1, 'months').format('MMM-YY') %>
+<% let twoMonthsAgo = moment().subtract(2, 'months').format('MMM-YY') %>
+<% let threeMonthsAgo = moment().subtract(3, 'months').format('MMM-YY') %>
+<% let fourMonthsAgo = moment().subtract(4, 'months').format('MMM-YY') %>
+<% let fiveMonthsAgo = moment().subtract(5, 'months').format('MMM-YY') %>
+<% let sixMonthsAgo = moment().subtract(6, 'months').format('MMM-YY') %>
+<% let sevenMonthsAgo = moment().subtract(7, 'months').format('MMM-YY') %>
+<% let eightMonthsAgo = moment().subtract(8, 'months').format('MMM-YY') %>
+<% let nineMonthsAgo = moment().subtract(9, 'months').format('MMM-YY') %>
+<% let tenMonthsAgo = moment().subtract(10, 'months').format('MMM-YY') %>
+<% let elevenMonthsAgo = moment().subtract(11, 'months').format('MMM-YY') %>
+<% let twelveMonthsAgo = moment().subtract(12, 'months').format('MMM-YY') %>
+
+<style>
+
+  .modal-fullscreen .modal-dialog {
+    max-width: 100%;
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    display: flex;
+    position: fixed;
+    z-index: 100000;
+  }
+
+
+
+  thead,
+  tbody,
+  tr,
+  td,
+  th {
+    display: block;
+  }
+
+  tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+  }
+
+  thead th {
+    height: 50px;
+
+    /*text-align: left;*/
+  }
+
+  tbody {
+    height: 650px;
+    overflow-y: auto;
+  }
+
+  tbody td,
+  thead th {
+    width: 19.2%;
+    float: left;
+  }
+
+  .modal-dialog-1 {
+    max-width: 100%;
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    display: flex;
+  }
+</style>
+
+
+
+<div id="top50edit-container">
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop"  tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-dialog-1">
+        <div class="modal-content" style="background-color: rgb(252, 176, 38);">
+          <div style="background-color: rgb(252, 176, 38); height: 50px; color: black; height: 40px;">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" style="margin-right: 10px; margin-top: 20px;">&times;</span>
+            </button>
+            <h3 style="text-align: center; margin-top: 10px;">Link this part number to an exising 4C</h3>
+          </div>
+          <div class="modal-body">
+            <table class="table table-hover table-dark" style="font-size: 15px; height: 65vh;">
+              <thead>
+                <tr class="d-flex">
+                  <th style="width: 100px;">#</th>
+                  <th style="width: 140px;">Claim Number</th>
+                  <th style="width: 100px;">Issued</th>
+                  <th style="width: 100px;">Contained</th>
+                  <th style="width: 100px;">Closed</th>
+                  <th style="width: 90px;">Status</th>
+                  <th style="width: 100px;">Model</th>
+                  <th style="width: 270px;">Narrative</th>
+                  <th style="width: 220px;">Containment</th>
+                  <th style="width: 220px;">Why</th>
+                  <th style="width: 220px;">What</th>
+                  <th style="width: 220px;">Root Cause</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for (let c of fourCs) { %>
+                <tr class="d-flex">
+                  <% if (theLinkedFourC._id.toString() === c._id.toString()) { %>
+                    <td style="height: 76px; width: 100px;"><a type="button" href='/top50/removeLinkedFourC/<%= c._id %>/<%= claim._id  %>' class="btn btn-danger">Unlink</a></td>
+                    <% } else if (claim.top50Linked) { %>
+                    <td style="height: 76px; width: 100px;"><a type="button" class="btn btn-success">--</a></td>
+                    <% } else { %>
+                    <td style="height: 76px; width: 100px;"><a type="button" href='/top50/addLinkedFourC/<%= c._id %>/<%= claim._id  %>' class="btn btn-success">Link</a></td>
+                  <% } %>
+
+                  <td style="width: 135px;"><a href="/claims/4c/<%= c.division %>?claimNumber=<%= c.claimNumber %>" target="_blank"><%= c.claimNumber %></a></td>
+                  <td style="width: 100px;"> <%= moment(c.vettedAt).format("DD/MM/YYYY") %></td>
+                  <% if (c.containedAt) { %>
+                    <td style="width: 100px;"> <%= moment(c.containedAt).format("DD/MM/YYYY") %></td>
+                  <% } else { %>
+                    <td style="width: 100px;"></td>
+                  <% } %>
+                  <% if (c.closedAt) { %>
+                    <td style="width: 100px;"> <%= moment(c.closedAt).format("DD/MM/YYYY") %></td>
+                  <% } else { %>
+                    <td style="width: 100px;"></td>
+                  <% } %>
+                  
+ 
+                  <td style="width: 90px;"> <%= c.status %></td>
+                  <td style="width: 100px;"> <%= c.model %></td>
+                  <td style="width: 270px;"> <%= c.description && c.description.substring(0, 80) %>...</td>
+                  <td style="width: 220px;"> <%= c.containNotes && c.containNotes.substring(0, 80) %></td>
+                  <td style="width: 220px;"> <%= c.counterWhyNotes && c.counterWhyNotes.substring(0, 80) %></td>
+                  <td style="width: 220px;"> <%= c.counterWhatNotes && c.counterWhatNotes.substring(0, 80) %></td>
+                  <td style="width: 220px;"> <%= c.rootCause && c.rootCause.substring(0, 80) %></td>
+                </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+          <div class="" style="border: none; padding-left: 12px; padding-right: 14px">
+       
+            <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; margin-top: -30px; justify-content: space-between; ">
+              <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex;">
+                <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+              </div>
+              <div>
+                <button type="button" class="btn btn-secondary" style="position: relative;;" data-dismiss="modal">Close</button>
+              </div>
+              
+            </div>
+            
+
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal to link -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+
+      <div style="background-color: rgb(252, 176, 38); height: 50px;">
+        <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+        <h3 style="text-align: center; margin: 8px; color: black;">Manual 4C Link</h3>
+      </div>
+      <div class="modal-body">
+        <form action="/claims/manLinkedClaim/<%=claim._id%>" method="POST">
+          <fieldset>
+            <div class="form-group" style="color:black">
+              <label id="closeLabel" for="exampleTextarea">Please enter the 4C number that you want to link to</label>
+              <input class='form-control' name="claimLinkTo" type='text'>
+
+
+            </div>
+
+            <div>
+              <button type="button" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+              <button type="submit" class="btn btn-success float-right" style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+
+            </div>
+          </fieldset>
+
+        </form>
+
+
+
+      </div>
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+        <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- Modal to remove -->
+<div class="modal fade" id="exampleModalCenterRemove" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+
+      <div style="background-color: rgb(252, 176, 38); height: 50px;">
+        <button style="color: black; margin: 5px;" class="close" aria-label="Close"></button>
+        <h3 style="text-align: center; margin: 8px; color: black;">Remove Manual 4C Link</h3>
+      </div>
+      <div class="modal-body">
+        <form action="/claims/manRemoveLinkedClaim/<%=claim._id%>" method="POST">
+          <fieldset>
+            <div class="form-group" style="color:black">
+              <label id="closeLabel" for="exampleTextarea">Are you sure you want to remove manual link?</label>
+              <!-- <input class='form-control'  name="claimLinkTo" type='text'> -->
+
+
+            </div>
+
+            <div>
+              <button type="button" data-dismiss="modal" class="btn btn-danger float-right" style=" margin-left: 8px; color: white; border-radius: 4px;">Cancel</button>
+              <button type="submit" class="btn btn-success float-right" style=" margin-bottom: 10px; color: white; border-radius: 4px;">Confirm</button>
+
+            </div>
+          </fieldset>
+
+        </form>
+
+
+
+      </div>
+      <div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex; ">
+        <img style="margin: 5px;" height="24px" src="/7z/content/images/jcb-logo.png"> <img height="24px" src="/7z/content/images/df.png">
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1>Top 50 Update</h1>
+      <div style="display: flex; gap: 2;">
+       
+          <% if (fourCs.length > 0) { %>
+            <!-- Button trigger modal -->
+            <button type="button" style="margin-right: 8px;" class="btn btn-info" data-toggle="modal" data-target="#staticBackdrop">
+              4C Exists. Click here to view & link this part number
+            </button>
+            <% } else { %>
+            <button type="button" style="margin-right: 8px;" class="btn btn-danger">
+              No current 4C's for this part number.
+            </button>
+            <% } %>
+            <!-- <% if (claim.linked) { %>
+              <a class="btn btn-danger btn-md " data-toggle="modal" data-target="#exampleModalCenterRemove" style=" display: inline-flex;" target="_blank">Manual Unlink</a>
+              <% } else { %>
+              <a class="btn btn-info btn-md " data-toggle="modal" data-target="#exampleModalCenter" style=" display: inline-flex;" target="_blank">Manual Link</a>
+            <% } %> -->
+      
+    
+
+      </div>
+      
+    </div>
+
+    
+
+     
+
+   
+
+    
+
+
+
+    <div class="col">
+
+
+      <form action="/top50/edit/<%=period%>/<%=division%>/<%= type %>/<%= failedPart %>?_method=PUT" method="POST">
+
+        <label for="name">Part Number</label>
+        <input class="form-control" type="text" name="name" value="<%= failedPart %>" disabled>
+        <div class="valid-feedback">Looks good</div>
+
+        <label for="detection">Champion</label>
+        <select class="form-control" type="text" name="claim[champion]" autocomplete="off">
+          <% champions.forEach(champion => { %>
+          <option hidden><%= claim.champion %></option>
+          <option label="<%= champion.name %>" value="<%= champion.name %>">
+            <% }) %>
+        </select>
+        <div class="valid-feedback">Looks good</div>
+        
+       
+        <label for="notes">Concern</label>
+        <textarea style="height: 112px;" class="form-control" name="claim[concern]"><%= claim.concern %></textarea>
+
+        <label for="notes">Containment Details</label>
+        <% if (claim.top50Linked) { %>
+          <textarea style="height: 180px;" class="form-control" disabled><%= linkedContainedNotes %></textarea>
+        <% } else { %>
+          <textarea style="height: 180px; margin-bottom: 5px;" class="form-control" name="claim[containJosh]"><%= claim.containJosh %></textarea>
+        <% } %>
+        
+       
+    </div>
+
+
+   
+
+    <div class="col">
+      <label for="area">4C Linked</label>
+      <% if (claim.top50Linked) { %>
+      
+      <input class="form-control" type="text" name="name" value="Yes" disabled>
+      <% } else { %>
+        <input class="form-control" type="text" name="name" value="No" disabled>
+       <% } %>
+
+      
+
+      <label for="area">RAG</label>
+      <% if (claim.top50Linked) { %>
+        <input class="form-control" type="text" name="name" value="<%= linkedStatus %>" disabled>
+      <% } else { %>
+        <select class="form-control" type="text" name="claim[rag]" value="<%= claim.rag %>" autocomplete="off" required>
+          <option hidden><%= claim.rag%></option>
+          <option>Open</option>
+          <option>Contained</option>
+          <option>Closed</option>
+        </select>
+      <% } %>
+      <label for="area">ASD</label>
+      <% if (claim.top50Linked) { %>
+        <!-- <input class="form-control" type="text" name="claim[asdJosh]" value="<%= linkedAsd %>" > -->
+        <select class="form-control" type="text" name="claim[asdJosh]" value="<%= claim.linkedAsd %>" autocomplete="off" required>
+          <option hidden><%= claim.linkedAsd%></option>
+          <option>Assembly</option>
+          <option>Supplier</option>
+          <option>Design</option>
+        </select>
+      <% } else { %>
+        <select class="form-control" type="text" name="claim[asdJosh]" value="<%= claim.asdJosh %>" autocomplete="off" required>
+          <option hidden><%= claim.asdJosh%></option>
+          <option>Assembly</option>
+          <option>Supplier</option>
+          <option>Design</option>
+        </select>
+      <% } %>
+      
+      <label for="notes">Action</label>
+      <% if (claim.top50Linked) { %>
+        <% if (linkedStatus === 'Open') { %>
+          <textarea style="height: 135px;" class="form-control" name="claim[action]"><%= claim.action %></textarea>
+        <% } else { %>
+          <textarea style="height: 135px;" class="form-control" disabled><%= linkedAction %></textarea>
+        <% } %>
+
+        
+      <% } else { %>
+        <textarea style="height: 135px;" class="form-control" name="claim[action]"><%= claim.action %></textarea>
+      <% } %>
+      
+        <!-- <<label for="area">Cut in Date</label>
+      <select class="form-control" style="margin-bottom: 20px;" type="text" name="claim[closureDate]" value="<%= claim.closureDate %>" autocomplete="off">
+        <option hidden><%= claim.closureDate %></option>
+        <option></option>
+        <option><%= twelveMonthsAgo %></option>
+        <option><%= elevenMonthsAgo %></option>
+        <option><%= tenMonthsAgo %></option>
+        <option><%= nineMonthsAgo %></option>
+        <option><%= eightMonthsAgo %></option>
+        <option><%= sevenMonthsAgo %></option>
+        <option><%= sixMonthsAgo %></option>
+        <option><%= fiveMonthsAgo %></option>
+        <option><%= fourMonthsAgo %></option>
+        <option><%= threeMonthsAgo %></option>
+        <option><%= twoMonthsAgo %></option>
+        <option><%= oneMonthAgo %></option>
+        <option><%= thisMonth %></option>
+        <option><%= nextMonth %></option>
+        <option><%= twoMonthsTime %></option>
+        <option><%= threeMonthsTime %></option>
+        <option><%= fourMonthsTime %></option>
+        <option><%= fiveMonthsTime %></option>
+        <option><%= sixMonthsTime %></option>
+        <option><%= sevenMonthsTime %></option>
+        <option><%= eightMonthsTime %></option>
+        <option><%= nineMonthsTime %></option>
+        <option><%= tenMonthsTime %></option>
+        <option><%= elevenMonthsTime %></option>
+        <option><%= twelveMonthsTime %></option>
+
+      </select> -->
+       <div class="row" style="margin-bottom: 12px;">
+
+
+        <div class="col">
+          <label for="name" id="nim">Opened Date</label>
+          <% if (claim.top50Linked) { %>
+            <input class="form-control" type="text" name="" value="<%= linkedOpenedDate %>" disabled>
+          <% } else { %>
+            <% if (claim.top50OpenedDate) { %>
+              <!-- <input class="form-control" id='date' type='date' name="claim[top50OpenedDate]" value='<%= moment(claim.top50OpenedDate).format("YYYY-MM-DD") %>'> -->
+              <input class="form-control" type="text"  name="" value="<%= moment(claim.top50OpenedDate).format("DD/MM/YYYY") %>" disabled>
+              
+             <% } else { %>
+              <input class="form-control" type="date" value="<%= claim.top50OpenedDate %>" name="claim[top50OpenedDate]"  required>
+            <% } %>
+          <% } %>
+
+          
+
+         
+          
+
+          
+          
+          
+        </div>
+        <div class="col">
+          <label for="name" id="max">Contained Date</label>
+          <% if (claim.top50Linked) { %>
+            <input class="form-control" type="text" name="claim[top50ContainedDate]" value="<%= linkedContainedDate %>" disabled>
+          <% } else { %>
+            <% if (claim.top50ContainedDate) { %>
+              <input class="form-control" id='date' type='date' name="claim[top50ContainedDate]" value='<%= moment(claim.top50ContainedDate).format("YYYY-MM-DD") %>'>
+              <% } else { %>
+              <input class="form-control" type="date" value="<%= claim.top50ContainedDate %>" name="claim[top50ContainedDate]" >
+            <% } %>
+          <% } %>
+        
+        </div>
+
+        
+
+
+
+        <div class="col">
+          <label for="name" id="max">Closed Date</label>
+          <% if (claim.top50Linked) { %>
+            <input class="form-control" type="text" name="name" value="<%= linkedClosedDate %>" disabled>
+          <% } else { %>
+            <% if (claim.top50ClosedDate) { %>
+              <input class="form-control" id='date' type='date' name="claim[top50ClosedDate]" value='<%= moment(claim.top50ClosedDate).format("YYYY-MM-DD") %>'>
+              
+              <% } else { %>
+              <input class="form-control" type="date" value="<%= claim.top50ClosedDate %>" name="claim[top50ClosedDate]" >
+            <% } %>
+          <% } %>
+        </div>
+
+
+      </div> 
+
+      <% if (division != 'GROUP') { %>
+      <div class="form-group text-center">
+        <button class="btn btn-md btn-success btn-block">Submit</button>
+      </div>
+      <% }%>
+
+    </div>
+
+
+
+    </form>
+  </div>
+  <div>
+    <a href="/top50/50/<%= period %>/<%= division %>/<%= type %>">Go Back</a>
+
+  </div>
+
+  <script>
+
+// (function () {
+//     let containedDate1 = new Date(moment(claim.top50ClosedDate).format("YYYY, MM, DD")).toISOString().substring(0, 10),
+//     field = document.querySelector('#date');
+//     field.value = date;
+    
+
+// })()
+  </script>

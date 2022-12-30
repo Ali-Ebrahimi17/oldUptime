@@ -1,0 +1,32 @@
+<% layout('layouts/boilerplate')%>
+
+<div id="newbuild-container">
+
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Add Date</h1>
+    </div>
+
+
+
+    <div class="col">
+      <form action="/yard/new/<%= division %>" method="POST">
+        <input type="hidden" name="yard[division]" value="<%= division %>">
+        <label for="buildNumber">Build Number</label>
+        <input class="form-control" type="txt" name="yard[buildNumber]" required>
+        <label for="buildNumber">Serial Number</label>
+        <input class="form-control" type="text" name="yard[serial]" required>
+        <label for="buildNumber">Reason for Hold</label>
+        <textarea style="height: 190px; margin-bottom: 15px;" class="form-control" name="yard[concern]" required></textarea>
+
+        <div class="form-group text-center">
+          <button class="btn btn-block btn-md btn-success" style="margin: 5px;">Save</button>
+        </div>
+    </div>
+    </form>
+  </div>
+  <div>
+    <a href="/yard/all/<%= division %>">Go Back</a>
+  </div>

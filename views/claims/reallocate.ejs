@@ -1,0 +1,51 @@
+<% layout('layouts/boilerplate')%>
+<div class="container">
+
+  <div class="row form-background">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Reallocate 4C</h1>
+    </div>
+
+
+    <div class="container form">
+      <form action="/claims/reallocate/<%= claim._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col">
+            <label for="area">Area Responsible</label>
+            <select class="form-control" type="text" name="claim[area]" autocomplete="off" required>
+              <% areas.forEach(area => { %>
+              <option hidden><%= claim.area %></option>
+
+              <option label="<%= area.name %>" value="<%= area.name %>">
+
+                <% }) %>
+            </select>
+          </div>
+          <div class="col">
+            <label for="area">Should be Detected</label>
+            <select class="form-control" type="text" name="claim[detection]" autocomplete="off" required>
+              <% detections.forEach(detection => { %>
+              <option hidden><%= claim.detection %></option>
+
+              <option label="<%= detection.name %>" value="<%= detection.name %>">
+
+                <% }) %>
+            </select>
+          </div>
+
+
+        </div>
+        <label for="exampleTextarea">Reason for reallocation</label>
+        <textarea class="form-control" id="reasonTextarea" name="claim[reason]" rows="4" style="resize: none" required></textarea>
+        <br>
+
+        <div class="form-group text-center">
+          <button class="btn btn-lg btn-success">Submit</button>
+        </div>
+      </form>
+
+
+
+    </div>
+  </div>

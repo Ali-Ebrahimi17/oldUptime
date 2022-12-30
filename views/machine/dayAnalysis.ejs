@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-size=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="222"> -->
+		<title>JCB - Equipment Monitoring</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" /> -->
+		<!-- <link rel="stylesheet" href="/content/bootswatch/united.css" type="text/css"> -->
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<link rel="stylesheet" href="/content/table.css" type="text/css" />
+		<link rel="stylesheet" href="/content/font-awesome/css/all.css" type="text/css" />
+		<link rel="stylesheet" href="/content/ui/jquery-ui.min.css" type="text/css" />
+		<script src="/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<script src="/content/ui/jquery-ui.min.js"></script>
+		<script src="/content/marquee/jquery.marquee.min.js"></script>
+		<script src="/content/timer/moment.js"></script>
+		<script src="/content/timer/dist/ez.countimer.min.js"></script>
+
+		<!-- <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" /> -->
+		<link rel="stylesheet" href="/stylesheets/app.css" />
+		<link rel="stylesheet" href="/fontawesome/css/all.css" />
+
+		<style>
+			.table > tbody > tr > td {
+				vertical-align: middle;
+			}
+		</style>
+	</head>
+
+	<body style="overflow-x: hidden; background-color: black; margin-top: 35px">
+		<div class="row header-top" style="top: 0; position: fixed; width: 102vw; z-index: 100; background-color: rgb(252, 176, 38)">
+			<div class="col text-left" style="padding: 4px 4px 5px 4px">
+				<img style="margin-left: 20px" height="24px" src="/media/jcb-logo.png" />
+			</div>
+			<div class="col text-right" style="padding: 5px 8px 0px 0px">
+				<a href="/equipment-monitoring/operations">
+					<span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 3%" class="fas fa-home icon-home"></span>
+				</a>
+			</div>
+		</div>
+
+		<div class="col-main">
+			<div class="row">
+				<div class="col-12">
+					<h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">ASSET SHIFT PATTERN</h1>
+					<h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: 0px 0px 16px 0px; text-align: center">
+						<span style="margin-right: 5px"><img src="/media/uk-small.png" alt="" width="30" height="30" /></span>UK Group View
+					</h1>
+				</div>
+				<div class="col-lg-12" style="margin-top: -1px; border-top: 3px solid rgb(33, 35, 37)"></div>
+			</div>
+		</div>
+
+		<section style="margin: 0 30px">
+			<table class="table" id="table-requests" style="margin-bottom: 42px">
+				<thead>
+					<tr>
+						<th class="th-top" colspan="9"><%= shortBu %> - <%= day %>/<%= month %>/<%= year %></th>
+					</tr>
+					<tr style="font-size: 15px">
+						<th class="th-centre" style="height: 60px; width: 100px; border-right: 1px solid black"><%= shortBu %></th>
+						<th class="th-centre" style="width: 150px; border-right: 1px solid black">SHIFT BREAKDOWN</th>
+						<th class="th-centre" style="width: 200px; border-right: 1px solid black">TIME BREAKDOWN</th>
+					</tr>
+					<tr style="font-size: 15px">
+						<th class="th-centre" style="height: 40px; width: 50px; border-right: 1px solid rgb(42, 44, 46)">EQUIPMENT</th>
+						<th class="th-centre" style="width: 51px; border-right: 1px solid rgb(42, 44, 46)">SHIFT</th>
+						<th class="th-centre" style="width: 51px; border-right: 1px solid rgb(42, 44, 46)">R-TIME</th>
+						<th class="th-centre" style="width: 51px; border-right: 1px solid rgb(42, 44, 46)">T-TIME</th>
+						<th class="th-centre" style="width: 51px; border-right: 1px solid rgb(42, 44, 46)">OTHER</th>
+						<th class="th-centre" style="width: 52px; border-right: 1px solid rgb(42, 44, 46)">KNOWN<br />BREAKDOWN</th>
+						<th class="th-centre" style="width: 52px; border-right: 1px solid rgb(42, 44, 46)">UNKNOWN<br />BREAKDOWN</th>
+						<th class="th-centre" style="width: 54px; border-right: 1px solid rgb(42, 44, 46)">WAITING<br />(CONS)</th>
+						<th class="th-centre" style="width: 54px; border-right: 1px solid rgb(42, 44, 46)">WAITING<br />(PARTS)</th>
+					</tr>
+				</thead>
+				<tbody style="color: white">
+					<% for (let m of machines) { %>
+					<tr>
+						<td class="td-centre" rowspan="2" style="width: 50px"><%= m.machineName %></td>
+						<td class="td-centre" style="width: 50px">TBC</td>
+						<td class="td-centre" style="width: 50px">TBC</td>
+						<td class="td-centre" style="width: 50px">TBC</td>
+						<td class="td-centre" style="width: 50px">TBC</td>
+						<td class="td-centre" style="width: 50px">TBC</td>
+						<td class="td-centre" style="width: 50px">TBC</td>
+						<td class="td-centre" style="width: 50px">TBC</td>
+						<td class="td-centre" style="width: 50px">TBC</td>
+					</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</section>
+
+		<div
+			class="container-fluid footer"
+			style="bottom: 0; position: fixed; width: 100vw; z-index: 100; background-color: transparent; margin-top: 5px; z-index: 2"
+		>
+			<div class="row header-top">
+				<div class="col-lg-6 d-lg-block text-left" style="padding: 4px 4px 5px 4px; background-color: rgb(252, 176, 38)">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold; background-color: rgb(252, 176, 38)">
+					J.C. Bamford Excavators LTD &copy; 2022
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

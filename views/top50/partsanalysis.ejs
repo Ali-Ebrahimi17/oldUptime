@@ -1,0 +1,41 @@
+<% layout('layouts/boilerplate')%>
+
+<header style="text-align: center; margin-bottom: 30px;">
+    <h1 style="font-weight: bold;">ANALYSIS OF THE <%= num %> CLAIMS AGAINST <%= failedPart %></h1>
+</header>
+<div class="top50-analysis-container">
+    <div>
+        <ul style="list-style-type:none;">
+            <h2>Countries</h2>
+            <% for (let country of countries) { %>
+                <li><%= country._id %> - <%= country.count %></li>
+            <% } %>
+        </ul>
+</div>
+    <div>
+            <ul style="list-style-type:none;">
+                <h2>Dealers</h2>
+                <% for (let dealer of dealers) { %>
+                    <li><%= dealer._id %> - <%= dealer.count %></li>
+                <% } %>
+            </ul>
+    </div>
+    <div>
+            <ul style="list-style-type:none;">
+                <h2>Models</h2>
+                <% for (let model of models) { %>
+                    <li><%= model._id %> - <%= model.count %></li>
+                <% } %>
+            </ul>
+    </div>
+    <div>
+            <ul style="list-style-type:none;">
+                <h2>T Period</h2>
+                <% for (let tPeriod of tPeriods) { %>
+                    <li><%= tPeriod._id %> - <%= tPeriod.count %></li>
+                <% } %>
+            </ul>
+    </div>
+</div>
+
+

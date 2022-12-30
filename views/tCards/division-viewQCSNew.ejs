@@ -1,0 +1,531 @@
+<% layout('layouts/boilertCardDash')%>
+<!-- <meta http-equiv="refresh" content="100" /> -->
+<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+<!-- <link rel="stylesheet" href="/7z/content/bootswatch/united.css" type="text/css"> -->
+<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+<link rel="stylesheet" href="/7z/content/font-awesome/css/all.css" type="text/css" />
+<link rel="stylesheet" href="/7z/content/chart-js/chart.min.css" type="text/css" />
+<script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+<script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+<script src="/7z/content/chart-js/chart.bundle.min.js"></script>
+<script src="/7z/content/chart-js/chartjs-plugin-labels.min.js"></script>
+<!-- <script src="/7z/content/chart-js/chartjs-plugin-datalabels.min.js"></script> -->
+
+<script defer src="/font-v6/js/solid.js"></script>
+<script defer src="/font-v6/js/brands.js"></script>
+
+<script defer src="/font-v6/js/fontawesome.js"></script>
+<script src="/content/marquee/jquery.marquee.min.js"></script>
+
+<style>
+	body {
+		background-color: black;
+    overflow: hidden;
+	}
+	h5 {
+		color: white;
+		font-size: 1.5rem;
+		margin-bottom: -15px;
+	}
+	h3 {
+		color: white;
+		font-size: 2rem;
+	}
+	h2 {
+		font-weight: bold;
+		color: black;
+	}
+	h1 {
+		font-weight: bold;
+		font-size: 4rem;
+	}
+	h6 {
+		font-size: 1rem;
+	}
+	hr {
+		background-color: #6a6d6d;
+	}
+	.fact_header {
+		color: white;
+		text-align: center;
+	}
+	.fact_stat {
+		color: white;
+		text-align: center;
+		font-size: 50px;
+		display: flex;
+		/* flex-direction: column; */
+		justify-content: space-evenly;
+	}
+	.fact_box {
+		width: 220px;
+		height: 100px;
+		background-color: rgb(26, 28, 30);
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+	.analtysis_header {
+		color: white;
+		text-align: center;
+		font-size: 24px;
+	}
+	.analysis_box {
+		width: 200px;
+		height: 105px;
+		background-color: rgb(26, 28, 30);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	.new5 {
+		border: 1px solid grey;
+		border-radius: 5px;
+		width: 60%;
+		margin-bottom: 1px;
+	}
+
+	.tCard {
+		background: rgb(26, 28, 30);
+		display: inline-block;
+		height: 115px;
+		margin-top: 60px;
+		position: relative;
+		width: 155px;
+	}
+	.tCard:before {
+		border-bottom: 35px solid rgb(26, 28, 30);
+		border-left: 40px solid transparent;
+		border-right: 40px solid transparent;
+		content: '';
+		height: 0;
+		margin-top: 30px;
+		position: absolute;
+		top: -65px;
+		width: 155px;
+	}
+	.insidecard {
+		color: white;
+		font-size: 28px;
+		text-align: center;
+		margin-top: -10px;
+		display: flex;
+		flex-direction: column;
+	}
+	.analysis_header {
+		height: 50px;
+		width: 160px;
+		background-color: rgb(26, 28, 30);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	.analysis_header_text {
+		color: white;
+		text-align: center;
+		font-size: 23px;
+	}
+</style>
+
+<!-- add update modal -->
+<div class="modal fade" id="add_new_update" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div style="background-color: rgb(252, 176, 38); height: 50px">
+				<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+				<h3 style="text-align: center; margin: 8px; color: black">Digital QASI</h3>
+			</div>
+			<div class="modal-body">
+				<div>
+					<form method="POST" action="/tCard/qcs-new-create-update">
+						<fieldset>
+							<div class="form-group" style="color: black">
+								<label id="closeLabel" for="exampleTextarea">Add new update</label>
+								<textarea class="form-control" id="close" rows="8" style="resize: none" name="update[body]" required></textarea>
+							</div>
+							<div>
+								<button
+									type="button"
+									data-dismiss="modal"
+									class="btn btn-danger float-right"
+									style="margin-left: 8px; color: white; border-radius: 4px"
+								>
+									Cancel
+								</button>
+								<button type="submit" class="btn btn-success float-right" style="margin-bottom: 10px; color: white; border-radius: 4px">
+									Confirm
+								</button>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+			<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+				<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" /> <img height="24px" src="/7z/content/images/df.png" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<div style="display: flex; width: 100%; height: 90vh; flex-wrap: wrap; justify-content: center; margin-top: -10px;">
+  
+	<div style="width: 1375px; display: flex; flex-wrap: wrap; justify-content: space-evenly">
+		<div style="display: flex; justify-content: space-evenly; width: 100%; flex-wrap: wrap; margin-bottom: 50px">
+			<div style="width: 700px; height: 335px">
+				<h3>Overview</h3>
+				<hr />
+				<div style="width: 100%; display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px">
+					<div class="fact_box">
+						<div class="fact_header">Total Validations</div>
+
+						<div class="fact_stat">
+							<%= totalCardsNumber %>
+							<i style="margin-top: 10px; color: green" class="fa-solid fa-circle-check"></i>
+						</div>
+					</div>
+
+					<div class="fact_box">
+						<div class="fact_header">Critical to Quality Validations</div>
+						<div class="fact_stat">
+							<%= totalCardsNumberCTQ %>
+							<i style="margin-top: 10px; color: red" class="fa-solid fa-clipboard-check"></i>
+						</div>
+					</div>
+					<div class="fact_box">
+						<div class="fact_header">Quality Control Validations</div>
+						<div class="fact_stat">
+							<%= totalCardsNumberQC %>
+							<i style="margin-top: 10px; color: #fcb026" class="fa-solid fa-clipboard-check"></i>
+						</div>
+					</div>
+				</div>
+				<div style="width: 100%; display: flex; justify-content: space-evenly; flex-wrap: wrap; margin-bottom: 20px">
+					<div class="fact_box">
+						<div class="fact_header">Total Number of Users</div>
+
+						<div class="fact_stat">
+							<%= usersNumber %>
+							<i style="margin-top: 10px; color: #fcb026" class="fa-solid fa-user-plus"></i>
+						</div>
+					</div>
+					<div class="fact_box">
+						<div class="fact_header">Locations</div>
+						<div class="fact_stat">
+							<%= locationsNumber %>
+							<i style="margin-top: 10px; color: #2563eb" class="fa-solid fa-map-location-dot"></i>
+						</div>
+					</div>
+					<!-- <div style="width: 200px; height: 120px; background-color: #303333"></div> -->
+				</div>
+				<div style="width: 100%; display: flex; justify-content: center; flex-wrap: wrap">
+					<div class="fact_box" style="width: 300px">
+						<div class="fact_header">Quality Validations to Date</div>
+						<div class="fact_stat">
+							<%= totalChecksNumber %>
+							<i style="margin-top: 10px; color: green" class="fa-solid fa-chart-line"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style="width: 605px; height: 335px">
+				<h3>Current Week Status</h3>
+				<hr />
+        <a href="/tCard/qcs-dash">
+          <div style="width: 605px; height: 335px; background-color: rgb(26, 28, 30); padding-top: 8px">
+            <div style="display: flex; justify-content: space-evenly; margin-bottom: 20px;">
+              <% totalPercenatages.map((percentage) => { %>
+                <div style="color:white; width: 135px; text-align: center; background-color: <%= percentage.color %>; padding: 5px 10px; border-radius: 6px;">
+                  <div>
+                    <%= percentage._id %> - <%= percentage.roundPercentage %>%
+                  </div>
+                  
+                </div>
+             <% }) %>
+             
+            </div>
+            <div style="height: 250px;">
+              <canvas id="doChart"></canvas>
+            </div>
+            
+          </div>
+
+        </a>
+				
+			</div>
+		</div>
+		<div style="display: flex; justify-content: space-between; width: 1328px; flex-wrap: wrap; margin-bottom: 10px">
+			<div style="width: 900px; height: 330px">
+				<h3>Analysis</h3>
+				<hr />
+				<div style="display: flex; justify-content: space-between">
+					<div style="height: 225px; display: flex; flex-direction: column; justify-content: space-between">
+						<a href="/tCard/qcs-critical-to-quality-dash/all">
+							<div class="analysis_box">
+								<div class="analtysis_header">Critical to Quality</div>
+                <i style="margin-top: 10px; color: red; font-size: 45px;" class="fa-solid fa-clipboard-check"></i>
+							</div>
+						</a>
+
+						<div class="analysis_box">
+							<div class="analtysis_header">Quality Control</div>
+              <i style="margin-top: 10px; color: #fcb026;  font-size: 45px;" class="fa-solid fa-clipboard-check"></i>
+						</div>
+					</div>
+
+					<div style="width: 675px; height: 240px; display: flex; flex-direction: column">
+						<div style="display: flex; justify-content: space-between">
+							<div class="analysis_header">
+								<div class="analysis_header_text">Assembly</div>
+							</div>
+							<div class="analysis_header">
+								<div class="analysis_header_text">Manufacturing</div>
+							</div>
+							<div class="analysis_header">
+								<div class="analysis_header_text">Paint</div>
+							</div>
+							<div class="analysis_header">
+								<div class="analysis_header_text">Plant Quality</div>
+							</div>
+						</div>
+						<div style="display: flex; justify-content: space-between">
+							<div class="tCard">
+								<div class="insidecard">
+									<i style="font-size: 50px; margin-top: 10px; color: #fcb026; margin-bottom: 8px" class="fa-solid fa-screwdriver-wrench"></i>
+									Equipment
+								</div>
+							</div>
+							<div class="tCard">
+								<div class="insidecard">
+									<i style="font-size: 50px; margin-top: 10px; color: #fcb026; margin-bottom: 8px" class="fa-solid fa-list-check"></i>
+									Process
+								</div>
+							</div>
+							<div class="tCard">
+								<div class="insidecard">
+									<i style="font-size: 50px; margin-top: 10px; color: #fcb026; margin-bottom: 8px" class="fa-solid fa-users"></i>
+									People
+								</div>
+							</div>
+							<div class="tCard">
+								<div class="insidecard">
+									<i style="font-size: 50px; margin-top: 10px; color: #fcb026; margin-bottom: 8px" class="fa-solid fa-clipboard-list"></i>
+									Standards
+								</div>
+							</div>
+						</div>
+
+						<!-- <img src="/images/maggie.jpg" alt="quality" width="678" height="265" /> -->
+					</div>
+				</div>
+			</div>
+			<div style="width: 350px; height: 200px">
+				<% if (currentUser && currentUser.isTCardAdmin ) { %>
+				<div type="button" class="btn float-right" data-toggle="modal" data-target="#add_new_update">
+					<i style="font-size: 30px; color: white" class="fa-solid fa-plus"></i>
+				</div>
+				<%} %>
+
+				<h3>Updates</h3>
+				<hr />
+				<div style="height: 240px; display: flex; flex-direction: column; justify-content: space-between;">
+					<div
+						style="
+							width: 350px;
+							height: 225px;
+							background-color: rgb(26, 28, 30);
+							display: flex;
+							flex-direction: column;
+							padding: 20px 0px;
+							overflow-y: auto;
+						"
+					>
+						<ul>
+							<% updates.map((u) => { %>
+							<li style="font-size: 20px; color: white; margin-bottom: 5px">
+								<% if (currentUser && currentUser.isTCardAdmin ) { %>
+								<a href="" data-toggle="modal" data-target="#update<%= u._id %>"><%= u.body %></a>
+								<% } else { %> <%= u.body %> <% } %>
+							</li>
+
+							<!--  update modal -->
+							<div class="modal fade" id="update<%= u._id  %>" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered modal-lg">
+									<div class="modal-content">
+										<div style="background-color: rgb(252, 176, 38); height: 50px">
+											<button style="color: black; margin: 5px" class="close" aria-label="Close"></button>
+											<h3 style="text-align: center; margin: 8px; color: black">Digital QASI</h3>
+										</div>
+										<div class="modal-body">
+											<div>
+												<form method="POST" action="/tCard/qcs-new-edit-update/<%= u._id %>">
+													<fieldset>
+														<div class="form-group" style="color: black">
+															<label id="closeLabel" for="exampleTextarea">Update text</label>
+															<textarea class="form-control"  rows="8" style="resize: none" name="update[body]" required><%= u.body  %></textarea>
+														</div>
+														<div>
+															<a
+																type="button"
+																href="/tCard/qcs-new-delete-update/<%= u._id %>"
+																class="btn btn-danger float-left"
+																style="color: white; border-radius: 4px"
+															>
+																Delete
+															</a>
+															<button
+																type="button"
+																data-dismiss="modal"
+																class="btn btn-danger float-right"
+																style="margin-left: 8px; color: white; border-radius: 4px"
+															>
+																Cancel
+															</button>
+															<button type="submit" class="btn btn-success float-right" style="margin-bottom: 10px; color: white; border-radius: 4px">
+																Confirm
+															</button>
+														</div>
+													</fieldset>
+												</form>
+											</div>
+										</div>
+										<div style="background-color: rgb(252, 176, 38); display: flex; align-items: center; height: 50px; display: flex">
+											<img style="margin: 5px" height="24px" src="/7z/content/images/jcb-logo.png" />
+											<img height="24px" src="/7z/content/images/df.png" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<% })%>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="width: 500px; display: flex; flex-wrap: wrap; justify-content: space-evenly">
+		<!-- division wrapper-->
+		<div style="width: 100%; height: 720px;">
+			<h3>Locations</h3>
+			<hr />
+			<div style="width: 500px; height: 670px; margin-top: -10px;  display: flex; flex-direction: column;  overflow-y: auto; overflow-x: hidden; ">
+				<% locationList.map((l) => { %>
+          <a href="/tCard/qcs/all-checks/<%= l.division %>">
+            <div style=" margin-bottom: 2px;">
+              <div style="color: white; text-align: center; font-size: 19px;"><%= l.longDivision %></div>
+              <div style="display: flex; justify-content: center">
+                <div style="height: 20px; border-radius: 0; width: 400px; display: flex; justify-items: center">
+                  <% l.divPercenatages.map((d) => { %>
+                  <div
+                    class="progress-bar progress-bar-animated"
+                    style="background-color: <%= d.color %>; font-size: 15px; color: black; font-weight: bold; width: <%= d.roundPercentage %>%"
+                  >
+                    <%= d.roundPercentage %>%
+                  </div>
+    
+                  <% }) %>
+                </div>
+              </div>
+              <div style="font-size: 14px; color: grey; text-align: center; padding-top: 5px;;">
+                last checked by <%= l.lastChecked %>
+              </div>
+              <!-- <hr class="new5" /> -->
+            </div>
+
+          </a>
+			
+        <% }) %>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid footer">
+    <div class="marquee data-duration="18000" data-gap="2500" data-duplicated="true" style=" margin-left: -15px; width: 100vw; background-color: rgb(26, 28, 30);">
+      Total Validations: <%= totalCardsNumber %>,           
+      Critical to Quality Validations: <%= totalCardsNumberCTQ %>, 
+      Quality Control Validations: <%= totalCardsNumberQC %>, 
+      Total Number of Users: <%= usersNumber %>, 
+      Latest Updates : <% updates.map((update) => { %>
+        <%=  update.body %>.
+      <% }) %>
+      
+    </div>
+		<div class="row header-top">
+			<div class="col-lg-6 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+				<img height="24px" src="/7z/content/images/jcb-logo.png" />
+				<img height="24px" src="/7z/content/images/df.png" />
+			</div>
+			<div class="col-lg-6 d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">J.C. Bamford Excavators LTD &copy; 2022</div>
+		</div>
+	</div>
+
+	<script>
+				Chart.defaults.global.defaultFontColor = '#fff'
+				Chart.defaults.global.defaultFontSize = 16
+        Chart.defaults.global.defaultFontFamily = "Ubuntu";
+
+
+				// Chart.defaults.scale.gridLines.display = false
+				let doughnut = document.getElementById('doChart')
+				let myDoughnutChart = new Chart(doughnut, {
+					type: 'doughnut',
+					data: {
+						labels:<%- JSON.stringify(totalLabels) %>,
+						datasets: [
+							{
+								label: '',
+				        data: [<%= totaldata %>],
+								backgroundColor: <%- JSON.stringify(totalcolors) %>,
+								borderColor: <%- JSON.stringify(totalcolors) %>,
+							},
+						],
+					},
+					options: {
+						maintainAspectRatio: false,
+						responsive: true,
+						cutoutPercentage: 65,
+            plugins: {
+            datalabels: {
+                formatter: (val) => {
+                  return val + '%';
+                }
+              }
+            },
+						legend: {
+							labels: {
+								padding: 40, //default is 10
+							},
+							display: false,
+							position: 'bottom',
+							align: 'start',
+						},
+				      tooltips: {
+				        callbacks: {
+                  label: function (tooltipItem, data) {
+                    return data.labels[tooltipItem.index] + ' : ' +
+                      data.datasets[0].data[tooltipItem.index] + '%';
+                  }
+				        }
+				      }
+					},
+				})
+
+		    $(document).ready(function() {
+
+		// $('.timer-2').countimer();
+
+		$('.marquee').marquee({
+		  //duration in milliseconds of the marquee
+		  duration: 18000,
+		  //gap in pixels between the tickers
+		  gap: 600000,
+		  //time in milliseconds before the marquee will start animating
+		  delayBeforeStart: 10,
+		  //'left' or 'right'
+		  direction: 'left',
+		  //true or false - should the marquee be duplicated to show an effect of continues flow
+		  duplicated: true
+		});
+
+		});
+	</script>
+</div>

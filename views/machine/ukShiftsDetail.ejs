@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-size=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<!-- <meta http-equiv="refresh" content="222"> -->
+		<title>JCB - Equipment Monitoring</title>
+		<link rel="icon" href="/home/jcb.png" />
+		<link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css" />
+		<!-- <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" /> -->
+		<!-- <link rel="stylesheet" href="/content/bootswatch/united.css" type="text/css"> -->
+		<link rel="stylesheet" href="/content/dashboards.css" type="text/css" />
+		<link rel="stylesheet" href="/content/table.css" type="text/css" />
+		<link rel="stylesheet" href="/content/font-awesome/css/all.css" type="text/css" />
+		<link rel="stylesheet" href="/content/ui/jquery-ui.min.css" type="text/css" />
+		<script src="/content/jquery/jquery-3.3.1.min.js"></script>
+		<script src="/content/bootstrap/js/bootstrap.bundle.js"></script>
+		<script src="/content/ui/jquery-ui.min.js"></script>
+		<script src="/content/marquee/jquery.marquee.min.js"></script>
+		<script src="/content/timer/moment.js"></script>
+		<script src="/content/timer/dist/ez.countimer.min.js"></script>
+
+		<!-- <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" /> -->
+		<link rel="stylesheet" href="/stylesheets/app.css" />
+		<link rel="stylesheet" href="/fontawesome/css/all.css" />
+	</head>
+
+	<body style="overflow-x: hidden; background-color: black; margin-top: 35px">
+		<div class="row header-top" style="top: 0; position: fixed; width: 102vw; z-index: 100; background-color: rgb(252, 176, 38)">
+			<div class="col text-left" style="padding: 4px 4px 5px 4px">
+				<img style="margin-left: 20px" height="24px" src="/media/jcb-logo.png" />
+			</div>
+			<div class="col text-right" style="padding: 5px 8px 0px 0px">
+				<a href="/equipment-monitoring/operations">
+					<span style="font-size: 22px; padding-top: 2px; color: black; margin-right: 3%" class="fas fa-home icon-home"></span>
+				</a>
+			</div>
+		</div>
+
+		<div class="col-main">
+			<div class="row">
+				<div class="col-12">
+					<h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center">ASSET SHIFT PATTERN</h1>
+					<h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: 0px 0px 16px 0px; text-align: center">
+						<span style="margin-right: 5px"><img src="/media/uk-small.png" alt="" width="30" height="30" /></span>UK Group View
+					</h1>
+				</div>
+				<div class="col-lg-12" style="margin-top: -1px; border-top: 3px solid rgb(33, 35, 37)"></div>
+			</div>
+		</div>
+
+		<section style="margin: 0 30px">
+			<table class="table" id="table-requests" style="margin-bottom: 42px">
+				<thead>
+					<tr>
+						<th class="th-top" colspan="2">ASSET</th>
+						<th class="th-top" colspan="7">SHIFT PATTERN</th>
+					</tr>
+					<tr>
+						<th class="th-centre" style="width: 95px; border-right: 1px solid rgb(42, 44, 46)">DIVISION</th>
+						<th class="th-centre" style="width: 95px; border-right: 1px solid rgb(42, 44, 46)">ASSET</th>
+						<th class="th-centre" style="width: 95px; border-right: 1px solid transparent">TYPE</th>
+						<th class="th-centre" style="width: 95px; border-right: 1px solid rgb(42, 44, 46)">MONDAY</th>
+						<th class="th-centre" style="width: 95px; border-right: 1px solid rgb(42, 44, 46)">TUESDAY</th>
+						<th class="th-centre" style="width: 95px; border-right: 1px solid rgb(42, 44, 46)">WEDNESDAY</th>
+						<th class="th-centre" style="width: 95px; border-right: 1px solid rgb(42, 44, 46)">THURSDAY</th>
+						<th class="th-centre" style="width: 95px; border-right: 1px solid rgb(42, 44, 46)">FRIDAY</th>
+						<th class="th-centre" style="width: 95px; border-right: 1px solid rgb(42, 44, 46)">SATURDAY</th>
+						<th class="th-centre" style="width: 95px; border-left: 1px solid rgb(42, 44, 46)">SUNDAY</th>
+					</tr>
+				</thead>
+				<tbody style="color: white">
+					<% let monday = [] %> <% let tuesday = [] %> <% let wednesday = [] %> <% let thursday = [] %> <% let friday = [] %> <% let saturday = [] %>
+					<% let sunday = [] %> <% for (let shift of machine.shifts) { %> <% if (machine.shifts.length > 0 && shift.monday) { %> <%
+					monday.push(shift.startTimeString.substring(0, 5) + ' - ' + shift.endTimeString.substring(0, 5)) %> <% } %> <% if (machine.shifts.length > 0
+					&& shift.tuesday) { %> <% tuesday.push(shift.startTimeString.substring(0, 5) + ' - ' + shift.endTimeString.substring(0, 5)) %> <% } %> <% if
+					(machine.shifts.length > 0 && shift.wednesday) { %> <% wednesday.push(shift.startTimeString.substring(0, 5) + ' - ' +
+					shift.endTimeString.substring(0, 5)) %> <% } %> <% if (machine.shifts.length > 0 && shift.thursday) { %> <%
+					thursday.push(shift.startTimeString.substring(0, 5) + ' - ' + shift.endTimeString.substring(0, 5)) %> <% } %> <% if (machine.shifts.length >
+					0 && shift.friday) { %> <% friday.push(shift.startTimeString.substring(0, 5) + ' - ' + shift.endTimeString.substring(0, 5)) %> <% } %> <% if
+					(machine.shifts.length > 0 && shift.saturday) { %> <% saturday.push(shift.startTimeString.substring(0, 5) + ' - ' +
+					shift.endTimeString.substring(0, 5)) %> <% } %> <% if (machine.shifts.length > 0 && shift.sunday) { %> <%
+					sunday.push(shift.startTimeString.substring(0, 5) + ' - ' + shift.endTimeString.substring(0, 5)) %> <% } %> <% } %>
+					<tr>
+						<td class="td-centre" style="width: 95px; height: 60px"><%= machine.businessUnit %></td>
+						<td class="td-centre" style="width: 95px"><%= machine.abbreviatedName %></td>
+						<td class="td-centre" style="width: 95px"><%= machine.type %></td>
+						<td class="td-centre" style="width: 95px">
+							<% for (let x of monday) { %> <% if (x != null) { %> <%= x %><br />
+							<% } %> <% } %>
+						</td>
+						<td class="td-centre" style="width: 94px">
+							<% for (let x of tuesday) { %> <% if (x != null) { %> <%= x %><br />
+							<% } %> <% } %>
+						</td>
+						<td class="td-centre" style="width: 94px">
+							<% for (let x of wednesday) { %> <% if (x != null) { %> <%= x %><br />
+							<% } %> <% } %>
+						</td>
+						<td class="td-centre" style="width: 97px">
+							<% for (let x of thursday) { %> <% if (x != null) { %> <%= x %><br />
+							<% } %> <% } %>
+						</td>
+						<td class="td-centre" style="width: 94px">
+							<% for (let x of friday) { %> <% if (x != null) { %> <%= x %><br />
+							<% } %> <% } %>
+						</td>
+						<td class="td-centre" style="width: 96px">
+							<% for (let x of saturday) { %> <% if (x != null) { %> <%= x %><br />
+							<% } %> <% } %>
+						</td>
+						<td class="td-centre" style="width: 87px">
+							<% for (let x of sunday) { %> <% if (x != null) { %> <%= x %><br />
+							<% } %> <% } %>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<div
+			class="container-fluid footer"
+			style="bottom: 0; position: fixed; width: 100vw; z-index: 100; background-color: transparent; margin-top: 5px; z-index: 2"
+		>
+			<div class="row header-top">
+				<div class="col-lg-6 d-lg-block text-left" style="padding: 4px 4px 5px 4px; background-color: rgb(252, 176, 38)">
+					<img height="24px" src="/7z/content/images/jcb-logo.png" />
+					<img height="24px" src="/7z/content/images/df.png" />
+				</div>
+				<div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold; background-color: rgb(252, 176, 38)">
+					J.C. Bamford Excavators LTD &copy; 2022
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

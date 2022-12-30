@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-size=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- <meta http-equiv="refresh" content="30"> -->
+  <title>JCB - Equipment Monitoring</title>
+  <link rel="icon" href="/home/jcb.png" />
+  <link rel="stylesheet" href="/content/bootstrap/css/bootstrap.css" type="text/css">
+  <!-- <link rel="stylesheet" href="/content/bootswatch/united.css" type="text/css"> -->
+  <link rel="stylesheet" href="/content/dashboards.css" type="text/css">
+  <link rel="stylesheet" href="/content/font-awesome/css/all.css" type="text/css">
+  <link rel="stylesheet" href="/content/ui/jquery-ui.min.css" type="text/css">
+  <script src="/7z/content/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/7z/content/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/content/ui/jquery-ui.min.js"></script>
+  <script src="/content/marquee/jquery.marquee.min.js"></script>
+  <script src="/content/timer/moment.js"></script>
+  <script src="/content/timer/dist/ez.countimer.min.js"></script>
+</head>
+
+<body style="margin-bottom: 50px; overflow: hidden;">
+
+  <%- include('../../views/partials/flash.ejs')%>
+  <!-- convert ms into HH:MM:SS -->
+  <% function msToTime(duration) { %>
+  <%  let milliseconds = parseInt((duration%1000)/100) %>
+  <%  seconds = (parseInt((duration/1000)%60)) %>
+  <%  minutes = parseInt((duration/(1000*60))%60) %>
+  <%  hours = parseInt((duration/(1000*60*60))%24); %>
+  <%   minutes = (minutes < 10) ? "0" + minutes : minutes; %>
+  <%   seconds = (seconds < 10) ? "0" + seconds : seconds; %>
+  <% if (minutes < 1 && hours < 1) { %>
+  <%  return '<1m' %>
+  <%  } %>
+  <% if (hours > 0) { %>
+  <%  return hours + ":" + minutes + ":" + seconds  %>
+  <%  } %>
+  <%  return minutes + ":" + seconds %>
+  <% } %>
+
+  <% function overFourtyMinsAgo(time) { %>
+    <% let result = false %>
+    <% let date1 = new Date() %>
+    <% let date2 = new Date(time) %>
+    <% if(date1-date2 > 40*60*1000){ %>
+      <%  result = true %>
+    <%} %>
+      <% return result %>
+  <% } %>
+
+  <div class="container-fluid">
+
+    <div class="row header-top">
+      <div class="col-lg-8 d-none d-lg-block text-left" style="padding: 4px 4px 5px 4px">
+        <img height="24px" src="/media/jcb-logo.png">
+      </div>
+      <div class="col-lg-4 d-none d-lg-block text-right" style="padding: 5px 8px 0px 0px">
+        <span style="font-size: 19px; padding-top: 2px; margin-right: 4px; color: black; font-weight: bold;">Last Update: <%= moment(update.lastUpdate).format("DD/MM/YYYY - HH:mm:ss") %> </span>
+        <!-- <a href="/equipment-monitoring/home">
+                <span style="font-size: 22px; padding-top: 2px; color: black" class="fas fa-home icon-home"></span>
+            </a> -->
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-main">
+
+        <div class="row" style="display: flex;">
+
+          <div class="col-lg-3" style="margin-top: 18px;"><a type="button" href='/equipment-monitoring/weeklyReport' target="_blank" fullscreen=yes><i style="margin-left: 14px;" class="fas fa-file-pdf"></i></a></div>
+          <div class="col-lg-6" style="margin-bottom: -5px;">
+            <h1 style="font-size: 34px; color: white; margin: 4px 0px 0px 0px; text-align: center"><%= shortBu %></h1>
+            <h1 style="font-size: 22px; color: rgb(252, 176, 38); margin: 0px 0px 18px 0px; text-align: center"><span style="margin-right: 5px;"></span><%= screenName %></h1>
+
+          </div>
+
+
+          <div class="col-lg-3" style="display: flex; justify-content: end;">
+            <div style="margin-top: 15px">
+          
+              
+              <div class="btn-group dropleft">
+                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: rgb(102, 101, 110); color: white;">
+                  Screens
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/equipment-monitoring/business-unit/<%= shortBu %>"><%= shortBu %></a>
+                  <% screens.map((screen) => { %>
+                    <a class="dropdown-item" href="/equipment-monitoring/screen/<%= shortBu %>/<%= screen %>"><%= screen %></a>
+                  <% }) %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+          <div class="col-lg-12" style="margin-bottom: 22px; padding: 8px 0px 8px 0px; border-bottom: 3px solid rgb(26, 28, 30); border-top: 3px solid rgb(26, 28, 30)">
+            <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Welding Robots</h1>
+              <h1 class="line-measure-value-top " style="color: grey;"><span><%= weldPercent %>%</span> <span>(<%= weldPercentT %>%)</span></h1>
+            </div>
+            <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Laser Cutters</h1>
+              <h1 class="line-measure-value-top" style="color: grey;"><span><%= laserPercent %>%</span> <span>(<%= laserPercentT %>%)</span></h1>
+            </div>
+            <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px">
+              <h1 class="line-sub-header-top">Plasma Cutters</h1>
+              <h1 class="line-measure-value-top" style="color: grey;"><span><%= plasmaPercent %>%</span> <span>(<%= plasmaPercentT %>%)</span></h1>
+            </div>
+          </div>
+
+
+
+          <div style=" display: flex; align-items: center; justify-content: center; margin-bottom: 122px; margin-top: 10px; ">
+            <div style="display: flex; justify-content: center; flex-wrap: wrap;  width: 100vw;">
+              <% for (let m of machines) { %>
+              <div style="float: left; width: 80px; padding: 6px 4px 4px 4px; height: 150px;">
+                <a href="/equipment-monitoring/business-unit/<%=m.shortBu %>">
+                  <!-- <h1 style="text-align: center; color: rgb(172, 174, 176); font-size: 14px; font-weight: bold"><%= m.shortBu %></h1> -->
+                  <% if (m.dataStatus === 'ok') { %>
+                  <h1 style="text-align: center; color: rgb(0, 196, 70); font-size: 10px; font-weight: bold; margin-top: -6px; margin-bottom: 5px;"><%= m.abbreviatedName %></h1>
+                  <% } %>
+                  <% if (m.dataStatus === 'white') { %>
+                  <h1 style="text-align: center; color: white; font-size: 10px; font-weight: bold; margin-top: -6px; margin-bottom: 5px;"><%= m.abbreviatedName %></h1>
+                  <% } %>
+                  <% if (m.dataStatus === 'wrong') { %>
+                  <h1 style="text-align: center; color: red; font-size: 10px; font-weight: bold; margin-top: -6px; margin-bottom: 5px;"><%= m.abbreviatedName %></h1>
+                  <% } %>
+                  <% if (m.dataStatus === 'to check') { %>
+                  <h1 style="text-align: center; color: rgb(252, 176, 38); font-size: 10px; font-weight: bold; margin-top: -6px; margin-bottom: 5px;"><%= m.abbreviatedName %></h1>
+                  <% } %>
+
+                </a>
+                <% if (m.programming) { %>
+                <a href="/equipment-monitoring/machine/<%=m._id %>">
+                  <div class="bg-no-signal" style="height: 60px; margin-bottom: 8px; font-size: 14px; text-align: center;  color: white; font-weight: bold">
+                    <div style="display: flex; align-content: center; justify-content: center; ">
+                      <% if (!m.signal) { %>
+                      <h6 style="font-weight: bold; font-size: 16px; padding-top: 12px;"><i class="fas fa-wrench"></i></h6>
+                      <p>Programming</p>
+                      <% } else { %>
+                      <h6 style="font-weight: bold; font-size: 15px; padding-top: 12px; "><i class="fas fa-wrench"></i></h6>
+                      <% } %>
+                    </div>
+                  </div>
+
+
+                  <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">Program mode</h1>
+
+
+              </div>
+              </a>
+
+              <% } else { %>
+
+              <% if (m.inShift && m.signal) { %>
+              <a href="/equipment-monitoring/machine/<%=m._id %>">
+                <div class="<% if (m.state === 'Breakdown') { %>bg-danger<% } else if  (m.state === 'Planned Stoppage') { %>bg-wire<% } else if  (m.state === 'Unplanned Stoppage') { %>bg-info<% }  else { %>bg-success<% } %>" style="height: 60px; margin-bottom: 8px; font-size: 14px; text-align: center;  color: white; font-weight: bold">
+                  <div style=" display: flex; text-align: center; flex-direction: column; justify-content: center; ">
+                    <% if (m.state === 'Running') { %>
+                    <% if (m.thelastSignal > m.shiftStart) { %>
+                    <h6 style="font-weight: bold; font-size: 16px; padding-top: 8px;"><%= m.eff  %>%</h6>
+                    <h6 style="font-weight: bold; font-size: 16px; margin-top: -2px; color: black;">(<%= m.teff  %>%)</h6>
+
+                    <% } else { %>
+                    <h6 style="font-weight: bold; font-size: 16px; padding-top: 8px;">--</h6>
+                    <h6 style="font-weight: bold; font-size: 16px; margin-top: -2px; color: black;">--</h6>
+
+                    <% } %>
+
+
+                  
+                    <% } else { %>
+                    <% if (m.stoppages.length > 0) { %>
+                    <% if (m.stoppages[0].createdAt > new Date(m.shiftStart)) { %>
+                    <% str = msToTime(Date.now() - new Date(m.stoppages[0].createdAt)) %>
+                    <% } else { %>
+                    <% str = msToTime(Date.now() - new Date(m.shiftStart)) %>
+                    <% } %>
+                    <% } %>
+                    <!-- <div id ="clock"></div> -->
+                    <h6 style="font-weight: bold; font-size: 15px; padding: 18px 0; "><%= str %></h6>
+                    <% } %>
+                  </div>
+                </div>
+                <% if (m.state === 'Running' && m.inShift) { %>
+                <% if (m.thelastSignal > m.shiftStart) { %>
+                  
+                  <% if (overFourtyMinsAgo(m.thelastSignal)) { %>
+                    <h1 style="text-align: center; color: orange; font-size: 12px; font-weight: bold"><%= moment(m.thelastSignal).format('HH:mm:ss') %></h1>
+                  <% } else { %>
+                    <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold"><%= moment(m.thelastSignal).format('HH:mm:ss') %></h1>
+                 <% } %>
+                
+                <%  } else { %>
+                <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">Waiting Signal</h1>
+                <%  } %>
+                <% } else { %>
+                <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">--</h1>
+                <% } %>
+              </a>
+            </div>
+
+            <% } else { %>
+            <a href="/equipment-monitoring/machine/<%=m._id %>">
+              <div class="bg-no-signal" style="height: 60px; margin-bottom: 8px; font-size: 14px; text-align: center;  color: white; font-weight: bold">
+                <div style="display: flex; align-content: center; justify-content: center; ">
+                  <% if (!m.signal) { %>
+                  <h6 style="font-weight: bold; font-size: 16px; padding-top: 18px;">X</h6>
+                  <% } else { %>
+                  <h6 style="font-weight: bold; font-size: 15px; padding-top: 18px; ">--</h6>
+                  <% } %>
+                </div>
+              </div>
+              <% if (m.state === 'Running' && m.inShift) { %>
+              <% if (m.thelastSignal > m.shiftStart) { %>
+              <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold"><%= moment(m.thelastSignal).format('HH:mm:ss') %></h1>
+              <%  } else { %>
+              <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">Waiting Signal</h1>
+              <%  } %>
+              <% } else { %>
+              <h1 style="text-align: center; color: white; font-size: 12px; font-weight: bold">--</h1>
+              <% } %>
+          </div>
+          </a>
+          <% } %>
+          <% } %>
+
+          <%} %>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </div>
+  
+
+
+
+
+
+  <div class="container-fluid footer" style="background-color: black;">
+    <div style="margin-left: -11px;  width: 105%; margin-bottom: 100px; padding: 8px 35px 8px 0px; border-bottom: 3px solid rgb(26, 28, 30)">
+      <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px; margin-top: 25px;">
+        <h1 class="line-sub-header-top">Planned Stoppage</h1>
+        <h1 class="line-measure-value-top text-grey"><%= sumOfBdTime %></h1>
+      </div>
+      <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px; margin-top: 25px;">
+        <h1 class="line-sub-header-top">Unplanned Stoppage</h1>
+        <h1 class="line-measure-value-top text-info"><%= sumOfUnknownBdTime %></h1>
+      </div>
+
+      <div class="col-measure" style="width: 33.3%; float: left; text-align: center; margin: 0px; margin-top: 25px;">
+        <h1 class="line-sub-header-top">Breakdown</h1>
+        <h1 class="line-measure-value-top text-danger"><%= sumOfWireTime %></h1>
+      </div>
+    </div>
+    <div class="marquee <% if (totalWire > 0) { %> text-danger text-alert <% } else { %>''<% } %>" data-duration="16000" data-gap="2500" data-duplicated="true" style=" margin-left: -15px; width: 100vw;">
+      Live Status : Planned Stoppages (<%= totalKnownBreakdown %>),
+      Unplanned Stoppages (<%= totalUnKnownBreakdown %>),
+      Breakdowns (<%= totalWire %>)
+    </div>
+    <!-- <div style="color: white; background-color: red; width: 110%; margin-left: -12px;" class="marquee <% if (totalWire > 0) { %>  <% } else { %>''<% } %>" data-duration="16000" data-gap="2500" data-duplicated="true" style=" margin-left: -15px; width: 100vw;" >
+        LiveLink System Currently Under Maintenance. Please Check Back For Updates. 
+    </div> -->
+    <div class="row header-top">
+      <div class="col-lg-6  d-lg-block text-left" style="padding: 4px 4px 5px 4px;">
+        <img height="24px" src="/7z/content/images/jcb-logo.png">
+        <img height="24px" src="/7z/content/images/df.png">
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-right" style="padding: 6px 12px 5px 0px; font-weight: bold">
+        J.C. Bamford Excavators LTD &copy; 2022
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+
+      // $('.timer-2').countimer();
+
+      $('.marquee').marquee({
+        //duration in milliseconds of the marquee
+        duration: 7000,
+        //gap in pixels between the tickers
+        gap: 100000,
+        //time in milliseconds before the marquee will start animating
+        delayBeforeStart: 10,
+        //'left' or 'right'
+        direction: 'left',
+        //true or false - should the marquee be duplicated to show an effect of continues flow
+        duplicated: true
+      });
+
+    });
+
+    //version 1 
+
+    function displayTime() {
+      let time = moment().format('HH:mm:ss');
+
+      $('#clock').html(time);
+
+      setTimeout(displayTime, 1000);
+    }
+
+    $(document).ready(function() {
+      displayTime();
+    });
+  </script>
+
+</body>
+
+</html>

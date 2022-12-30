@@ -1,0 +1,66 @@
+<% layout('layouts/boilerplate')%>
+
+<div style="display: flex; justify-content: center;">
+  <h1>Robot Efficiency By Week</h1>
+</div>
+
+<style>
+  .orange {
+    background-color: rgb(255, 145, 0);
+    text-align: center;
+    /* color: orange; */
+  }
+</style>
+
+
+<div style="display: flex; justify-content: center;">
+  <table class="table table-hover table-dark" style="font-size: 15px; height: 76vh; width: fit-content; text-align: center; ">
+    <thead>
+      <tr class="d-flex">
+        <th style="width: 450px; text-align: center;"></th>
+        <th style="width: 1365px; text-align: center;">W/C</th>
+
+      </tr>
+      <tr class="d-flex">
+        <th style="width: 150px; text-align: left;">Business Unit</th>
+        <th style="width: 300px; text-align: left;">Asset</th>
+        <th style="width: 100px;"><%= monday12WeeksAgo  %></th>
+        <th style="width: 100px;"><%= monday11WeeksAgo  %></th>
+        <th style="width: 100px;"><%= monday10WeeksAgo  %></th>
+        <th style="width: 100px;"><%= monday9WeeksAgo  %></th>
+        <th style="width: 100px;"><%= monday8WeeksAgo  %></th>
+        <th style="width: 100px;"><%= monday7WeeksAgo  %></th>
+        <th style="width: 100px;"><%= monday6WeeksAgo  %></th>
+        <th style="width: 100px;"><%= monday5WeeksAgo  %></th>
+        <th style="width: 100px;"><%= monday4WeeksAgo  %></th>
+        <th style="width: 100px;"><%= monday3WeeksAgo  %></th>
+        <th style="width: 100px;"><%= monday2WeeksAgo  %></th>
+        <th style="width: 100px;"><%= lastWeekMonday  %></th>
+        <th style="width: 150px;">12 Wk Average</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <% for (let c of dataArr) { %>
+      <tr class="d-flex">
+        <td style="height: 55px; width: 150px; text-align: left;"><%= c.bu %></td>
+        <td style="width: 300px; text-align: left;"><%= c.name %></td>
+        <td style="width: 100px;" class="<% if (c.twelveWeeksAgo < 51) { %>orange<% } else { %><% } %>"><%= c.twelveWeeksAgo %>%</td>
+        <td style="width: 100px;" class="<% if (c.elevenWeeksAgo < 51) { %>orange<% } else { %><% } %>"><%= c.elevenWeeksAgo %>%</td>
+        <td style="width: 100px;" class="<% if (c.tenWeeksAgo < 51) { %>orange<% } else { %><% } %>"><%= c.tenWeeksAgo %>%</td>
+        <td style="width: 100px;" class="<% if (c.nineWeeksAgo < 51) { %>orange<% } else { %><% } %>"><%= c.nineWeeksAgo %>%</td>
+        <td style="width: 100px;" class="<% if (c.eightWeeksAgo < 51) { %>orange<% } else { %><% } %>"><%= c.eightWeeksAgo %>%</td>
+        <td style="width: 100px;" class="<% if (c.sevenWeeksAgo < 51) { %>orange<% } else { %><% } %>"><%= c.sevenWeeksAgo %>%</td>
+        <td style="width: 100px;" class="<% if (c.sixWeeksAgo < 51) { %>orange<% } else { %><% } %>"><%= c.sixWeeksAgo %>%</td>
+        <td style="width: 100px;" class="<% if (c.fiveWeeksAgo < 51) { %>orange<% } else { %><% } %>"><%= c.fiveWeeksAgo %>%</td>
+        <td style="width: 100px;" class="<% if (c.fourWeeksAgo < 51) { %>orange<% } else { %><% } %>"><%= c.fourWeeksAgo %>%</td>
+        <td style="width: 100px;" class="<% if (c.threeWeeksAgo < 51) { %>orange<% } else { %><% } %>"><%= c.threeWeeksAgo %>%</td>
+        <td style="width: 100px;" class="<% if (c.twoWeeksAgo < 51) { %>orange<% } else { %><% } %>"><%= c.twoWeeksAgo %>%</td>
+        <td style="width: 100px;" class="<% if (c.lastWeek < 51) { %>orange<% } else { %><% } %>"><%= c.lastWeek %>%</td>
+        <td style="width: 150px;" class="<% if (c.average < 51) { %>orange<% } else { %><% } %>"><%= c.average %>%</td>
+      </tr>
+      <% } %>
+
+    </tbody>
+  </table>
+</div>

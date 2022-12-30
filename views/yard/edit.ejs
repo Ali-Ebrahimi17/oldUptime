@@ -1,0 +1,59 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container">
+
+
+  <div class="row form-background" style="margin-top: 40px;">
+
+    <div class="col-md-12 text-center">
+      <h1 style="color: white;">Update <%= machine.buildNumber %></h1>
+      <div class="float-right">
+
+        <% if (!machine.reviewed) { %>
+        <a href='/yard/reviewed/<%= machine._id  %>/<%= division %>' style="margin-right: 10px;" type="button" class="btn btn-info">Mark machine as WIP</a>
+        <% } %>
+        <% if (machine.reviewed && !machine.returned) { %>
+        <a href='/yard/returned/<%= machine._id  %>/<%= division %>' type="button" class="btn btn-success">Sent back to top yard</a>
+        <% } %>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="container form">
+
+
+
+      <div class="col">
+        <form action="/yard/edit/<%= machine._id %>" method="POST">
+          <input type="hidden" name="machine[division]" value="<%= division %>">
+          <label class="form-label" for="title">Build Number</label>
+          <input class="form-control" type="text" name="machine[buildNumber]" value="<%= machine.buildNumber %>" required disabled />
+
+          <label class="form-label" for="title">Serial Number</label>
+          <input class="form-control" type="text" name="machine[serial]" value="<%= machine.serial %>" required disabled />
+
+          <label for="notes" style="color: white;">Concern</label>
+          <textarea style="height: 120px; " class="form-control" name="machine[concern]" required disabled><%= machine.concern %></textarea>
+
+
+
+      </div>
+    </div>
+
+
+    <div class="col">
+
+
+      <label for="notes" style="color: white;">Comments</label>
+      <textarea style="height: 195px; margin-bottom: 26px;" class="form-control" name="machine[comments]"><%= machine.comments %></textarea>
+
+      <div class="form-group ">
+
+        <button class="btn btn-md btn-success btn-block">Submit</button>
+      </div>
+    </div>
+    </form>
+  </div>
